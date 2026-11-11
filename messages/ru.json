@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "UGCMarket — бренды и креаторы",
+    "description": "Платформа, которая соединяет бренды и контент-креаторов в Азербайджане.",
+    "notFound": "Страница не найдена",
+    "creatorDescription": "Контент-креатор из города {city} — UGCMarket"
+  },
+  "common": {
+    "loading": "Загрузка…",
+    "scaffold": "Эта страница ещё в разработке.",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "apply": "Откликнуться"
+  },
+  "pages": {
+    "landing": "Главная",
+    "login": "Вход",
+    "signup": "Регистрация",
+    "resetPassword": "Восстановление пароля",
+    "verifyEmail": "Подтвердите e-mail",
+    "onboarding": "Кто вы?",
+    "board": "Кампании",
+    "creatorDashboard": "Кабинет",
+    "creatorProfileEdit": "Мой профиль",
+    "creatorApplications": "Мои отклики",
+    "creatorPosts": "Мои публикации",
+    "brandDashboard": "Кабинет бренда",
+    "brandProfile": "Профиль бренда",
+    "campaignNew": "Новая кампания",
+    "campaignEdit": "Редактировать кампанию",
+    "campaignApplicants": "Отклики",
+    "adminDashboard": "Админ-панель",
+    "adminCreators": "Креаторы",
+    "adminBrands": "Бренды",
+    "adminCampaigns": "Кампании",
+    "adminUsers": "Пользователи"
+  },
+  "errors": {
+    "unknown": "Произошла неизвестная ошибка.",
+    "internal": "Ошибка сервера. Попробуйте позже.",
+    "unauthorized": "Войдите, чтобы продолжить.",
+    "forbidden": "Недостаточно прав для этого действия.",
+    "validation": "Проверьте введённые данные.",
+    "notImplemented": "Эта функция ещё не готова.",
+    "handle_taken": "Это имя пользователя уже занято.",
+    "brand_exists": "У этого аккаунта уже есть профиль бренда.",
+    "role_already_set": "Роль уже выбрана.",
+    "notFound": {
+      "resource": "Не найдено.",
+      "creator": "Креатор не найден.",
+      "brand": "Бренд не найден.",
+      "campaign": "Кампания не найдена.",
+      "post": "Публикация не найдена."
+    }
+  },
+  "validation": {
+    "handle": "Только строчные буквы, цифры, точка и подчёркивание (3–30 символов)."
+  }
+}

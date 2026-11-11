@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "UGCMarket — brands and creators",
+    "description": "The platform connecting brands with content creators in Azerbaijan.",
+    "notFound": "Page not found",
+    "creatorDescription": "Content creator from {city} — UGCMarket"
+  },
+  "common": {
+    "loading": "Loading…",
+    "scaffold": "This page is still being built.",
+    "save": "Save",
+    "cancel": "Cancel",
+    "apply": "Apply"
+  },
+  "pages": {
+    "landing": "Home",
+    "login": "Log in",
+    "signup": "Sign up",
+    "resetPassword": "Reset password",
+    "verifyEmail": "Verify your email",
+    "onboarding": "Who are you?",
+    "board": "Campaigns",
+    "creatorDashboard": "Dashboard",
+    "creatorProfileEdit": "My profile",
+    "creatorApplications": "My applications",
+    "creatorPosts": "My posts",
+    "brandDashboard": "Brand dashboard",
+    "brandProfile": "Brand profile",
+    "campaignNew": "New campaign",
+    "campaignEdit": "Edit campaign",
+    "campaignApplicants": "Applicants",
+    "adminDashboard": "Admin",
+    "adminCreators": "Creators",
+    "adminBrands": "Brands",
+    "adminCampaigns": "Campaigns",
+    "adminUsers": "Users"
+  },
+  "errors": {
+    "unknown": "Something went wrong.",
+    "internal": "Server error. Please try again later.",
+    "unauthorized": "Please log in to continue.",
+    "forbidden": "You don't have permission to do this.",
+    "validation": "Please check the fields.",
+    "notImplemented": "This feature isn't ready yet.",
+    "handle_taken": "This username is taken.",
+    "brand_exists": "This account already has a brand profile.",
+    "role_already_set": "Role is already set.",
+    "notFound": {
+      "resource": "Not found.",
+      "creator": "Creator not found.",
+      "brand": "Brand not found.",
+      "campaign": "Campaign not found.",
+      "post": "Post not found."
+    }
+  },
+  "validation": {
+    "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters)."
+  }
+}

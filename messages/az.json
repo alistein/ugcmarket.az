@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "title": "UGCMarket — brendlər və kontent yaradıcıları",
+    "description": "Azərbaycanda brendləri kontent yaradıcıları ilə birləşdirən platforma.",
+    "notFound": "Səhifə tapılmadı",
+    "creatorDescription": "{city} şəhərindən kontent yaradıcısı — UGCMarket"
+  },
+  "common": {
+    "loading": "Yüklənir…",
+    "scaffold": "Bu səhifə hələ hazırlanır.",
+    "save": "Yadda saxla",
+    "cancel": "Ləğv et",
+    "apply": "Müraciət et"
+  },
+  "pages": {
+    "landing": "Ana səhifə",
+    "login": "Daxil ol",
+    "signup": "Qeydiyyat",
+    "resetPassword": "Şifrəni bərpa et",
+    "verifyEmail": "E-poçtu təsdiqlə",
+    "onboarding": "Siz kimsiniz?",
+    "board": "Kampaniyalar",
+    "creatorDashboard": "Kabinet",
+    "creatorProfileEdit": "Profilim",
+    "creatorApplications": "Müraciətlərim",
+    "creatorPosts": "Paylaşımlarım",
+    "brandDashboard": "Brend kabineti",
+    "brandProfile": "Brend profili",
+    "campaignNew": "Yeni kampaniya",
+    "campaignEdit": "Kampaniyanı redaktə et",
+    "campaignApplicants": "Müraciət edənlər",
+    "adminDashboard": "Admin panel",
+    "adminCreators": "Kreatorlar",
+    "adminBrands": "Brendlər",
+    "adminCampaigns": "Kampaniyalar",
+    "adminUsers": "İstifadəçilər"
+  },
+  "errors": {
+    "unknown": "Naməlum xəta baş verdi.",
+    "internal": "Serverdə xəta baş verdi. Bir az sonra yenidən cəhd edin.",
+    "unauthorized": "Davam etmək üçün daxil olun.",
+    "forbidden": "Bu əməliyyat üçün icazəniz yoxdur.",
+    "validation": "Məlumatları yoxlayın.",
+    "notImplemented": "Bu funksiya hələ hazır deyil.",
+    "handle_taken": "Bu istifadəçi adı artıq tutulub.",
+    "brand_exists": "Bu hesabın artıq brend profili var.",
+    "role_already_set": "Rol artıq seçilib.",
+    "notFound": {
+      "resource": "Tapılmadı.",
+      "creator": "Kreator tapılmadı.",
+      "brand": "Brend tapılmadı.",
+      "campaign": "Kampaniya tapılmadı.",
+      "post": "Paylaşım tapılmadı."
+    }
+  },
+  "validation": {
+    "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)."
+  }
+}
