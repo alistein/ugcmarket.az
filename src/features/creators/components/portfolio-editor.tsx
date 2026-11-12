@@ -10,18 +10,21 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { Field } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
-import { isEnabledNetwork, networkOfUrl, PortfolioItemInput } from "@/schemas";
+import { isEnabledNetwork, networkOfUrl, PORTFOLIO_MAX, PortfolioItemInput } from "@/schemas";
 import { type CreatorPublic, postNumbers, useAddPortfolioItem, useRemovePortfolioItem } from "../hooks";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
 
-const MAX = 12;
+/** Three slots are shown from the start (a complete profile needs 3), then a + tile up to the limit. */
+const SLOTS = 3;
 
 /** Links to the creator's best posts (we don't host video). Saved immediately, not with the form. */
 export function PortfolioEditor({
@@ -33,9 +36,112 @@ export function PortfolioEditor({
   creator: Pick<CreatorPublic, "creator_socials">;
 }) {
   const t = useTranslations("creator.portfolio");
+  const [open, setOpen] = useState(false);
+  const empty = Math.max(0, SLOTS - items.length);
+  const canAddMore = items.length >= SLOTS && items.length < PORTFOLIO_MAX;
+
+  return (
+    <div className="grid grid-cols-1 gap-3">
+      <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+        {items.map((item) => (
+          <li key={item.id}>
+            <PortfolioTile item={item} creator={creator} />
+          </li>
+        ))}
+        {Array.from({ length: empty }, (_, i) => (
+          <li key={`empty-${i}`}>
+            <button type="button" onClick={() => setOpen(true)} className={cn(slotClass, "items-stretch")}>
+              <span className="flex size-9 items-center justify-center rounded-lg border border-dashed border-border text-muted-foreground">
+                <HugeiconsIcon icon={NETWORK_ICON.instagram} strokeWidth={2} className="size-4" />
+              </span>
+              <span className="flex flex-1 items-center justify-center px-2 text-center text-sm text-balance text-muted-foreground">
+                {t("slotEmpty")}
+              </span>
+            </button>
+          </li>
+        ))}
+        {canAddMore && (
+          <li>
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              aria-label={t("addMore")}
+              className={cn(slotClass, "items-center justify-center gap-2 text-muted-foreground")}
+            >
+              <span className="flex size-10 items-center justify-center rounded-full bg-muted">
+                <HugeiconsIcon icon={Add01Icon} strokeWidth={2} className="size-5" />
+              </span>
+              <span className="px-2 text-center text-xs text-balance">{t("addMore")}</span>
+            </button>
+          </li>
+        )}
+      </ul>
+      {items.length >= PORTFOLIO_MAX && (
+        <p className="text-sm text-muted-foreground">{t("full", { max: PORTFOLIO_MAX })}</p>
+      )}
+      <AddPortfolioDialog open={open} onOpenChange={setOpen} />
+    </div>
+  );
+}
+
+const slotClass =
+  "flex aspect-[3/4] w-full flex-col rounded-2xl border border-dashed border-border p-3 outline-none transition-colors hover:border-foreground/30 hover:bg-muted/40 focus-visible:ring-4 focus-visible:ring-ring/25";
+
+function PortfolioTile({
+  item,
+  creator,
+}: {
+  item: CreatorPublic["portfolio_items"][number];
+  creator: Pick<CreatorPublic, "creator_socials">;
+}) {
+  const t = useTranslations("creator.portfolio");
+  const remove = useRemovePortfolioItem();
+  return (
+    <div className="group relative flex aspect-[3/4] w-full flex-col rounded-2xl bg-muted/60 p-3">
+      <div className="flex items-start justify-between gap-1">
+        <span
+          className={cn(
+            "flex size-9 shrink-0 items-center justify-center rounded-lg",
+            NETWORK_TINT[item.network],
+          )}
+        >
+          <HugeiconsIcon icon={NETWORK_ICON[item.network]} strokeWidth={2} className="size-4" />
+        </span>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon-xs"
+          aria-label={t("remove")}
+          disabled={remove.isPending}
+          onClick={() => remove.mutate(item.id)}
+          className="relative z-10"
+        >
+          <HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />
+        </Button>
+      </div>
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noopener noreferrer nofollow"
+        className="mt-auto min-w-0 outline-none after:absolute after:inset-0 after:rounded-2xl focus-visible:after:ring-4 focus-visible:after:ring-ring/25"
+      >
+        <span className="line-clamp-3 text-sm font-medium text-pretty break-words">
+          {item.title || shortUrl(item.url)}
+        </span>
+        <span className="mt-0.5 inline-flex items-center gap-0.5 text-xs text-muted-foreground">
+          {t("open")}
+          <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={2} className="size-3" />
+        </span>
+        <PostStatsLine creator={creator} item={item} explainMismatch />
+      </a>
+    </div>
+  );
+}
+
+function AddPortfolioDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+  const t = useTranslations("creator.portfolio");
   const te = useTranslations();
   const add = useAddPortfolioItem();
-  const remove = useRemovePortfolioItem();
   const form = useForm<PortfolioItemInput>({
     resolver: zodResolver(PortfolioItemInput) as never,
     defaultValues: { url: "", title: "" },
@@ -48,7 +154,10 @@ export function PortfolioEditor({
     add.mutate(
       { url: v.url, title: v.title || undefined },
       {
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+          form.reset();
+          onOpenChange(false);
+        },
         onError: (e) => {
           const key = e instanceof ApiClientError ? e.message : "errors.unknown";
           toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
@@ -58,62 +167,12 @@ export function PortfolioEditor({
   );
 
   return (
-    <div className="grid grid-cols-1 gap-4">
-      {items.length > 0 && (
-        <ul className="grid gap-2">
-          {items.map((item) => (
-            <li key={item.id} className="flex items-center gap-3 rounded-2xl bg-muted/60 p-3">
-              <span
-                className={cn(
-                  "flex size-9 shrink-0 items-center justify-center rounded-xl",
-                  NETWORK_TINT[item.network],
-                )}
-              >
-                <HugeiconsIcon icon={NETWORK_ICON[item.network]} strokeWidth={2} className="size-4" />
-              </span>
-              <a
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="min-w-0 flex-1"
-              >
-                <span className="block truncate text-sm font-medium">{item.title || shortUrl(item.url)}</span>
-                {item.title && (
-                  <span className="block truncate text-xs text-muted-foreground">{shortUrl(item.url)}</span>
-                )}
-                <PostStatsLine creator={creator} item={item} explainMismatch />
-              </a>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                aria-label={t("open")}
-                nativeButton={false}
-                render={<a href={item.url} target="_blank" rel="noopener noreferrer nofollow" />}
-              >
-                <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={2} />
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                aria-label={t("remove")}
-                disabled={remove.isPending}
-                onClick={() => remove.mutate(item.id)}
-              >
-                <HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />
-              </Button>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {items.length < MAX ? (
-        <form
-          noValidate
-          onSubmit={submit}
-          className="grid gap-3 rounded-2xl border border-dashed border-border p-4"
-        >
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t("dialogTitle")}</DialogTitle>
+        </DialogHeader>
+        <form noValidate onSubmit={submit} className="grid gap-4">
           <Field
             label={t("url")}
             error={form.formState.errors.url}
@@ -126,6 +185,7 @@ export function PortfolioEditor({
                 type="url"
                 inputMode="url"
                 autoCapitalize="none"
+                autoFocus
                 placeholder="https://www.instagram.com/reel/…"
               />
             )}
@@ -133,15 +193,15 @@ export function PortfolioEditor({
           <Field label={t("titleLabel")} error={form.formState.errors.title}>
             {(a) => <Input {...a} {...form.register("title")} placeholder={t("titlePh")} />}
           </Field>
-          <Button type="submit" variant="soft" disabled={add.isPending} className="w-fit">
-            <HugeiconsIcon icon={Add01Icon} strokeWidth={2} data-icon="inline-start" />
-            {t("add")}
-          </Button>
+          <DialogFooter>
+            <Button type="submit" disabled={add.isPending}>
+              <HugeiconsIcon icon={Add01Icon} strokeWidth={2} data-icon="inline-start" />
+              {t("add")}
+            </Button>
+          </DialogFooter>
         </form>
-      ) : (
-        <p className="text-sm text-muted-foreground">{t("full", { max: MAX })}</p>
-      )}
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

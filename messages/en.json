@@ -495,7 +495,10 @@
         "youtube": "YouTube"
       },
       "checked": "Numbers checked automatically.",
-      "notYours": "This post belongs to @{owner}. Numbers are shown only for your own posts."
+      "notYours": "This post belongs to @{owner}. Numbers are shown only for your own posts.",
+      "slotEmpty": "Add a Reel",
+      "addMore": "Add another piece",
+      "dialogTitle": "Add to your portfolio"
     },
     "dashboard": {
       "setupTitle": "Set up your creator profile",

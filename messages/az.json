@@ -495,7 +495,10 @@
         "youtube": "YouTube"
       },
       "checked": "Rəqəmlər avtomatik yoxlanılıb.",
-      "notYours": "Bu paylaşım @{owner} hesabına aiddir. Rəqəmlər yalnız öz paylaşımlarınız üçün göstərilir."
+      "notYours": "Bu paylaşım @{owner} hesabına aiddir. Rəqəmlər yalnız öz paylaşımlarınız üçün göstərilir.",
+      "slotEmpty": "Reels əlavə edin",
+      "addMore": "Daha bir iş əlavə edin",
+      "dialogTitle": "Portfolioya iş əlavə edin"
     },
     "dashboard": {
       "setupTitle": "Kreator profilinizi yaradın",

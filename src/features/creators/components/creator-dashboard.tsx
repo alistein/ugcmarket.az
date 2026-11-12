@@ -249,7 +249,8 @@ function StatusNote({ status }: { status: "pending" | "rejected" }) {
 function Overview({ creator: c }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
   const { items } = completeness(c);
-  const todo = items.filter((i) => !i.done);
+  // Portfolio has its own empty slots in the Portfolio tab.
+  const todo = items.filter((i) => !i.done && i.key !== "portfolio");
 
   return (
     <Panel className="grid grid-cols-1 gap-5">
