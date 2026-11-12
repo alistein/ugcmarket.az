@@ -452,7 +452,17 @@
       "contactsHint": "Əlaqə məlumatları gizlidir — yalnız sən müraciət etdiyin kampaniyanın brendi görür.",
       "contactInstagram": "Əlaqə üçün Instagram",
       "contactPhone": "Telefon",
-      "pricesHint": "Bir paylaşım üçün AZN-lə təxmini qiymət. Boş saxlasan, \"razılaşma ilə\" görünür."
+      "pricesHint": "Bir paylaşım üçün AZN-lə təxmini qiymət. Boş saxlasan, \"razılaşma ilə\" görünür.",
+      "crop": {
+        "title": "Şəkli tənzimlə",
+        "hint": "Sürüşdür və yaxınlaşdır — dairədəki hissə profil şəklin olacaq.",
+        "zoom": "Yaxınlaşdırma",
+        "zoomIn": "Yaxınlaşdır",
+        "zoomOut": "Uzaqlaşdır",
+        "cancel": "Ləğv et",
+        "save": "Yadda saxla",
+        "saving": "Yüklənir…"
+      }
     },
     "portfolio": {
       "title": "Portfolio",

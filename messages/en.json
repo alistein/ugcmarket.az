@@ -452,7 +452,17 @@
       "contactsHint": "Contacts stay private — only the brand of a campaign you apply to sees them.",
       "contactInstagram": "Instagram for contact",
       "contactPhone": "Phone",
-      "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”."
+      "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”.",
+      "crop": {
+        "title": "Adjust your photo",
+        "hint": "Drag and zoom — what’s inside the circle becomes your profile photo.",
+        "zoom": "Zoom",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Uploading…"
+      }
     },
     "portfolio": {
       "title": "Portfolio",

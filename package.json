@@ -36,6 +36,7 @@
     "posthog-node": "^5.68.2",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "react-easy-crop": "^6.2.5",
     "react-hook-form": "^7.91.0",
     "resend": "^6.38.0",
     "server-only": "^0.0.1",

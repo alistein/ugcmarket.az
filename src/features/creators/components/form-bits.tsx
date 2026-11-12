@@ -3,11 +3,12 @@
 import { Camera01Icon, Loading03Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { cn } from "@/lib/utils";
-import { useUploadAvatar } from "../hooks";
+import { type CropArea, useUploadAvatar } from "../hooks";
+import { AvatarCropDialog } from "./avatar-crop";
 
 /** Multi-select as tappable chips (categories, languages). */
 export function ChipGroup<T extends string>({
@@ -76,13 +77,31 @@ export function AvatarField({
   const input = useRef<HTMLInputElement>(null);
   const upload = useUploadAvatar();
 
+  const [picked, setPicked] = useState<{ file: File; url: string } | null>(null);
+  const close = () => {
+    if (picked) URL.revokeObjectURL(picked.url);
+    setPicked(null);
+  };
+
   const pick = (file: File | undefined) => {
     if (!file) return;
+    if (!file.type.startsWith("image/")) return toast.error(t("avatarFailed"));
     if (file.size > 15 * 1024 * 1024) return toast.error(t("avatarTooBig"));
-    upload.mutate(file, {
-      onSuccess: (url) => onChange(url),
-      onError: () => toast.error(t("avatarFailed")),
-    });
+    setPicked({ file, url: URL.createObjectURL(file) }); // → crop & zoom dialog
+  };
+
+  const save = (area: CropArea) => {
+    if (!picked) return;
+    upload.mutate(
+      { file: picked.file, area },
+      {
+        onSuccess: (url) => {
+          onChange(url);
+          close();
+        },
+        onError: () => toast.error(t("avatarFailed")),
+      },
+    );
   };
 
   return (
@@ -116,6 +135,12 @@ export function AvatarField({
           </button>
         )}
       </div>
+      <AvatarCropDialog
+        src={picked?.url ?? null}
+        pending={upload.isPending}
+        onCancel={close}
+        onConfirm={save}
+      />
       <input
         ref={input}
         type="file"
