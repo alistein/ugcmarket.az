@@ -106,6 +106,12 @@ const handleTaken = (e: { code?: string } | null) => e?.code === "23505";
 export async function isHandleAvailable(handle: string) {
   const supabase = await createUserClient();
   const { data, error } = await supabase.rpc("handle_available", { h: handle.toLowerCase() });
+  // PGRST202 = function not found → migration 20261112100000_creator_profile.sql not applied.
+  if (error?.code === "PGRST202") {
+    throw new Error(
+      "handle_available() is missing in the database — run `pnpm db:push && pnpm db:types:remote`.",
+    );
+  }
   if (error) throw error;
   return !!data;
 }

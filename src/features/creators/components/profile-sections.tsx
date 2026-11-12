@@ -117,14 +117,18 @@ function HandleField({ form, currentHandle }: { form: Form; currentHandle?: stri
   const valid = CreatorHandle.safeParse(debounced).success;
   const unchanged = !!currentHandle && debounced.toLowerCase() === currentHandle;
   const check = useHandleAvailability(debounced.toLowerCase(), valid && !unchanged);
+  // Only say "taken" on an explicit `available: false`. A failed check (network, server)
+  // shows nothing — the server still rejects a duplicate on save.
   const status =
-    !valid || unchanged || debounced !== handle
+    !valid || unchanged || debounced !== handle || check.isError
       ? null
       : check.isPending
         ? "checking"
-        : check.data?.available
+        : check.data?.available === true
           ? "free"
-          : "taken";
+          : check.data?.available === false
+            ? "taken"
+            : null;
 
   return (
     <Field
