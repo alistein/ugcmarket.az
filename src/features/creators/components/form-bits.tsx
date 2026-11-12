@@ -131,7 +131,7 @@ export function AvatarField({
   );
 }
 
-/** Section wrapper used by the edit form and the wizard steps. */
+/** Settings-style section (no card): title on the left, fields on the right on wide screens. */
 export function FormSection({
   id,
   title,
@@ -146,11 +146,13 @@ export function FormSection({
   return (
     <section
       id={id}
-      className="scroll-mt-24 rounded-3xl bg-card p-5 shadow-(--shadow-soft) ring-1 ring-foreground/[0.04] sm:p-7 dark:ring-white/[0.07]"
+      className="grid scroll-mt-24 grid-cols-1 gap-x-12 gap-y-5 border-t border-border/70 py-10 first:border-t-0 first:pt-0 lg:grid-cols-[14rem_minmax(0,1fr)]"
     >
-      <h2 className="text-lg font-semibold tracking-[-0.02em]">{title}</h2>
-      {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
-      <div className="mt-5 grid gap-5">{children}</div>
+      <div>
+        <h2 className="text-lg font-semibold tracking-[-0.02em]">{title}</h2>
+        {description && <p className="mt-1 text-sm text-pretty text-muted-foreground">{description}</p>}
+      </div>
+      <div className="grid min-w-0 grid-cols-1 gap-5">{children}</div>
     </section>
   );
 }

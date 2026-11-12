@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -110,46 +110,75 @@ function ProfileSetup() {
   };
 
   return (
-    <div className="mx-auto max-w-xl">
-      <p className="text-sm font-medium text-primary tabular-nums">
-        {t("setup.step", { current: index + 1, total: STEPS.length })}
-      </p>
-      <h1 className="mt-1 text-3xl font-semibold tracking-[-0.03em]">{t(`steps.${step}.title`)}</h1>
-      <p className="mt-1.5 text-muted-foreground">{t(`steps.${step}.subtitle`)}</p>
-      <div className="mt-5 flex gap-1.5" aria-hidden>
-        {STEPS.map((s, i) => (
-          <span key={s} className={cn("h-1.5 flex-1 rounded-full bg-muted", i <= index && "bg-primary")} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-[14rem_minmax(0,1fr)]">
+      {/* Stepper: vertical on wide screens, a progress bar on phones */}
+      <aside className="lg:sticky lg:top-8 lg:self-start">
+        <p className="text-sm font-medium text-primary tabular-nums">
+          {t("setup.step", { current: index + 1, total: STEPS.length })}
+        </p>
+        <div className="mt-3 flex gap-1.5 lg:hidden" aria-hidden>
+          {STEPS.map((s, i) => (
+            <span key={s} className={cn("h-1.5 flex-1 rounded-full bg-muted", i <= index && "bg-primary")} />
+          ))}
+        </div>
+        <ol className="mt-5 hidden gap-1 lg:grid">
+          {STEPS.map((s, i) => (
+            <li
+              key={s}
+              aria-current={i === index ? "step" : undefined}
+              className="flex items-center gap-3 py-1.5 text-sm"
+            >
+              <span
+                className={cn(
+                  "flex size-7 shrink-0 items-center justify-center rounded-full font-semibold tabular-nums",
+                  i < index && "bg-mint text-mint-ink",
+                  i === index && "bg-foreground text-background",
+                  i > index && "text-muted-foreground ring-1 ring-border",
+                )}
+              >
+                {i < index ? <HugeiconsIcon icon={Tick02Icon} strokeWidth={3} className="size-3.5" /> : i + 1}
+              </span>
+              <span className={cn(i === index ? "font-medium" : "text-muted-foreground")}>
+                {t(`steps.${s}.title`)}
+              </span>
+            </li>
+          ))}
+        </ol>
+      </aside>
 
       <form
         noValidate
-        className="mt-6 grid gap-5 rounded-3xl bg-card p-5 shadow-(--shadow-soft) ring-1 ring-foreground/[0.04] sm:p-7 dark:ring-white/[0.07]"
+        className="grid min-w-0 grid-cols-1 content-start gap-6"
         onSubmit={(e) => {
           e.preventDefault();
           void next();
         }}
       >
+        <div>
+          <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
+            {t(`steps.${step}.title`)}
+          </h1>
+          <p className="mt-1.5 text-muted-foreground">{t(`steps.${step}.subtitle`)}</p>
+        </div>
+
         {step === "about" && <AboutFields form={form} />}
         {step === "content" && <ContentFields form={form} />}
         {step === "socials" && <SocialFields form={form} />}
         {step === "prices" && <PriceFields form={form} />}
 
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-border/70 pt-6">
           {index > 0 && (
             <Button type="button" variant="ghost" size="lg" onClick={() => setStep(STEPS[index - 1])}>
               <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} data-icon="inline-start" />
               {t("setup.back")}
             </Button>
           )}
-          <Button type="submit" size="lg" className="ml-auto min-w-36" disabled={create.isPending}>
+          {step === "prices" && <p className="text-sm text-muted-foreground">{t("setup.reviewNote")}</p>}
+          <Button type="submit" size="lg" className="ml-auto min-w-40" disabled={create.isPending}>
             {last ? t("setup.finish") : t("setup.next")}
             {!last && <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} data-icon="inline-end" />}
           </Button>
         </div>
-        {step === "prices" && (
-          <p className="text-center text-xs text-muted-foreground">{t("setup.reviewNote")}</p>
-        )}
       </form>
     </div>
   );
@@ -180,12 +209,12 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
   );
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div>
       <BackToMe />
       <h1 className="text-3xl font-semibold tracking-[-0.03em]">{t("edit.title")}</h1>
       <p className="mt-1.5 text-muted-foreground">{t("edit.subtitle")}</p>
 
-      <form noValidate onSubmit={save} className="mt-6 grid gap-4">
+      <form noValidate onSubmit={save} className="mt-8 grid grid-cols-1">
         <FormSection id="about" title={t("steps.about.title")}>
           <AboutFields form={form} currentHandle={creator.handle} />
         </FormSection>
@@ -216,7 +245,7 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
         </div>
       </form>
 
-      <div className="mt-4">
+      <div className="*:border-t! *:pt-10!">
         <FormSection id="portfolio" title={t("portfolio.title")} description={t("portfolio.subtitle")}>
           <PortfolioEditor items={creator.portfolio_items} />
         </FormSection>

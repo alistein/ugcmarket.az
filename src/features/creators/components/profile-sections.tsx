@@ -47,14 +47,16 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
   }, [name, currentHandle, setValue, getFieldState]);
 
   return (
-    <>
-      <Controller
-        control={control}
-        name="avatar_url"
-        render={({ field }) => (
-          <AvatarField value={field.value} name={name ?? ""} onChange={(v) => field.onChange(v)} />
-        )}
-      />
+    <div className="grid gap-5 sm:grid-cols-2">
+      <div className="sm:col-span-2">
+        <Controller
+          control={control}
+          name="avatar_url"
+          render={({ field }) => (
+            <AvatarField value={field.value} name={name ?? ""} onChange={(v) => field.onChange(v)} />
+          )}
+        />
+      </div>
       <Field label={t("displayName")} error={errors.display_name}>
         {(a) => (
           <Input {...a} {...register("display_name")} autoComplete="name" placeholder={t("displayNamePh")} />
@@ -93,6 +95,7 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
         )}
       </Field>
       <Field
+        className="sm:col-span-2"
         label={t("bio")}
         error={errors.bio}
         hint={t("bioHint")}
@@ -100,7 +103,7 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
       >
         {(a) => <Textarea {...a} {...register("bio")} rows={4} maxLength={600} placeholder={t("bioPh")} />}
       </Field>
-    </>
+    </div>
   );
 }
 
@@ -240,8 +243,11 @@ export function SocialFields({ form }: { form: Form }) {
       {NETWORKS.map((n) => {
         const e = errors?.[n];
         return (
-          <div key={n} className="grid gap-3 rounded-2xl bg-muted/60 p-4">
-            <div className="flex items-center gap-2 text-sm font-medium">
+          <div
+            key={n}
+            className="grid gap-3 border-b border-border/70 pb-5 md:grid-cols-[9rem_minmax(0,1fr)_9rem_9rem] md:gap-4"
+          >
+            <div className="flex items-center gap-2 text-sm font-medium md:pt-8">
               <span className={cn("flex size-7 items-center justify-center rounded-full", NETWORK_TINT[n])}>
                 <HugeiconsIcon icon={NETWORK_ICON[n]} strokeWidth={2} className="size-4" />
               </span>
@@ -256,11 +262,10 @@ export function SocialFields({ form }: { form: Form }) {
                   autoCorrect="off"
                   spellCheck={false}
                   placeholder="@"
-                  className="bg-card"
                 />
               )}
             </Field>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 md:contents">
               <Field label={t("followers")} error={e?.followers}>
                 {(a) => (
                   <Input
@@ -268,7 +273,7 @@ export function SocialFields({ form }: { form: Form }) {
                     {...register(`socials.${n}.followers`)}
                     inputMode="numeric"
                     placeholder="12500"
-                    className="bg-card tabular-nums"
+                    className="tabular-nums"
                   />
                 )}
               </Field>
@@ -279,7 +284,7 @@ export function SocialFields({ form }: { form: Form }) {
                     {...register(`socials.${n}.avg_views`)}
                     inputMode="numeric"
                     placeholder="4000"
-                    className="bg-card tabular-nums"
+                    className="tabular-nums"
                   />
                 )}
               </Field>
@@ -287,8 +292,8 @@ export function SocialFields({ form }: { form: Form }) {
           </div>
         );
       })}
-      <div className="grid gap-4 rounded-2xl border border-dashed border-border p-4">
-        <p className="flex items-start gap-2 text-sm text-muted-foreground">
+      <div className="grid gap-4 pt-1 md:grid-cols-2">
+        <p className="flex items-start gap-2 text-sm text-muted-foreground md:col-span-2">
           <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
           {t("contactsHint")}
         </p>
@@ -328,7 +333,7 @@ export function PriceFields({ form }: { form: Form }) {
   return (
     <>
       <p className="-mt-2 text-sm text-muted-foreground">{t("pricesHint")}</p>
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {PRICE_FORMATS.map((f) => (
           <Field key={f} label={tt(`formats.${f}`)} error={formState.errors.prices?.[f]}>
             {(a) => (

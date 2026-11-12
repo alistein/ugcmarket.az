@@ -10,17 +10,18 @@ type FieldProps = {
   error?: Pick<FieldError, "message">;
   hint?: string;
   aside?: React.ReactNode;
+  className?: string;
   children: (props: { id: string; "aria-invalid"?: boolean; "aria-describedby"?: string }) => React.ReactNode;
 };
 
 /** Label + control + hint/error, wired with aria-describedby. Error messages are i18n keys. */
-export function Field({ label, error, hint, aside, children }: FieldProps) {
+export function Field({ label, error, hint, aside, className, children }: FieldProps) {
   const t = useTranslations();
   const id = useId();
   const msgId = `${id}-msg`;
   const message = error?.message;
   return (
-    <div className="grid gap-2">
+    <div className={className ? `grid content-start gap-2 ${className}` : "grid content-start gap-2"}>
       <div className="flex items-center justify-between gap-2">
         <Label htmlFor={id}>{label}</Label>
         {aside}
