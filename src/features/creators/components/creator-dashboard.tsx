@@ -22,6 +22,7 @@ import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Link } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
@@ -143,16 +144,9 @@ function Home({ creator: c }: { creator: MyCreator }) {
                 {t("addBio")}
               </Link>
             )}
+            <ProfileStatsLine creator={c} />
           </div>
-          <Button
-            variant="outline"
-            className="self-start"
-            nativeButton={false}
-            render={<Link href="/me/profile" />}
-          >
-            <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} data-icon="inline-start" />
-            {t("edit")}
-          </Button>
+          <HeaderActions creator={c} />
         </section>
 
         {c.review_status !== "approved" && <StatusNote status={c.review_status} />}
@@ -248,56 +242,11 @@ function StatusNote({ status }: { status: "pending" | "rejected" }) {
 /** Audience numbers, completeness and the share link in one card (Luhive's "Activity" spot). */
 function Overview({ creator: c }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
-  const locale = useLocale();
-  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
-  const { items, percent } = completeness(c);
+  const { items } = completeness(c);
   const todo = items.filter((i) => !i.done);
 
   return (
     <Panel className="grid grid-cols-1 gap-5">
-      <div className="flex flex-wrap gap-x-10 gap-y-4">
-        {c.creator_socials.map((s) => {
-          const n = socialNumbers(c, s);
-          return (
-            <div key={s.network}>
-              <p className="flex items-center gap-1.5 text-2xl font-semibold tracking-[-0.03em] tabular-nums">
-                {compact.format(n.followers)}
-                {n.checked && (
-                  <HugeiconsIcon
-                    icon={CheckmarkCircle02Icon}
-                    strokeWidth={2}
-                    className="size-4 text-mint-ink"
-                    aria-label={t("checked")}
-                  />
-                )}
-              </p>
-              <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
-                {t("followers")}
-              </p>
-            </div>
-          );
-        })}
-        <div>
-          <p className="text-2xl font-semibold tracking-[-0.03em] tabular-nums">{c.portfolio_items.length}</p>
-          <p className="text-sm text-muted-foreground">{t("works")}</p>
-        </div>
-        <div className="min-w-40 flex-1 sm:max-w-56">
-          <p className="text-2xl font-semibold tracking-[-0.03em] tabular-nums">{percent}%</p>
-          <div
-            className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-muted"
-            role="progressbar"
-            aria-valuenow={percent}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label={t("completeTitle")}
-          >
-            <div className="h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
-          </div>
-          <p className="mt-1 text-sm text-muted-foreground">{t("completeTitle")}</p>
-        </div>
-      </div>
-
       {todo.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {todo.map((i) => (
@@ -312,8 +261,6 @@ function Overview({ creator: c }: { creator: MyCreator }) {
           ))}
         </div>
       )}
-
-      {c.creator_socials.length > 0 && <StatsRefresh creator={c} />}
 
       <ShareRow creator={c} />
     </Panel>
@@ -401,10 +348,12 @@ function Prices({ creator: c }: { creator: MyCreator }) {
 }
 
 /** "Numbers checked automatically · 2h ago" + manual re-check (server rate-limits to 1/hour). */
-function StatsRefresh({ creator: c }: { creator: MyCreator }) {
+/** Right side of the header: edit link, numbers refresh (with a hint) and the last check time. */
+function HeaderActions({ creator: c }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
   const te = useTranslations();
   const refresh = useRefreshSocialStats();
+  const hasSocials = c.creator_socials.length > 0;
   const checkedAt = c.creator_social_stats
     ?.map((s) => s.fetched_at)
     .filter((d): d is string => !!d)
@@ -412,31 +361,52 @@ function StatsRefresh({ creator: c }: { creator: MyCreator }) {
     .at(-1);
   // Fixed dd.mm.yyyy hh:mm: Intl has thin Azerbaijani date data ("2026 M11 12").
   const when = checkedAt ? formatDateTime(new Date(checkedAt)) : null;
+  const textButton =
+    "inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary disabled:pointer-events-none disabled:opacity-60 [&_svg]:size-4";
+
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
-      <span>{when ? t("statsCheckedAt", { when }) : t("statsSelfReported")}</span>
-      <Button
-        size="sm"
-        variant="ghost"
-        disabled={refresh.isPending}
-        onClick={() =>
-          refresh.mutate(undefined, {
-            onSuccess: () => toast.success(t("statsRefreshed")),
-            onError: (e) => {
-              const key = e instanceof ApiClientError ? e.message : "errors.unknown";
-              toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
-            },
-          })
-        }
-      >
-        <HugeiconsIcon
-          icon={RefreshIcon}
-          strokeWidth={2}
-          data-icon="inline-start"
-          className={cn(refresh.isPending && "animate-spin")}
-        />
-        {refresh.isPending ? t("statsRefreshing") : t("statsRefresh")}
-      </Button>
+    <div className="flex flex-col items-start gap-2 sm:items-end">
+      <Link href="/me/profile" className={textButton}>
+        <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
+        {t("edit")}
+      </Link>
+      {hasSocials && (
+        <>
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <button
+                  type="button"
+                  className={textButton}
+                  disabled={refresh.isPending}
+                  onClick={() =>
+                    refresh.mutate(undefined, {
+                      onSuccess: () => toast.success(t("statsRefreshed")),
+                      onError: (e) => {
+                        const key = e instanceof ApiClientError ? e.message : "errors.unknown";
+                        toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
+                      },
+                    })
+                  }
+                />
+              }
+            >
+              <HugeiconsIcon
+                icon={RefreshIcon}
+                strokeWidth={2}
+                className={cn(refresh.isPending && "animate-spin")}
+              />
+              {refresh.isPending ? t("statsRefreshing") : t("statsRefresh")}
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="end">
+              {t("statsRefreshHint")}
+            </TooltipContent>
+          </Tooltip>
+          <span className="text-xs text-muted-foreground tabular-nums">
+            {when ? t("statsLastRun", { when }) : t("statsNeverRun")}
+          </span>
+        </>
+      )}
     </div>
   );
 }
@@ -444,4 +414,52 @@ function StatsRefresh({ creator: c }: { creator: MyCreator }) {
 function formatDateTime(d: Date) {
   const p = (n: number) => String(n).padStart(2, "0");
   return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+
+/** One small line under the bio: followers (✓ when checked) · portfolio items · completeness. */
+function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
+  const t = useTranslations("creator.dashboard");
+  const locale = useLocale();
+  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+  const { percent } = completeness(c);
+  return (
+    <p className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
+      {c.creator_socials.map((s) => {
+        const n = socialNumbers(c, s);
+        return (
+          <span key={s.network} className="inline-flex items-center gap-1.5">
+            <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
+            <span className="font-semibold text-foreground tabular-nums">{compact.format(n.followers)}</span>
+            {t("followers")}
+            {n.checked && (
+              <HugeiconsIcon
+                icon={CheckmarkCircle02Icon}
+                strokeWidth={2}
+                className="size-3.5 text-mint-ink"
+                aria-label={t("checked")}
+              />
+            )}
+          </span>
+        );
+      })}
+      <span>
+        <span className="font-semibold text-foreground tabular-nums">{c.portfolio_items.length}</span>{" "}
+        {t("works")}
+      </span>
+      <span className="inline-flex items-center gap-2">
+        <span className="font-semibold text-foreground tabular-nums">{percent}%</span>
+        {t("completeShort")}
+        <span
+          className="h-1 w-16 overflow-hidden rounded-full bg-muted"
+          role="progressbar"
+          aria-valuenow={percent}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={t("completeTitle")}
+        >
+          <span className="block h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
+        </span>
+      </span>
+    </p>
+  );
 }

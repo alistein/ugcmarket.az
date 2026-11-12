@@ -567,7 +567,11 @@
       "statsRefresh": "Обновить цифры",
       "statsRefreshing": "Проверяем…",
       "statsRefreshed": "Цифры обновлены.",
-      "categoriesTitle": "Категории"
+      "categoriesTitle": "Категории",
+      "completeShort": "заполнено",
+      "statsRefreshHint": "Цифры берутся из Instagram. Обновить их можно раз в сутки, а раз в неделю они обновляются автоматически.",
+      "statsLastRun": "Последняя проверка: {when}",
+      "statsNeverRun": "Ещё не проверялось"
     },
     "public": {
       "login": "Войти",

@@ -567,7 +567,11 @@
       "statsRefresh": "Rəqəmləri yenilə",
       "statsRefreshing": "Yoxlanılır…",
       "statsRefreshed": "Rəqəmlər yeniləndi.",
-      "categoriesTitle": "Kateqoriyalar"
+      "categoriesTitle": "Kateqoriyalar",
+      "completeShort": "dolğunluq",
+      "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir.",
+      "statsLastRun": "Son yoxlama: {when}",
+      "statsNeverRun": "Hələ yoxlanılmayıb"
     },
     "public": {
       "login": "Daxil ol",

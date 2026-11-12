@@ -567,7 +567,11 @@
       "statsRefresh": "Refresh numbers",
       "statsRefreshing": "Checking…",
       "statsRefreshed": "Numbers updated.",
-      "categoriesTitle": "Categories"
+      "categoriesTitle": "Categories",
+      "completeShort": "complete",
+      "statsRefreshHint": "Numbers come from Instagram. You can refresh them once a day, and they update automatically every week.",
+      "statsLastRun": "Last checked: {when}",
+      "statsNeverRun": "Not checked yet"
     },
     "public": {
       "login": "Sign in",

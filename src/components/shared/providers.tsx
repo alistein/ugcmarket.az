@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import posthog from "posthog-js";
 import { useEffect, useState } from "react";
@@ -30,7 +31,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthSync />
-      {children}
+      <TooltipProvider>{children}</TooltipProvider>
       <Toaster position="top-center" />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
