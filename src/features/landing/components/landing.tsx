@@ -131,14 +131,28 @@ function Hero() {
   );
 }
 
+/** Partner logos (public/partners/, transparent PNG, 160px tall). Add a partner = add a row here. */
+const PARTNERS: { name: string; src: string; srcDark?: string; width: number; height: number }[] = [
+  { name: "Decoliv", src: "/partners/decoliv.png", width: 743, height: 160 },
+  { name: "bir-yer", src: "/partners/bir-yer.png", srcDark: "/partners/bir-yer-dark.png", width: 601, height: 160 },
+];
+
 function Partner() {
   const t = useTranslations("landing.partner");
   return (
     <section className="mx-auto max-w-6xl px-4">
-      <div className="flex flex-col items-center gap-5 border-y border-border/70 py-10 sm:flex-row sm:justify-center sm:gap-8">
+      <div className="flex flex-col items-center gap-6 border-y border-border/70 py-10 md:flex-row md:justify-center md:gap-10">
         <span className="text-sm text-muted-foreground">{t("label")}</span>
-        <span aria-hidden className="hidden h-6 w-px bg-border sm:block" />
-        <Image src="/partners/decoliv.png" alt={t("logoAlt")} width={743} height={160} className="h-9 w-auto sm:h-10" priority={false} />
+        <span aria-hidden className="hidden h-6 w-px bg-border md:block" />
+        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          {PARTNERS.map((p) => (
+            <span key={p.name} className="flex">
+              <Image src={p.src} alt={p.name} width={p.width} height={p.height} className={cn("h-9 w-auto sm:h-10", p.srcDark && "dark:hidden")} />
+              {/* Dark-mode variant for logos with dark wordmarks. */}
+              {p.srcDark && <Image src={p.srcDark} alt={p.name} width={p.width} height={p.height} className="hidden h-9 w-auto sm:h-10 dark:block" />}
+            </span>
+          ))}
+        </div>
       </div>
     </section>
   );
