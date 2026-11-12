@@ -329,13 +329,10 @@
   "app": {
     "account": "Hesab",
     "publicProfile": "Açıq profilim",
-    "nav": {
-      "label": "Əsas menyu",
-      "home": "Kabinet",
-      "campaigns": "Kampaniyalar",
-      "applications": "Müraciətlər",
-      "profile": "Profil"
-    }
+    "browseCampaigns": "Kampaniyalar",
+    "editProfile": "Profili redaktə et",
+    "myApplications": "Müraciətlərim",
+    "language": "Dil"
   },
   "taxonomy": {
     "categories": {
@@ -382,7 +379,8 @@
       "tiktok_video": "TikTok video",
       "youtube_short": "YouTube Shorts",
       "ugc_video": "UGC video (brend üçün)"
-    }
+    },
+    "barter": "Barterə açıq"
   },
   "creator": {
     "setup": {
@@ -492,7 +490,8 @@
       "status": {
         "pending": {
           "title": "Profilin yoxlanılır",
-          "body": "Adətən 24 saat çəkir. Bu vaxt profilini tamamla."
+          "body": "Adətən 24 saat çəkir. Bu vaxt profilini tamamla.",
+          "badge": "Yoxlanılır"
         },
         "approved": {
           "title": "Profilin aktivdir",
@@ -501,7 +500,8 @@
         "rejected": {
           "title": "Profil təsdiqlənmədi",
           "body": "Məlumatları yoxla və yenilə və ya komandaya yaz.",
-          "cta": "Redaktə et"
+          "cta": "Redaktə et",
+          "badge": "Təsdiqlənməyib"
         }
       },
       "shareTitle": "Profil linkin",
@@ -511,7 +511,22 @@
       "copied": "Kopyalandı",
       "copyFailed": "Kopyalamaq alınmadı",
       "share": "Paylaş",
-      "preview": "Bax"
+      "preview": "Bax",
+      "joined": "Qoşulub: {days, plural, =0 {bu gün} other {# gün əvvəl}}",
+      "editLinks": "Linkləri redaktə et",
+      "addLinks": "Sosial şəbəkə əlavə et",
+      "addBio": "+ Özün haqqında yaz",
+      "edit": "Redaktə et",
+      "followers": "izləyici",
+      "works": "portfolio işi",
+      "tabs": {
+        "portfolio": "Portfolio",
+        "prices": "Qiymətlər",
+        "applications": "Müraciətlər"
+      },
+      "applicationsEmpty": "Hələ müraciətin yoxdur",
+      "pricesEmpty": "Qiymət göstərilməyib — profildə \"razılaşma ilə\" görünür.",
+      "editPrices": "Qiymətləri dəyiş"
     },
     "public": {
       "login": "Daxil ol",

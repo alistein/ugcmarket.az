@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import {
@@ -55,6 +55,19 @@ function useServerErrors(form: ReturnType<typeof useForm<CreatorFormValues>>) {
     const key = e instanceof ApiClientError ? e.message : "errors.unknown";
     toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
   };
+}
+
+function BackToMe() {
+  const t = useTranslations("common");
+  return (
+    <Link
+      href="/me"
+      className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
+    >
+      <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} className="size-4" />
+      {t("back")}
+    </Link>
+  );
 }
 
 // ── Setup wizard ────────────────────────────────────────────────────────────
@@ -168,6 +181,7 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
 
   return (
     <div className="mx-auto max-w-2xl">
+      <BackToMe />
       <h1 className="text-3xl font-semibold tracking-[-0.03em]">{t("edit.title")}</h1>
       <p className="mt-1.5 text-muted-foreground">{t("edit.subtitle")}</p>
 

@@ -329,13 +329,10 @@
   "app": {
     "account": "Account",
     "publicProfile": "My public profile",
-    "nav": {
-      "label": "Main menu",
-      "home": "Home",
-      "campaigns": "Campaigns",
-      "applications": "Applications",
-      "profile": "Profile"
-    }
+    "browseCampaigns": "Campaigns",
+    "editProfile": "Edit profile",
+    "myApplications": "My applications",
+    "language": "Language"
   },
   "taxonomy": {
     "categories": {
@@ -382,7 +379,8 @@
       "tiktok_video": "TikTok video",
       "youtube_short": "YouTube Shorts",
       "ugc_video": "UGC video (for the brand)"
-    }
+    },
+    "barter": "Open to barter"
   },
   "creator": {
     "setup": {
@@ -492,7 +490,8 @@
       "status": {
         "pending": {
           "title": "Your profile is in review",
-          "body": "Usually within 24 hours. Meanwhile, finish your profile."
+          "body": "Usually within 24 hours. Meanwhile, finish your profile.",
+          "badge": "In review"
         },
         "approved": {
           "title": "Your profile is live",
@@ -501,7 +500,8 @@
         "rejected": {
           "title": "Profile not approved",
           "body": "Check and update your details, or message the team.",
-          "cta": "Edit"
+          "cta": "Edit",
+          "badge": "Not approved"
         }
       },
       "shareTitle": "Your profile link",
@@ -511,7 +511,22 @@
       "copied": "Copied",
       "copyFailed": "Couldn’t copy",
       "share": "Share",
-      "preview": "View"
+      "preview": "View",
+      "joined": "Joined {days, plural, =0 {today} one {# day ago} other {# days ago}}",
+      "editLinks": "Edit links",
+      "addLinks": "Add a social account",
+      "addBio": "+ Write about yourself",
+      "edit": "Edit",
+      "followers": "followers",
+      "works": "portfolio items",
+      "tabs": {
+        "portfolio": "Portfolio",
+        "prices": "Prices",
+        "applications": "Applications"
+      },
+      "applicationsEmpty": "No applications yet",
+      "pricesEmpty": "No prices yet — your profile shows “negotiable”.",
+      "editPrices": "Edit prices"
     },
     "public": {
       "login": "Sign in",

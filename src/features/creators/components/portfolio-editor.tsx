@@ -44,7 +44,7 @@ export function PortfolioEditor({ items }: { items: CreatorPublic["portfolio_ite
   );
 
   return (
-    <div className="grid gap-4">
+    <div className="grid grid-cols-1 gap-4">
       {items.length > 0 && (
         <ul className="grid gap-2">
           {items.map((item) => (
