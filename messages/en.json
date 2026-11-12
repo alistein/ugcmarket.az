@@ -298,6 +298,16 @@
     "emailOff": {
       "title": "Test mode",
       "body": "Emails aren’t being sent yet. Sign in with Google or a password. Forgot your password? Message the team."
+    },
+    "panel": {
+      "tagline": "let creators make your ads",
+      "views": "views this month",
+      "applicants": "creators applied",
+      "brand": "Your brand",
+      "campaign": "New collection — Reels",
+      "barter": "barter",
+      "deadline": "Nov 30",
+      "apply": "Apply"
     }
   }
 }

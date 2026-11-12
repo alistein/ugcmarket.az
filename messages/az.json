@@ -298,6 +298,16 @@
     "emailOff": {
       "title": "Test rejimi",
       "body": "E-poçt göndərişi hələ aktiv deyil. Google və ya şifrə ilə daxil ol. Şifrəni unutmusansa, komandaya yaz."
+    },
+    "panel": {
+      "tagline": "reklamını kreatorlar çəksin",
+      "views": "baxış bu ay",
+      "applicants": "kreator müraciət etdi",
+      "brand": "Sənin brendin",
+      "campaign": "Yeni kolleksiya — Reels",
+      "barter": "barter",
+      "deadline": "30 noy",
+      "apply": "Müraciət et"
     }
   }
 }

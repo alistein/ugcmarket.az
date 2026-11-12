@@ -1,6 +1,12 @@
 "use client";
 
-import { GoogleIcon, Loading03Icon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
+import {
+  ArrowLeft01Icon,
+  GoogleIcon,
+  Loading03Icon,
+  ViewIcon,
+  ViewOffIcon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
@@ -26,13 +32,27 @@ export function AuthCard({
 }) {
   return (
     <div className="w-full">
-      <div className="rounded-3xl bg-card p-6 shadow-(--shadow-raised) ring-1 ring-foreground/[0.04] sm:p-8 dark:ring-white/[0.07]">
-        <h1 className="text-2xl font-semibold tracking-[-0.025em] text-balance">{title}</h1>
-        {subtitle && <p className="mt-1.5 text-sm text-pretty text-muted-foreground">{subtitle}</p>}
-        <div className="mt-6">{children}</div>
+      <BackHome />
+      <div>
+        <h1 className="text-center text-3xl font-semibold tracking-[-0.03em] text-balance">{title}</h1>
+        {subtitle && <p className="mt-2 text-center text-sm text-pretty text-muted-foreground">{subtitle}</p>}
+        <div className="mt-8">{children}</div>
       </div>
       {footer && <div className="mt-5 text-center text-sm text-muted-foreground">{footer}</div>}
     </div>
+  );
+}
+
+function BackHome() {
+  const t = useTranslations("common");
+  return (
+    <Link
+      href="/"
+      className="mb-8 inline-flex items-center gap-1 rounded-full py-1 pr-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+    >
+      <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} className="size-4" />
+      {t("back")}
+    </Link>
   );
 }
 
@@ -207,7 +227,7 @@ export function GoogleButton({ next, onError }: { next: string; onError: (key: A
 }
 
 /**
- * Google's official "G" mark (public/brands/google-g.svg, from Google's sign-in branding
+ * Google's official "G" mark (public/brands/google-g.png, from Google's sign-in branding
  * guidelines). Falls back to the Hugeicons outline until the file is added.
  */
 function GoogleMark() {
@@ -223,7 +243,7 @@ function GoogleMark() {
     // eslint-disable-next-line @next/next/no-img-element -- tiny static SVG, no optimisation needed
     <img
       ref={ref}
-      src="/brands/google-g.svg"
+      src="/brands/google-g.png"
       alt=""
       aria-hidden
       width={18}

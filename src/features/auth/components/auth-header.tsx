@@ -7,8 +7,8 @@ import { Link } from "@/i18n/navigation";
 // which would block prerendering under Cache Components.
 export function AuthHeader() {
   return (
-    <header className="mx-auto flex w-full max-w-6xl items-center gap-2 px-4 py-3">
-      <Link href="/" className="font-heading text-lg font-semibold tracking-[-0.03em]">
+    <header className="flex w-full items-center gap-2 px-4 py-3 sm:px-6 sm:py-5">
+      <Link href="/" className="font-heading text-xl font-semibold tracking-[-0.03em]">
         ugc<span className="text-primary">market</span>
       </Link>
       <div className="ml-auto">
