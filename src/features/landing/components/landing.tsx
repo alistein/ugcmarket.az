@@ -132,9 +132,11 @@ function Hero() {
 }
 
 /** Partner logos (public/partners/, transparent PNG, 160px tall). Add a partner = add a row here. */
-const PARTNERS: { name: string; src: string; srcDark?: string; width: number; height: number }[] = [
+/** `size` balances logos optically: wide wordmarks sit lower than compact marks. */
+const PARTNERS: { name: string; src: string; srcDark?: string; width: number; height: number; size?: string }[] = [
   { name: "Decoliv", src: "/partners/decoliv.png", width: 743, height: 160 },
   { name: "bir-yer", src: "/partners/bir-yer.png", srcDark: "/partners/bir-yer-dark.png", width: 601, height: 160 },
+  { name: "Rossmann", src: "/partners/rossmann.png", width: 1099, height: 160, size: "h-6 sm:h-7" },
 ];
 
 function Partner() {
@@ -146,10 +148,10 @@ function Partner() {
         <span aria-hidden className="hidden h-6 w-px bg-border md:block" />
         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
           {PARTNERS.map((p) => (
-            <span key={p.name} className="flex">
-              <Image src={p.src} alt={p.name} width={p.width} height={p.height} className={cn("h-9 w-auto sm:h-10", p.srcDark && "dark:hidden")} />
+            <span key={p.name} className="flex items-center">
+              <Image src={p.src} alt={p.name} width={p.width} height={p.height} className={cn("w-auto", p.size ?? "h-9 sm:h-10", p.srcDark && "dark:hidden")} />
               {/* Dark-mode variant for logos with dark wordmarks. */}
-              {p.srcDark && <Image src={p.srcDark} alt={p.name} width={p.width} height={p.height} className="hidden h-9 w-auto sm:h-10 dark:block" />}
+              {p.srcDark && <Image src={p.srcDark} alt={p.name} width={p.width} height={p.height} className={cn("hidden w-auto dark:block", p.size ?? "h-9 sm:h-10")} />}
             </span>
           ))}
         </div>
