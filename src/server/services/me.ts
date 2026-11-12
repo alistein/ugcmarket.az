@@ -22,6 +22,10 @@ export async function setRole(user: SessionUser, role: "brand" | "creator") {
   const supabase = await createUserClient();
   const { error } = await supabase.rpc("set_my_role", { new_role: role });
   if (error?.message === "role_already_set") throw errors.conflict("role_already_set");
+  // PGRST202 = function not found → migration 20261112000000_auth_guards.sql not applied.
+  if (error?.code === "PGRST202") {
+    throw new Error("set_my_role() is missing in the database — run `pnpm db:push && pnpm db:types:remote`.");
+  }
   if (error) throw error;
   await track(user.id, "role_selected", { role });
 }
