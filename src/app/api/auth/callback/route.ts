@@ -14,7 +14,11 @@ export async function GET(request: Request) {
   // Provider-side failure, e.g. the user closed the Google consent screen.
   const providerError = url.searchParams.get("error");
   if (providerError) {
-    return loginWithError(request, locale, providerError === "access_denied" ? "oauth_cancelled" : "oauth_failed");
+    return loginWithError(
+      request,
+      locale,
+      providerError === "access_denied" ? "oauth_cancelled" : "oauth_failed",
+    );
   }
 
   const code = url.searchParams.get("code");

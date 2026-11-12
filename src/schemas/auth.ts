@@ -4,7 +4,11 @@ import { z } from "zod";
  * Auth forms. Messages are i18n keys (validation.*). Password rules mirror Supabase
  * (supabase/config.toml: minimum_password_length = 8, letters_digits) — change both together.
  */
-export const Email = z.string().trim().toLowerCase().pipe(z.email("validation.email").max(254, "validation.email"));
+export const Email = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .pipe(z.email("validation.email").max(254, "validation.email"));
 
 export const NewPassword = z
   .string()
