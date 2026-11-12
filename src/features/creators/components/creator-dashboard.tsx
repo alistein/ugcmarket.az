@@ -296,7 +296,7 @@ function ShareRow({ creator }: { creator: MyCreator }) {
   };
 
   return (
-    <div className="grid grid-cols-1 gap-2 border-t border-border/70 pt-4">
+    <div className="grid grid-cols-1 gap-2 not-first:border-t not-first:border-border/70 not-first:pt-4">
       <p className="text-sm text-muted-foreground">
         {creator.review_status === "approved" ? t("shareBody") : t("sharePending")}
       </p>
