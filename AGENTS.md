@@ -57,6 +57,8 @@ Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) f
   - Coral `--primary` is for the one main action on a screen. Joy tints (`brand`, `sun`, `mint`, `sky`, `rose` — Badge
     variants and `bg-*/text-*-ink` utilities) label categories, networks and statuses — never buttons.
   - Depth via `--shadow-soft|raised|float|press`, not borders. Filled fields (`bg-muted`) with a soft coral focus ring.
+  - **No tinted background boxes** for notes, statuses, hints or results (founders, 2026-11-12). Use plain text,
+    `text-muted-foreground` (or `text-destructive` for problems) with a small icon. Backgrounds are for fields and controls.
   - Buttons press to `scale(0.97)`. Named avatars get a tone from the joy palette; one initial in overlapping groups.
   - Apple type: tighter tracking as size grows (`tracking-[-0.025em]` on titles), body at 0, `tabular-nums` for counts.
 - Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).

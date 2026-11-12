@@ -404,7 +404,7 @@ function SocialConnectRow({
           </p>
         )}
         {connected && !lookup.isPending && (
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl bg-mint/50 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span>
               <span className="text-lg font-semibold tracking-[-0.02em] tabular-nums">
                 {compact.format(Number(followers))}
@@ -458,7 +458,7 @@ export function PriceFields({ form }: { form: Form }) {
           </Field>
         ))}
       </div>
-      <label className="flex cursor-pointer items-start gap-3 rounded-2xl bg-muted p-4 has-checked:bg-mint/60">
+      <label className="flex cursor-pointer items-start gap-3">
         <input
           type="checkbox"
           {...register("barter_open")}

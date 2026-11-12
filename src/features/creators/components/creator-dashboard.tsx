@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Alert02Icon,
   Add01Icon,
   ArrowRight01Icon,
   CheckmarkBadge01Icon,
@@ -230,11 +231,15 @@ function StatusNote({ status }: { status: "pending" | "rejected" }) {
     <p
       role="status"
       className={cn(
-        "rounded-2xl px-4 py-3 text-sm",
-        status === "pending" ? "bg-sun/70 text-sun-ink" : "bg-rose text-rose-ink",
+        "flex items-start gap-2 text-sm",
+        status === "pending" ? "text-muted-foreground" : "text-destructive",
       )}
     >
-      {" "}
+      <HugeiconsIcon
+        icon={status === "pending" ? Clock01Icon : Alert02Icon}
+        strokeWidth={2}
+        className="mt-0.5 size-4 shrink-0"
+      />
       {t(`${status}.body`)}
     </p>
   );

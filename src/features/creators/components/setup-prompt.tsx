@@ -44,7 +44,7 @@ export function SetupPrompt() {
           ))}
         </ol>
 
-        <p className="mt-8 flex items-start gap-2.5 rounded-2xl bg-sun/60 px-4 py-3 text-sm text-sun-ink">
+        <p className="mt-8 flex items-start gap-2 text-sm text-muted-foreground">
           <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
           {t("applyRule")}
         </p>

@@ -96,10 +96,7 @@ export function PublicCreatorProfile({
       <PublicHeader />
       <main className="mx-auto w-full max-w-4xl flex-1 px-4 pb-16">
         {preview && (
-          <div
-            role="status"
-            className="mb-4 flex items-start gap-3 rounded-2xl bg-sun p-4 text-sm text-sun-ink"
-          >
+          <div role="status" className="mb-4 flex items-start gap-2 text-sm text-muted-foreground">
             <HugeiconsIcon icon={Clock01Icon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
             {c.review_status === "rejected" ? t("previewRejected") : t("previewPending")}
           </div>
