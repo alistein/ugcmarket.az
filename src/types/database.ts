@@ -556,6 +556,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      handle_available: { Args: { h: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       my_role: {
         Args: never

@@ -6,3 +6,4 @@ export * from "./application";
 export * from "./post";
 export * from "./admin";
 export * from "./auth";
+export * from "./taxonomy";
