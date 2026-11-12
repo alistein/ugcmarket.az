@@ -15,9 +15,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { Field } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { ApiClientError } from "@/lib/api-client";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 import { isEnabledNetwork, networkOfUrl, PORTFOLIO_MAX, PortfolioItemInput } from "@/schemas";
 import { type CreatorPublic, postNumbers, useAddPortfolioItem, useRemovePortfolioItem } from "../hooks";
@@ -79,7 +80,7 @@ export function PortfolioEditor({
       {items.length >= PORTFOLIO_MAX && (
         <p className="text-sm text-muted-foreground">{t("full", { max: PORTFOLIO_MAX })}</p>
       )}
-      <AddPortfolioDialog open={open} onOpenChange={setOpen} />
+      <AddPortfolioSheet open={open} onOpenChange={setOpen} />
     </div>
   );
 }
@@ -138,10 +139,11 @@ function PortfolioTile({
   );
 }
 
-function AddPortfolioDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
+function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const t = useTranslations("creator.portfolio");
   const te = useTranslations();
   const add = useAddPortfolioItem();
+  const desktop = useMediaQuery("(min-width: 640px)");
   const form = useForm<PortfolioItemInput>({
     resolver: zodResolver(PortfolioItemInput) as never,
     defaultValues: { url: "", title: "" },
@@ -167,41 +169,43 @@ function AddPortfolioDialog({ open, onOpenChange }: { open: boolean; onOpenChang
   );
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("dialogTitle")}</DialogTitle>
-        </DialogHeader>
-        <form noValidate onSubmit={submit} className="grid gap-4">
-          <Field
-            label={t("url")}
-            error={form.formState.errors.url}
-            hint={detected ? t("detected", { network: t(`networks.${detected}`) }) : t("urlHint")}
-          >
-            {(a) => (
-              <Input
-                {...a}
-                {...form.register("url")}
-                type="url"
-                inputMode="url"
-                autoCapitalize="none"
-                autoFocus
-                placeholder="https://www.instagram.com/reel/…"
-              />
-            )}
-          </Field>
-          <Field label={t("titleLabel")} error={form.formState.errors.title}>
-            {(a) => <Input {...a} {...form.register("title")} placeholder={t("titlePh")} />}
-          </Field>
-          <DialogFooter>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side={desktop ? "right" : "bottom"} className="max-h-[90dvh]">
+        <SheetHeader>
+          <SheetTitle className="text-lg font-semibold">{t("dialogTitle")}</SheetTitle>
+        </SheetHeader>
+        <form noValidate onSubmit={submit} className="flex flex-1 flex-col overflow-y-auto">
+          <div className="grid gap-4 px-6">
+            <Field
+              label={t("url")}
+              error={form.formState.errors.url}
+              hint={detected ? t("detected", { network: t(`networks.${detected}`) }) : t("urlHint")}
+            >
+              {(a) => (
+                <Input
+                  {...a}
+                  {...form.register("url")}
+                  type="url"
+                  inputMode="url"
+                  autoCapitalize="none"
+                  autoFocus
+                  placeholder="https://www.instagram.com/reel/…"
+                />
+              )}
+            </Field>
+            <Field label={t("titleLabel")} error={form.formState.errors.title}>
+              {(a) => <Input {...a} {...form.register("title")} placeholder={t("titlePh")} />}
+            </Field>
+          </div>
+          <SheetFooter>
             <Button type="submit" disabled={add.isPending}>
               <HugeiconsIcon icon={Add01Icon} strokeWidth={2} data-icon="inline-start" />
               {t("add")}
             </Button>
-          </DialogFooter>
+          </SheetFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
 
