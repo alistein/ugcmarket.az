@@ -10,6 +10,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { LanguageMenu } from "@/components/shared/language-menu";
+import { Logo } from "@/components/shared/logo";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,8 +36,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <header className="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 pt-5 pb-2 sm:pt-7">
-        <Link href="/me" className="font-heading text-2xl font-semibold tracking-[-0.04em]">
-          ugc<span className="text-primary">market</span>
+        <Link href="/me" className="group/logo text-xl">
+          <Logo />
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <Button

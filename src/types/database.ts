@@ -431,7 +431,6 @@ export type Database = {
         Row: {
           avatar_url: string | null
           barter_open: boolean
-          repost_open: boolean
           bio: string | null
           categories: string[]
           city: string
@@ -442,13 +441,13 @@ export type Database = {
           id: string
           languages: string[]
           profile_id: string
+          repost_open: boolean
           review_status: Database["public"]["Enums"]["review_status"]
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
           barter_open?: boolean
-          repost_open?: boolean
           bio?: string | null
           categories?: string[]
           city: string
@@ -459,13 +458,13 @@ export type Database = {
           id?: string
           languages?: string[]
           profile_id: string
+          repost_open?: boolean
           review_status?: Database["public"]["Enums"]["review_status"]
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
           barter_open?: boolean
-          repost_open?: boolean
           bio?: string | null
           categories?: string[]
           city?: string
@@ -476,6 +475,7 @@ export type Database = {
           id?: string
           languages?: string[]
           profile_id?: string
+          repost_open?: boolean
           review_status?: Database["public"]["Enums"]["review_status"]
           updated_at?: string
         }
@@ -488,36 +488,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      social_lookups: {
-        Row: {
-          created_at: string
-          handle: string
-          id: number
-          network: Database["public"]["Enums"]["social_network"]
-          ok: boolean
-          source: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          handle: string
-          id?: never
-          network: Database["public"]["Enums"]["social_network"]
-          ok: boolean
-          source?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          handle?: string
-          id?: never
-          network?: Database["public"]["Enums"]["social_network"]
-          ok?: boolean
-          source?: string | null
-          user_id?: string
-        }
-        Relationships: []
       }
       portfolio_item_stats: {
         Row: {
@@ -681,6 +651,36 @@ export type Database = {
           locale?: string
           role?: Database["public"]["Enums"]["user_role"] | null
           status?: Database["public"]["Enums"]["account_status"]
+        }
+        Relationships: []
+      }
+      social_lookups: {
+        Row: {
+          created_at: string
+          handle: string
+          id: number
+          network: Database["public"]["Enums"]["social_network"]
+          ok: boolean
+          source: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          handle: string
+          id?: never
+          network: Database["public"]["Enums"]["social_network"]
+          ok: boolean
+          source?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          handle?: string
+          id?: never
+          network?: Database["public"]["Enums"]["social_network"]
+          ok?: boolean
+          source?: string | null
+          user_id?: string
         }
         Relationships: []
       }

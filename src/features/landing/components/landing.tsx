@@ -18,6 +18,7 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LanguageMenu } from "@/components/shared/language-menu";
+import { Logo } from "@/components/shared/logo";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { ActivityWall } from "./activity-wall";
@@ -53,8 +54,8 @@ function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-background/70 pt-[env(safe-area-inset-top)] backdrop-blur-xl backdrop-saturate-150 [mask-image:linear-gradient(to_bottom,black_calc(100%-8px),transparent)]">
       <div className="mx-auto flex max-w-6xl items-center gap-2 py-3 pr-[max(1rem,env(safe-area-inset-right))] pl-[max(1rem,env(safe-area-inset-left))]">
-        <Link href="/" className="font-heading text-lg font-semibold tracking-[-0.03em]">
-          ugc<span className="text-primary">market</span>
+        <Link href="/" className="group/logo text-lg">
+          <Logo animated />
         </Link>
         <nav className="ml-8 hidden gap-1 md:flex">
           {(["how", "brands", "creators", "faq"] as const).map((k) => (
@@ -130,16 +131,18 @@ const PARTNERS: { name: string; src: string; srcDark?: string; width: number; he
   { name: "Decoliv", src: "/partners/decoliv.png", width: 743, height: 160 },
   { name: "bir-yer", src: "/partners/bir-yer.png", srcDark: "/partners/bir-yer-dark.png", width: 601, height: 160 },
   { name: "Rossmann", src: "/partners/rossmann.png", width: 1099, height: 160, size: "h-6 sm:h-7" },
+  { name: "Favorite", src: "/partners/favorite.png", width: 799, height: 160, size: "h-6 sm:h-7" },
+  // Horizontal lockup built from their stacked logo (G mark + name on one line) to match the row.
+  { name: "Georgian Point", src: "/partners/georgian-point.png", width: 1024, height: 160, size: "h-8 sm:h-9" },
 ];
 
 function Partner() {
   const t = useTranslations("landing.partner");
   return (
     <section className="mx-auto max-w-6xl px-4">
-      <div className="flex flex-col items-center gap-6 border-y border-border/70 py-10 md:flex-row md:justify-center md:gap-10">
+      <div className="flex flex-col items-center gap-6 border-y border-border/70 py-10">
         <span className="text-sm text-muted-foreground">{t("label")}</span>
-        <span aria-hidden className="hidden h-6 w-px bg-border md:block" />
-        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6">
           {PARTNERS.map((p) => (
             <span key={p.name} className="flex items-center">
               <Image src={p.src} alt={p.name} width={p.width} height={p.height} className={cn("w-auto", p.size ?? "h-9 sm:h-10", p.srcDark && "dark:hidden")} />
@@ -490,9 +493,7 @@ function Footer() {
   const t = useTranslations("landing.footer");
   return (
     <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 pt-10 pb-[calc(2.5rem+env(safe-area-inset-bottom))] text-sm text-muted-foreground">
-      <span className="font-heading text-base font-semibold tracking-[-0.03em] text-foreground">
-        ugc<span className="text-primary">market</span>
-      </span>
+      <Logo className="text-base text-foreground" />
       <span>{t("city")}</span>
       <span>{t("rights")}</span>
     </footer>

@@ -12,6 +12,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LanguageMenu } from "@/components/shared/language-menu";
+import { Logo } from "@/components/shared/logo";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,8 +36,8 @@ function PublicHeader() {
   const { data: me } = useMe();
   return (
     <header className="mx-auto flex w-full max-w-4xl items-center gap-2 px-4 py-4">
-      <Link href="/" className="font-heading text-xl font-semibold tracking-[-0.04em]">
-        ugc<span className="text-primary">market</span>
+      <Link href="/" className="group/logo text-xl">
+        <Logo />
       </Link>
       <div className="ml-auto flex items-center gap-1">
         <LanguageMenu />

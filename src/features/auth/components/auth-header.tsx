@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { LanguageMenu } from "@/components/shared/language-menu";
+import { Logo } from "@/components/shared/logo";
 import { Link } from "@/i18n/navigation";
 
 // Client components on purpose: next-intl's server Link reads the request locale (runtime data),
@@ -9,8 +10,8 @@ import { Link } from "@/i18n/navigation";
 export function AuthHeader() {
   return (
     <header className="flex w-full items-center gap-2 px-5 pt-5 sm:px-8 sm:pt-7">
-      <Link href="/" className="font-heading text-2xl font-semibold tracking-[-0.04em]">
-        ugc<span className="text-primary">market</span>
+      <Link href="/" className="group/logo text-xl">
+        <Logo />
       </Link>
       <div className="ml-auto">
         <LanguageMenu />

@@ -83,6 +83,9 @@
   --animate-marquee: marquee 40s linear infinite;
   /* Ambient activity wall (closing card): very slow vertical drift. */
   --animate-drift: drift 70s linear infinite;
+  /* Logo entrance (landing header, page load only): the viewfinder focuses, then the rec light blinks twice. */
+  --animate-logo-focus: logo-focus 500ms var(--ease-out) both;
+  --animate-logo-rec: logo-rec 2400ms var(--ease-in-out) 350ms both;
 
   @keyframes enter {
     from {
@@ -113,6 +116,26 @@
     }
     to {
       transform: translateX(100%);
+    }
+  }
+  @keyframes logo-focus {
+    from {
+      opacity: 0;
+      transform: scale(1.18);
+    }
+  }
+  @keyframes logo-rec {
+    0% {
+      opacity: 0;
+    }
+    12%,
+    58%,
+    100% {
+      opacity: 1;
+    }
+    36%,
+    80% {
+      opacity: 0.25;
     }
   }
 }
@@ -276,12 +299,14 @@
     translate: 0 0 !important;
   }
   .animate-enter,
-  .animate-rise {
+  .animate-rise,
+  .animate-logo-focus {
     animation-name: fade !important;
   }
   .animate-shimmer,
   .animate-marquee,
   .animate-drift,
+  .animate-logo-rec,
   .after\:animate-shimmer::after {
     animation: none !important;
   }
