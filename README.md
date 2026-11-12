@@ -7,8 +7,6 @@ Rules for humans and AI agents: [AGENTS.md](./AGENTS.md). Product docs: the UgcM
 ```bash
 corepack enable                              # once per machine: uses the pnpm version pinned in package.json
 pnpm install
-pnpm dlx shadcn@latest init                       # UI kit (keeps src/lib/utils.ts; overwrites globals.css — fine)
-pnpm dlx shadcn@latest add button input label textarea select card badge avatar dialog dropdown-menu sheet tabs skeleton separator sonner form
 cp .env.example .env.local                   # fill in keys (see Database below)
 pnpm dev                                  # http://localhost:3000 → /az
 ```
@@ -22,7 +20,7 @@ Dependency install scripts must be approved in `pnpm-workspace.yaml` → `allowB
 into `.env.local`, then:
 ```bash
 pnpm exec supabase login
-pnpm db:link -- --project-ref <your-project-ref>
+pnpm db:link --project-ref <your-project-ref>
 pnpm db:push                              # applies supabase/migrations to the cloud DB
 pnpm db:types:remote                      # regenerate src/types/database.ts
 ```
