@@ -102,6 +102,20 @@ function Home({ creator: c }: { creator: MyCreator }) {
           <HugeiconsIcon icon={Add01Icon} strokeWidth={2} className="size-4" />
           {c.creator_socials.length ? t("editLinks") : t("addLinks")}
         </Link>
+
+        {(c.categories.length > 0 || c.barter_open) && (
+          <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
+            <p className="text-xs font-medium text-muted-foreground">{t("categoriesTitle")}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {c.barter_open && <Badge variant="mint">{tt("barter")}</Badge>}
+              {c.categories.map((cat) => (
+                <Badge key={cat} variant="brand">
+                  {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
       </aside>
 
       {/* Main column */}
@@ -127,16 +141,6 @@ function Home({ creator: c }: { creator: MyCreator }) {
               <Link href="/me/profile#about" className="mt-2 inline-block text-primary hover:underline">
                 {t("addBio")}
               </Link>
-            )}
-            {(c.categories.length > 0 || c.barter_open) && (
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {c.barter_open && <Badge variant="mint">{tt("barter")}</Badge>}
-                {c.categories.map((cat) => (
-                  <Badge key={cat} variant="brand">
-                    {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
-                  </Badge>
-                ))}
-              </div>
             )}
           </div>
           <Button

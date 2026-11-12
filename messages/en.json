@@ -566,7 +566,8 @@
       "statsSelfReported": "You entered these numbers. Automatic checks are coming soon.",
       "statsRefresh": "Refresh numbers",
       "statsRefreshing": "Checking…",
-      "statsRefreshed": "Numbers updated."
+      "statsRefreshed": "Numbers updated.",
+      "categoriesTitle": "Categories"
     },
     "public": {
       "login": "Sign in",

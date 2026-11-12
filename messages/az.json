@@ -566,7 +566,8 @@
       "statsSelfReported": "Rəqəmləri özünüz daxil etmisiniz. Avtomatik yoxlama tezliklə əlavə olunacaq.",
       "statsRefresh": "Rəqəmləri yenilə",
       "statsRefreshing": "Yoxlanılır…",
-      "statsRefreshed": "Rəqəmlər yeniləndi."
+      "statsRefreshed": "Rəqəmlər yeniləndi.",
+      "categoriesTitle": "Kateqoriyalar"
     },
     "public": {
       "login": "Daxil ol",

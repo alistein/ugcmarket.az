@@ -566,7 +566,8 @@
       "statsSelfReported": "Цифры введены вами. Автоматическая проверка скоро появится.",
       "statsRefresh": "Обновить цифры",
       "statsRefreshing": "Проверяем…",
-      "statsRefreshed": "Цифры обновлены."
+      "statsRefreshed": "Цифры обновлены.",
+      "categoriesTitle": "Категории"
     },
     "public": {
       "login": "Войти",
