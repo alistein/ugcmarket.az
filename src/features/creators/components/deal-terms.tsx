@@ -8,13 +8,13 @@ import type { CreatorPublic } from "../hooks";
 export function DealTerms({ creator: c }: { creator: Pick<CreatorPublic, "barter_open" | "repost_open"> }) {
   const t = useTranslations("taxonomy.terms");
   if (!c.barter_open && !c.repost_open) {
-    return <Badge variant="mint">{t("paidOnly")}</Badge>;
+    return <Badge variant="secondary">{t("paidOnly")}</Badge>;
   }
   return (
     <>
-      <Badge variant="mint">{t("paid")}</Badge>
-      {c.barter_open && <Badge variant="mint">{t("barter")}</Badge>}
-      {c.repost_open && <Badge variant="mint">{t("repost")}</Badge>}
+      <Badge variant="secondary">{t("paid")}</Badge>
+      {c.barter_open && <Badge variant="secondary">{t("barter")}</Badge>}
+      {c.repost_open && <Badge variant="secondary">{t("repost")}</Badge>}
     </>
   );
 }
