@@ -32,7 +32,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
+import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
 import { completeness } from "../form";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
 import { PortfolioEditor } from "./portfolio-editor";
@@ -162,16 +162,12 @@ function Home({ creator: c }: { creator: MyCreator }) {
         <Tabs defaultValue="portfolio">
           <TabsList>
             <TabsTrigger value="portfolio">{t("tabs.portfolio")}</TabsTrigger>
-            <TabsTrigger value="prices">{t("tabs.prices")}</TabsTrigger>
             <TabsTrigger value="applications">{t("tabs.applications")}</TabsTrigger>
           </TabsList>
           <TabsContent value="portfolio" className="pt-3">
             <Panel>
               <PortfolioEditor items={c.portfolio_items} creator={c} />
             </Panel>
-          </TabsContent>
-          <TabsContent value="prices" className="pt-3">
-            <Prices creator={c} />
           </TabsContent>
           <TabsContent value="applications" className="pt-3">
             <Panel className="py-10 text-center">
@@ -318,44 +314,6 @@ function ShareRow({ creator }: { creator: MyCreator }) {
   );
 }
 
-function Prices({ creator: c }: { creator: MyCreator }) {
-  const t = useTranslations("creator.dashboard");
-  const tt = useTranslations("taxonomy");
-  const locale = useLocale();
-  const money = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
-  const prices = PRICE_FORMATS.flatMap((f) => c.creator_prices.filter((p) => p.format === f));
-  return (
-    <Panel>
-      {prices.length ? (
-        <ul className="divide-y divide-border/70">
-          {prices.map((p) => (
-            <li key={p.format} className="flex items-center justify-between py-3 first:pt-0">
-              <span>{known(PRICE_FORMATS, p.format) ? tt(`formats.${p.format}`) : p.format}</span>
-              <span className="font-medium tabular-nums">
-                {money.format(Number(p.amount))} {p.currency}
-              </span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-sm text-muted-foreground">{t("pricesEmpty")}</p>
-      )}
-      <Button
-        className="mt-4"
-        variant="outline"
-        size="sm"
-        nativeButton={false}
-        render={<Link href="/me/profile#prices" />}
-      >
-        <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} data-icon="inline-start" />
-        {t("editPrices")}
-      </Button>
-    </Panel>
-  );
-}
-
-/** "Numbers checked automatically · 2h ago" + manual re-check (server rate-limits to 1/hour). */
-/** Right side of the header: edit link, aligned with the name. */
 function HeaderActions() {
   const t = useTranslations("creator.dashboard");
   return (
