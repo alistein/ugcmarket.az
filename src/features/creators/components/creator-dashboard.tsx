@@ -22,7 +22,13 @@ import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Link } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
@@ -146,7 +152,7 @@ function Home({ creator: c }: { creator: MyCreator }) {
             )}
             <ProfileStatsLine creator={c} />
           </div>
-          <HeaderActions creator={c} />
+          <HeaderActions />
         </section>
 
         {c.review_status !== "approved" && <StatusNote status={c.review_status} />}
@@ -348,12 +354,25 @@ function Prices({ creator: c }: { creator: MyCreator }) {
 }
 
 /** "Numbers checked automatically · 2h ago" + manual re-check (server rate-limits to 1/hour). */
-/** Right side of the header: edit link, numbers refresh (with a hint) and the last check time. */
-function HeaderActions({ creator: c }: { creator: MyCreator }) {
+/** Right side of the header: edit link, aligned with the name. */
+function HeaderActions() {
+  const t = useTranslations("creator.dashboard");
+  return (
+    <Link
+      href="/me/profile"
+      className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-foreground transition-colors hover:text-primary sm:pt-2 [&_svg]:size-4"
+    >
+      <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
+      {t("edit")}
+    </Link>
+  );
+}
+
+/** Followers figure that opens a small menu: last check time and the refresh action. */
+function FollowersMenu({ creator: c, children }: { creator: MyCreator; children: React.ReactNode }) {
   const t = useTranslations("creator.dashboard");
   const te = useTranslations();
   const refresh = useRefreshSocialStats();
-  const hasSocials = c.creator_socials.length > 0;
   const checkedAt = c.creator_social_stats
     ?.map((s) => s.fetched_at)
     .filter((d): d is string => !!d)
@@ -361,53 +380,39 @@ function HeaderActions({ creator: c }: { creator: MyCreator }) {
     .at(-1);
   // Fixed dd.mm.yyyy hh:mm: Intl has thin Azerbaijani date data ("2026 M11 12").
   const when = checkedAt ? formatDateTime(new Date(checkedAt)) : null;
-  const textButton =
-    "inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary disabled:pointer-events-none disabled:opacity-60 [&_svg]:size-4";
-
   return (
-    <div className="flex flex-col items-start gap-2 sm:items-end sm:self-start sm:pt-2">
-      <Link href="/me/profile" className={textButton}>
-        <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
-        {t("edit")}
-      </Link>
-      {hasSocials && (
-        <>
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <button
-                  type="button"
-                  className={textButton}
-                  disabled={refresh.isPending}
-                  onClick={() =>
-                    refresh.mutate(undefined, {
-                      onSuccess: () => toast.success(t("statsRefreshed")),
-                      onError: (e) => {
-                        const key = e instanceof ApiClientError ? e.message : "errors.unknown";
-                        toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
-                      },
-                    })
-                  }
-                />
-              }
-            >
-              <HugeiconsIcon
-                icon={RefreshIcon}
-                strokeWidth={2}
-                className={cn(refresh.isPending && "animate-spin")}
-              />
-              {refresh.isPending ? t("statsRefreshing") : t("statsRefresh")}
-            </TooltipTrigger>
-            <TooltipContent side="bottom" align="end">
-              <p>{t("statsRefreshHint")}</p>
-              <p className="mt-1.5 tabular-nums opacity-70">
-                {when ? `${t("statsLastRun")}: ${when}` : t("statsNeverRun")}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </>
-      )}
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger className="-mx-1.5 -my-0.5 inline-flex items-center gap-1.5 rounded-full px-1.5 py-0.5 whitespace-nowrap transition-colors outline-none hover:bg-muted focus-visible:ring-4 focus-visible:ring-ring/25 aria-expanded:bg-muted">
+        {children}
+        <HugeiconsIcon
+          icon={RefreshIcon}
+          strokeWidth={2}
+          className={cn("size-3", refresh.isPending && "animate-spin")}
+        />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" sideOffset={8} className="w-72 p-1.5">
+        <div className="px-3 pt-2 pb-2.5 text-xs text-muted-foreground">
+          <p className="text-pretty">{t("statsRefreshHint")}</p>
+          <p className="mt-1.5 tabular-nums">{when ? `${t("statsLastRun")}: ${when}` : t("statsNeverRun")}</p>
+        </div>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          disabled={refresh.isPending}
+          onClick={() =>
+            refresh.mutate(undefined, {
+              onSuccess: () => toast.success(t("statsRefreshed")),
+              onError: (e) => {
+                const key = e instanceof ApiClientError ? e.message : "errors.unknown";
+                toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
+              },
+            })
+          }
+        >
+          <HugeiconsIcon icon={RefreshIcon} strokeWidth={2} />
+          {refresh.isPending ? t("statsRefreshing") : t("statsRefresh")}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -423,11 +428,11 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
   const { percent } = completeness(c);
   return (
-    <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
       {c.creator_socials.map((s) => {
         const n = socialNumbers(c, s);
         return (
-          <span key={s.network} className="inline-flex items-center gap-1.5 whitespace-nowrap">
+          <FollowersMenu key={s.network} creator={c}>
             <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
             <span className="font-semibold text-foreground tabular-nums">{compact.format(n.followers)}</span>
             {t("followers")}
@@ -439,7 +444,7 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
                 aria-label={t("checked")}
               />
             )}
-          </span>
+          </FollowersMenu>
         );
       })}
       <span className="whitespace-nowrap">
@@ -460,6 +465,6 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
           <span className="block h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
         </span>
       </span>
-    </p>
+    </div>
   );
 }
