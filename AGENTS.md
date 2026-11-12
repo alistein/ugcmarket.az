@@ -35,14 +35,22 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
   Don't blindly re-run `pnpm dlx shadcn add` over an existing file (it overwrites our changes); diff first.
 - Primitives are **Base UI** (`@base-ui/react`), not Radix. Check the Base UI API when composing (e.g. `render` prop, not `asChild`).
 - Icons: **Hugeicons** (`@hugeicons/react` + `@hugeicons/core-free-icons`). Don't add another icon library.
-- **Design language** (from the `emil-design-eng`, `apple-design`, `stageshow` skills — read them before UI work):
+- **Motion — strictly Emil Kowalski** (`emil-design-eng`, `animate` + `animate/RECIPES.md`, `review-animations` +
+  `STANDARDS.md`, `choreograph`, `animation-performance`). These are the ONLY authority for animation. Do not take motion
+  advice from `apple-design` or `stageshow`. Build with `animate`, then self-review with `review-animations` before merge.
+  - Gate first: 100+/day or keyboard-triggered → no animation; tens/day → near-imperceptible or none; name the purpose.
+  - Tokens (globals.css): `ease-out` = cubic-bezier(0.23,1,0.32,1) enter/exit/press/popovers; `ease-in-out` =
+    cubic-bezier(0.77,0,0.175,1) movement on screen; `ease-(--ease-drawer)` sheets; default transition easing `ease` (colors).
+  - Durations: press 160ms; popovers/selects 200ms (exit 150ms); modals 250ms; sheets 500ms; UI < 300ms otherwise.
+  - Only transform/opacity (and clip-path). Never `transition-all`, never `scale(0)` (start 0.95 + opacity), never `ease-in`.
+    Popovers scale from `--transform-origin`; modals stay centered. Transitions/`@starting-style`, not keyframes, for
+    anything re-triggerable. Hover motion only behind `(hover: hover) and (pointer: fine)`.
+  - Tailwind v4: `scale-*`/`translate-*` set the individual `scale`/`translate` properties — transition those names.
+  - Reduced motion: fades stay, movement goes (handled globally in globals.css).
+- **Visual language** (`emil-design-eng`, `apple-design` for materials/type, `stageshow` for marketing visuals only):
   - Coral `--primary` is for the one main action on a screen. Joy tints (`brand`, `sun`, `mint`, `sky`, `rose` — Badge
     variants and `bg-*/text-*-ink` utilities) label categories, networks and statuses — never buttons.
   - Depth via `--shadow-soft|raised|float|press`, not borders. Filled fields (`bg-muted`) with a soft coral focus ring.
-  - Motion tokens: `ease-(--ease-snappy)` for UI (150–250ms), `ease-(--ease-drawer)` for sheets (500 in / 300 out).
-    Transitions over keyframes (interruptible); list exact properties (`transition-[scale,opacity]`), never `transition-all`.
-    Popovers scale from `--transform-origin`; modals stay centered; nothing enters from `scale(0)`; exits faster than enters.
-    Tailwind v4 `scale-*`/`translate-*` set the individual `scale`/`translate` properties — transition those, not `transform`.
   - Buttons press to `scale(0.97)`. Named avatars get a tone from the joy palette; one initial in overlapping groups.
   - Apple type: tighter tracking as size grows (`tracking-[-0.025em]` on titles), body at 0, `tabular-nums` for counts.
 - Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).

@@ -50,16 +50,17 @@ function TabsList({
       {...props}
     >
       {props.children}
-      {/* Slides between tabs (Base UI exposes the active tab's box as CSS vars). */}
+      {/* Emil Kowalski's tab recipe: a full-width layer clipped to the active tab, so only
+          clip-path animates (no width/left layout animation). Base UI provides the tab's box. */}
       <TabsPrimitive.Indicator
         data-slot="tabs-indicator"
         renderBeforeHydration
         className={cn(
-          "absolute -z-10 transition-[translate,width,height] duration-300 ease-(--ease-snappy)",
-          "top-(--active-tab-top) left-0 h-(--active-tab-height) w-(--active-tab-width) translate-x-(--active-tab-left)",
+          "absolute inset-x-0 -z-10 [transition:clip-path_250ms_var(--ease-in-out)]",
+          "[clip-path:inset(0_calc(100%_-_var(--active-tab-left)_-_var(--active-tab-width))_0_var(--active-tab-left)_round_var(--indicator-radius))]",
           variant === "line"
-            ? "top-auto bottom-[-5px] h-0.5 rounded-full bg-foreground group-data-vertical/tabs:hidden"
-            : "rounded-[calc(var(--radius-4xl)-3px)] bg-card shadow-(--shadow-soft) ring-1 ring-foreground/[0.04] dark:bg-white/12 dark:ring-0"
+            ? "bottom-[-5px] h-0.5 bg-foreground [--indicator-radius:9999px] group-data-vertical/tabs:hidden"
+            : "top-(--active-tab-top) h-(--active-tab-height) bg-card [--indicator-radius:calc(var(--radius-4xl)-3px)] dark:bg-white/12"
         )}
       />
     </TabsPrimitive.List>

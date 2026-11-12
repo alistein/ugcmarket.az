@@ -41,7 +41,7 @@ function DropdownMenuContent({
       >
         <MenuPrimitive.Popup
           data-slot="dropdown-menu-content"
-          className={cn("z-50 max-h-(--available-height) w-(--anchor-width) min-w-48 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-2xl bg-popover p-1 text-popover-foreground ring-1 ring-foreground/5 shadow-(--shadow-float) transition-[opacity,scale] duration-200 ease-(--ease-snappy) outline-none data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-[0.97] data-ending-style:opacity-0 data-ending-style:duration-100 dark:ring-white/10", className )}
+          className={cn("z-50 max-h-(--available-height) w-(--anchor-width) min-w-48 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-2xl bg-popover p-1 text-popover-foreground ring-1 ring-foreground/5 shadow-(--shadow-float) transition-[opacity,scale] duration-200 ease-out outline-none data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:duration-150 dark:ring-white/10", className )}
           {...props}
         />
       </MenuPrimitive.Positioner>
@@ -135,7 +135,7 @@ function DropdownMenuSubContent({
   return (
     <DropdownMenuContent
       data-slot="dropdown-menu-sub-content"
-      className={cn("w-auto min-w-36 rounded-2xl bg-popover p-1 text-popover-foreground ring-1 ring-foreground/5 shadow-(--shadow-float) transition-[opacity,scale] duration-200 ease-(--ease-snappy) data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-[0.97] data-ending-style:opacity-0 data-ending-style:duration-100 dark:ring-white/10", className )}
+      className={cn("w-auto min-w-36 rounded-2xl bg-popover p-1 text-popover-foreground ring-1 ring-foreground/5 shadow-(--shadow-float) transition-[opacity,scale] duration-200 ease-out data-starting-style:scale-95 data-starting-style:opacity-0 data-ending-style:scale-95 data-ending-style:opacity-0 data-ending-style:duration-150 dark:ring-white/10", className )}
       align={align}
       alignOffset={alignOffset}
       side={side}

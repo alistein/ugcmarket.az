@@ -65,32 +65,31 @@
   --shadow-float: 0 2px 4px oklch(0.2 0.02 50 / 0.06), 0 12px 24px -6px oklch(0.2 0.02 50 / 0.14), 0 32px 64px -16px oklch(0.2 0.02 50 / 0.2);
   --shadow-press: inset 0 1px 0 oklch(1 0 0 / 0.2), 0 1px 2px oklch(0.35 0.12 35 / 0.25), 0 3px 8px -3px oklch(0.55 0.19 33 / 0.3);
 
-  /* Motion — custom curves (Emil Kowalski / Ionic). Never ease-in for UI. */
-  --ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-smooth: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  /* Motion — Emil Kowalski's curves (animations.dev). Strict rules in AGENTS.md → Motion.
+     Overrides Tailwind's weak built-ins: `ease-out` / `ease-in-out` utilities now use these. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* enter/exit, press, popovers */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* moving/morphing on screen */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* sheets & drawers (Ionic/iOS) */
+  --default-transition-timing-function: ease; /* hover/color changes → ease */
+  --default-transition-duration: 150ms;
 
-  --animate-rise: rise 520ms var(--ease-snappy) both;
+  /* Group entrance (stagger recipe): 300ms, 8px, ease-out. Rare/first-view surfaces only. */
+  --animate-enter: enter 300ms var(--ease-out) both;
+  /* Constant motion → linear, on transform only. */
   --animate-shimmer: shimmer 1.6s linear infinite;
-  --animate-morph: morph 280ms var(--ease-snappy) both;
 
-  @keyframes rise {
+  @keyframes enter {
     from {
       opacity: 0;
-      transform: translateY(10px) scale(0.98);
-    }
-  }
-  /* State swap: blur bridges the two states so they read as one object. */
-  @keyframes morph {
-    from {
-      opacity: 0;
-      filter: blur(4px);
-      transform: scale(0.96);
+      transform: translateY(8px);
     }
   }
   @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
     to {
-      background-position: -200% 0;
+      transform: translateX(100%);
     }
   }
 }
@@ -219,14 +218,31 @@
   }
 }
 
-/* Gentler, non-vestibular motion when asked (Apple: reduced ≠ none). */
+/* Reduced motion: fewer and gentler, not zero (Emil Kowalski).
+   Keep opacity/color; drop movement. Base UI enter/exit states become a plain fade. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
     transition-property: opacity, color, background-color, border-color !important;
     scroll-behavior: auto !important;
+  }
+  [data-starting-style],
+  [data-ending-style] {
+    scale: 1 !important;
+    translate: 0 0 !important;
+  }
+  .animate-enter {
+    animation-name: fade !important;
+  }
+  .animate-shimmer,
+  .after\:animate-shimmer::after {
+    animation: none !important;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
   }
 }

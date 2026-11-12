@@ -203,7 +203,7 @@ function useDarkMode() {
 function Hero() {
   return (
     <section className="grid items-center gap-12 pt-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
-      <div className="animate-rise space-y-6">
+      <div className="animate-enter space-y-6">
         <Badge variant="brand" className="h-6 px-2.5">
           UGCMarket design system
         </Badge>
@@ -233,7 +233,7 @@ function Hero() {
           aria-hidden
           className="absolute inset-x-8 top-10 bottom-0 -z-10 rounded-[3rem] bg-[radial-gradient(60%_60%_at_30%_30%,var(--sun),transparent),radial-gradient(60%_60%_at_80%_70%,var(--brand-soft),transparent)] opacity-90 blur-2xl"
         />
-        <Card className="animate-rise [animation-delay:80ms]">
+        <Card className="animate-enter [animation-delay:50ms]">
           <CardHeader>
             <div className="flex items-center gap-2.5">
               <NamedAvatar name="Decolive" size="sm" />
@@ -273,7 +273,7 @@ function Hero() {
             </div>
           </CardContent>
         </Card>
-        <div className="animate-rise absolute right-3 bottom-0 w-[calc(100%-1.5rem)] rounded-3xl sm:w-[76%] bg-popover/85 p-3.5 shadow-(--shadow-float) ring-1 ring-foreground/5 backdrop-blur-xl backdrop-saturate-150 [animation-delay:260ms] sm:right-[-6%] dark:ring-white/10">
+        <div className="animate-enter absolute right-3 bottom-0 w-[calc(100%-1.5rem)] rounded-3xl sm:w-[76%] bg-popover/85 p-3.5 shadow-(--shadow-float) ring-1 ring-foreground/5 backdrop-blur-xl backdrop-saturate-150 [animation-delay:100ms] sm:right-[-6%] dark:ring-white/10">
           <div className="flex items-center gap-3">
             <NamedAvatar name="Aysel Məmmədova" badge />
             <div className="min-w-0 flex-1">
@@ -392,9 +392,9 @@ function Foundations() {
 // ─── Motion ──────────────────────────────────────────────────────────────────
 
 const CURVES = [
-  ["--ease-snappy", "cubic-bezier(0.23, 1, 0.32, 1)", "Enter, press, popovers · 150–250ms", 220],
-  ["--ease-drawer", "cubic-bezier(0.32, 0.72, 0, 1)", "Sheets & drawers · 500ms in, 300ms out", 500],
-  ["--ease-smooth", "cubic-bezier(0.77, 0, 0.175, 1)", "Things moving on screen", 450],
+  ["--ease-out", "var(--ease-out)", "Enter/exit, press, popovers · 150–250ms", 250],
+  ["--ease-in-out", "var(--ease-in-out)", "Moving on screen · tab indicator 250ms", 250],
+  ["--ease-drawer", "var(--ease-drawer)", "Sheets & drawers · 500ms", 500],
 ] as const;
 
 function Motion() {
@@ -403,8 +403,8 @@ function Motion() {
     <Section
       id="motion"
       eyebrow="Motion"
-      title="Fast to respond, never in the way."
-      description="Press feedback on pointer-down, popovers grow from their trigger, exits are quicker than entrances, and nothing animates from scale(0). Reduced-motion users get cross-fades."
+      title="Every animation earns its place."
+      description="Strictly Emil Kowalski's rules: animate only with a purpose, transform and opacity only, ease-out for enter/exit, ease-in-out for movement, ease for color, UI under 300ms, popovers from their trigger, never from scale(0), transitions over keyframes. Reduced motion keeps fades and drops movement."
     >
       <Panel className="block space-y-5">
         {CURVES.map(([name, curve, use, ms]) => (
@@ -441,7 +441,8 @@ function Motion() {
 
 const BUTTON_VARIANTS = ["default", "soft", "secondary", "outline", "ghost", "destructive", "link"] as const;
 
-/** State morph: idle → sending → applied. Blur bridges the crossfade (Emil Kowalski). */
+/** State morph: idle → sending → applied. Each new label enters from blur(2px)/0.7 via @starting-style —
+ *  Emil Kowalski's blur mask, as a transition (interruptible), not keyframes. */
 function ApplyButton() {
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -450,10 +451,7 @@ function ApplyButton() {
   return (
     <Button
       size="lg"
-      className={cn(
-        "min-w-36 transition-[scale,background-color,box-shadow,color] duration-300",
-        state === "done" && "bg-mint text-mint-ink shadow-none hover:bg-mint"
-      )}
+      className={cn("min-w-36", state === "done" && "bg-mint text-mint-ink shadow-none hover:bg-mint")}
       onClick={() => {
         if (state === "sending") return;
         if (state === "done") return setState("idle");
@@ -461,7 +459,10 @@ function ApplyButton() {
         timer.current = setTimeout(() => setState("done"), 1100);
       }}
     >
-      <span key={state} className="flex animate-morph items-center gap-2">
+      <span
+        key={state}
+        className="flex items-center gap-2 [transition:filter_200ms_ease,opacity_200ms_ease] starting:opacity-70 starting:blur-[2px]"
+      >
         {state === "sending" && <Icon icon={Loading03Icon} className="size-4 animate-spin" />}
         {state === "done" && <Icon icon={CheckmarkCircle02Icon} className="size-4" />}
         {label}
@@ -476,7 +477,7 @@ function Buttons() {
       id="buttons"
       eyebrow="Buttons"
       title="Press it. It presses back."
-      description="Every button scales to 0.97 on pointer-down in 150ms. One primary per screen; soft for secondary actions that still belong to the brand."
+      description="Every button scales to 0.97 on press in 160ms with --ease-out. One primary per screen; soft for secondary actions that still belong to the brand."
     >
       <Panel label="Variants">
         {BUTTON_VARIANTS.map((v) => (
@@ -1038,7 +1039,7 @@ function CampaignCard({
   applied: number;
 }) {
   return (
-    <Card size="sm" className="group/campaign transition-[translate,box-shadow] duration-300 ease-(--ease-snappy) hover:-translate-y-0.5 hover:shadow-(--shadow-float)">
+    <Card size="sm">
       <CardHeader>
         <div className="flex min-w-0 items-center gap-2.5">
           <NamedAvatar name={brand} size="sm" />
