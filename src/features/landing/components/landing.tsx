@@ -133,11 +133,11 @@ function Hero() {
 function Board() {
   const t = useTranslations("landing.board");
   return (
-    <section className="mx-auto grid max-w-6xl items-center gap-14 px-4 py-20 md:grid-cols-2">
-      <div className="space-y-4 text-center md:text-left">
+    <section className="mx-auto max-w-6xl px-4 py-20">
+      <div className="mb-14 space-y-4 text-center">
         <Pill>{t("label")}</Pill>
         <h2 className="font-heading text-4xl leading-[1.05] font-semibold tracking-[-0.035em] sm:text-5xl">{t("title")}</h2>
-        <p className="mx-auto max-w-sm text-lg text-muted-foreground md:mx-0">{t("sub")}</p>
+        <p className="mx-auto max-w-sm text-lg text-muted-foreground">{t("sub")}</p>
       </div>
       <BoardPhone />
     </section>

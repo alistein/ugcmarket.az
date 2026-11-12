@@ -105,7 +105,9 @@
       "applications": "23 отклика",
       "now": "сейчас",
       "followers": "подписчиков",
-      "notifTitle": "Айсель откликнулась"
+      "notifTitle": "Айсель откликнулась",
+      "offer": "снимешь для нас Reels? 🎬",
+      "accept": "да, я в деле! 🙌"
     },
     "audience": {
       "brandsLabel": "брендам",
