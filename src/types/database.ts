@@ -561,6 +561,10 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      set_my_role: {
+        Args: { new_role: Database["public"]["Enums"]["user_role"] }
+        Returns: undefined
+      }
     }
     Enums: {
       account_status: "active" | "blocked"

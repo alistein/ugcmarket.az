@@ -13,11 +13,15 @@ export async function getMe(user: SessionUser) {
   return { ...user, creator, brand };
 }
 
-/** Onboarding: role can be chosen once (brand or creator). Admins are set manually in the DB. */
+/**
+ * Onboarding: role can be chosen once (brand or creator). Admins are set manually in the DB.
+ * The DB enforces "once" too (set_my_role) — users can't update profiles.role directly.
+ */
 export async function setRole(user: SessionUser, role: "brand" | "creator") {
   if (user.role) throw errors.conflict("role_already_set");
   const supabase = await createUserClient();
-  const { error } = await supabase.from("profiles").update({ role }).eq("id", user.id);
+  const { error } = await supabase.rpc("set_my_role", { new_role: role });
+  if (error?.message === "role_already_set") throw errors.conflict("role_already_set");
   if (error) throw error;
   await track(user.id, "role_selected", { role });
 }
