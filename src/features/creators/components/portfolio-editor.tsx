@@ -170,7 +170,7 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side={desktop ? "right" : "bottom"} className="max-h-[90dvh]">
+      <SheetContent side={desktop ? "right" : "bottom"} className="data-[side=bottom]:h-[calc(100dvh-0.5rem)]">
         <SheetHeader>
           <SheetTitle className="text-lg font-semibold">{t("dialogTitle")}</SheetTitle>
         </SheetHeader>
