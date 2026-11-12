@@ -57,7 +57,11 @@
     "creator_exists": "Sizin artıq kreator profiliniz var.",
     "portfolio_full": "Portfolio doludur. Yeni iş əlavə etmək üçün birini silin.",
     "portfolio_duplicate": "Bu link artıq portfolionuzda var.",
-    "stats_cooldown": "Rəqəmləri gündə bir dəfə yeniləmək olar. Sabah yenidən cəhd edin."
+    "stats_cooldown": "Rəqəmləri gündə bir dəfə yeniləmək olar. Sabah yenidən cəhd edin.",
+    "lookup_limit": "Bir saat ərzində çox yoxlama etdiniz. Bir az sonra yenidən cəhd edin.",
+    "lookup_unavailable": "Avtomatik yoxlama hazırda əlçatan deyil. Bir az sonra yenidən cəhd edin.",
+    "lookup_not_found": "Hesab tapılmadı və ya bağlıdır. İstifadəçi adını yoxlayın, hesab açıq olmalıdır.",
+    "lookup_failed": "Hesabı yoxlamaq mümkün olmadı. Yenidən cəhd edin."
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol).",
@@ -80,7 +84,8 @@
     "languagesMin": "Ən azı bir dil seçin.",
     "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin.",
     "portfolioUrl": "Instagram paylaşımının və ya Reels-in linkini daxil edin (https://…).",
-    "avatar": "Şəkli yenidən yükləyin."
+    "avatar": "Şəkli yenidən yükləyin.",
+    "lookupRequired": "İstifadəçi adını yazdıqdan sonra \"Hesabı qoş\" düyməsini basın."
   },
   "landing": {
     "nav": {
@@ -441,7 +446,7 @@
       "languages": "Kontent dili",
       "barter": "Barterə açığam",
       "barterHint": "Pul əvəzinə məhsul və ya xidmət qarşılığında əməkdaşlıq.",
-      "socialsHint": "Rəqəmləri özünüz daxil edirsiniz. Profilinizdə onlar \"kreatorun öz göstəriciləri\" kimi qeyd olunur.",
+      "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik.",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -464,7 +469,13 @@
         "save": "Yadda saxla",
         "saving": "Yüklənir…"
       },
-      "moreNetworksSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik yalnız Instagram hesabınızı qeyd edin."
+      "moreNetworksSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik yalnız Instagram hesabınızı qeyd edin.",
+      "connect": "Hesabı qoş",
+      "reconnect": "Yenilə",
+      "connecting": "Hesab yoxlanılır. Bu, 30 saniyəyə qədər çəkə bilər.",
+      "connected": "Instagram-dan götürüldü",
+      "statFollowers": "izləyici",
+      "statAvgViews": "orta baxış"
     },
     "portfolio": {
       "title": "Portfolio",

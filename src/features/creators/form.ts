@@ -11,7 +11,7 @@ import {
   SocialUsername,
   type CreatorProfileInput,
 } from "@/schemas";
-import type { MyCreator, Network } from "./hooks";
+import { type MyCreator, type Network, socialNumbers } from "./hooks";
 
 /**
  * Form shape for the creator profile (setup wizard + edit). Inputs are strings; toPayload()
@@ -32,7 +32,9 @@ const SocialRow = z
     if (!SocialUsername.safeParse(row.handle).success) {
       ctx.addIssue({ code: "custom", path: ["handle"], message: "validation.socialHandle" });
     }
-    if (!row.followers) ctx.addIssue({ code: "custom", path: ["followers"], message: "validation.required" });
+    // Numbers come only from "connect account" (API lookup); typing a handle isn't enough.
+    if (!row.followers)
+      ctx.addIssue({ code: "custom", path: ["handle"], message: "validation.lookupRequired" });
   });
 
 const price = z
@@ -108,10 +110,13 @@ export function creatorToForm(c: MyCreator): CreatorFormValues {
   const base = emptyCreatorForm();
   for (const s of c.creator_socials) {
     if (!(NETWORKS as readonly string[]).includes(s.network)) continue;
+    // Only numbers checked through the API count as "connected"; old self-reported numbers
+    // don't, so the creator is asked to connect the account on the next save.
+    const checked = socialNumbers(c, s);
     base.socials[s.network] = {
       handle: s.handle,
-      followers: String(s.followers),
-      avg_views: s.avg_views == null ? "" : String(s.avg_views),
+      followers: checked.checked && checked.followers != null ? String(checked.followers) : "",
+      avg_views: checked.checked && checked.avg_views != null ? String(checked.avg_views) : "",
     };
   }
   for (const p of c.creator_prices) {

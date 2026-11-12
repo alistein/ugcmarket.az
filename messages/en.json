@@ -57,7 +57,11 @@
     "creator_exists": "You already have a profile.",
     "portfolio_full": "Your portfolio is full.",
     "portfolio_duplicate": "That link is already in your portfolio.",
-    "stats_cooldown": "You can refresh the numbers once a day. Try again tomorrow."
+    "stats_cooldown": "You can refresh the numbers once a day. Try again tomorrow.",
+    "lookup_limit": "Too many checks in the last hour. Try again a bit later.",
+    "lookup_unavailable": "Automatic checks aren’t available right now. Try again later.",
+    "lookup_not_found": "Account not found or private. Check the username; the account must be public.",
+    "lookup_failed": "Couldn’t check the account. Try again."
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters).",
@@ -80,7 +84,8 @@
     "languagesMin": "Pick at least one language.",
     "socialsMin": "Add at least one social account.",
     "portfolioUrl": "Enter a link to an Instagram post or Reel (https://…).",
-    "avatar": "Upload the photo again."
+    "avatar": "Upload the photo again.",
+    "lookupRequired": "After entering the username, press “Connect account”."
   },
   "landing": {
     "nav": {
@@ -441,7 +446,7 @@
       "languages": "Content language",
       "barter": "Open to barter",
       "barterHint": "Collaborate in exchange for a product or service instead of money.",
-      "socialsHint": "You enter these numbers yourself. Your profile labels them as “reported by the creator”.",
+      "socialsHint": "Enter your username and press “Connect account”. We take followers and views from your account automatically.",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -464,7 +469,13 @@
         "save": "Save",
         "saving": "Uploading…"
       },
-      "moreNetworksSoon": "TikTok and YouTube are coming soon. For now, add your Instagram account."
+      "moreNetworksSoon": "TikTok and YouTube are coming soon. For now, add your Instagram account.",
+      "connect": "Connect account",
+      "reconnect": "Refresh",
+      "connecting": "Checking the account. This can take up to 30 seconds.",
+      "connected": "Taken from Instagram",
+      "statFollowers": "followers",
+      "statAvgViews": "avg. views"
     },
     "portfolio": {
       "title": "Portfolio",

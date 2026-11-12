@@ -115,6 +115,25 @@ export function socialNumbers(
     : { followers: s.followers, avg_views: s.avg_views, avg_likes: null, checked: false, checked_at: null };
 }
 
+export type LookupResult = {
+  network: Network;
+  handle: string;
+  followers: number;
+  posts: number | null;
+  avg_views: number | null;
+  avg_likes: number | null;
+};
+
+/** "Connect account": fetch public numbers for a username now (server rate-limits; paid). */
+export function useLookupSocial() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (v: { network: Network; handle: string }) =>
+      api<LookupResult>("/creators/socials/lookup", { method: "POST", json: v }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: creatorKeys.mine }),
+  });
+}
+
 export function useRefreshSocialStats() {
   const qc = useQueryClient();
   return useMutation({

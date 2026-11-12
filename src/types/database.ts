@@ -486,6 +486,36 @@ export type Database = {
           },
         ]
       }
+      social_lookups: {
+        Row: {
+          created_at: string
+          handle: string
+          id: number
+          network: Database["public"]["Enums"]["social_network"]
+          ok: boolean
+          source: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          handle: string
+          id?: never
+          network: Database["public"]["Enums"]["social_network"]
+          ok: boolean
+          source?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          handle?: string
+          id?: never
+          network?: Database["public"]["Enums"]["social_network"]
+          ok?: boolean
+          source?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       portfolio_item_stats: {
         Row: {
           attempted_at: string

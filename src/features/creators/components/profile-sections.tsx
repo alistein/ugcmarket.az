@@ -4,18 +4,22 @@ import {
   Alert02Icon,
   CheckmarkCircle02Icon,
   InstagramIcon,
+  Loading03Icon,
   LockIcon,
+  RefreshIcon,
   TiktokIcon,
   YoutubeIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { Field } from "@/components/shared/form-field";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import {
   CITIES,
@@ -23,9 +27,10 @@ import {
   CREATOR_CATEGORIES,
   CreatorHandle,
   ENABLED_PRICE_FORMATS,
+  SocialUsername,
 } from "@/schemas";
 import { type CreatorFormValues, NETWORKS, suggestHandle } from "../form";
-import { useHandleAvailability } from "../hooks";
+import { useHandleAvailability, useLookupSocial } from "../hooks";
 import { AvatarField, ChipGroup } from "./form-bits";
 
 type Form = UseFormReturn<CreatorFormValues>;
@@ -246,58 +251,14 @@ export function SocialFields({ form }: { form: Form }) {
   return (
     <>
       <p className="-mt-2 text-sm text-muted-foreground">{t("socialsHint")}</p>
-      {NETWORKS.map((n) => {
-        const e = errors?.[n];
-        return (
-          <div
-            key={n}
-            className="grid gap-3 border-b border-border/70 pb-5 md:grid-cols-[9rem_minmax(0,1fr)_9rem_9rem] md:gap-4"
-          >
-            <div className="flex items-center gap-2 text-sm font-medium md:pt-8">
-              <span className={cn("flex size-7 items-center justify-center rounded-full", NETWORK_TINT[n])}>
-                <HugeiconsIcon icon={NETWORK_ICON[n]} strokeWidth={2} className="size-4" />
-              </span>
-              {t(`network.${n}`)}
-            </div>
-            <Field label={t("username")} error={e?.handle ?? (n === "instagram" ? rootError : undefined)}>
-              {(a) => (
-                <Input
-                  {...a}
-                  {...register(`socials.${n}.handle`)}
-                  autoCapitalize="none"
-                  autoCorrect="off"
-                  spellCheck={false}
-                  placeholder="@"
-                />
-              )}
-            </Field>
-            <div className="grid grid-cols-2 gap-3 md:contents">
-              <Field label={t("followers")} error={e?.followers}>
-                {(a) => (
-                  <Input
-                    {...a}
-                    {...register(`socials.${n}.followers`)}
-                    inputMode="numeric"
-                    placeholder="12500"
-                    className="tabular-nums"
-                  />
-                )}
-              </Field>
-              <Field label={t("avgViews")} error={e?.avg_views}>
-                {(a) => (
-                  <Input
-                    {...a}
-                    {...register(`socials.${n}.avg_views`)}
-                    inputMode="numeric"
-                    placeholder="4000"
-                    className="tabular-nums"
-                  />
-                )}
-              </Field>
-            </div>
-          </div>
-        );
-      })}
+      {NETWORKS.map((n) => (
+        <SocialConnectRow
+          key={n}
+          form={form}
+          network={n}
+          rootError={n === "instagram" ? rootError : undefined}
+        />
+      ))}
       <p className="text-sm text-muted-foreground">{t("moreNetworksSoon")}</p>
       <div className="grid gap-4 pt-1 md:grid-cols-2">
         <p className="flex items-start gap-2 text-sm text-muted-foreground md:col-span-2">
@@ -329,6 +290,154 @@ export function SocialFields({ form }: { form: Form }) {
         </Field>
       </div>
     </>
+  );
+}
+
+/**
+ * One network: username + "Connect account". Followers / avg views are never typed; they come
+ * from the API lookup and are shown read-only. Editing the username clears them.
+ */
+function SocialConnectRow({
+  form,
+  network,
+  rootError,
+}: {
+  form: Form;
+  network: (typeof NETWORKS)[number];
+  rootError?: { message?: string };
+}) {
+  const t = useTranslations("creator.form");
+  const te = useTranslations();
+  const locale = useLocale();
+  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+  const { register, control, setValue, getValues, formState } = form;
+  const e = formState.errors.socials?.[network];
+  const followers = useWatch({ control, name: `socials.${network}.followers` });
+  const avgViews = useWatch({ control, name: `socials.${network}.avg_views` });
+  const lookup = useLookupSocial();
+  const [error, setError] = useState<string | null>(null);
+  const connected = !!followers;
+
+  const field = register(`socials.${network}.handle`);
+
+  const connect = () => {
+    const raw = getValues(`socials.${network}.handle`);
+    const parsed = SocialUsername.safeParse(raw);
+    if (!parsed.success) {
+      form.setError(`socials.${network}.handle`, { message: "validation.socialHandle" });
+      return;
+    }
+    setError(null);
+    lookup.mutate(
+      { network, handle: parsed.data },
+      {
+        onSuccess: (r) => {
+          setValue(`socials.${network}.handle`, r.handle, { shouldDirty: true });
+          setValue(`socials.${network}.followers`, String(r.followers), { shouldDirty: true });
+          setValue(`socials.${network}.avg_views`, r.avg_views == null ? "" : String(r.avg_views), {
+            shouldDirty: true,
+          });
+          form.clearErrors(`socials.${network}`);
+        },
+        onError: (err) => {
+          const key = err instanceof ApiClientError ? err.message : "errors.unknown";
+          setError(te.has(key as never) ? te(key as never) : te("errors.unknown"));
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="grid gap-3 border-b border-border/70 pb-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-4">
+      <div className="flex items-center gap-2 text-sm font-medium md:pt-8">
+        <span className={cn("flex size-7 items-center justify-center rounded-full", NETWORK_TINT[network])}>
+          <HugeiconsIcon icon={NETWORK_ICON[network]} strokeWidth={2} className="size-4" />
+        </span>
+        {t(`network.${network}`)}
+      </div>
+      <div className="grid gap-3">
+        <Field
+          label={t("username")}
+          error={e?.handle ?? rootError}
+          hint={lookup.isPending ? t("connecting") : undefined}
+        >
+          {(a) => (
+            <div className="flex gap-2">
+              <Input
+                {...a}
+                {...field}
+                onChange={(ev) => {
+                  void field.onChange(ev);
+                  // A different account: previous numbers no longer apply.
+                  if (getValues(`socials.${network}.followers`)) {
+                    setValue(`socials.${network}.followers`, "");
+                    setValue(`socials.${network}.avg_views`, "");
+                  }
+                }}
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    ev.preventDefault();
+                    connect();
+                  }
+                }}
+                disabled={lookup.isPending}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                placeholder="@"
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant={connected ? "outline" : "default"}
+                disabled={lookup.isPending}
+                onClick={connect}
+                className="shrink-0"
+              >
+                {lookup.isPending ? (
+                  <HugeiconsIcon
+                    icon={Loading03Icon}
+                    strokeWidth={2}
+                    className="animate-spin"
+                    data-icon="inline-start"
+                  />
+                ) : connected ? (
+                  <HugeiconsIcon icon={RefreshIcon} strokeWidth={2} data-icon="inline-start" />
+                ) : null}
+                {connected ? t("reconnect") : t("connect")}
+              </Button>
+            </div>
+          )}
+        </Field>
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {error}
+          </p>
+        )}
+        {connected && !lookup.isPending && (
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl bg-mint/50 px-4 py-3">
+            <span>
+              <span className="text-lg font-semibold tracking-[-0.02em] tabular-nums">
+                {compact.format(Number(followers))}
+              </span>{" "}
+              <span className="text-sm text-muted-foreground">{t("statFollowers")}</span>
+            </span>
+            {avgViews && (
+              <span>
+                <span className="text-lg font-semibold tracking-[-0.02em] tabular-nums">
+                  {compact.format(Number(avgViews))}
+                </span>{" "}
+                <span className="text-sm text-muted-foreground">{t("statAvgViews")}</span>
+              </span>
+            )}
+            <span className="ml-auto inline-flex items-center gap-1 text-xs font-medium text-mint-ink">
+              <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-3.5" />
+              {t("connected")}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 

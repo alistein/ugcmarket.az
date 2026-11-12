@@ -264,3 +264,78 @@ export async function refreshStaleStats({ budgetMs }: { budgetMs: number }) {
   await Promise.all(workers);
   return { done, remaining: queue.length, creators: staleCreators.size, portfolio: staleItems.length };
 }
+
+// ── "Connect account": synchronous lookup from the profile form ───────────────
+
+/** Paid lookups a user can start per hour (typos and retries included). */
+const LOOKUPS_PER_HOUR = 8;
+
+/**
+ * Look up a public account right now and return its numbers for the form. If the creator
+ * profile already exists, the numbers are also saved as checked stats.
+ */
+export async function lookupSocial(user: SessionUser, network: Network, handle: string) {
+  const db = createAdminClient();
+  const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+  const { count } = await db
+    .from("social_lookups")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .gte("created_at", since);
+  if ((count ?? 0) >= LOOKUPS_PER_HOUR) throw new ApiError(429, "lookup_limit", "errors.lookup_limit");
+
+  const providers = providersFor(network);
+  if (!providers.length) throw new ApiError(503, "lookup_unavailable", "errors.lookup_unavailable");
+
+  const log = (ok: boolean, source: string | null) =>
+    db.from("social_lookups").insert({ user_id: user.id, network, handle, ok, source });
+
+  const errors: string[] = [];
+  for (const provider of providers) {
+    try {
+      const profile = await provider.fetchProfile(handle);
+      if (!profile || profile.followers == null) {
+        errors.push(`${provider.id}: not found or private`);
+        continue;
+      }
+      await log(true, provider.id);
+      const { data: creator } = await db
+        .from("creators")
+        .select("id")
+        .eq("profile_id", user.id)
+        .maybeSingle();
+      if (creator) {
+        await db.from("creator_social_stats").upsert({
+          creator_id: creator.id,
+          network,
+          handle,
+          followers: profile.followers,
+          posts: profile.posts,
+          avg_views: profile.avg_views,
+          avg_likes: profile.avg_likes,
+          recent: profile.recent as unknown as Json,
+          source: provider.id,
+          fetched_at: new Date().toISOString(),
+          attempted_at: new Date().toISOString(),
+          error: null,
+        });
+      }
+      return {
+        network,
+        handle,
+        followers: profile.followers,
+        posts: profile.posts,
+        avg_views: profile.avg_views,
+        avg_likes: profile.avg_likes,
+      };
+    } catch (e) {
+      errors.push(e instanceof ProviderError ? e.message : `${provider.id}: ${(e as Error).message}`);
+    }
+  }
+  await log(false, null);
+  console.warn(`[social-stats] lookup ${network}/${handle}: ${errors.join(" | ")}`);
+  if (errors.every((e) => e.includes("not found"))) {
+    throw new ApiError(404, "lookup_not_found", "errors.lookup_not_found");
+  }
+  throw new ApiError(502, "lookup_failed", "errors.lookup_failed");
+}
