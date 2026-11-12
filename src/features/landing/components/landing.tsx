@@ -151,7 +151,12 @@ function Audience() {
     { id: "creators", label: t("creatorsLabel"), title: t("creatorsTitle"), points: [t("creators1"), t("creators2"), t("creators3")], link: "ugcmarket.az/creator/aysel.mmd" },
   ];
   return (
-    <section id="brands" className="mx-auto grid max-w-6xl scroll-mt-20 gap-4 px-4 py-12 md:grid-cols-2">
+    <section id="brands" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-12">
+      <div className="mb-12 space-y-4 text-center">
+        <Pill>{t("label")}</Pill>
+        <h2 className="font-heading text-4xl font-semibold tracking-[-0.035em] sm:text-5xl">{t("title")}</h2>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
       {cards.map((c) => (
         <div key={c.id} id={c.id === "creators" ? "creators" : undefined} className="flex flex-col rounded-[2rem] bg-card p-8 shadow-(--shadow-raised) ring-1 ring-foreground/[0.04] dark:ring-white/[0.07]">
           <span className="text-sm font-medium text-primary">{c.label}</span>
@@ -169,6 +174,7 @@ function Audience() {
           </div>
         </div>
       ))}
+      </div>
     </section>
   );
 }
