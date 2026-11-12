@@ -48,7 +48,9 @@ More patterns:
 
 ## 5. Terms and voice (decided)
 - **Elan**, not *kampaniya*, for a brand's listing in Azerbaijani: `Elanlar`, `Elan yerləşdir`, `elanlara müraciət edin`.
-  Mind the suffixes: elanı, elana, elanın, elanda (not -ya/-nı forms of *kampaniya*). Code identifiers stay `campaign`.
+  Mind the suffixes: elanı, elana, elanın, elanda (not -ya/-nı forms of *kampaniya*).
+- Same concept in the other languages: Russian **объявление** (not кампания), English **listing** (not campaign).
+  Code identifiers, routes and DB names stay `campaign`.
 - **Siz everywhere**, landing page included. The landing keeps its lowercase marketing style, but addresses the reader with *siz*.
 - One term per concept. Before introducing a new word for an existing concept, check `messages/az.json` and ask the founders.
 

@@ -21,20 +21,20 @@
     "resetPassword": "Reset password",
     "verifyEmail": "Verify your email",
     "onboarding": "Account type",
-    "board": "Campaigns",
+    "board": "Listings",
     "creatorDashboard": "Dashboard",
     "creatorProfileEdit": "My profile",
     "creatorApplications": "My applications",
     "creatorPosts": "My posts",
     "brandDashboard": "Brand dashboard",
     "brandProfile": "Brand profile",
-    "campaignNew": "New campaign",
-    "campaignEdit": "Edit campaign",
+    "campaignNew": "New listing",
+    "campaignEdit": "Edit listing",
     "campaignApplicants": "Applicants",
     "adminDashboard": "Admin",
     "adminCreators": "Creators",
     "adminBrands": "Brands",
-    "adminCampaigns": "Campaigns",
+    "adminCampaigns": "Listings",
     "adminUsers": "Users"
   },
   "errors": {
@@ -51,7 +51,7 @@
       "resource": "Not found.",
       "creator": "Creator not found.",
       "brand": "Brand not found.",
-      "campaign": "Campaign not found.",
+      "campaign": "Listing not found.",
       "post": "Post not found."
     },
     "creator_exists": "You already have a profile.",
@@ -95,8 +95,8 @@
       "titleA": "let",
       "titleAccent": "creators",
       "titleB": "make your ads",
-      "sub": "brands post campaigns, creators advertise them on instagram and tiktok. paid or barter",
-      "ctaBrand": "post a campaign",
+      "sub": "brands post listings, creators advertise them on instagram and tiktok. paid or barter.",
+      "ctaBrand": "post a listing",
       "ctaCreator": "join as a creator",
       "note": "completely free for now",
       "brandAsk": "a brand?",
@@ -114,8 +114,8 @@
       "reels3": "autumn fit"
     },
     "board": {
-      "label": "campaign board",
-      "title": "every campaign in one place",
+      "label": "listing board",
+      "title": "every listing in one place",
       "sub": "creators browse and apply to the right one in one tap",
       "applied": "Aysel applied",
       "view": "view",
@@ -140,7 +140,7 @@
     "audience": {
       "brandsLabel": "for brands",
       "brandsTitle": "find the right creator",
-      "brands1": "post a campaign in 2 minutes",
+      "brands1": "post a listing in 2 minutes",
       "brands2": "browse profiles and portfolios",
       "brands3": "track posts and views",
       "creatorsLabel": "for creators",
@@ -167,7 +167,7 @@
       "cOne": "create a profile",
       "cOneSub": "niche, socials, sample work",
       "cTwo": "apply",
-      "cTwoSub": "one click on campaigns you like",
+      "cTwoSub": "one click on listings you like",
       "cThree": "shoot and earn",
       "cThreeSub": "drop the link, get paid",
       "cFollowers": "followers",
@@ -177,19 +177,19 @@
     "faq": {
       "title": "questions",
       "q1": "is it paid?",
-      "a1": "everything is free right now",
+      "a1": "everything is free right now.",
       "q2": "do payments go through the platform?",
-      "a2": "not yet, brands and creators agree directly",
+      "a2": "not yet, brands and creators agree directly.",
       "q3": "who can be a creator?",
-      "a3": "anyone with instagram or tiktok. small audiences welcome",
+      "a3": "anyone with instagram or tiktok. small audiences welcome.",
       "q4": "how do i see results?",
-      "a4": "the creator sends the post link and views, you confirm",
+      "a4": "the creator sends the post link and views, you confirm.",
       "q5": "how do i get paid?",
-      "a5": "not through the platform yet, you agree the fee and terms directly with the brand",
+      "a5": "not through the platform yet, you agree the fee and terms directly with the brand.",
       "q6": "how do i choose creators?",
-      "a6": "you post a campaign, review the profiles, follower counts and portfolios of those who applied, and pick yourself",
+      "a6": "you post a listing, review the profiles, follower counts and portfolios of those who applied, and pick yourself.",
       "q7": "can i use the video in my ads?",
-      "a7": "the brand and creator agree this directly, note the usage rights in the campaign so there are no surprises later"
+      "a7": "the brand and creator agree on this directly. note the usage rights in the listing so there are no surprises later."
     },
     "final": {
       "title": "your first collaboration, this week",
@@ -279,11 +279,11 @@
       "continue": "Continue",
       "brand": {
         "title": "Brand",
-        "body": "Post campaigns and let creators apply."
+        "body": "Post listings and let creators apply."
       },
       "creator": {
         "title": "Creator",
-        "body": "Apply to campaigns and show your portfolio."
+        "body": "Apply to listings and show your portfolio."
       }
     },
     "blocked": {
@@ -329,7 +329,7 @@
   "app": {
     "account": "Account",
     "publicProfile": "My public profile",
-    "browseCampaigns": "Campaigns",
+    "browseCampaigns": "Listings",
     "editProfile": "Edit profile",
     "myApplications": "My applications",
     "language": "Language"
@@ -398,7 +398,7 @@
       },
       "content": {
         "title": "Content types",
-        "subtitle": "Categories help you find the right campaigns."
+        "subtitle": "Categories help you find the right listings."
       },
       "socials": {
         "title": "Social accounts",
@@ -449,7 +449,7 @@
       "username": "Username or link",
       "followers": "Followers",
       "avgViews": "Avg. views",
-      "contactsHint": "Your contacts stay private. Only the brand of a campaign you apply to can see them.",
+      "contactsHint": "Your contacts stay private. Only the brand of a listing you apply to can see them.",
       "contactInstagram": "Instagram for contact",
       "contactPhone": "Phone",
       "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”.",
@@ -495,8 +495,8 @@
         "prices": "Add a price",
         "portfolio": "Add 3 portfolio items"
       },
-      "boardTitle": "Campaigns",
-      "boardBody": "Browse open brand campaigns and apply.",
+      "boardTitle": "Listings",
+      "boardBody": "Browse open brand listings and apply.",
       "status": {
         "pending": {
           "title": "Your profile is in review",
@@ -505,7 +505,7 @@
         },
         "approved": {
           "title": "Your profile is live",
-          "body": "Brands can see your profile and you can apply to campaigns."
+          "body": "Brands can see your profile and you can apply to listings."
         },
         "rejected": {
           "title": "Profile not approved",
@@ -568,8 +568,8 @@
       "prices": "Prices",
       "pricesEmpty": "Negotiable",
       "ctaTitle": "Want to work with this creator?",
-      "ctaBody": "Post a campaign and creators will apply to you.",
-      "ctaButton": "Post a campaign"
+      "ctaBody": "Post a listing and creators will apply to you.",
+      "ctaButton": "Post a listing"
     }
   }
 }
