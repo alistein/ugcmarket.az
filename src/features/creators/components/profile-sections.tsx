@@ -187,7 +187,7 @@ function HandleField({ form, currentHandle }: { form: Form; currentHandle?: stri
 export function ContentFields({ form }: { form: Form }) {
   const t = useTranslations("creator.form");
   const tt = useTranslations("taxonomy");
-  const { control, register, formState } = form;
+  const { control, formState } = form;
   return (
     <>
       <Field label={t("categories")} error={formState.errors.categories} hint={t("categoriesHint")}>
@@ -227,17 +227,6 @@ export function ContentFields({ form }: { form: Form }) {
           />
         )}
       </Field>
-      <label className="flex cursor-pointer items-start gap-3 rounded-2xl bg-muted p-4 has-checked:bg-mint/60">
-        <input
-          type="checkbox"
-          {...register("barter_open")}
-          className="mt-0.5 size-5 accent-[var(--primary)]"
-        />
-        <span className="grid gap-0.5">
-          <span className="text-sm font-medium">{t("barter")}</span>
-          <span className="text-sm text-muted-foreground">{t("barterHint")}</span>
-        </span>
-      </label>
     </>
   );
 }
@@ -469,6 +458,17 @@ export function PriceFields({ form }: { form: Form }) {
           </Field>
         ))}
       </div>
+      <label className="flex cursor-pointer items-start gap-3 rounded-2xl bg-muted p-4 has-checked:bg-mint/60">
+        <input
+          type="checkbox"
+          {...register("barter_open")}
+          className="mt-0.5 size-5 accent-[var(--primary)]"
+        />
+        <span className="grid gap-0.5">
+          <span className="text-sm font-medium">{t("barter")}</span>
+          <span className="text-sm text-muted-foreground">{t("barterHint")}</span>
+        </span>
+      </label>
     </>
   );
 }

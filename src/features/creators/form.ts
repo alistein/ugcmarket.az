@@ -80,9 +80,9 @@ export type CreatorFormValues = z.input<typeof CreatorForm>;
 /** Which fields each wizard step owns (validated with form.trigger before moving on). */
 export const STEP_FIELDS = {
   about: ["avatar_url", "display_name", "handle", "city", "bio"],
-  content: ["categories", "languages", "barter_open"],
+  content: ["categories", "languages"],
   socials: ["socials", "contact_instagram", "contact_phone"],
-  prices: ["prices"],
+  prices: ["prices", "barter_open"],
 } as const;
 export type Step = keyof typeof STEP_FIELDS;
 export const STEPS = Object.keys(STEP_FIELDS) as Step[];
