@@ -56,7 +56,8 @@
     },
     "creator_exists": "You already have a profile.",
     "portfolio_full": "Your portfolio is full.",
-    "portfolio_duplicate": "That link is already in your portfolio."
+    "portfolio_duplicate": "That link is already in your portfolio.",
+    "stats_cooldown": "You can refresh the numbers once an hour. Try again later."
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters).",
@@ -545,7 +546,13 @@
         "tag2": "Lifestyle",
         "barter": "Open to barter",
         "followers": "followers"
-      }
+      },
+      "checked": "Checked automatically",
+      "statsCheckedAt": "Numbers checked automatically: {when}.",
+      "statsSelfReported": "You entered these numbers. Automatic checks are coming soon.",
+      "statsRefresh": "Refresh numbers",
+      "statsRefreshing": "Checking…",
+      "statsRefreshed": "Numbers updated."
     },
     "public": {
       "login": "Sign in",
@@ -557,7 +564,7 @@
       "edit": "Edit",
       "followers": "followers",
       "avgViews": "{views} avg. views",
-      "selfReported": "Numbers are reported by the creator.",
+      "selfReported": "Numbers without a check mark are reported by the creator.",
       "portfolio": "Portfolio",
       "portfolioEmpty": "No work added yet.",
       "networkPost": {
@@ -569,7 +576,8 @@
       "pricesEmpty": "Negotiable",
       "ctaTitle": "Want to work with this creator?",
       "ctaBody": "Post a listing and creators will apply to you.",
-      "ctaButton": "Post a listing"
+      "ctaButton": "Post a listing",
+      "checked": "Checked automatically"
     }
   }
 }

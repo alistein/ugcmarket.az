@@ -1,4 +1,5 @@
 import "server-only";
+import { after } from "next/server";
 import { env } from "@/lib/env";
 import type {
   CreatorProfileInput,
@@ -11,11 +12,12 @@ import { track } from "@/server/analytics";
 import type { SessionUser } from "@/server/auth";
 import { createPublicClient, createUserClient } from "@/server/db/supabase";
 import { ApiError, errors } from "@/server/http/errors";
+import { refreshCreatorSocialStatsQuietly } from "./social-stats";
 
 type Db = Awaited<ReturnType<typeof createUserClient>>;
 
 const PUBLIC_FIELDS =
-  "id, handle, display_name, avatar_url, city, country, categories, languages, bio, barter_open, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position)";
+  "id, handle, display_name, avatar_url, city, country, categories, languages, bio, barter_open, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position)";
 
 const MAX_PORTFOLIO = 12;
 
@@ -133,6 +135,8 @@ export async function createMyCreator(user: SessionUser, input: CreatorProfileIn
   await saveContacts(supabase, data.id, contact_instagram ?? null, contact_phone ?? null);
   if (socials?.length) await replaceSocials(supabase, data.id, socials);
   if (prices?.length) await replacePrices(supabase, data.id, prices);
+  // Check the public numbers in the background (providers can take seconds).
+  if (socials?.length) after(() => refreshCreatorSocialStatsQuietly(data.id));
   await track(user.id, "creator_profile_completed");
   return getMyCreator(user);
 }
@@ -149,7 +153,10 @@ export async function updateMyCreator(user: SessionUser, input: CreatorProfileUp
     if (error) throw error;
   }
   await saveContacts(supabase, me.id, contact_instagram, contact_phone);
-  if (socials) await replaceSocials(supabase, me.id, socials);
+  if (socials) {
+    await replaceSocials(supabase, me.id, socials);
+    after(() => refreshCreatorSocialStatsQuietly(me.id));
+  }
   if (prices) await replacePrices(supabase, me.id, prices);
   return getMyCreator(user);
 }

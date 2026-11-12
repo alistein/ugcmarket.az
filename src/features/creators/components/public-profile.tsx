@@ -3,6 +3,7 @@
 import {
   ArrowUpRight01Icon,
   CheckmarkBadge01Icon,
+  CheckmarkCircle02Icon,
   Clock01Icon,
   Location01Icon,
   PencilEdit02Icon,
@@ -18,7 +19,7 @@ import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
-import type { CreatorPublic } from "../hooks";
+import { type CreatorPublic, socialNumbers } from "../hooks";
 import { shortUrl } from "./portfolio-editor";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
 
@@ -85,7 +86,6 @@ export function PublicCreatorProfile({
   const tt = useTranslations("taxonomy");
   const locale = useLocale();
   const { data: me } = useMe();
-  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
   const money = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
   const known = <T extends string>(list: readonly T[], v: string): v is T =>
     (list as readonly string[]).includes(v);
@@ -184,21 +184,12 @@ export function PublicCreatorProfile({
                     className="ml-auto size-4 text-muted-foreground"
                   />
                 </div>
-                <p className="mt-4 text-3xl font-semibold tracking-[-0.03em] tabular-nums">
-                  {compact.format(s.followers)}
-                </p>
-                <p className="text-sm text-muted-foreground">{t("followers")}</p>
-                {s.avg_views != null && (
-                  <p className="mt-2 inline-flex items-center gap-1 text-sm text-muted-foreground tabular-nums">
-                    <HugeiconsIcon icon={ViewIcon} strokeWidth={2} className="size-4" />
-                    {t("avgViews", { views: compact.format(s.avg_views) })}
-                  </p>
-                )}
+                <SocialCardNumbers creator={c} social={s} />
               </a>
             ))}
           </section>
         )}
-        {c.creator_socials.length > 0 && (
+        {c.creator_socials.some((s) => !socialNumbers(c, s).checked) && (
           <p className="mt-2 px-1 text-xs text-muted-foreground">{t("selfReported")}</p>
         )}
 
@@ -293,5 +284,39 @@ export function PublicCreatorProfile({
         </div>
       </main>
     </div>
+  );
+}
+
+/** Followers + avg views for one account; automatically checked numbers get a label. */
+function SocialCardNumbers({
+  creator,
+  social,
+}: {
+  creator: CreatorPublic;
+  social: CreatorPublic["creator_socials"][number];
+}) {
+  const t = useTranslations("creator.public");
+  const locale = useLocale();
+  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+  const n = socialNumbers(creator, social);
+  return (
+    <>
+      <p className="mt-4 text-3xl font-semibold tracking-[-0.03em] tabular-nums">
+        {compact.format(n.followers)}
+      </p>
+      <p className="text-sm text-muted-foreground">{t("followers")}</p>
+      {n.avg_views != null && (
+        <p className="mt-2 inline-flex items-center gap-1 text-sm text-muted-foreground tabular-nums">
+          <HugeiconsIcon icon={ViewIcon} strokeWidth={2} className="size-4" />
+          {t("avgViews", { views: compact.format(n.avg_views) })}
+        </p>
+      )}
+      {n.checked && (
+        <p className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-mint-ink">
+          <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-3.5" />
+          {t("checked")}
+        </p>
+      )}
+    </>
   );
 }

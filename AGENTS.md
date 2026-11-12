@@ -90,8 +90,14 @@ Add deps: `pnpm add <pkg>` / `pnpm add -D <pkg>`. One-off CLIs: `pnpm dlx <cli>`
 Local CLIs: `pnpm exec <bin>` (e.g. `pnpm exec supabase`). Commit `pnpm-lock.yaml`; never create `package-lock.json`.
 New dependency with an install script → decide it in `pnpm-workspace.yaml` → `allowBuilds` (true only if it needs it).
 
+## Social numbers (src/server/social)
+Followers / views / likes are checked by pluggable providers (`SocialStatsProvider`), tried in registry order per
+network: official APIs first (Instagram Business Discovery, YouTube Data API), third-party scraping (Apify) only as a
+temporary fallback until Meta/TikTok review. Results go to `creator_social_stats` (service role only); UI prefers them
+over self-reported numbers when the handle matches. Priority: Instagram, then TikTok, then YouTube.
+
 ## Scope guard (MVP)
-Not building yet: catalog/search, saved lists, compare, messaging, payments, ratings, disputes, AI assistant, social API verification.
+Not building yet: catalog/search, saved lists, compare, messaging, payments, ratings, disputes, AI assistant.
 Ask before adding anything from that list.
 
 <!-- BEGIN:nextjs-agent-rules -->

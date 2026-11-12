@@ -56,7 +56,8 @@
     },
     "creator_exists": "Sizin artıq kreator profiliniz var.",
     "portfolio_full": "Portfolio doludur. Yeni iş əlavə etmək üçün birini silin.",
-    "portfolio_duplicate": "Bu link artıq portfolionuzda var."
+    "portfolio_duplicate": "Bu link artıq portfolionuzda var.",
+    "stats_cooldown": "Rəqəmləri saatda bir dəfə yeniləmək olar. Bir az sonra yenidən cəhd edin."
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol).",
@@ -545,7 +546,13 @@
         "tag2": "Lifestyle",
         "barter": "Barterə açıq",
         "followers": "izləyici"
-      }
+      },
+      "checked": "Avtomatik yoxlanılıb",
+      "statsCheckedAt": "Rəqəmlər avtomatik yoxlanılıb: {when}.",
+      "statsSelfReported": "Rəqəmləri özünüz daxil etmisiniz. Avtomatik yoxlama tezliklə əlavə olunacaq.",
+      "statsRefresh": "Rəqəmləri yenilə",
+      "statsRefreshing": "Yoxlanılır…",
+      "statsRefreshed": "Rəqəmlər yeniləndi."
     },
     "public": {
       "login": "Daxil ol",
@@ -557,7 +564,7 @@
       "edit": "Redaktə et",
       "followers": "izləyici",
       "avgViews": "{views} orta baxış",
-      "selfReported": "Rəqəmlər kreatorun öz göstəriciləridir.",
+      "selfReported": "İşarəsi olmayan rəqəmləri kreator özü daxil edib.",
       "portfolio": "Portfolio",
       "portfolioEmpty": "Hələ heç bir iş əlavə olunmayıb.",
       "networkPost": {
@@ -569,7 +576,8 @@
       "pricesEmpty": "Razılaşma yolu ilə",
       "ctaTitle": "Bu kreatorla işləmək istəyirsiniz?",
       "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin.",
-      "ctaButton": "Elan yerləşdir"
+      "ctaButton": "Elan yerləşdir",
+      "checked": "Avtomatik yoxlanılıb"
     }
   }
 }

@@ -34,9 +34,56 @@ export type CreatorPublic = {
     avg_views: number | null;
     verified: boolean;
   }[];
+  /** Numbers checked automatically by the server (src/server/social). */
+  creator_social_stats?: SocialStats[];
   creator_prices: { format: string; amount: number; currency: string }[];
   portfolio_items: { id: string; url: string; network: Network; title: string | null; position: number }[];
 };
+
+export type SocialStats = {
+  network: Network;
+  handle: string;
+  followers: number | null;
+  posts: number | null;
+  avg_views: number | null;
+  avg_likes: number | null;
+  source: string | null;
+  fetched_at: string | null;
+};
+
+/**
+ * Numbers to show for one social account: automatically checked ones when they exist for the
+ * same handle, otherwise what the creator entered (self-reported).
+ */
+export function socialNumbers(
+  c: Pick<CreatorPublic, "creator_social_stats">,
+  s: CreatorPublic["creator_socials"][number],
+) {
+  const st = c.creator_social_stats?.find(
+    (x) =>
+      x.network === s.network &&
+      x.handle.toLowerCase() === s.handle.toLowerCase() &&
+      x.fetched_at &&
+      x.followers != null,
+  );
+  return st
+    ? {
+        followers: st.followers ?? s.followers,
+        avg_views: st.avg_views ?? s.avg_views,
+        avg_likes: st.avg_likes,
+        checked: true,
+        checked_at: st.fetched_at,
+      }
+    : { followers: s.followers, avg_views: s.avg_views, avg_likes: null, checked: false, checked_at: null };
+}
+
+export function useRefreshSocialStats() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: () => api<Record<string, string>>("/creators/me/socials/refresh", { method: "POST" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: creatorKeys.mine }),
+  });
+}
 
 export type MyCreator = CreatorPublic & { contact_instagram: string | null; contact_phone: string | null };
 

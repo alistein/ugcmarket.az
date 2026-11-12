@@ -4,8 +4,10 @@ import {
   Add01Icon,
   ArrowRight01Icon,
   CheckmarkBadge01Icon,
+  CheckmarkCircle02Icon,
   Clock01Icon,
   Copy01Icon,
+  RefreshIcon,
   Location01Icon,
   PencilEdit02Icon,
   Share08Icon,
@@ -20,10 +22,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "@/i18n/navigation";
+import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
 import { completeness } from "../form";
-import { type MyCreator, useMyCreator } from "../hooks";
+import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
 import { PortfolioEditor } from "./portfolio-editor";
 import { SetupPrompt } from "./setup-prompt";
 import { NETWORK_ICON } from "./profile-sections";
@@ -244,17 +247,28 @@ function Overview({ creator: c }: { creator: MyCreator }) {
   return (
     <Panel className="grid grid-cols-1 gap-5">
       <div className="flex flex-wrap gap-x-10 gap-y-4">
-        {c.creator_socials.map((s) => (
-          <div key={s.network}>
-            <p className="text-2xl font-semibold tracking-[-0.03em] tabular-nums">
-              {compact.format(s.followers)}
-            </p>
-            <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-              <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
-              {t("followers")}
-            </p>
-          </div>
-        ))}
+        {c.creator_socials.map((s) => {
+          const n = socialNumbers(c, s);
+          return (
+            <div key={s.network}>
+              <p className="flex items-center gap-1.5 text-2xl font-semibold tracking-[-0.03em] tabular-nums">
+                {compact.format(n.followers)}
+                {n.checked && (
+                  <HugeiconsIcon
+                    icon={CheckmarkCircle02Icon}
+                    strokeWidth={2}
+                    className="size-4 text-mint-ink"
+                    aria-label={t("checked")}
+                  />
+                )}
+              </p>
+              <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
+                {t("followers")}
+              </p>
+            </div>
+          );
+        })}
         <div>
           <p className="text-2xl font-semibold tracking-[-0.03em] tabular-nums">{c.portfolio_items.length}</p>
           <p className="text-sm text-muted-foreground">{t("works")}</p>
@@ -289,6 +303,8 @@ function Overview({ creator: c }: { creator: MyCreator }) {
           ))}
         </div>
       )}
+
+      {c.creator_socials.length > 0 && <StatsRefresh creator={c} />}
 
       <ShareRow creator={c} />
     </Panel>
@@ -373,4 +389,50 @@ function Prices({ creator: c }: { creator: MyCreator }) {
       </Button>
     </Panel>
   );
+}
+
+/** "Numbers checked automatically · 2h ago" + manual re-check (server rate-limits to 1/hour). */
+function StatsRefresh({ creator: c }: { creator: MyCreator }) {
+  const t = useTranslations("creator.dashboard");
+  const te = useTranslations();
+  const refresh = useRefreshSocialStats();
+  const checkedAt = c.creator_social_stats
+    ?.map((s) => s.fetched_at)
+    .filter((d): d is string => !!d)
+    .sort()
+    .at(-1);
+  // Fixed dd.mm.yyyy hh:mm: Intl has thin Azerbaijani date data ("2026 M11 12").
+  const when = checkedAt ? formatDateTime(new Date(checkedAt)) : null;
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-muted-foreground">
+      <span>{when ? t("statsCheckedAt", { when }) : t("statsSelfReported")}</span>
+      <Button
+        size="sm"
+        variant="ghost"
+        disabled={refresh.isPending}
+        onClick={() =>
+          refresh.mutate(undefined, {
+            onSuccess: () => toast.success(t("statsRefreshed")),
+            onError: (e) => {
+              const key = e instanceof ApiClientError ? e.message : "errors.unknown";
+              toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
+            },
+          })
+        }
+      >
+        <HugeiconsIcon
+          icon={RefreshIcon}
+          strokeWidth={2}
+          data-icon="inline-start"
+          className={cn(refresh.isPending && "animate-spin")}
+        />
+        {refresh.isPending ? t("statsRefreshing") : t("statsRefresh")}
+      </Button>
+    </div>
+  );
+}
+
+function formatDateTime(d: Date) {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }

@@ -336,6 +336,59 @@ export type Database = {
           },
         ]
       }
+      creator_social_stats: {
+        Row: {
+          attempted_at: string
+          avg_likes: number | null
+          avg_views: number | null
+          creator_id: string
+          error: string | null
+          fetched_at: string | null
+          followers: number | null
+          handle: string
+          network: Database["public"]["Enums"]["social_network"]
+          posts: number | null
+          recent: Json
+          source: string | null
+        }
+        Insert: {
+          attempted_at?: string
+          avg_likes?: number | null
+          avg_views?: number | null
+          creator_id: string
+          error?: string | null
+          fetched_at?: string | null
+          followers?: number | null
+          handle: string
+          network: Database["public"]["Enums"]["social_network"]
+          posts?: number | null
+          recent?: Json
+          source?: string | null
+        }
+        Update: {
+          attempted_at?: string
+          avg_likes?: number | null
+          avg_views?: number | null
+          creator_id?: string
+          error?: string | null
+          fetched_at?: string | null
+          followers?: number | null
+          handle?: string
+          network?: Database["public"]["Enums"]["social_network"]
+          posts?: number | null
+          recent?: Json
+          source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_social_stats_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creators"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       creator_socials: {
         Row: {
           avg_views: number | null
