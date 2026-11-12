@@ -7,3 +7,7 @@ allowBuilds:
   "@swc/core": false
   # Postinstall only prints a funding banner.
   core-js: false
+
+# Supply-chain guard: don't install package versions published less than 24h ago
+# (most hijacked releases are caught and pulled within hours). Minutes.
+minimumReleaseAge: 1440
