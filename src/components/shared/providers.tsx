@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import posthog from "posthog-js";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthSync } from "@/features/auth/components/auth-sync";
 import { ApiClientError } from "@/lib/api-client";
 import { env } from "@/lib/env";
 
@@ -27,6 +28,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthSync />
       {children}
       <Toaster position="top-center" />
       <ReactQueryDevtools initialIsOpen={false} />

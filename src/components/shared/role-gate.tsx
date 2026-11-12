@@ -1,25 +1,43 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
+import { AccountBlocked } from "@/features/auth/components/account-blocked";
 import { useMe } from "@/features/me/hooks";
-import { useRouter } from "@/i18n/navigation";
+import { usePathname, useRouter } from "@/i18n/navigation";
+import { type AppRole, homeFor } from "@/lib/auth-routes";
 
-/** Client-side guard for role areas. Real enforcement is in the API (requireRole) + RLS. */
-export function RoleGate({ role, children }: { role: "brand" | "creator" | "admin"; children: React.ReactNode }) {
-  const { data: me, isPending } = useMe();
+type Props = { role: AppRole; children: React.ReactNode };
+
+/**
+ * Client-side guard for role areas — UX only. src/proxy.ts already bounces signed-out users;
+ * real enforcement is requireRole() in the API + RLS.
+ *  signed out → /login?next=…   · no role → /onboarding   · wrong role → own home
+ *  blocked → blocked screen (API returns 403 for everything anyway)
+ */
+export function RoleGate({ role, children }: Props) {
+  const { data: me, isPending, isError } = useMe();
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
   const t = useTranslations("common");
 
-  useEffect(() => {
-    if (isPending) return;
-    if (!me) router.replace("/login");
-    else if (!me.role) router.replace("/onboarding");
-    else if (me.role !== role && me.role !== "admin") router.replace("/");
-  }, [me, isPending, role, router]);
+  const allowed = !!me && me.status !== "blocked" && (me.role === role || me.role === "admin");
 
-  if (isPending || !me || (me.role !== role && me.role !== "admin")) {
-    return <div className="p-10 text-sm text-neutral-500">{t("loading")}</div>;
+  useEffect(() => {
+    if (isPending || isError || allowed) return;
+    if (!me) router.replace({ pathname: "/login", query: { next: `/${locale}${pathname}` } });
+    else if (me.status === "blocked") return;
+    else router.replace(homeFor(me.role));
+  }, [me, isPending, isError, allowed, router, pathname, locale]);
+
+  if (me?.status === "blocked") return <AccountBlocked />;
+  if (!allowed) {
+    return (
+      <div role="status" className="flex flex-1 items-center justify-center p-10 text-sm text-muted-foreground">
+        {isError ? t("loadFailed") : t("loading")}
+      </div>
+    );
   }
   return <>{children}</>;
 }

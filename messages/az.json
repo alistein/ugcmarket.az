@@ -10,7 +10,9 @@
     "scaffold": "Bu səhifə hələ hazırlanır.",
     "save": "Yadda saxla",
     "cancel": "Ləğv et",
-    "apply": "Müraciət et"
+    "apply": "Müraciət et",
+    "loadFailed": "Yükləmək alınmadı. Səhifəni yenilə.",
+    "back": "Geri"
   },
   "pages": {
     "landing": "Ana səhifə",
@@ -54,7 +56,15 @@
     }
   },
   "validation": {
-    "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)."
+    "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol).",
+    "required": "Bu sahəni doldur",
+    "email": "E-poçt ünvanı düzgün deyil",
+    "passwordMin": "Ən azı 8 simvol",
+    "passwordMax": "Ən çox 72 simvol",
+    "passwordLetter": "Ən azı bir hərf olmalıdır",
+    "passwordDigit": "Ən azı bir rəqəm olmalıdır",
+    "passwordMismatch": "Şifrələr eyni deyil",
+    "otp": "6 rəqəmli kodu daxil et"
   },
   "landing": {
     "nav": {
@@ -155,6 +165,110 @@
     },
     "partner": {
       "label": "rəsmi tərəfdaşlarımız"
+    }
+  },
+  "auth": {
+    "google": "Google ilə davam et",
+    "or": "və ya",
+    "signOut": "Çıxış",
+    "fields": {
+      "email": "E-poçt",
+      "emailPlaceholder": "sen@mail.az",
+      "password": "Şifrə",
+      "newPassword": "Yeni şifrə",
+      "confirmPassword": "Şifrəni təkrarla",
+      "code": "Kod",
+      "showPassword": "Şifrəni göstər",
+      "hidePassword": "Şifrəni gizlət"
+    },
+    "login": {
+      "title": "Yenidən xoş gəldin",
+      "subtitle": "Hesabına daxil ol",
+      "tabPassword": "Şifrə ilə",
+      "tabCode": "Kodla",
+      "forgot": "Şifrəni unutmusan?",
+      "submit": "Daxil ol",
+      "codeHint": "E-poçtuna birdəfəlik kod göndərəcəyik — şifrə lazım deyil",
+      "noAccount": "Hesabın yoxdur?",
+      "signupLink": "Qeydiyyatdan keç"
+    },
+    "signup": {
+      "title": "Hesab yarat",
+      "subtitle": "Brendlər və kreatorlar üçün — pilotda pulsuz",
+      "titleBrand": "Brend hesabı yarat",
+      "titleCreator": "Kreator hesabı yarat",
+      "submit": "Qeydiyyatdan keç",
+      "passwordHint": "Ən azı 8 simvol, hərf və rəqəm",
+      "withCode": "Şifrəsiz, kodla qeydiyyat",
+      "withPassword": "Şifrə ilə qeydiyyat",
+      "haveAccount": "Artıq hesabın var?",
+      "loginLink": "Daxil ol"
+    },
+    "code": {
+      "send": "Kod göndər",
+      "title": "E-poçtunu yoxla",
+      "sentTo": "{email} ünvanına 6 rəqəmli kod göndərdik",
+      "verify": "Təsdiqlə",
+      "resend": "Kodu yenidən göndər",
+      "resendIn": "Yenidən göndərmək: {seconds} san",
+      "resent": "Yeni kod göndərildi",
+      "changeEmail": "Başqa e-poçt",
+      "spamHint": "Məktub gəlmirsə, spam qovluğunu yoxla"
+    },
+    "verify": {
+      "title": "E-poçtunu təsdiqlə",
+      "subtitle": "Qeydiyyatı tamamlamaq üçün {email} ünvanına göndərdiyimiz kodu daxil et",
+      "missingEmail": "Hansı e-poçtu təsdiqləyirsən?",
+      "continue": "Davam et"
+    },
+    "reset": {
+      "title": "Şifrəni bərpa et",
+      "subtitle": "E-poçtuna kod göndərəcəyik",
+      "send": "Kod göndər",
+      "codeTitle": "Yeni şifrə təyin et",
+      "codeSubtitle": "{email} ünvanına göndərdiyimiz kodu və yeni şifrəni daxil et",
+      "updateTitle": "Yeni şifrə təyin et",
+      "updateSubtitle": "Hesabın üçün yeni şifrə seç",
+      "submit": "Şifrəni yenilə",
+      "done": "Şifrən yeniləndi",
+      "backToLogin": "Girişə qayıt"
+    },
+    "onboarding": {
+      "title": "Necə qoşulursan?",
+      "subtitle": "Bunu sonradan dəyişmək olmur",
+      "signedInAs": "{email} kimi daxil olmusan",
+      "continue": "Davam et",
+      "brand": {
+        "title": "Brendəm",
+        "body": "Kampaniya yerləşdir, kreatorlar müraciət etsin"
+      },
+      "creator": {
+        "title": "Kreatoram",
+        "body": "Kampaniyalara müraciət et, portfolionu göstər"
+      }
+    },
+    "blocked": {
+      "title": "Hesabın məhdudlaşdırılıb",
+      "body": "Səhv olduğunu düşünürsənsə, komandamızla əlaqə saxla."
+    },
+    "errors": {
+      "invalid_credentials": "E-poçt və ya şifrə yanlışdır",
+      "email_not_confirmed": "E-poçt hələ təsdiqlənməyib — yeni kod göndərdik",
+      "code_invalid": "Kod yanlışdır və ya vaxtı keçib",
+      "too_many_emails": "Çox tez-tez cəhd edirsən. Bir dəqiqə sonra yenidən yoxla",
+      "too_many_requests": "Çox cəhd oldu. Bir az gözlə və yenidən yoxla",
+      "weak_password": "Şifrə çox zəifdir — daha güclü şifrə seç",
+      "same_password": "Yeni şifrə köhnəsi ilə eyni ola bilməz",
+      "signup_disabled": "Qeydiyyat hazırda bağlıdır",
+      "email_invalid": "E-poçt ünvanı düzgün deyil",
+      "blocked": "Bu hesab məhdudlaşdırılıb",
+      "network": "İnternet bağlantısını yoxla",
+      "oauth_cancelled": "Google ilə giriş ləğv edildi",
+      "oauth_failed": "Google ilə daxil olmaq alınmadı. Yenidən cəhd et",
+      "link_invalid": "Link etibarsızdır. Kodla daxil olmağı yoxla",
+      "link_expired": "Linkin vaxtı keçib. Yeni kod istə",
+      "session_missing": "Sessiyanın vaxtı keçib. Kodu yenidən istə",
+      "unknown": "Nəsə alınmadı. Yenidən cəhd et"
     }
   }
 }
