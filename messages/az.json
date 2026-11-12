@@ -152,6 +152,10 @@
     "footer": {
       "city": "Bakı, Azərbaycan",
       "rights": "© 2026 UGCMarket"
+    },
+    "partner": {
+      "label": "rəsmi tərəfdaşımız",
+      "logoAlt": "Decoliv"
     }
   }
 }

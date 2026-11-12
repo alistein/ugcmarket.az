@@ -198,8 +198,8 @@ function Hero() {
         <Card className="animate-enter [animation-delay:50ms]">
           <CardHeader>
             <div className="flex items-center gap-2.5">
-              <NamedAvatar name="Decolive" size="sm" />
-              <span className="text-sm font-medium">Decolive</span>
+              <NamedAvatar name="Decoliv" size="sm" />
+              <span className="text-sm font-medium">Decoliv</span>
               <Badge variant="mint" className="ml-auto">
                 Live
               </Badge>
@@ -707,7 +707,7 @@ function Cards() {
             <Label htmlFor="c-name" className="px-1">
               Name
             </Label>
-            <Input id="c-name" defaultValue="Decolive" />
+            <Input id="c-name" defaultValue="Decoliv" />
           </CardContent>
           <CardFooter className="justify-end gap-2">
             <Button variant="ghost">Cancel</Button>
@@ -733,7 +733,7 @@ function Cards() {
             <NamedAvatar name="Aysel Məmmədova" size="sm" />
             <NamedAvatar name="Nigar Rəhimli" />
             <NamedAvatar name="Leyla Kərimova" size="lg" />
-            <NamedAvatar name="Decolive" size="lg" badge />
+            <NamedAvatar name="Decoliv" size="lg" badge />
             <Separator orientation="vertical" className="mx-1 h-8" />
             <AvatarGroup>
               {["Aysel Məmmədova", "Nigar Rəhimli", "Leyla Kərimova", "Tural Səfərov"].map((n) => (
@@ -769,12 +769,12 @@ function Overlays() {
                 <Icon icon={CheckmarkCircle02Icon} className="size-5" />
               </div>
               <DialogTitle>Application sent</DialogTitle>
-              <DialogDescription>Message Decolive directly to agree on the details.</DialogDescription>
+              <DialogDescription>Message Decoliv directly to agree on the details.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-1 rounded-2xl bg-muted p-1.5 text-sm">
               <div className="flex items-center gap-3 rounded-xl px-3 py-2.5">
                 <Icon icon={InstagramIcon} className="size-4 text-muted-foreground" />
-                @decolive.az
+                @decoliv.az
               </div>
               <div className="flex items-center gap-3 rounded-xl px-3 py-2.5 tabular-nums">
                 <Icon icon={Call02Icon} className="size-4 text-muted-foreground" />
@@ -871,7 +871,7 @@ function Overlays() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-60">
             <DropdownMenuGroup>
-              <DropdownMenuLabel>Decolive</DropdownMenuLabel>
+              <DropdownMenuLabel>Decoliv</DropdownMenuLabel>
               <DropdownMenuItem>
                 <Icon icon={UserIcon} />
                 Brand profile
@@ -1101,7 +1101,7 @@ function Patterns() {
     >
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <CampaignCard
-          brand="Decolive"
+          brand="Decoliv"
           title="Yeni kolleksiya üçün ev interyeri Reels"
           network="instagram"
           format="Reels"

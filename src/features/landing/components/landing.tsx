@@ -8,6 +8,7 @@ import {
   Link01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -130,6 +131,19 @@ function Hero() {
   );
 }
 
+function Partner() {
+  const t = useTranslations("landing.partner");
+  return (
+    <section className="mx-auto max-w-6xl px-4">
+      <div className="flex flex-col items-center gap-5 border-y border-border/70 py-10 sm:flex-row sm:justify-center sm:gap-8">
+        <span className="text-sm text-muted-foreground">{t("label")}</span>
+        <span aria-hidden className="hidden h-6 w-px bg-border sm:block" />
+        <Image src="/partners/decoliv.png" alt={t("logoAlt")} width={743} height={160} className="h-9 w-auto sm:h-10" priority={false} />
+      </div>
+    </section>
+  );
+}
+
 function Board() {
   const t = useTranslations("landing.board");
   return (
@@ -147,7 +161,7 @@ function Board() {
 function Audience() {
   const t = useTranslations("landing.audience");
   const cards = [
-    { id: "brands", label: t("brandsLabel"), title: t("brandsTitle"), points: [t("brands1"), t("brands2"), t("brands3")], link: "ugcmarket.az/c/decolive-reels" },
+    { id: "brands", label: t("brandsLabel"), title: t("brandsTitle"), points: [t("brands1"), t("brands2"), t("brands3")], link: "ugcmarket.az/c/decoliv-reels" },
     { id: "creators", label: t("creatorsLabel"), title: t("creatorsTitle"), points: [t("creators1"), t("creators2"), t("creators3")], link: "ugcmarket.az/creator/aysel.mmd" },
   ];
   return (
@@ -340,6 +354,7 @@ export function Landing() {
       <Nav />
       <main>
         <Hero />
+        <Partner />
         <Board />
         <Audience />
         <Steps />

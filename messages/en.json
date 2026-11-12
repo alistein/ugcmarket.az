@@ -152,6 +152,10 @@
     "footer": {
       "city": "Baku, Azerbaijan",
       "rights": "© 2026 UGCMarket"
+    },
+    "partner": {
+      "label": "our official partner",
+      "logoAlt": "Decoliv"
     }
   }
 }

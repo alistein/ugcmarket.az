@@ -302,7 +302,7 @@ export function HeroProps() {
         <ViewsCounter />
       </Prop>
 
-      <Prop className="bottom-2 right-[9%] hidden lg:block" delay={350} rotate="-7deg">
+      <Prop className="bottom-20 right-[9%] hidden lg:block" delay={350} rotate="-7deg">
         <div className="relative flex w-44 flex-col items-center rounded-xl bg-sky px-4 py-3 text-sky-ink shadow-(--shadow-raised)">
           <span className="absolute top-1/2 -left-2 size-4 -translate-y-1/2 rounded-full bg-background" />
           <span className="absolute top-1/2 -right-2 size-4 -translate-y-1/2 rounded-full bg-background" />

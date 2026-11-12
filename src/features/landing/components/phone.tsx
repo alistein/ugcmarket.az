@@ -88,7 +88,7 @@ export function BoardPhone() {
   return (
     <div ref={ref} className="relative mx-auto w-full max-w-4xl">
       {/* Desktop: bubbles straddle the frame's sides (envite). */}
-      <Bubble side="sent" shown={shown} delay={150} from="Decolive" className="hidden md:flex md:top-[16%] md:left-[calc(50%+150px)]">
+      <Bubble side="sent" shown={shown} delay={150} from="Decoliv" className="hidden md:flex md:top-[16%] md:left-[calc(50%+150px)]">
         {t("offer")}
       </Bubble>
       <Bubble side="received" shown={shown} delay={850} from="@aysel.mmd" className="hidden md:flex md:right-[calc(50%+150px)] md:bottom-[26%]">
@@ -97,7 +97,7 @@ export function BoardPhone() {
 
       {/* Phone widths: offer above the top-right corner, reply below the bottom-left — content stays readable. */}
       <div className="relative z-30 -mb-7 flex justify-end pr-1 md:hidden">
-        <Bubble side="sent" shown={shown} delay={150} from="Decolive" className="relative">
+        <Bubble side="sent" shown={shown} delay={150} from="Decoliv" className="relative">
           {t("offer")}
         </Bubble>
       </div>
@@ -111,7 +111,7 @@ export function BoardPhone() {
           <div className="flex-1 space-y-5 px-5 pt-4">
             <div className="space-y-1.5">
               <div className="text-[13px] text-muted-foreground">
-                <span className="font-semibold text-foreground">Decolive</span> · ev dekoru
+                <span className="font-semibold text-foreground">Decoliv</span> · ev dekoru
               </div>
               <div className="font-heading text-[22px] leading-[1.15] font-semibold tracking-[-0.02em]">
                 Yeni kolleksiya üçün ev interyeri Reels
