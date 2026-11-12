@@ -342,7 +342,7 @@ export function PriceFields({ form }: { form: Form }) {
                   {...a}
                   {...register(`prices.${f}`)}
                   inputMode="decimal"
-                  placeholder="—"
+                  placeholder="0"
                   className="pr-14 tabular-nums"
                 />
                 <span className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-sm text-muted-foreground">

@@ -20,7 +20,7 @@
     "signup": "Sign up",
     "resetPassword": "Reset password",
     "verifyEmail": "Verify your email",
-    "onboarding": "Who are you?",
+    "onboarding": "Account type",
     "board": "Campaigns",
     "creatorDashboard": "Dashboard",
     "creatorProfileEdit": "My profile",
@@ -60,26 +60,26 @@
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters).",
-    "required": "Fill in this field",
-    "email": "Enter a valid email",
-    "passwordMin": "At least 8 characters",
-    "passwordMax": "At most 72 characters",
-    "passwordLetter": "Include at least one letter",
-    "passwordDigit": "Include at least one digit",
-    "passwordMismatch": "Passwords don’t match",
-    "otp": "Enter the 6-digit code",
-    "handleReserved": "This name can’t be used",
-    "socialHandle": "Not a valid username",
-    "number": "Enter a number",
-    "duplicate": "Duplicate",
-    "phone": "Not a valid phone number",
-    "tooLong": "Too long",
-    "categoriesMin": "Pick at least one category",
-    "categoriesMax": "At most 5 categories",
-    "languagesMin": "Pick at least one language",
-    "socialsMin": "Add at least one social account",
+    "required": "Fill in this field.",
+    "email": "Enter a valid email.",
+    "passwordMin": "At least 8 characters.",
+    "passwordMax": "At most 72 characters.",
+    "passwordLetter": "Include at least one letter.",
+    "passwordDigit": "Include at least one digit.",
+    "passwordMismatch": "Passwords don’t match.",
+    "otp": "Enter the 6-digit code.",
+    "handleReserved": "This name can’t be used.",
+    "socialHandle": "Not a valid username.",
+    "number": "Enter a number.",
+    "duplicate": "Duplicate.",
+    "phone": "Not a valid phone number.",
+    "tooLong": "Too long.",
+    "categoriesMin": "Pick at least one category.",
+    "categoriesMax": "At most 5 categories.",
+    "languagesMin": "Pick at least one language.",
+    "socialsMin": "Add at least one social account.",
     "portfolioUrl": "Enter an Instagram, TikTok or YouTube link (https://…)",
-    "avatar": "Upload the photo again"
+    "avatar": "Upload the photo again."
   },
   "landing": {
     "nav": {
@@ -222,22 +222,22 @@
     },
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign in to your account",
+      "subtitle": "Sign in to your account.",
       "tabPassword": "Password",
       "tabCode": "Email code",
       "forgot": "Forgot password?",
       "submit": "Sign in",
-      "codeHint": "We’ll email you a one-time code, no password needed",
+      "codeHint": "We’ll email you a one-time code, no password needed.",
       "noAccount": "No account yet?",
       "signupLink": "Sign up"
     },
     "signup": {
       "title": "Create your account",
-      "subtitle": "For brands and creators, free during the pilot",
+      "subtitle": "For brands and creators, free during the pilot.",
       "titleBrand": "Create a brand account",
       "titleCreator": "Create a creator account",
       "submit": "Sign up",
-      "passwordHint": "At least 8 characters, letters and digits",
+      "passwordHint": "At least 8 characters, letters and digits.",
       "withCode": "Sign up with a code instead",
       "withPassword": "Sign up with a password",
       "haveAccount": "Already have an account?",
@@ -246,44 +246,44 @@
     "code": {
       "send": "Send code",
       "title": "Check your email",
-      "sentTo": "We sent a 6-digit code to {email}",
+      "sentTo": "We sent a 6-digit code to {email}.",
       "verify": "Verify",
       "resend": "Resend code",
       "resendIn": "Resend in {seconds}s",
-      "resent": "New code sent",
+      "resent": "New code sent.",
       "changeEmail": "Use another email",
-      "spamHint": "Nothing yet? Check your spam folder"
+      "spamHint": "Nothing yet? Check your spam folder."
     },
     "verify": {
       "title": "Confirm your email",
-      "subtitle": "Enter the code we sent to {email} to finish signing up",
+      "subtitle": "Enter the code we sent to {email} to finish signing up.",
       "missingEmail": "Which email are you confirming?",
       "continue": "Continue"
     },
     "reset": {
       "title": "Reset your password",
-      "subtitle": "We’ll email you a code",
+      "subtitle": "We’ll email you a code.",
       "send": "Send code",
       "codeTitle": "Set a new password",
-      "codeSubtitle": "Enter the code we sent to {email} and your new password",
+      "codeSubtitle": "Enter the code we sent to {email} and your new password.",
       "updateTitle": "Set a new password",
-      "updateSubtitle": "Choose a new password for your account",
+      "updateSubtitle": "Choose a new password for your account.",
       "submit": "Update password",
-      "done": "Password updated",
+      "done": "Password updated.",
       "backToLogin": "Back to sign in"
     },
     "onboarding": {
-      "title": "How are you joining?",
-      "subtitle": "You can’t change this later",
-      "signedInAs": "Signed in as {email}",
+      "title": "Choose your account type",
+      "subtitle": "You can’t change this later.",
+      "signedInAs": "Signed in as {email}.",
       "continue": "Continue",
       "brand": {
-        "title": "I’m a brand",
-        "body": "Post campaigns and let creators apply"
+        "title": "Brand",
+        "body": "Post campaigns and let creators apply."
       },
       "creator": {
-        "title": "I’m a creator",
-        "body": "Apply to campaigns and show your portfolio"
+        "title": "Creator",
+        "body": "Apply to campaigns and show your portfolio."
       }
     },
     "blocked": {
@@ -291,24 +291,24 @@
       "body": "If you think this is a mistake, contact our team."
     },
     "errors": {
-      "invalid_credentials": "Wrong email or password",
-      "email_not_confirmed": "Email not confirmed yet, we sent you a new code",
-      "code_invalid": "The code is wrong or expired",
-      "too_many_emails": "Too many attempts. Try again in a minute",
-      "too_many_requests": "Too many attempts. Wait a bit and try again",
-      "weak_password": "That password is too weak, pick a stronger one",
-      "same_password": "New password must differ from the old one",
-      "signup_disabled": "Sign-ups are closed right now",
-      "email_invalid": "Enter a valid email",
-      "blocked": "This account is restricted",
-      "network": "Check your internet connection",
-      "oauth_cancelled": "Google sign-in was cancelled",
-      "oauth_failed": "Couldn’t sign in with Google. Try again",
-      "link_invalid": "This link is invalid. Try signing in with a code",
-      "link_expired": "This link has expired. Request a new code",
-      "session_missing": "Your session expired. Request a new code",
-      "unknown": "Something went wrong. Try again",
-      "email_off": "Emails are off in test mode. Message the team to confirm your account"
+      "invalid_credentials": "Wrong email or password.",
+      "email_not_confirmed": "Email not confirmed yet, we sent you a new code.",
+      "code_invalid": "The code is wrong or expired.",
+      "too_many_emails": "Too many attempts. Try again in a minute.",
+      "too_many_requests": "Too many attempts. Wait a bit and try again.",
+      "weak_password": "That password is too weak, pick a stronger one.",
+      "same_password": "New password must differ from the old one.",
+      "signup_disabled": "Sign-ups are closed right now.",
+      "email_invalid": "Enter a valid email.",
+      "blocked": "This account is restricted.",
+      "network": "Check your internet connection.",
+      "oauth_cancelled": "Google sign-in was cancelled.",
+      "oauth_failed": "Couldn’t sign in with Google. Try again.",
+      "link_invalid": "This link is invalid. Try signing in with a code.",
+      "link_expired": "This link has expired. Request a new code.",
+      "session_missing": "Your session expired. Request a new code.",
+      "unknown": "Something went wrong. Try again.",
+      "email_off": "Emails are off in test mode. Message the team to confirm your account."
     },
     "emailOff": {
       "title": "Test mode",
@@ -319,7 +319,7 @@
       "views": "views this month",
       "applicants": "creators applied",
       "brand": "Your brand",
-      "campaign": "New collection — Reels",
+      "campaign": "New collection: Reels",
       "barter": "barter",
       "deadline": "Nov 30",
       "apply": "Apply"
@@ -388,59 +388,59 @@
       "next": "Continue",
       "back": "Back",
       "finish": "Create profile",
-      "created": "Profile created and sent for review",
+      "created": "Profile created and sent for review.",
       "reviewNote": "You can add prices later too. Your profile goes public after review."
     },
     "steps": {
       "about": {
         "title": "About you",
-        "subtitle": "This is how brands will get to know you"
+        "subtitle": "This is how brands will get to know you."
       },
       "content": {
         "title": "Content types",
-        "subtitle": "Categories help you find the right campaigns"
+        "subtitle": "Categories help you find the right campaigns."
       },
       "socials": {
         "title": "Social accounts",
-        "subtitle": "Show your accounts and audience"
+        "subtitle": "Show your accounts and audience."
       },
       "prices": {
         "title": "Prices",
-        "subtitle": "Optional — a ballpark helps brands decide"
+        "subtitle": "Optional. A ballpark price helps brands decide."
       }
     },
     "edit": {
       "title": "My profile",
-      "subtitle": "Changes show on your public profile right away",
-      "saved": "Saved",
-      "fixErrors": "Fix the fields marked in red",
+      "subtitle": "Changes show on your public profile right away.",
+      "saved": "Saved.",
+      "fixErrors": "Fix the fields marked in red.",
       "unsaved": "Unsaved changes",
       "discard": "Discard",
       "save": "Save"
     },
     "form": {
       "avatar": "Profile photo",
-      "avatarHint": "A square photo where your face is clear",
+      "avatarHint": "A square photo where your face is clear.",
       "avatarPick": "Choose photo",
       "avatarRemove": "Remove photo",
       "avatarTooBig": "Photo is too large (max 15 MB)",
-      "avatarFailed": "Couldn’t upload the photo",
+      "avatarFailed": "Couldn’t upload the photo.",
       "displayName": "Name",
       "displayNamePh": "Aysel Mammadova",
       "handle": "Username",
-      "handleHint": "Your profile link: lowercase letters, digits, dot, underscore",
+      "handleHint": "Your profile link: lowercase letters, digits, dot, underscore.",
       "handleFree": "Available: /creator/{handle}",
       "city": "City",
       "cityPh": "Choose a city",
       "bio": "About",
-      "bioHint": "What you create, for whom, what makes you different",
+      "bioHint": "What you create, for whom, what makes you different.",
       "bioPh": "Lifestyle and beauty creator from Baku…",
       "categories": "Categories",
-      "categoriesHint": "Pick up to 5",
+      "categoriesHint": "Pick up to 5.",
       "languages": "Content language",
       "barter": "Open to barter",
-      "barterHint": "Collaborate in exchange for a product or service instead of money",
-      "socialsHint": "You enter these numbers yourself — your profile labels them as “reported by the creator”.",
+      "barterHint": "Collaborate in exchange for a product or service instead of money.",
+      "socialsHint": "You enter these numbers yourself. Your profile labels them as “reported by the creator”.",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -449,13 +449,13 @@
       "username": "Username or link",
       "followers": "Followers",
       "avgViews": "Avg. views",
-      "contactsHint": "Contacts stay private — only the brand of a campaign you apply to sees them.",
+      "contactsHint": "Your contacts stay private. Only the brand of a campaign you apply to can see them.",
       "contactInstagram": "Instagram for contact",
       "contactPhone": "Phone",
       "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”.",
       "crop": {
         "title": "Adjust your photo",
-        "hint": "Drag and zoom — what’s inside the circle becomes your profile photo.",
+        "hint": "Drag and zoom. Whatever is inside the circle becomes your profile photo.",
         "zoom": "Zoom",
         "zoomIn": "Zoom in",
         "zoomOut": "Zoom out",
@@ -466,16 +466,16 @@
     },
     "portfolio": {
       "title": "Portfolio",
-      "subtitle": "Links to your best work — brands decide faster with 3 or more",
+      "subtitle": "Add links to your best work. Brands decide faster when you have 3 or more.",
       "url": "Link",
-      "urlHint": "Link to an Instagram, TikTok or YouTube post",
-      "detected": "{network} link",
+      "urlHint": "Link to an Instagram, TikTok or YouTube post.",
+      "detected": "{network} link.",
       "titleLabel": "Title (optional)",
       "titlePh": "Reels for a café",
       "add": "Add",
       "open": "Open",
       "remove": "Remove",
-      "full": "Up to {max} items",
+      "full": "Up to {max} items.",
       "networks": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -496,11 +496,11 @@
         "portfolio": "Add 3 portfolio items"
       },
       "boardTitle": "Campaigns",
-      "boardBody": "Browse open brand campaigns and apply",
+      "boardBody": "Browse open brand campaigns and apply.",
       "status": {
         "pending": {
           "title": "Your profile is in review",
-          "body": "Usually within 24 hours. Once approved you can apply to listings — meanwhile, finish your profile.",
+          "body": "Your profile will be activated within 24 hours. Once approved, you can apply to listings. Meanwhile, finish your profile.",
           "badge": "In review"
         },
         "approved": {
@@ -515,11 +515,11 @@
         }
       },
       "shareTitle": "Your profile link",
-      "shareBody": "Put it in your bio or send it to brands",
-      "sharePending": "Everyone sees it after review — for now only you can",
+      "shareBody": "Put it in your bio or send it to brands.",
+      "sharePending": "Everyone can see it once approved. For now, only you can.",
       "copy": "Copy",
       "copied": "Copied",
-      "copyFailed": "Couldn’t copy",
+      "copyFailed": "Couldn’t copy.",
       "share": "Share",
       "preview": "View",
       "joined": "Joined {days, plural, =0 {today} one {# day ago} other {# days ago}}",
@@ -535,7 +535,7 @@
         "applications": "Applications"
       },
       "applicationsEmpty": "No applications yet",
-      "pricesEmpty": "No prices yet — your profile shows “negotiable”.",
+      "pricesEmpty": "No prices yet. Your profile shows “negotiable”.",
       "editPrices": "Edit prices",
       "setupEyebrow": "For creators",
       "applyRule": "To apply to listings, your profile must be complete and approved by our team.",
@@ -551,8 +551,8 @@
       "login": "Sign in",
       "notFoundBody": "The profile was removed, the link is wrong, or it’s still in review.",
       "home": "Home",
-      "previewPending": "Preview: your profile is in review — only you can see it for now.",
-      "previewRejected": "Preview: your profile wasn’t approved — others can’t see it.",
+      "previewPending": "Preview: your profile is in review. Only you can see it for now.",
+      "previewRejected": "Preview: your profile wasn’t approved, so others can’t see it.",
       "barter": "Open to barter",
       "edit": "Edit",
       "followers": "followers",
@@ -568,7 +568,7 @@
       "prices": "Prices",
       "pricesEmpty": "Negotiable",
       "ctaTitle": "Want to work with this creator?",
-      "ctaBody": "Post a campaign — creators apply to you.",
+      "ctaBody": "Post a campaign and creators will apply to you.",
       "ctaButton": "Post a campaign"
     }
   }

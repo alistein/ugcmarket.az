@@ -227,7 +227,8 @@ function StatusNote({ status }: { status: "pending" | "rejected" }) {
         status === "pending" ? "bg-sun/70 text-sun-ink" : "bg-rose text-rose-ink",
       )}
     >
-      <span className="font-medium">{t(`${status}.title`)}.</span> {t(`${status}.body`)}
+      {" "}
+      {t(`${status}.body`)}
     </p>
   );
 }

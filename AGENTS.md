@@ -30,6 +30,12 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
     Middleware is `src/proxy.ts`. Route `params` are Promises.
 11. Role guards in the UI (`RoleGate`) are UX only — real enforcement is `requireRole()` + RLS.
 
+## Copywriting (must, everywhere)
+Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) for every user-facing string:
+- **No em dash (—)** in any language. Use a period, comma or colon. `pnpm copy:check` must pass.
+- **Azerbaijani is written natively, never translated literally** from English or Russian. App UI uses formal **siz**.
+- **Finish the sentences:** body text, hints, errors and toasts end with a period; titles, labels and buttons don't.
+
 ## UI kit
 - `src/components/ui/*` came from shadcn but is **our UI kit now** — edit freely; it will diverge from upstream.
   Don't blindly re-run `pnpm dlx shadcn add` over an existing file (it overwrites our changes); diff first.
@@ -74,6 +80,7 @@ src/schemas/  src/lib/  src/i18n/  src/types/  messages/  supabase/
 - Mobile feel (most users are on phones) → `mobile-native`.
 - Before merging UI → `break-ui` (long Azerbaijani/Russian strings, empty states) and `review-animations`.
 - Landing page / marketing visuals (faux product UI, animated demos) → `stageshow`. Not for real app screens.
+- Any user-facing copy (az/ru/en) → `ugc-copywriting` (mandatory).
 - Toasts → `ask-sonner`. Library choice → `pick-ui-library` (explicit). UI variants → `prototype` (explicit).
 
 ## Commands (pnpm only — never npm/npx/yarn)

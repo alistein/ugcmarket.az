@@ -255,7 +255,7 @@ function Hero() {
 // ─── Foundations ─────────────────────────────────────────────────────────────
 
 const CORE_TOKENS = [
-  ["primary", "primary-foreground", "Sunset — actions"],
+  ["primary", "primary-foreground", "Sunset: actions"],
   ["foreground", "background", "Ink"],
   ["muted", "muted-foreground", "Fields & quiet surfaces"],
   ["card", "card-foreground", "Cards & popovers"],
@@ -276,7 +276,7 @@ function Foundations() {
       id="foundations"
       eyebrow="Foundations"
       title="Warm, quiet, and one color that means go."
-      description="Coral is reserved for the action on a screen. Everything else is warm neutrals and depth. The joy palette tints categories, networks and statuses — never buttons."
+      description="Coral is reserved for the action on a screen. Everything else is warm neutrals and depth. The joy palette tints categories, networks and statuses, never buttons."
     >
       <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
         <Panel label="Core" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -309,7 +309,7 @@ function Foundations() {
         </Panel>
       </div>
 
-      <Panel label="Type — Geist, tracking tightens as size grows" className="block space-y-5">
+      <Panel label="Type: Geist, tracking tightens as size grows" className="block space-y-5">
         {[
           ["Display · 60 / −3.5%", "text-6xl font-semibold tracking-[-0.035em] leading-[1.02]", "Bir yerdə."],
           ["Title · 36 / −2.5%", "text-4xl font-semibold tracking-[-0.025em] leading-[1.1]", "Kampaniyanı 5 dəqiqəyə yerləşdir"],
@@ -328,7 +328,7 @@ function Foundations() {
         </p>
       </Panel>
 
-      <Panel label="Depth — shadows do the work outlines used to" className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+      <Panel label="Depth: shadows do the work outlines used to" className="grid grid-cols-2 gap-6 sm:grid-cols-4">
         {[
           ["soft", "Fields, chips"],
           ["raised", "Cards"],
@@ -455,7 +455,7 @@ function Buttons() {
           <Button>Default</Button>
           <Button size="lg">Large</Button>
         </Panel>
-        <Panel label="State morph — try it">
+        <Panel label="State morph: try it">
           <ApplyButton />
           <span className="text-xs text-muted-foreground">Idle → sending → applied, with blur-masked swaps.</span>
         </Panel>
@@ -502,7 +502,7 @@ function Badges() {
       id="badges"
       eyebrow="Badges"
       title="Color that sorts, not shouts."
-      description="Joy tints mark what something is — a network, a reward, a status — so a board of campaigns scans at a glance."
+      description="Joy tints mark what something is (a network, a reward, a status), so a board of campaigns scans at a glance."
     >
       <Panel label="Variants">
         {(["default", "brand", "sun", "mint", "sky", "rose", "secondary", "outline", "destructive"] as const).map((v) => (
@@ -590,7 +590,7 @@ function Forms() {
     >
       <Panel className="grid gap-6 md:grid-cols-2">
         <Field id="f-title" label="Campaign title" hint="Shown on the campaign board.">
-          <Input id="f-title" placeholder="Yeni restoran açılışı — Reels" />
+          <Input id="f-title" placeholder="Yeni restoranın açılışı üçün Reels" />
         </Field>
         <Field id="f-handle" label="Username" error="Bu istifadəçi adı artıq tutulub.">
           <Input id="f-handle" defaultValue="aysel" aria-invalid />
@@ -644,7 +644,7 @@ function Forms() {
           </Field>
         </div>
       </Panel>
-      <Panel label="Segmented control (Tabs) — the indicator slides" className="grid gap-8 md:grid-cols-2">
+      <Panel label="Segmented control (Tabs): the indicator slides" className="grid gap-8 md:grid-cols-2">
         <Tabs defaultValue="all">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
@@ -1112,7 +1112,7 @@ function Patterns() {
         />
         <CampaignCard
           brand="Şirin Kafe"
-          title="Açılış həftəsi — 2 TikTok video, dequstasiya daxil"
+          title="Açılış həftəsi: 2 TikTok video, dequstasiya daxildir"
           network="tiktok"
           format="TikTok video"
           barter
@@ -1122,7 +1122,7 @@ function Patterns() {
         />
         <CreatorCard />
       </div>
-      <Panel label="Stress test — long Azerbaijani and Russian strings" className="grid gap-4 md:grid-cols-2">
+      <Panel label="Stress test: long Azerbaijani and Russian strings" className="grid gap-4 md:grid-cols-2">
         <CampaignCard
           brand="Azərbaycan Respublikası Gənclər və İdman Nazirliyinin Tədbirlər Mərkəzi"
           title="Beynəlxalq gənclər festivalının açılış mərasimi üçün çoxdilli qısa videoların hazırlanması və paylaşılması"

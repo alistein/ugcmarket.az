@@ -109,7 +109,7 @@ export async function isHandleAvailable(handle: string) {
   // PGRST202 = function not found → migration 20261112100000_creator_profile.sql not applied.
   if (error?.code === "PGRST202") {
     throw new Error(
-      "handle_available() is missing in the database — run `pnpm db:push && pnpm db:types:remote`.",
+      "handle_available() is missing in the database. Run `pnpm db:push && pnpm db:types:remote`.",
     );
   }
   if (error) throw error;
