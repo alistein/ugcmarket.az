@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useRouter } from "@/i18n/navigation";
+import { env } from "@/lib/env";
 import { OnboardingRole, SignupInput } from "@/schemas/auth";
 import { type AuthErrorKey, errorKeyOf } from "../errors";
 import { useAfterAuth, useNextPath, useSignUp } from "../hooks";
@@ -72,18 +73,20 @@ export function SignupView() {
       ) : (
         <SendCodeForm next={next} error={error} onError={setError} onSent={setCodeEmail} />
       )}
-      <Button
-        type="button"
-        variant="link"
-        size="sm"
-        className="mt-3 w-full"
-        onClick={() => {
-          setError(null);
-          setMode((m) => (m === "password" ? "code" : "password"));
-        }}
-      >
-        {mode === "password" ? t("signup.withCode") : t("signup.withPassword")}
-      </Button>
+      {env.authEmail && (
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          className="mt-3 w-full"
+          onClick={() => {
+            setError(null);
+            setMode((m) => (m === "password" ? "code" : "password"));
+          }}
+        >
+          {mode === "password" ? t("signup.withCode") : t("signup.withPassword")}
+        </Button>
+      )}
     </AuthCard>
   );
 }
@@ -112,6 +115,8 @@ function PasswordSignupForm({
         // Confirmations off (local dev) → already signed in. Otherwise confirm with the emailed code.
         // Existing emails get the same response on purpose (no account enumeration).
         if (data.session) onSignedIn();
+        // Emails off but Supabase still requires confirmation → nothing will arrive; say so.
+        else if (!env.authEmail) onError("email_off");
         else router.push({ pathname: "/verify-email", query: { email: v.email, next } });
       },
       onError: (e) => onError(errorKeyOf(e)),

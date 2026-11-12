@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
+import { env } from "@/lib/env";
 import {
   EmailInput,
   type EmailInput as EmailValues,
@@ -26,7 +27,16 @@ import {
   useUpdatePassword,
   useVerifyEmailCode,
 } from "../hooks";
-import { AuthCard, CodeInput, Field, FormError, PasswordInput, SubmitButton, useCooldown } from "./auth-ui";
+import {
+  AuthCard,
+  EmailOffCard,
+  CodeInput,
+  Field,
+  FormError,
+  PasswordInput,
+  SubmitButton,
+  useCooldown,
+} from "./auth-ui";
 
 /**
  * 1. request: email → recovery code
@@ -34,6 +44,10 @@ import { AuthCard, CodeInput, Field, FormError, PasswordInput, SubmitButton, use
  * update (?step=update, from the email link via /api/auth/confirm): session exists → new password only
  */
 export function ResetPasswordView() {
+  return env.authEmail ? <ResetPassword /> : <EmailOffCard />;
+}
+
+function ResetPassword() {
   const t = useTranslations("auth");
   const params = useSearchParams();
   const next = useNextPath(null);

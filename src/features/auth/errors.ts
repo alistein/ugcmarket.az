@@ -18,6 +18,7 @@ export type AuthErrorKey =
   | "link_invalid"
   | "link_expired"
   | "session_missing"
+  | "email_off"
   | "unknown";
 
 const AUTH_ERROR_KEYS = new Set<string>([
@@ -37,6 +38,7 @@ const AUTH_ERROR_KEYS = new Set<string>([
   "link_invalid",
   "link_expired",
   "session_missing",
+  "email_off",
   "unknown",
 ]);
 

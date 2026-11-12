@@ -292,7 +292,12 @@
       "link_invalid": "This link is invalid. Try signing in with a code",
       "link_expired": "This link has expired. Request a new code",
       "session_missing": "Your session expired. Request a new code",
-      "unknown": "Something went wrong. Try again"
+      "unknown": "Something went wrong. Try again",
+      "email_off": "Emails are off in test mode. Message the team to confirm your account"
+    },
+    "emailOff": {
+      "title": "Test mode",
+      "body": "Emails aren’t being sent yet. Sign in with Google or a password. Forgot your password? Message the team."
     }
   }
 }

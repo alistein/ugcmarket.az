@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, useRouter } from "@/i18n/navigation";
+import { env } from "@/lib/env";
 import { EmailInput, type EmailInput as EmailValues, LoginPasswordInput } from "@/schemas/auth";
 import { type AuthErrorKey, errorKeyOf, isAuthErrorKey } from "../errors";
 import { useAfterAuth, useNextPath, useSendEmailCode, useSignInWithPassword } from "../hooks";
@@ -57,24 +58,28 @@ export function LoginView() {
     >
       <GoogleButton next={next} onError={setError} />
       <OrDivider />
-      <Tabs defaultValue="password" onValueChange={() => setError(null)}>
-        <TabsList className="w-full">
-          <TabsTrigger value="password">{t("login.tabPassword")}</TabsTrigger>
-          <TabsTrigger value="code">{t("login.tabCode")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="password" className="pt-4">
-          <PasswordForm next={next} onError={setError} error={error} onSuccess={afterAuth} />
-        </TabsContent>
-        <TabsContent value="code" className="pt-4">
-          <SendCodeForm
-            next={next}
-            onSent={setCodeEmail}
-            onError={setError}
-            error={error}
-            hint={t("login.codeHint")}
-          />
-        </TabsContent>
-      </Tabs>
+      {!env.authEmail ? (
+        <PasswordForm next={next} onError={setError} error={error} onSuccess={afterAuth} />
+      ) : (
+        <Tabs defaultValue="password" onValueChange={() => setError(null)}>
+          <TabsList className="w-full">
+            <TabsTrigger value="password">{t("login.tabPassword")}</TabsTrigger>
+            <TabsTrigger value="code">{t("login.tabCode")}</TabsTrigger>
+          </TabsList>
+          <TabsContent value="password" className="pt-4">
+            <PasswordForm next={next} onError={setError} error={error} onSuccess={afterAuth} />
+          </TabsContent>
+          <TabsContent value="code" className="pt-4">
+            <SendCodeForm
+              next={next}
+              onSent={setCodeEmail}
+              onError={setError}
+              error={error}
+              hint={t("login.codeHint")}
+            />
+          </TabsContent>
+        </Tabs>
+      )}
     </AuthCard>
   );
 }
@@ -105,11 +110,11 @@ function PasswordForm({
       onSuccess,
       onError: (e) => {
         const key = errorKeyOf(e);
-        if (key === "email_not_confirmed") {
+        if (key === "email_not_confirmed" && env.authEmail) {
           router.push({ pathname: "/verify-email", query: { email: v.email, next } });
           return;
         }
-        onError(key);
+        onError(key === "email_not_confirmed" ? "email_off" : key);
         if (key === "invalid_credentials") form.resetField("password");
       },
     });
@@ -133,12 +138,14 @@ function PasswordForm({
         label={t("fields.password")}
         error={errors.password}
         aside={
-          <Link
-            href="/reset-password"
-            className="text-xs font-medium text-primary underline-offset-4 hover:underline"
-          >
-            {t("login.forgot")}
-          </Link>
+          env.authEmail && (
+            <Link
+              href="/reset-password"
+              className="text-xs font-medium text-primary underline-offset-4 hover:underline"
+            >
+              {t("login.forgot")}
+            </Link>
+          )
         }
       >
         {(a) => (

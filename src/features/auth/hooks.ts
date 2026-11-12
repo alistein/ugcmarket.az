@@ -7,6 +7,7 @@ import { useCallback } from "react";
 import { meKeys } from "@/features/me/hooks";
 import { useRouter } from "@/i18n/navigation";
 import { safeNext, stripLocale } from "@/lib/auth-routes";
+import { env } from "@/lib/env";
 import { createClient } from "@/lib/supabase/client";
 import { AuthFlowError, toAuthFlowError } from "./errors";
 
@@ -59,7 +60,7 @@ export function useSignInWithPassword() {
         return await run(() => supabase().auth.signInWithPassword(v));
       } catch (e) {
         // Unconfirmed email: send a fresh code so the verify screen is immediately useful.
-        if (e instanceof AuthFlowError && e.key === "email_not_confirmed") {
+        if (env.authEmail && e instanceof AuthFlowError && e.key === "email_not_confirmed") {
           await supabase()
             .auth.resend({ type: "signup", email: v.email })
             .catch(() => {});

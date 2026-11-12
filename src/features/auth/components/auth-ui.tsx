@@ -8,6 +8,7 @@ import type { FieldError } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { type AuthErrorKey, errorKeyOf } from "../errors";
 import { useSignInWithGoogle } from "../hooks";
@@ -210,4 +211,30 @@ export function useCooldown(seconds = 60) {
     return () => clearTimeout(id);
   }, [left]);
   return { left, restart: () => setLeft(seconds) };
+}
+
+/** Shown on email-only screens (verify, reset) while auth emails are off (env.authEmail). */
+export function EmailOffCard() {
+  const t = useTranslations("auth");
+  return (
+    <AuthCard
+      title={t("emailOff.title")}
+      subtitle={t("emailOff.body")}
+      footer={
+        <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
+          {t("reset.backToLogin")}
+        </Link>
+      }
+    >
+      <Button
+        variant="outline"
+        size="lg"
+        className="w-full"
+        nativeButton={false}
+        render={<Link href="/login" />}
+      >
+        {t("login.submit")}
+      </Button>
+    </AuthCard>
+  );
 }

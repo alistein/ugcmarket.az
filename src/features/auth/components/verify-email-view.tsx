@@ -7,13 +7,18 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
+import { env } from "@/lib/env";
 import { Email, EmailInput, type EmailInput as EmailValues } from "@/schemas/auth";
 import { useAfterAuth, useNextPath } from "../hooks";
-import { AuthCard, Field, SubmitButton } from "./auth-ui";
+import { AuthCard, EmailOffCard, Field, SubmitButton } from "./auth-ui";
 import { EmailCodeStep } from "./email-code-step";
 
 /** After a password sign-up (or an unconfirmed login): type the 6-digit confirmation code. */
 export function VerifyEmailView() {
+  return env.authEmail ? <VerifyEmail /> : <EmailOffCard />;
+}
+
+function VerifyEmail() {
   const t = useTranslations("auth");
   const params = useSearchParams();
   const next = useNextPath(params.get("next"));

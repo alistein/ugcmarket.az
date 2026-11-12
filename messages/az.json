@@ -292,7 +292,12 @@
       "link_invalid": "Link etibarsızdır. Kodla daxil olmağı yoxla",
       "link_expired": "Linkin vaxtı keçib. Yeni kod istə",
       "session_missing": "Sessiyanın vaxtı keçib. Kodu yenidən istə",
-      "unknown": "Nəsə alınmadı. Yenidən cəhd et"
+      "unknown": "Nəsə alınmadı. Yenidən cəhd et",
+      "email_off": "Test rejimində e-poçt göndərilmir. Hesabını təsdiqləmək üçün komandaya yaz"
+    },
+    "emailOff": {
+      "title": "Test rejimi",
+      "body": "E-poçt göndərişi hələ aktiv deyil. Google və ya şifrə ilə daxil ol. Şifrəni unutmusansa, komandaya yaz."
     }
   }
 }
