@@ -144,7 +144,6 @@ export function BoardPhone() {
           {t("accept")}
         </Bubble>
       </div>
-      <p className="mt-6 text-center font-mono text-sm text-muted-foreground">yeni-kolleksiya.ugc</p>
     </div>
   );
 }

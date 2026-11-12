@@ -1,9 +1,9 @@
 {
   "meta": {
-    "title": "UGCMarket — brendlər və kontent yaradıcıları",
+    "title": "UGCMarket · brendlər və kontent yaradıcıları",
     "description": "Azərbaycanda brendləri kontent yaradıcıları ilə birləşdirən platforma.",
     "notFound": "Səhifə tapılmadı",
-    "creatorDescription": "{city} şəhərindən kontent yaradıcısı — UGCMarket"
+    "creatorDescription": "{city} şəhərindən kontent yaradıcısı · UGCMarket"
   },
   "common": {
     "loading": "Yüklənir…",
@@ -76,14 +76,17 @@
       "start": "başla"
     },
     "hero": {
-      "eyebrow": "azərbaycanın ugc marketpleysi",
+      "eyebrow": "brendlər və kreatorlar üçün yerli platforma 🇦🇿",
       "titleA": "reklamını",
       "titleAccent": "kreatorlar",
       "titleB": "çəksin",
-      "sub": "kampaniyanı yerləşdir, kreatorlar müraciət etsin, instagram və tiktok-da paylaşılsın",
+      "sub": "brendlər kampaniya yerləşdirir, kreatorlar instagram və tiktok-da reklam etsin. pulla və ya barterlə",
       "ctaBrand": "kampaniya yerləşdir",
       "ctaCreator": "kreator kimi qoşul",
-      "note": "pilotda pulsuz"
+      "note": "hazırda tam pulsuzdur",
+      "brandAsk": "brendsən?",
+      "creatorAsk": "kreatorsan?",
+      "creatorLine": "çək, paylaş, qazan"
     },
     "props": {
       "hello": "salam, mən",
@@ -91,7 +94,7 @@
       "views": "baxış",
       "reels": "reels · bakı",
       "paid": "ödənildi",
-      "reels1": "bu kreslo — evdə",
+      "reels1": "bu kreslo · evdə",
       "reels2": "səhər qəhvəsi ☕",
       "reels3": "payız kombini"
     },
@@ -127,9 +130,9 @@
       "brands3": "paylaşımları və baxışları izlə",
       "creatorsLabel": "kreatorlar üçün",
       "creatorsTitle": "sevdiyin brendlərlə işlə",
-      "creators1": "pulsuz profil və media-kit linki",
+      "creators1": "pulsuz profil və paylaşa biləcəyin portfolio linki",
       "creators2": "pul və ya barter",
-      "creators3": "baxışların — sənin portfolion",
+      "creators3": "baxışların, sənin portfolion",
       "label": "kimlər üçün",
       "title": "hər iki tərəf üçün"
     },
@@ -140,24 +143,45 @@
       "oneSub": "məhsul, büdcə, son tarix",
       "two": "seç",
       "twoSub": "müraciətlərə bax, birini seç",
-      "three": "paylaş",
-      "threeSub": "link və baxışlar bir yerdə"
+      "three": "nəticəni gör",
+      "threeSub": "link və baxışlar bir yerdə",
+      "mockCampaign": "Yeni kolleksiya · Reels",
+      "mockDeadline": "30 noy",
+      "brand": "brend",
+      "creator": "kreator",
+      "cOne": "profil yarat",
+      "cOneSub": "nişə, şəbəkələr, nümunə işlər",
+      "cTwo": "müraciət et",
+      "cTwoSub": "bəyəndiyin kampaniyaya bir kliklə",
+      "cThree": "çək və qazan",
+      "cThreeSub": "linki at, ödənişini al",
+      "cFollowers": "izləyici",
+      "cNiche": "ev dekoru"
     },
     "marquee": "yemək,gözəllik,moda,ev,texnologiya,idman,səyahət,kafe,uşaq,avto",
     "faq": {
       "title": "suallar",
       "q1": "bu pulludur?",
-      "a1": "pilot dövründə pulsuzdur",
+      "a1": "hazırda bütün funksiyalar pulsuzdur",
       "q2": "ödəniş platformadan keçir?",
-      "a2": "hələlik yox — razılaşma birbaşa brendlə kreator arasında olur",
+      "a2": "hələlik yox, razılaşma birbaşa brendlə kreator arasında olur",
       "q3": "kim kreator ola bilər?",
       "a3": "instagram və ya tiktok hesabı olan hər kəs. kiçik auditoriya da olar",
       "q4": "nəticəni necə görürəm?",
-      "a4": "kreator paylaşım linkini və baxışları göndərir, sən təsdiqləyirsən"
+      "a4": "kreator paylaşım linkini və baxışları göndərir, sən təsdiqləyirsən",
+      "q5": "ödənişi necə alıram?",
+      "a5": "hələlik platforma ödənişi idarə etmir, qonorarı və şərtləri brendlə birbaşa razılaşırsan",
+      "q6": "kreatorları necə seçirəm?",
+      "a6": "kampaniyanı yerləşdirirsən, müraciət edənlərin profilinə, izləyici sayına və portfoliosuna baxıb özün seçirsən",
+      "q7": "videodan reklamda istifadə edə bilərəm?",
+      "a7": "bunu brend və kreator birbaşa razılaşdırır, kampaniyada istifadə hüquqlarını qeyd et ki, sonradan sual yaranmasın"
     },
     "final": {
-      "title": "ilk kampaniyan bu həftə",
-      "sub": "brend və ya kreator — 2 dəqiqəyə başla"
+      "title": "ilk əməkdaşlığın bu həftə",
+      "sub": "brend və ya kreator, 2 dəqiqəyə başla",
+      "applied": "{handle} müraciət etdi",
+      "accepted": "{handle} razılaşdı",
+      "views": "baxış"
     },
     "footer": {
       "city": "Bakı, Azərbaycan",
@@ -188,13 +212,13 @@
       "tabCode": "Kodla",
       "forgot": "Şifrəni unutmusan?",
       "submit": "Daxil ol",
-      "codeHint": "E-poçtuna birdəfəlik kod göndərəcəyik — şifrə lazım deyil",
+      "codeHint": "E-poçtuna birdəfəlik kod göndərəcəyik, şifrə lazım deyil",
       "noAccount": "Hesabın yoxdur?",
       "signupLink": "Qeydiyyatdan keç"
     },
     "signup": {
       "title": "Hesab yarat",
-      "subtitle": "Brendlər və kreatorlar üçün — pilotda pulsuz",
+      "subtitle": "Brendlər və kreatorlar üçün, pilotda pulsuz",
       "titleBrand": "Brend hesabı yarat",
       "titleCreator": "Kreator hesabı yarat",
       "submit": "Qeydiyyatdan keç",
@@ -253,11 +277,11 @@
     },
     "errors": {
       "invalid_credentials": "E-poçt və ya şifrə yanlışdır",
-      "email_not_confirmed": "E-poçt hələ təsdiqlənməyib — yeni kod göndərdik",
+      "email_not_confirmed": "E-poçt hələ təsdiqlənməyib, yeni kod göndərdik",
       "code_invalid": "Kod yanlışdır və ya vaxtı keçib",
       "too_many_emails": "Çox tez-tez cəhd edirsən. Bir dəqiqə sonra yenidən yoxla",
       "too_many_requests": "Çox cəhd oldu. Bir az gözlə və yenidən yoxla",
-      "weak_password": "Şifrə çox zəifdir — daha güclü şifrə seç",
+      "weak_password": "Şifrə çox zəifdir, daha güclü şifrə seç",
       "same_password": "Yeni şifrə köhnəsi ilə eyni ola bilməz",
       "signup_disabled": "Qeydiyyat hazırda bağlıdır",
       "email_invalid": "E-poçt ünvanı düzgün deyil",

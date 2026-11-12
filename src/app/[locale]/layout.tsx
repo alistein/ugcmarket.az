@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { notFound } from "next/navigation";
@@ -14,6 +14,18 @@ import "../globals.css";
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+// mobile-native: paint under the notch (content is padded back with env(safe-area-inset-*)),
+// keyboard resizes the layout on Android, status bar matches the page top. The site is light-only
+// for now (no theme toggle), so one theme-color; split per scheme once dark mode ships.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
+  themeColor: "#fdfbf9",
+  colorScheme: "light",
+};
 
 export async function generateMetadata({ params }: LayoutProps<"/[locale]">): Promise<Metadata> {
   const { locale } = await params;

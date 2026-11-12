@@ -319,3 +319,44 @@ export function HeroProps() {
     </>
   );
 }
+
+/**
+ * Phone-size version (envite pattern): two core stickers above the headline — the live name tag
+ * on the left, the auto-scrolling Reels card on the right. Scaled with transform only; below md only.
+ */
+export function HeroPropsMobile() {
+  return (
+    <div aria-hidden className="pointer-events-none relative mx-auto mb-4 h-[12rem] w-full max-w-[24rem] select-none md:hidden">
+      <MobileProp className="top-5 left-0" origin="origin-top-left" scale={0.8} rotate="-6deg" delay={100}>
+        <NameTag />
+      </MobileProp>
+      <MobileProp className="top-0 right-1" origin="origin-top-right" scale={0.68} rotate="5deg" delay={160}>
+        <ReelsFeed />
+      </MobileProp>
+    </div>
+  );
+}
+
+function MobileProp({
+  className,
+  origin = "origin-center",
+  scale,
+  rotate,
+  delay,
+  children,
+}: {
+  className: string;
+  origin?: string;
+  scale: number;
+  rotate: string;
+  delay: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className={cn("absolute animate-enter", className)} style={{ animationDelay: `${delay}ms` }}>
+      <div className={origin} style={{ scale: String(scale), rotate }}>
+        {children}
+      </div>
+    </div>
+  );
+}

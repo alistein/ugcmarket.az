@@ -75,15 +75,31 @@
 
   /* Group entrance (stagger recipe): 300ms, 8px, ease-out. Rare/first-view surfaces only. */
   --animate-enter: enter 300ms var(--ease-out) both;
+  /* Hero headline: words rise in one after another (page load only, so a keyframe is fine). */
+  --animate-rise: rise 700ms var(--ease-out) both;
   /* Constant motion → linear, on transform only. */
   --animate-shimmer: shimmer 1.6s linear infinite;
   /* Marketing marquee: constant motion → linear, transform only. */
   --animate-marquee: marquee 40s linear infinite;
+  /* Ambient activity wall (closing card): very slow vertical drift. */
+  --animate-drift: drift 70s linear infinite;
 
   @keyframes enter {
     from {
       opacity: 0;
       transform: translateY(8px);
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(0.35em);
+      filter: blur(6px);
+    }
+  }
+  @keyframes drift {
+    to {
+      transform: translateY(-50%);
     }
   }
   @keyframes marquee {
@@ -210,6 +226,26 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%; /* no font inflation in landscape */
+  }
+  /* mobile-native: controls fire on tap without the double-tap wait, and a long-press
+     doesn't select their label or pop the link callout. Content text stays selectable. */
+  button,
+  a,
+  summary,
+  [role="button"],
+  [role="tab"] {
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  /* iOS zooms into inputs under 16px and never zooms back out. */
+  @media (pointer: coarse) {
+    input,
+    textarea,
+    select {
+      font-size: max(16px, 1em);
+    }
   }
   body {
     @apply bg-background text-foreground;
@@ -239,11 +275,13 @@
     scale: 1 !important;
     translate: 0 0 !important;
   }
-  .animate-enter {
+  .animate-enter,
+  .animate-rise {
     animation-name: fade !important;
   }
   .animate-shimmer,
   .animate-marquee,
+  .animate-drift,
   .after\:animate-shimmer::after {
     animation: none !important;
   }

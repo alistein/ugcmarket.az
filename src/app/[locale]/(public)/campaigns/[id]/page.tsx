@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/campaign
   // Draft, paused, rejected or missing → generic + noindex (no data leak).
   if (!campaign) return { title: t("notFound"), robots: { index: false } };
 
-  const title = campaign.brand ? `${campaign.title} — ${campaign.brand.name}` : campaign.title;
+  const title = campaign.brand ? `${campaign.title} · ${campaign.brand.name}` : campaign.title;
   const description = campaign.description.slice(0, 160);
   return {
     title,
