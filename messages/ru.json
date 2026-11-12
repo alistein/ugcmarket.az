@@ -570,7 +570,7 @@
       "categoriesTitle": "Категории",
       "completeShort": "заполнено",
       "statsRefreshHint": "Цифры берутся из Instagram. Обновить их можно раз в сутки, а раз в неделю они обновляются автоматически.",
-      "statsLastRun": "Последняя проверка: {when}",
+      "statsLastRun": "Последняя проверка",
       "statsNeverRun": "Ещё не проверялось"
     },
     "public": {

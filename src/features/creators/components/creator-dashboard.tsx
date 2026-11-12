@@ -402,8 +402,15 @@ function HeaderActions({ creator: c }: { creator: MyCreator }) {
               {t("statsRefreshHint")}
             </TooltipContent>
           </Tooltip>
-          <span className="text-xs text-muted-foreground tabular-nums">
-            {when ? t("statsLastRun", { when }) : t("statsNeverRun")}
+          <span className="flex flex-col text-xs text-muted-foreground tabular-nums sm:items-end">
+            {when ? (
+              <>
+                <span>{t("statsLastRun")}</span>
+                <span className="text-foreground/80">{when}</span>
+              </>
+            ) : (
+              t("statsNeverRun")
+            )}
           </span>
         </>
       )}
@@ -423,11 +430,11 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
   const { percent } = completeness(c);
   return (
-    <p className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-muted-foreground">
+    <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
       {c.creator_socials.map((s) => {
         const n = socialNumbers(c, s);
         return (
-          <span key={s.network} className="inline-flex items-center gap-1.5">
+          <span key={s.network} className="inline-flex items-center gap-1.5 whitespace-nowrap">
             <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
             <span className="font-semibold text-foreground tabular-nums">{compact.format(n.followers)}</span>
             {t("followers")}
@@ -442,15 +449,15 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
           </span>
         );
       })}
-      <span>
+      <span className="whitespace-nowrap">
         <span className="font-semibold text-foreground tabular-nums">{c.portfolio_items.length}</span>{" "}
         {t("works")}
       </span>
-      <span className="inline-flex items-center gap-2">
+      <span className="inline-flex items-center gap-2 whitespace-nowrap">
         <span className="font-semibold text-foreground tabular-nums">{percent}%</span>
         {t("completeShort")}
         <span
-          className="h-1 w-16 overflow-hidden rounded-full bg-muted"
+          className="h-1 w-12 shrink-0 overflow-hidden rounded-full bg-muted"
           role="progressbar"
           aria-valuenow={percent}
           aria-valuemin={0}

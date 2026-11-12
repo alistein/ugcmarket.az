@@ -570,7 +570,7 @@
       "categoriesTitle": "Kateqoriyalar",
       "completeShort": "dolğunluq",
       "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir.",
-      "statsLastRun": "Son yoxlama: {when}",
+      "statsLastRun": "Son yoxlama",
       "statsNeverRun": "Hələ yoxlanılmayıb"
     },
     "public": {
