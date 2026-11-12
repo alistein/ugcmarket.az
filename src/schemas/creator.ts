@@ -111,6 +111,7 @@ const profileShape = {
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin").max(6),
   bio: z.string().trim().max(600, "validation.tooLong").nullable(),
   barter_open: z.boolean(),
+  repost_open: z.boolean(),
   /** Private — only revealed to a brand through the application flow. */
   contact_instagram: SocialUsername.nullable(),
   contact_phone: Phone.nullable(),
@@ -123,6 +124,7 @@ export const CreatorProfileInput = z.object({
   avatar_url: profileShape.avatar_url.optional(),
   bio: profileShape.bio.optional(),
   barter_open: profileShape.barter_open.optional(),
+  repost_open: profileShape.repost_open.optional(),
   contact_instagram: profileShape.contact_instagram.optional(),
   contact_phone: profileShape.contact_phone.optional(),
   socials: profileShape.socials.optional(),

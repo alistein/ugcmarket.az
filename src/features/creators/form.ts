@@ -59,6 +59,7 @@ export const CreatorForm = z.object({
   categories: z.array(CreatorCategory).min(1, "validation.categoriesMin").max(5, "validation.categoriesMax"),
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin"),
   barter_open: z.boolean(),
+  repost_open: z.boolean(),
   socials: z
     .object({ instagram: SocialRow, tiktok: SocialRow, youtube: SocialRow })
     .refine((s) => NETWORKS.some((n) => s[n].handle), {
@@ -82,7 +83,7 @@ export const STEP_FIELDS = {
   about: ["avatar_url", "display_name", "handle", "city", "bio"],
   content: ["categories", "languages"],
   socials: ["socials", "contact_instagram", "contact_phone"],
-  prices: ["prices", "barter_open"],
+  prices: ["prices", "barter_open", "repost_open"],
 } as const;
 export type Step = keyof typeof STEP_FIELDS;
 export const STEPS = Object.keys(STEP_FIELDS) as Step[];
@@ -99,6 +100,7 @@ export function emptyCreatorForm(): CreatorFormValues {
     categories: [],
     languages: ["az"],
     barter_open: false,
+    repost_open: false,
     socials: { instagram: { ...emptyRow }, tiktok: { ...emptyRow }, youtube: { ...emptyRow } },
     prices: Object.fromEntries(PRICE_FORMATS.map((f) => [f, ""])) as CreatorFormValues["prices"],
     contact_instagram: "",
@@ -136,6 +138,7 @@ export function creatorToForm(c: MyCreator): CreatorFormValues {
       (x) => ContentLanguage.safeParse(x).success,
     ) as CreatorFormValues["languages"],
     barter_open: c.barter_open,
+    repost_open: c.repost_open,
     contact_instagram: c.contact_instagram ?? "",
     contact_phone: c.contact_phone ?? "",
   };
@@ -153,6 +156,7 @@ export function toPayload(v: CreatorFormValues): CreatorProfileInput & { avatar_
     categories: v.categories,
     languages: v.languages,
     barter_open: v.barter_open,
+    repost_open: v.repost_open,
     socials: NETWORKS.filter((n) => v.socials[n].handle).map((n) => ({
       network: n,
       handle: SocialUsername.parse(v.socials[n].handle),

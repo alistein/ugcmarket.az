@@ -30,6 +30,7 @@ export type CreatorPublic = {
   languages: string[];
   bio: string | null;
   barter_open: boolean;
+  repost_open: boolean;
   review_status: "pending" | "approved" | "rejected";
   created_at: string;
   creator_socials: {

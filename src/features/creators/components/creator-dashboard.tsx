@@ -35,6 +35,7 @@ import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
 import { completeness } from "../form";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
+import { DealTerms } from "./deal-terms";
 import { PortfolioEditor } from "./portfolio-editor";
 import { SetupPrompt } from "./setup-prompt";
 import { NETWORK_ICON } from "./profile-sections";
@@ -111,11 +112,17 @@ function Home({ creator: c }: { creator: MyCreator }) {
           {c.creator_socials.length ? t("editLinks") : t("addLinks")}
         </Link>
 
-        {(c.categories.length > 0 || c.barter_open) && (
+        <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
+          <p className="text-xs font-medium text-muted-foreground">{t("termsTitle")}</p>
+          <div className="flex flex-wrap gap-1.5">
+            <DealTerms creator={c} />
+          </div>
+        </div>
+
+        {c.categories.length > 0 && (
           <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
             <p className="text-xs font-medium text-muted-foreground">{t("categoriesTitle")}</p>
             <div className="flex flex-wrap gap-1.5">
-              {c.barter_open && <Badge variant="mint">{tt("barter")}</Badge>}
               {c.categories.map((cat) => (
                 <Badge key={cat} variant="brand">
                   {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}

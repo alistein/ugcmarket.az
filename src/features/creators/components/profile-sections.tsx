@@ -458,17 +458,23 @@ export function PriceFields({ form }: { form: Form }) {
           </Field>
         ))}
       </div>
-      <label className="flex cursor-pointer items-start gap-3">
-        <input
-          type="checkbox"
-          {...register("barter_open")}
-          className="mt-0.5 size-5 accent-[var(--primary)]"
-        />
-        <span className="grid gap-0.5">
-          <span className="text-sm font-medium">{t("barter")}</span>
-          <span className="text-sm text-muted-foreground">{t("barterHint")}</span>
-        </span>
-      </label>
+      <div className="grid gap-3 border-t border-border/70 pt-5">
+        <div className="grid gap-0.5">
+          <p className="text-sm font-semibold">{t("termsTitle")}</p>
+          <p className="text-sm text-muted-foreground">{t("termsHint")}</p>
+        </div>
+        {(["barter_open", "repost_open"] as const).map((name) => (
+          <label key={name} className="flex cursor-pointer items-start gap-3">
+            <input type="checkbox" {...register(name)} className="mt-0.5 size-5 accent-[var(--primary)]" />
+            <span className="grid gap-0.5">
+              <span className="text-sm font-medium">{t(name === "barter_open" ? "barter" : "repost")}</span>
+              <span className="text-sm text-muted-foreground">
+                {t(name === "barter_open" ? "barterHint" : "repostHint")}
+              </span>
+            </span>
+          </label>
+        ))}
+      </div>
     </>
   );
 }

@@ -20,6 +20,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
 import { type CreatorPublic, socialNumbers } from "../hooks";
+import { DealTerms } from "./deal-terms";
 import { PostStatsLine, shortUrl } from "./portfolio-editor";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
 
@@ -124,12 +125,15 @@ export function PublicCreatorProfile({
                 <span>{c.languages.map((l) => l.toUpperCase()).join(" · ")}</span>
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
-                {c.barter_open && <Badge variant="mint">{t("barter")}</Badge>}
                 {c.categories.map((cat) => (
                   <Badge key={cat} variant="brand">
                     {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
                   </Badge>
                 ))}
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                <span className="mr-1 text-xs text-muted-foreground">{t("termsTitle")}</span>
+                <DealTerms creator={c} />
               </div>
             </div>
             {isOwner && (

@@ -386,7 +386,13 @@
       "youtube_short": "YouTube Shorts",
       "ugc_video": "UGC video (brend üçün)"
     },
-    "barter": "Barterə açıq"
+    "barter": "Barterə açıq",
+    "terms": {
+      "paidOnly": "Yalnız ödənişli",
+      "paid": "Ödənişli",
+      "barter": "Barterə açıq",
+      "repost": "Paylaşım qarşılığında pulsuz"
+    }
   },
   "creator": {
     "setup": {
@@ -475,7 +481,11 @@
       "connecting": "Hesab yoxlanılır. Bu, 30 saniyəyə qədər çəkə bilər.",
       "connected": "Instagram-dan götürüldü",
       "statFollowers": "izləyici",
-      "statAvgViews": "orta baxış"
+      "statAvgViews": "orta baxış",
+      "termsTitle": "Şərtlər",
+      "termsHint": "Brendlər hansı şərtlərlə işlədiyinizi profilinizdə görəcək. Heç birini seçməsəniz, «Yalnız ödənişli» göstəriləcək.",
+      "repost": "Pulsuz əməkdaşlığa açığam",
+      "repostHint": "Ödəniş əvəzinə brend Reels və ya story-nizi öz səhifəsində paylaşır."
     },
     "portfolio": {
       "title": "Portfolio",
@@ -574,7 +584,8 @@
       "completeShort": "dolğunluq",
       "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir.",
       "statsLastRun": "Son yoxlama",
-      "statsNeverRun": "Hələ yoxlanılmayıb"
+      "statsNeverRun": "Hələ yoxlanılmayıb",
+      "termsTitle": "Şərtlər"
     },
     "public": {
       "login": "Daxil ol",
@@ -599,7 +610,8 @@
       "ctaTitle": "Bu kreatorla işləmək istəyirsiniz?",
       "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin.",
       "ctaButton": "Elan yerləşdir",
-      "checked": "Avtomatik yoxlanılıb"
+      "checked": "Avtomatik yoxlanılıb",
+      "termsTitle": "Şərtlər"
     }
   }
 }
