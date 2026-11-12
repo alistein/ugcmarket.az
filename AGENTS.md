@@ -95,6 +95,8 @@ Followers / views / likes are checked by pluggable providers (`SocialStatsProvid
 network: official APIs first (Instagram Business Discovery, YouTube Data API), third-party scraping (Apify) only as a
 temporary fallback until Meta/TikTok review. Results go to `creator_social_stats` (service role only); UI prefers them
 over self-reported numbers when the handle matches. Priority: Instagram, then TikTok, then YouTube.
+**Live networks:** `ENABLED_NETWORKS` in `src/schemas/taxonomy.ts` (Instagram only for now). Forms, validation, screens and
+providers all read it; launching TikTok/YouTube = add it there (+ `ENABLED_PRICE_FORMATS`).
 
 ## Scope guard (MVP)
 Not building yet: catalog/search, saved lists, compare, messaging, payments, ratings, disputes, AI assistant.

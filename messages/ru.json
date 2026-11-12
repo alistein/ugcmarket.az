@@ -79,7 +79,7 @@
     "categoriesMax": "Не больше 5 категорий.",
     "languagesMin": "Выберите хотя бы один язык.",
     "socialsMin": "Добавьте хотя бы одну соцсеть.",
-    "portfolioUrl": "Введите ссылку на Instagram, TikTok или YouTube (https://…)",
+    "portfolioUrl": "Введите ссылку на публикацию или Reels в Instagram (https://…).",
     "avatar": "Загрузите фото ещё раз."
   },
   "landing": {
@@ -403,7 +403,7 @@
       },
       "socials": {
         "title": "Соцсети",
-        "subtitle": "Покажите аккаунты и аудиторию."
+        "subtitle": "Покажите свой Instagram и аудиторию."
       },
       "prices": {
         "title": "Цены",
@@ -463,13 +463,14 @@
         "cancel": "Отмена",
         "save": "Сохранить",
         "saving": "Загрузка…"
-      }
+      },
+      "moreNetworksSoon": "TikTok и YouTube появятся скоро. Пока укажите только Instagram."
     },
     "portfolio": {
       "title": "Портфолио",
       "subtitle": "Добавьте ссылки на лучшие работы. Когда их 3 и больше, бренды выбирают быстрее.",
       "url": "Ссылка",
-      "urlHint": "Ссылка на публикацию в Instagram, TikTok или YouTube. Добавьте ссылку на Reels, и мы автоматически проверим просмотры и лайки.",
+      "urlHint": "Ссылка на публикацию или Reels в Instagram. Для Reels мы автоматически проверим просмотры и лайки.",
       "detected": "Ссылка {network}.",
       "titleLabel": "Название (необязательно)",
       "titlePh": "Reels для кафе",

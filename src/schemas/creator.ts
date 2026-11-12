@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Currency, Handle, PostFormat, SocialNetwork } from "./common";
-import { City, ContentLanguage, CreatorCategory } from "./taxonomy";
+import { City, ContentLanguage, CreatorCategory, EnabledNetwork, isEnabledNetwork } from "./taxonomy";
 
 /**
  * Creator profile schemas — shared by the profile forms and /api/creators*.
@@ -59,7 +59,7 @@ const Count = (max: number) =>
     .max(max, "validation.number");
 
 export const CreatorSocialInput = z.object({
-  network: SocialNetwork,
+  network: EnabledNetwork,
   handle: SocialUsername,
   followers: Count(500_000_000),
   avg_views: Count(500_000_000).optional(),
@@ -161,7 +161,7 @@ export const PortfolioItemInput = z
   })
   .transform((v, ctx) => {
     const network = networkOfUrl(v.url);
-    if (!network) {
+    if (!network || !isEnabledNetwork(network)) {
       ctx.addIssue({ code: "custom", path: ["url"], message: "validation.portfolioUrl" });
       return z.NEVER;
     }

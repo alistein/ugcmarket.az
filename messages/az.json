@@ -79,7 +79,7 @@
     "categoriesMax": "Ən çox 5 kateqoriya seçmək olar.",
     "languagesMin": "Ən azı bir dil seçin.",
     "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin.",
-    "portfolioUrl": "Instagram, TikTok və ya YouTube linkini daxil edin (https://…).",
+    "portfolioUrl": "Instagram paylaşımının və ya Reels-in linkini daxil edin (https://…).",
     "avatar": "Şəkli yenidən yükləyin."
   },
   "landing": {
@@ -403,7 +403,7 @@
       },
       "socials": {
         "title": "Sosial şəbəkələr",
-        "subtitle": "Hesablarınızı və auditoriyanızı göstərin."
+        "subtitle": "Instagram hesabınızı və auditoriyanızı göstərin."
       },
       "prices": {
         "title": "Qiymətlər",
@@ -463,13 +463,14 @@
         "cancel": "Ləğv et",
         "save": "Yadda saxla",
         "saving": "Yüklənir…"
-      }
+      },
+      "moreNetworksSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik yalnız Instagram hesabınızı qeyd edin."
     },
     "portfolio": {
       "title": "Portfolio",
       "subtitle": "Ən yaxşı işlərinizin linklərini əlavə edin. Portfolioda 3 və daha çox iş olanda brendlər daha tez seçim edir.",
       "url": "Link",
-      "urlHint": "Instagram, TikTok və ya YouTube paylaşımının linki. Instagram Reels linki əlavə etsəniz, baxış və bəyənmə sayı avtomatik yoxlanılacaq.",
+      "urlHint": "Instagram paylaşımının və ya Reels-in linki. Reels linki əlavə etsəniz, baxış və bəyənmə sayı avtomatik yoxlanılacaq.",
       "detected": "{network} linki tanındı.",
       "titleLabel": "Başlıq (istəyə bağlı)",
       "titlePh": "Kafe üçün Reels",

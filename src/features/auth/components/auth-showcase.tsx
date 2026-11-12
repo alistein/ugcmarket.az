@@ -5,7 +5,6 @@ import {
   FavouriteIcon,
   InstagramIcon,
   PlayIcon,
-  TiktokIcon,
   ViewIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -47,8 +46,8 @@ export function AuthShowcase() {
         <p className="text-4xl font-semibold tracking-[-0.04em] tabular-nums">36</p>
         <p className="mt-0.5 text-sm text-muted-foreground">{t("applicants")}</p>
         <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-          <Legend tone="bg-sun" label="Instagram" />
-          <Legend tone="bg-mint" label="TikTok" />
+          <Legend tone="bg-sun" label="Reels" />
+          <Legend tone="bg-mint" label="Stories" />
           <Legend tone="bg-sky" label="UGC" />
         </div>
         <div className="mt-3 grid grid-cols-6 gap-1.5">
@@ -68,7 +67,7 @@ export function AuthShowcase() {
       <div className="absolute bottom-0 left-0 h-[30%] w-[26%] bg-sky [background-image:radial-gradient(var(--sky-ink)_1px,transparent_1.2px)] [background-size:7px_7px] opacity-70" />
       <div className="absolute bottom-0 left-[16%] flex h-[24%] w-[24%] flex-col justify-between bg-sun p-4 text-sun-ink">
         <div className="flex items-center gap-1.5 text-xs font-medium">
-          <HugeiconsIcon icon={TiktokIcon} strokeWidth={2} className="size-4" />
+          <HugeiconsIcon icon={InstagramIcon} strokeWidth={2} className="size-4" />
           @aysel.ugc
         </div>
         <span className="flex size-12 items-center justify-center self-center rounded-full bg-white/70 shadow-(--shadow-soft)">

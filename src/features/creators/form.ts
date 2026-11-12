@@ -4,6 +4,8 @@ import {
   ContentLanguage,
   CreatorCategory,
   CreatorHandle,
+  ENABLED_NETWORKS,
+  ENABLED_PRICE_FORMATS,
   PRICE_FORMATS,
   Phone,
   SocialUsername,
@@ -15,7 +17,8 @@ import type { MyCreator, Network } from "./hooks";
  * Form shape for the creator profile (setup wizard + edit). Inputs are strings; toPayload()
  * converts to the API schema, which the server validates again.
  */
-export const NETWORKS = ["instagram", "tiktok", "youtube"] as const satisfies readonly Network[];
+/** Networks shown in the form: only the ones enabled in the product (see ENABLED_NETWORKS). */
+export const NETWORKS = ENABLED_NETWORKS satisfies readonly Network[];
 
 const optionalCount = z
   .string()
@@ -104,6 +107,7 @@ export function emptyCreatorForm(): CreatorFormValues {
 export function creatorToForm(c: MyCreator): CreatorFormValues {
   const base = emptyCreatorForm();
   for (const s of c.creator_socials) {
+    if (!(NETWORKS as readonly string[]).includes(s.network)) continue;
     base.socials[s.network] = {
       handle: s.handle,
       followers: String(s.followers),
@@ -150,7 +154,7 @@ export function toPayload(v: CreatorFormValues): CreatorProfileInput & { avatar_
       followers: toInt(v.socials[n].followers),
       ...(v.socials[n].avg_views ? { avg_views: toInt(v.socials[n].avg_views) } : {}),
     })),
-    prices: PRICE_FORMATS.filter((f) => v.prices[f]).map((f) => ({
+    prices: ENABLED_PRICE_FORMATS.filter((f) => v.prices[f]).map((f) => ({
       format: f,
       amount: Number(v.prices[f].replace(",", ".")),
       currency: "AZN" as const,

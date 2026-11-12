@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
-import { networkOfUrl, PortfolioItemInput } from "@/schemas";
+import { isEnabledNetwork, networkOfUrl, PortfolioItemInput } from "@/schemas";
 import { type CreatorPublic, postNumbers, useAddPortfolioItem, useRemovePortfolioItem } from "../hooks";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
 
@@ -41,7 +41,8 @@ export function PortfolioEditor({
     defaultValues: { url: "", title: "" },
   });
   const url = useWatch({ control: form.control, name: "url" });
-  const detected = url ? networkOfUrl(url.trim()) : null;
+  const found = url ? networkOfUrl(url.trim()) : null;
+  const detected = found && isEnabledNetwork(found) ? found : null;
 
   const submit = form.handleSubmit((v) =>
     add.mutate(

@@ -53,3 +53,22 @@ export const PRICE_FORMATS = [
   "youtube_short",
   "ugc_video",
 ] as const;
+
+/**
+ * Networks live in the product right now (founders, 2026-11-12: Instagram first; TikTok and
+ * YouTube come soon). The DB enum and providers already support all three; to launch one,
+ * add it here (and its formats to ENABLED_PRICE_FORMATS). Nothing else needs to change.
+ */
+export const ENABLED_NETWORKS = ["instagram"] as const;
+export const EnabledNetwork = z.enum(ENABLED_NETWORKS);
+export type EnabledNetwork = z.infer<typeof EnabledNetwork>;
+export const isEnabledNetwork = (n: string): n is EnabledNetwork =>
+  (ENABLED_NETWORKS as readonly string[]).includes(n);
+
+/** Price formats offered in the form for the enabled networks. */
+export const ENABLED_PRICE_FORMATS = [
+  "reels",
+  "stories",
+  "post",
+  "ugc_video",
+] as const satisfies readonly (typeof PRICE_FORMATS)[number][];

@@ -4,7 +4,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { meKeys } from "@/features/me/hooks";
 import { api } from "@/lib/api-client";
 import { createClient } from "@/lib/supabase/client";
-import type { CreatorProfileInput, CreatorProfileUpdate, PortfolioItemInput } from "@/schemas";
+import {
+  type CreatorProfileInput,
+  type CreatorProfileUpdate,
+  isEnabledNetwork,
+  type PortfolioItemInput,
+} from "@/schemas";
 
 export const creatorKeys = {
   public: (handle: string) => ["creators", "public", handle] as const,
@@ -120,10 +125,23 @@ export function useRefreshSocialStats() {
 
 export type MyCreator = CreatorPublic & { contact_instagram: string | null; contact_phone: string | null };
 
+/**
+ * Hide networks that aren't live yet (ENABLED_NETWORKS) from every screen, even if older
+ * rows exist. Apply right after fetching.
+ */
+export function onlyEnabledNetworks<T extends CreatorPublic>(c: T): T {
+  return {
+    ...c,
+    creator_socials: c.creator_socials.filter((s) => isEnabledNetwork(s.network)),
+    creator_social_stats: c.creator_social_stats?.filter((s) => isEnabledNetwork(s.network)),
+    portfolio_items: c.portfolio_items.filter((p) => isEnabledNetwork(p.network)),
+  };
+}
+
 export function usePublicCreator(handle: string) {
   return useQuery({
     queryKey: creatorKeys.public(handle),
-    queryFn: () => api<CreatorPublic>(`/creators/${handle}`),
+    queryFn: () => api<CreatorPublic>(`/creators/${handle}`).then(onlyEnabledNetworks),
   });
 }
 
@@ -131,7 +149,7 @@ export function usePublicCreator(handle: string) {
 export function useMyCreator(enabled = true) {
   return useQuery({
     queryKey: creatorKeys.mine,
-    queryFn: () => api<MyCreator | null>("/creators/me"),
+    queryFn: () => api<MyCreator | null>("/creators/me").then((c) => (c ? onlyEnabledNetworks(c) : c)),
     enabled,
   });
 }

@@ -79,7 +79,7 @@
     "categoriesMax": "At most 5 categories.",
     "languagesMin": "Pick at least one language.",
     "socialsMin": "Add at least one social account.",
-    "portfolioUrl": "Enter an Instagram, TikTok or YouTube link (https://…)",
+    "portfolioUrl": "Enter a link to an Instagram post or Reel (https://…).",
     "avatar": "Upload the photo again."
   },
   "landing": {
@@ -403,7 +403,7 @@
       },
       "socials": {
         "title": "Social accounts",
-        "subtitle": "Show your accounts and audience."
+        "subtitle": "Show your Instagram account and audience."
       },
       "prices": {
         "title": "Prices",
@@ -463,13 +463,14 @@
         "cancel": "Cancel",
         "save": "Save",
         "saving": "Uploading…"
-      }
+      },
+      "moreNetworksSoon": "TikTok and YouTube are coming soon. For now, add your Instagram account."
     },
     "portfolio": {
       "title": "Portfolio",
       "subtitle": "Add links to your best work. Brands decide faster when you have 3 or more.",
       "url": "Link",
-      "urlHint": "Link to an Instagram, TikTok or YouTube post. Add a Reels link and we’ll check its views and likes automatically.",
+      "urlHint": "Link to an Instagram post or Reel. For Reels, we’ll check views and likes automatically.",
       "detected": "{network} link.",
       "titleLabel": "Title (optional)",
       "titlePh": "Reels for a café",

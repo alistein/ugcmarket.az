@@ -7,7 +7,6 @@ import {
   InstagramIcon,
   LockIcon,
   PlayIcon,
-  TiktokIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
@@ -119,9 +118,9 @@ function SetupVisual() {
         <p className="font-semibold tabular-nums">120 AZN</p>
       </div>
 
-      {/* tiktok likes chip */}
+      {/* reel likes chip */}
       <div className="absolute bottom-6 left-16 flex rotate-[-3deg] items-center gap-2 rounded-full bg-foreground px-3.5 py-2 text-sm text-background shadow-(--shadow-raised)">
-        <HugeiconsIcon icon={TiktokIcon} strokeWidth={2} className="size-4" />
+        <HugeiconsIcon icon={InstagramIcon} strokeWidth={2} className="size-4" />
         <HugeiconsIcon icon={FavouriteIcon} strokeWidth={2} className="size-4" />
         <span className="tabular-nums">3.1K</span>
       </div>

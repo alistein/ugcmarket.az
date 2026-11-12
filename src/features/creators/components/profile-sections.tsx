@@ -17,7 +17,13 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES, CreatorHandle, PRICE_FORMATS } from "@/schemas";
+import {
+  CITIES,
+  CONTENT_LANGUAGES,
+  CREATOR_CATEGORIES,
+  CreatorHandle,
+  ENABLED_PRICE_FORMATS,
+} from "@/schemas";
 import { type CreatorFormValues, NETWORKS, suggestHandle } from "../form";
 import { useHandleAvailability } from "../hooks";
 import { AvatarField, ChipGroup } from "./form-bits";
@@ -292,6 +298,7 @@ export function SocialFields({ form }: { form: Form }) {
           </div>
         );
       })}
+      <p className="text-sm text-muted-foreground">{t("moreNetworksSoon")}</p>
       <div className="grid gap-4 pt-1 md:grid-cols-2">
         <p className="flex items-start gap-2 text-sm text-muted-foreground md:col-span-2">
           <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
@@ -334,7 +341,7 @@ export function PriceFields({ form }: { form: Form }) {
     <>
       <p className="-mt-2 text-sm text-muted-foreground">{t("pricesHint")}</p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {PRICE_FORMATS.map((f) => (
+        {ENABLED_PRICE_FORMATS.map((f) => (
           <Field key={f} label={tt(`formats.${f}`)} error={formState.errors.prices?.[f]}>
             {(a) => (
               <div className="relative">
