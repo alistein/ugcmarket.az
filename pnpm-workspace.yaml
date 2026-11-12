@@ -1,0 +1,9 @@
+# pnpm settings for this repo (single package, not a monorepo).
+# pnpm blocks dependency install scripts unless listed here.
+allowBuilds:
+  # next-intl's message extractor. Both ship prebuilt platform binaries;
+  # their install scripts are only build-from-source fallbacks.
+  "@parcel/watcher": false
+  "@swc/core": false
+  # Postinstall only prints a funding banner.
+  core-js: false

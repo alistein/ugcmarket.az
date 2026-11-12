@@ -21,7 +21,7 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
 5. **API contract:** snake_case JSON matching DB columns. Success `{ data }`; error `{ error: { code, message, details? } }`
    with correct HTTP status. `message` is an i18n key (`errors.*`), translated on the client.
 6. **Schemas** in `src/schemas/*` are shared by forms (react-hook-form + zodResolver) and API validation. Change both together.
-7. **Database:** `supabase/migrations/*.sql` is the source of truth. Every table has RLS. After changes: `npm run db:reset && npm run db:types`.
+7. **Database:** `supabase/migrations/*.sql` is the source of truth. Every table has RLS. After changes: `pnpm db:push && pnpm db:types:remote` (cloud) or `pnpm db:reset && pnpm db:types` (local).
    Contact details (Instagram/phone) live in `creator_contacts` / `brand_contacts` — never select them in public queries.
 8. **Analytics:** hypothesis events are fired server-side in services via `track()` (`src/server/analytics.ts`).
 9. **i18n:** every user-facing string goes in `messages/az.json` first (source of truth, type-checked), then ru/en.
@@ -32,7 +32,7 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
 
 ## UI kit
 - `src/components/ui/*` came from shadcn but is **our UI kit now** — edit freely; it will diverge from upstream.
-  Don't blindly re-run `shadcn add` over an existing file (it overwrites our changes); diff first.
+  Don't blindly re-run `pnpm dlx shadcn add` over an existing file (it overwrites our changes); diff first.
 - Primitives are **Base UI** (`@base-ui/react`), not Radix. Check the Base UI API when composing (e.g. `render` prop, not `asChild`).
 - Icons: **Hugeicons** (`@hugeicons/react` + `@hugeicons/core-free-icons`). Don't add another icon library.
 - Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).
@@ -56,9 +56,12 @@ src/schemas/  src/lib/  src/i18n/  src/types/  messages/  supabase/
 - Landing page / marketing visuals (faux product UI, animated demos) → `stageshow`. Not for real app screens.
 - Toasts → `ask-sonner`. Library choice → `pick-ui-library` (explicit). UI variants → `prototype` (explicit).
 
-## Commands
-`npm run dev` · `npm run build` · `npm run lint` · `npm run typecheck` · `npm run format`
-`npm run db:start` · `npm run db:reset` · `npm run db:types` · `npm run skills:update`
+## Commands (pnpm only — never npm/npx/yarn)
+`pnpm dev` · `pnpm build` · `pnpm lint` · `pnpm typecheck` · `pnpm format`
+`pnpm db:push` · `pnpm db:types:remote` · `pnpm db:start` · `pnpm db:reset` · `pnpm db:types` · `pnpm skills:update`
+Add deps: `pnpm add <pkg>` / `pnpm add -D <pkg>`. One-off CLIs: `pnpm dlx <cli>` (e.g. `pnpm dlx shadcn@latest add <component>`).
+Local CLIs: `pnpm exec <bin>` (e.g. `pnpm exec supabase`). Commit `pnpm-lock.yaml`; never create `package-lock.json`.
+New dependency with an install script → decide it in `pnpm-workspace.yaml` → `allowBuilds` (true only if it needs it).
 
 ## Scope guard (MVP)
 Not building yet: catalog/search, saved lists, compare, messaging, payments, ratings, disputes, AI assistant, social API verification.

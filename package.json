@@ -12,7 +12,7 @@
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
     "db:types": "supabase gen types --lang=typescript > src/types/database.ts",
-    "skills:update": "npx skills update",
+    "skills:update": "pnpm dlx skills update",
     "db:link": "supabase link",
     "db:push": "supabase db push --remote",
     "db:types:remote": "supabase gen types --lang=typescript --remote > src/types/database.ts"
@@ -58,5 +58,17 @@
     "supabase": "^3.1.0",
     "tailwindcss": "4.3.3",
     "typescript": "^5"
+  },
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=12"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=12",
+      "onFail": "error"
+    }
   }
 }
