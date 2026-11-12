@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Globe02Icon,
   Logout03Icon,
   Megaphone01Icon,
   PencilEdit02Icon,
@@ -9,7 +8,8 @@ import {
   UserCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
+import { LanguageMenu } from "@/components/shared/language-menu";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,23 +17,13 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSignOut } from "@/features/auth/hooks";
 import { useMyCreator } from "@/features/creators/hooks";
 import { useMe } from "@/features/me/hooks";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import type { Locale } from "@/i18n/routing";
-
-const LOCALES: { value: Locale; label: string }[] = [
-  { value: "az", label: "Azərbaycanca" },
-  { value: "ru", label: "Русский" },
-  { value: "en", label: "English" },
-];
+import { Link } from "@/i18n/navigation";
 
 /**
  * Signed-in frame (Luhive-style): logo left; one primary action + the avatar menu right.
@@ -56,6 +46,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             {t("browseCampaigns")}
           </Button>
+          <LanguageMenu />
           <AccountMenu />
         </div>
       </header>
@@ -67,9 +58,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 function AccountMenu() {
   const t = useTranslations("app");
   const ta = useTranslations("auth");
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
   const { data: me } = useMe();
   const { data: creator } = useMyCreator(me?.role === "creator");
   const signOut = useSignOut();
@@ -88,7 +76,9 @@ function AccountMenu() {
           <NamedAvatar name={name} src={creator?.avatar_url} size="lg" />
           <div className="min-w-0">
             <p className="truncate font-semibold">{name}</p>
-            {me?.email && <p className="truncate text-sm text-muted-foreground">{me.email}</p>}
+            {me?.email && name !== me.email && (
+              <p className="truncate text-sm text-muted-foreground">{me.email}</p>
+            )}
           </div>
         </div>
         <DropdownMenuSeparator />
@@ -111,23 +101,6 @@ function AccountMenu() {
             <HugeiconsIcon icon={Task01Icon} strokeWidth={2} />
             {t("myApplications")}
           </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="flex items-center gap-2">
-            <HugeiconsIcon icon={Globe02Icon} strokeWidth={2} className="size-3.5" />
-            {t("language")}
-          </DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={locale}
-            onValueChange={(v) => router.replace(pathname, { locale: v as Locale })}
-          >
-            {LOCALES.map((l) => (
-              <DropdownMenuRadioItem key={l.value} value={l.value}>
-                {l.label}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem disabled={signOut.isPending} onClick={() => signOut.mutate()}>
