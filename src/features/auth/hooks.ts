@@ -60,7 +60,9 @@ export function useSignInWithPassword() {
       } catch (e) {
         // Unconfirmed email: send a fresh code so the verify screen is immediately useful.
         if (e instanceof AuthFlowError && e.key === "email_not_confirmed") {
-          await supabase().auth.resend({ type: "signup", email: v.email }).catch(() => {});
+          await supabase()
+            .auth.resend({ type: "signup", email: v.email })
+            .catch(() => {});
         }
         throw e;
       }
@@ -71,9 +73,7 @@ export function useSignInWithPassword() {
 export function useSignUp(next: string) {
   return useMutation({
     mutationFn: (v: { email: string; password: string }) =>
-      run(() =>
-        supabase().auth.signUp({ ...v, options: { emailRedirectTo: callbackUrl(next) } }),
-      ),
+      run(() => supabase().auth.signUp({ ...v, options: { emailRedirectTo: callbackUrl(next) } })),
   });
 }
 
@@ -109,11 +109,16 @@ export function useResendCode(type: CodeType, next: string) {
     mutationFn: async (email: string) => {
       const auth = supabase().auth;
       if (type === "signup") {
-        return run(() => auth.resend({ type: "signup", email, options: { emailRedirectTo: callbackUrl(next) } }));
+        return run(() =>
+          auth.resend({ type: "signup", email, options: { emailRedirectTo: callbackUrl(next) } }),
+        );
       }
       if (type === "recovery") return run(() => auth.resetPasswordForEmail(email));
       return run(() =>
-        auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: callbackUrl(next) } }),
+        auth.signInWithOtp({
+          email,
+          options: { shouldCreateUser: true, emailRedirectTo: callbackUrl(next) },
+        }),
       );
     },
   });

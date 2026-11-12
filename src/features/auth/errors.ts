@@ -21,12 +21,27 @@ export type AuthErrorKey =
   | "unknown";
 
 const AUTH_ERROR_KEYS = new Set<string>([
-  "invalid_credentials", "email_not_confirmed", "code_invalid", "too_many_emails", "too_many_requests",
-  "weak_password", "same_password", "signup_disabled", "email_invalid", "blocked", "network",
-  "oauth_cancelled", "oauth_failed", "link_invalid", "link_expired", "session_missing", "unknown",
+  "invalid_credentials",
+  "email_not_confirmed",
+  "code_invalid",
+  "too_many_emails",
+  "too_many_requests",
+  "weak_password",
+  "same_password",
+  "signup_disabled",
+  "email_invalid",
+  "blocked",
+  "network",
+  "oauth_cancelled",
+  "oauth_failed",
+  "link_invalid",
+  "link_expired",
+  "session_missing",
+  "unknown",
 ]);
 
-export const isAuthErrorKey = (v: unknown): v is AuthErrorKey => typeof v === "string" && AUTH_ERROR_KEYS.has(v);
+export const isAuthErrorKey = (v: unknown): v is AuthErrorKey =>
+  typeof v === "string" && AUTH_ERROR_KEYS.has(v);
 
 /** Carries a translated-on-render key; thrown by the auth hooks. */
 export class AuthFlowError extends Error {
@@ -71,3 +86,5 @@ export function toAuthFlowError(e: unknown): AuthFlowError {
   if (e instanceof TypeError) return new AuthFlowError("network"); // fetch failed
   return new AuthFlowError("unknown");
 }
+
+export const errorKeyOf = (e: unknown): AuthErrorKey => toAuthFlowError(e).key;

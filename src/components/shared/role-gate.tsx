@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { AccountBlocked } from "@/features/auth/components/account-blocked";
 import { useMe } from "@/features/me/hooks";
 import { usePathname, useRouter } from "@/i18n/navigation";
@@ -15,12 +15,29 @@ type Props = { role: AppRole; children: React.ReactNode };
  *  signed out → /login?next=…   · no role → /onboarding   · wrong role → own home
  *  blocked → blocked screen (API returns 403 for everything anyway)
  */
-export function RoleGate({ role, children }: Props) {
+export function RoleGate(props: Props) {
+  // usePathname inside → Suspense required on dynamic routes (Next 16 + Cache Components).
+  return (
+    <Suspense fallback={<GateStatus />}>
+      <Gate {...props} />
+    </Suspense>
+  );
+}
+
+function GateStatus({ failed }: { failed?: boolean }) {
+  const t = useTranslations("common");
+  return (
+    <div role="status" className="flex flex-1 items-center justify-center p-10 text-sm text-muted-foreground">
+      {failed ? t("loadFailed") : t("loading")}
+    </div>
+  );
+}
+
+function Gate({ role, children }: Props) {
   const { data: me, isPending, isError } = useMe();
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
-  const t = useTranslations("common");
 
   const allowed = !!me && me.status !== "blocked" && (me.role === role || me.role === "admin");
 
@@ -32,12 +49,6 @@ export function RoleGate({ role, children }: Props) {
   }, [me, isPending, isError, allowed, router, pathname, locale]);
 
   if (me?.status === "blocked") return <AccountBlocked />;
-  if (!allowed) {
-    return (
-      <div role="status" className="flex flex-1 items-center justify-center p-10 text-sm text-muted-foreground">
-        {isError ? t("loadFailed") : t("loading")}
-      </div>
-    );
-  }
+  if (!allowed) return <GateStatus failed={isError} />;
   return <>{children}</>;
 }
