@@ -365,7 +365,7 @@ function HeaderActions({ creator: c }: { creator: MyCreator }) {
     "inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary disabled:pointer-events-none disabled:opacity-60 [&_svg]:size-4";
 
   return (
-    <div className="flex flex-col items-start gap-2 sm:items-end">
+    <div className="flex flex-col items-start gap-2 sm:items-end sm:self-start sm:pt-2">
       <Link href="/me/profile" className={textButton}>
         <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
         {t("edit")}
