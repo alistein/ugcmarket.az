@@ -127,7 +127,7 @@ export function BoardPhone() {
             </div>
             <div className="space-y-1.5 px-1">
               <div className="text-[12px] font-medium tracking-wide text-muted-foreground uppercase">{t("brief")}</div>
-              <p className="text-[14px] leading-snug">Kolleksiyadan bir məhsulu öz evinizdə göstərin. 15–30 saniyə, təbii işıqda.</p>
+              <p className="text-[14px] leading-snug">Kolleksiyadan bir məhsulu öz evinizdə göstərin. 15–30 saniyə, təbii işıqda</p>
             </div>
           </div>
 
