@@ -1,5 +1,5 @@
 import "server-only";
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 import { z } from "zod";
 import { ApiError, errors } from "./errors";
 import type { ApiErrorBody } from "@/lib/api-types";
@@ -14,6 +14,8 @@ export function handler<P = Record<string, string>>(
   fn: (req: Request, ctx: Ctx<P>) => Promise<Response>,
 ) {
   return async (req: Request, ctx: Ctx<P>) => {
+    // API responses are per-request (auth cookies, live data): never prerender or cache them.
+    await connection();
     try {
       return await fn(req, ctx);
     } catch (e) {

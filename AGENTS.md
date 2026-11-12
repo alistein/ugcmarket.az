@@ -5,7 +5,7 @@ Product context, decisions and open questions live in the Obsidian wiki (`~/Docu
 Key pages: `decisions/mvp-scope`, `decisions/mvp-validation-plan`, `decisions/project-structure`, `concepts/off-platform-deal-model`.
 
 ## Stack
-Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v4 + shadcn/ui · Supabase (Postgres, Auth, Storage, RLS)
+Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v4 + shadcn/ui (Base UI primitives, `base-maia` style, Hugeicons) · Supabase (Postgres, Auth, Storage, RLS)
 · TanStack Query · zod v4 · react-hook-form · next-intl v4 (az default, ru, en) · PostHog · Resend · Vercel.
 
 ## Architecture rules (non-negotiable)
@@ -29,6 +29,15 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
 10. **Next 16 + Cache Components:** client components using `useParams`/`useSearchParams` must be inside `<Suspense>`.
     Middleware is `src/proxy.ts`. Route `params` are Promises.
 11. Role guards in the UI (`RoleGate`) are UX only — real enforcement is `requireRole()` + RLS.
+
+## UI kit
+- `src/components/ui/*` came from shadcn but is **our UI kit now** — edit freely; it will diverge from upstream.
+  Don't blindly re-run `shadcn add` over an existing file (it overwrites our changes); diff first.
+- Primitives are **Base UI** (`@base-ui/react`), not Radix. Check the Base UI API when composing (e.g. `render` prop, not `asChild`).
+- Icons: **Hugeicons** (`@hugeicons/react` + `@hugeicons/core-free-icons`). Don't add another icon library.
+- Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).
+- Design tokens live in `src/app/globals.css` (`:root` / `.dark` CSS variables + `@theme inline`). Change tokens, not one-off colors.
+- Product-level components (e.g. `CampaignCard`, `CreatorBadge`) go in `src/features/<domain>/components`; shared composites in `src/components/shared`.
 
 ## Folder map
 ```
