@@ -19,6 +19,19 @@ import { cn } from "@/lib/utils";
 import { type AuthErrorKey, errorKeyOf } from "../errors";
 import { useSignInWithGoogle } from "../hooks";
 
+/**
+ * Auth screens use an outlined, calmer field style (Base44-like) on top of the kit tokens:
+ * card background + border instead of the filled muted pill. Scoped here, not in the kit.
+ */
+const AUTH_FIELDS = cn(
+  "[&_[data-slot=input]:not([data-code])]:h-11 [&_[data-slot=input]:not([data-code])]:rounded-xl",
+  "[&_[data-slot=input]]:border-border [&_[data-slot=input]]:bg-card [&_[data-slot=input]]:shadow-(--shadow-soft)",
+  "[&_[data-slot=input]:hover]:bg-card [&_[data-slot=input]:hover]:border-foreground/20",
+);
+
+/** Full-width auth actions: taller, softer-cornered than the kit's pill. */
+export const AUTH_ACTION = "h-11 w-full rounded-xl text-[15px]";
+
 export function AuthCard({
   title,
   subtitle,
@@ -31,14 +44,12 @@ export function AuthCard({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="w-full">
+    <div className={cn("w-full", AUTH_FIELDS)}>
       <BackHome />
-      <div>
-        <h1 className="text-center text-3xl font-semibold tracking-[-0.03em] text-balance">{title}</h1>
-        {subtitle && <p className="mt-2 text-center text-sm text-pretty text-muted-foreground">{subtitle}</p>}
-        <div className="mt-8">{children}</div>
-      </div>
-      {footer && <div className="mt-5 text-center text-sm text-muted-foreground">{footer}</div>}
+      <h1 className="text-center text-4xl font-semibold tracking-[-0.035em] text-balance">{title}</h1>
+      {subtitle && <p className="mt-2.5 text-center text-sm text-pretty text-muted-foreground">{subtitle}</p>}
+      <div className="mt-9">{children}</div>
+      {footer && <div className="mt-6 text-center text-sm text-muted-foreground">{footer}</div>}
     </div>
   );
 }
@@ -48,7 +59,7 @@ function BackHome() {
   return (
     <Link
       href="/"
-      className="mb-8 inline-flex items-center gap-1 rounded-full py-1 pr-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+      className="mb-10 inline-flex items-center gap-1 rounded-full py-1 pr-2 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
     >
       <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} className="size-4" />
       {t("back")}
@@ -142,6 +153,7 @@ export function CodeInput({
   return (
     <Input
       {...props}
+      data-code
       inputMode="numeric"
       autoComplete="one-time-code"
       autoCapitalize="none"
@@ -149,7 +161,7 @@ export function CodeInput({
       enterKeyHint="done"
       placeholder="••••••"
       className={cn(
-        "h-14 rounded-2xl text-center font-mono text-2xl tracking-[0.4em] tabular-nums placeholder:text-muted-foreground/40",
+        "h-14 rounded-xl text-center font-mono text-2xl tracking-[0.4em] tabular-nums placeholder:text-muted-foreground/40",
         props.className,
       )}
       onChange={(e) => {
@@ -170,7 +182,7 @@ export function SubmitButton({
     <Button
       type="submit"
       size="lg"
-      className="w-full"
+      className={AUTH_ACTION}
       disabled={pending || props.disabled}
       aria-busy={pending}
       {...props}
@@ -207,7 +219,7 @@ export function GoogleButton({ next, onError }: { next: string; onError: (key: A
       type="button"
       variant="outline"
       size="lg"
-      className="w-full"
+      className={AUTH_ACTION}
       disabled={google.isPending}
       onClick={() => google.mutate(undefined, { onError: (e) => onError(errorKeyOf(e)) })}
     >
@@ -282,7 +294,7 @@ export function EmailOffCard() {
       <Button
         variant="outline"
         size="lg"
-        className="w-full"
+        className={AUTH_ACTION}
         nativeButton={false}
         render={<Link href="/login" />}
       >
