@@ -10,7 +10,6 @@ import {
   PencilEdit02Icon,
   Share08Icon,
   Tick02Icon,
-  UserCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
@@ -26,6 +25,7 @@ import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
 import { completeness } from "../form";
 import { type MyCreator, useMyCreator } from "../hooks";
 import { PortfolioEditor } from "./portfolio-editor";
+import { SetupPrompt } from "./setup-prompt";
 import { NETWORK_ICON } from "./profile-sections";
 
 const SOCIAL_URL = {
@@ -54,23 +54,6 @@ export function CreatorDashboard() {
       </p>
     );
   return data ? <Home creator={data} /> : <SetupPrompt />;
-}
-
-function SetupPrompt() {
-  const t = useTranslations("creator.dashboard");
-  return (
-    <div className="mx-auto max-w-xl rounded-3xl bg-card p-7 text-center shadow-(--shadow-raised) ring-1 ring-foreground/[0.04] sm:p-10">
-      <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-mint text-mint-ink">
-        <HugeiconsIcon icon={UserCircleIcon} strokeWidth={2} className="size-7" />
-      </span>
-      <h1 className="mt-5 text-3xl font-semibold tracking-[-0.03em] text-balance">{t("setupTitle")}</h1>
-      <p className="mt-2 text-pretty text-muted-foreground">{t("setupBody")}</p>
-      <Button size="lg" className="mt-6" nativeButton={false} render={<Link href="/me/profile" />}>
-        {t("setupCta")}
-        <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} data-icon="inline-end" />
-      </Button>
-    </div>
-  );
 }
 
 function Home({ creator: c }: { creator: MyCreator }) {

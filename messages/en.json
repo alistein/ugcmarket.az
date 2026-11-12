@@ -474,8 +474,8 @@
     },
     "dashboard": {
       "setupTitle": "Set up your creator profile",
-      "setupBody": "4 short steps: about you, topics, social accounts and prices. Then share your profile link.",
-      "setupCta": "Start",
+      "setupBody": "Brands get to know you through your profile: who you are, what you create and your audience. 4 short steps, about 5 minutes.",
+      "setupCta": "Start setting up",
       "hello": "Hi, {name}",
       "completeTitle": "Your profile",
       "checklist": {
@@ -490,7 +490,7 @@
       "status": {
         "pending": {
           "title": "Your profile is in review",
-          "body": "Usually within 24 hours. Meanwhile, finish your profile.",
+          "body": "Usually within 24 hours. Once approved you can apply to listings — meanwhile, finish your profile.",
           "badge": "In review"
         },
         "approved": {
@@ -526,7 +526,16 @@
       },
       "applicationsEmpty": "No applications yet",
       "pricesEmpty": "No prices yet — your profile shows “negotiable”.",
-      "editPrices": "Edit prices"
+      "editPrices": "Edit prices",
+      "setupEyebrow": "For creators",
+      "applyRule": "To apply to listings, your profile must be complete and approved by our team.",
+      "visual": {
+        "city": "Baku",
+        "tag1": "Beauty",
+        "tag2": "Lifestyle",
+        "barter": "Open to barter",
+        "followers": "followers"
+      }
     },
     "public": {
       "login": "Sign in",

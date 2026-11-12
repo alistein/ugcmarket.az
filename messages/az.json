@@ -474,8 +474,8 @@
     },
     "dashboard": {
       "setupTitle": "Kreator profilini qur",
-      "setupBody": "4 qısa addım: özün haqqında, mövzular, sosial şəbəkələr və qiymətlər. Sonra profil linkini paylaşa bilərsən.",
-      "setupCta": "Başla",
+      "setupBody": "Brendlər səni profilindən tanıyır: kim olduğun, nə çəkdiyin və auditoriyan. 4 qısa addım, təxminən 5 dəqiqə.",
+      "setupCta": "Profili qurmağa başla",
       "hello": "Salam, {name}",
       "completeTitle": "Profilin",
       "checklist": {
@@ -490,7 +490,7 @@
       "status": {
         "pending": {
           "title": "Profilin yoxlanılır",
-          "body": "Adətən 24 saat çəkir. Bu vaxt profilini tamamla.",
+          "body": "Adətən 24 saat çəkir. Təsdiqdən sonra elanlara müraciət edə bilərsən — bu vaxt profilini tamamla.",
           "badge": "Yoxlanılır"
         },
         "approved": {
@@ -526,7 +526,16 @@
       },
       "applicationsEmpty": "Hələ müraciətin yoxdur",
       "pricesEmpty": "Qiymət göstərilməyib — profildə \"razılaşma ilə\" görünür.",
-      "editPrices": "Qiymətləri dəyiş"
+      "editPrices": "Qiymətləri dəyiş",
+      "setupEyebrow": "Kreatorlar üçün",
+      "applyRule": "Elanlara müraciət etmək üçün profilin tamamlanmalı və komandamız tərəfindən təsdiqlənməlidir.",
+      "visual": {
+        "city": "Bakı",
+        "tag1": "Gözəllik",
+        "tag2": "Lifestyle",
+        "barter": "Barterə açıq",
+        "followers": "izləyici"
+      }
     },
     "public": {
       "login": "Daxil ol",
