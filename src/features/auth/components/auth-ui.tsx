@@ -3,7 +3,7 @@
 import { GoogleIcon, Loading03Icon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { FieldError } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -191,14 +191,47 @@ export function GoogleButton({ next, onError }: { next: string; onError: (key: A
       disabled={google.isPending}
       onClick={() => google.mutate(undefined, { onError: (e) => onError(errorKeyOf(e)) })}
     >
-      <HugeiconsIcon
-        icon={google.isPending ? Loading03Icon : GoogleIcon}
-        strokeWidth={2}
-        className={cn(google.isPending && "animate-spin")}
-        data-icon="inline-start"
-      />
+      {google.isPending ? (
+        <HugeiconsIcon
+          icon={Loading03Icon}
+          strokeWidth={2}
+          className="animate-spin"
+          data-icon="inline-start"
+        />
+      ) : (
+        <GoogleMark />
+      )}
       {t("google")}
     </Button>
+  );
+}
+
+/**
+ * Google's official "G" mark (public/brands/google-g.svg, from Google's sign-in branding
+ * guidelines). Falls back to the Hugeicons outline until the file is added.
+ */
+function GoogleMark() {
+  const [missing, setMissing] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
+  // onError can fire before hydration; catch an already-failed load too.
+  useEffect(() => {
+    const img = ref.current;
+    if (img?.complete && img.naturalWidth === 0) setMissing(true);
+  }, []);
+  if (missing) return <HugeiconsIcon icon={GoogleIcon} strokeWidth={2} data-icon="inline-start" />;
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- tiny static SVG, no optimisation needed
+    <img
+      ref={ref}
+      src="/brands/google-g.svg"
+      alt=""
+      aria-hidden
+      width={18}
+      height={18}
+      data-icon="inline-start"
+      className="size-[18px]"
+      onError={() => setMissing(true)}
+    />
   );
 }
 
