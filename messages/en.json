@@ -57,7 +57,7 @@
     "creator_exists": "You already have a profile.",
     "portfolio_full": "Your portfolio is full.",
     "portfolio_duplicate": "That link is already in your portfolio.",
-    "stats_cooldown": "You can refresh the numbers once an hour. Try again later."
+    "stats_cooldown": "You can refresh the numbers once a day. Try again tomorrow."
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters).",
@@ -469,7 +469,7 @@
       "title": "Portfolio",
       "subtitle": "Add links to your best work. Brands decide faster when you have 3 or more.",
       "url": "Link",
-      "urlHint": "Link to an Instagram, TikTok or YouTube post.",
+      "urlHint": "Link to an Instagram, TikTok or YouTube post. Add a Reels link and we’ll check its views and likes automatically.",
       "detected": "{network} link.",
       "titleLabel": "Title (optional)",
       "titlePh": "Reels for a café",
@@ -481,7 +481,9 @@
         "instagram": "Instagram",
         "tiktok": "TikTok",
         "youtube": "YouTube"
-      }
+      },
+      "checked": "Numbers checked automatically.",
+      "notYours": "This post belongs to @{owner}. Numbers are shown only for your own posts."
     },
     "dashboard": {
       "setupTitle": "Set up your creator profile",

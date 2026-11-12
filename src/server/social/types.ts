@@ -36,6 +36,26 @@ export interface SocialStatsProvider {
   fetchProfile(handle: string): Promise<ProfileStats | null>;
 }
 
+/** Numbers for one post (a Reel, TikTok video, YouTube video) by its URL. */
+export type PostStats = {
+  /** Account that published it, lowercased, without @. */
+  owner_handle: string | null;
+  views: number | null;
+  likes: number | null;
+  comments: number | null;
+  posted_at: string | null;
+};
+
+/** Same idea as SocialStatsProvider, for a single post URL. */
+export interface PostStatsProvider {
+  id: string;
+  network: Network;
+  kind: "official" | "third_party";
+  isConfigured(): boolean;
+  /** null = post not found, private or deleted. */
+  fetchPost(url: string): Promise<PostStats | null>;
+}
+
 export class ProviderError extends Error {
   constructor(
     public provider: string,

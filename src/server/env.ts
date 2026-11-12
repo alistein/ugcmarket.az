@@ -11,4 +11,6 @@ export const serverEnv = {
   apifyToken: process.env.APIFY_TOKEN ?? "",
   apifyInstagramActor: process.env.APIFY_INSTAGRAM_ACTOR || "apify/instagram-profile-scraper",
   youtubeApiKey: process.env.YOUTUBE_API_KEY ?? "",
+  /** Vercel Cron sends `Authorization: Bearer $CRON_SECRET`. */
+  cronSecret: process.env.CRON_SECRET ?? "",
 };

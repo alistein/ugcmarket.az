@@ -57,7 +57,7 @@
     "creator_exists": "Sizin artıq kreator profiliniz var.",
     "portfolio_full": "Portfolio doludur. Yeni iş əlavə etmək üçün birini silin.",
     "portfolio_duplicate": "Bu link artıq portfolionuzda var.",
-    "stats_cooldown": "Rəqəmləri saatda bir dəfə yeniləmək olar. Bir az sonra yenidən cəhd edin."
+    "stats_cooldown": "Rəqəmləri gündə bir dəfə yeniləmək olar. Sabah yenidən cəhd edin."
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol).",
@@ -469,7 +469,7 @@
       "title": "Portfolio",
       "subtitle": "Ən yaxşı işlərinizin linklərini əlavə edin. Portfolioda 3 və daha çox iş olanda brendlər daha tez seçim edir.",
       "url": "Link",
-      "urlHint": "Instagram, TikTok və ya YouTube paylaşımının linki.",
+      "urlHint": "Instagram, TikTok və ya YouTube paylaşımının linki. Instagram Reels linki əlavə etsəniz, baxış və bəyənmə sayı avtomatik yoxlanılacaq.",
       "detected": "{network} linki tanındı.",
       "titleLabel": "Başlıq (istəyə bağlı)",
       "titlePh": "Kafe üçün Reels",
@@ -481,7 +481,9 @@
         "instagram": "Instagram",
         "tiktok": "TikTok",
         "youtube": "YouTube"
-      }
+      },
+      "checked": "Rəqəmlər avtomatik yoxlanılıb.",
+      "notYours": "Bu paylaşım @{owner} hesabına aiddir. Rəqəmlər yalnız öz paylaşımlarınız üçün göstərilir."
     },
     "dashboard": {
       "setupTitle": "Kreator profilinizi yaradın",

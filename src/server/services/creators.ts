@@ -12,12 +12,12 @@ import { track } from "@/server/analytics";
 import type { SessionUser } from "@/server/auth";
 import { createPublicClient, createUserClient } from "@/server/db/supabase";
 import { ApiError, errors } from "@/server/http/errors";
-import { refreshCreatorSocialStatsQuietly } from "./social-stats";
+import { refreshCreatorSocialStatsQuietly, refreshPortfolioItemStatsQuietly } from "./social-stats";
 
 type Db = Awaited<ReturnType<typeof createUserClient>>;
 
 const PUBLIC_FIELDS =
-  "id, handle, display_name, avatar_url, city, country, categories, languages, bio, barter_open, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position)";
+  "id, handle, display_name, avatar_url, city, country, categories, languages, bio, barter_open, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position, portfolio_item_stats(owner_handle, views, likes, comments, posted_at, fetched_at))";
 
 const MAX_PORTFOLIO = 12;
 
@@ -181,6 +181,8 @@ export async function addPortfolioItem(user: SessionUser, input: PortfolioItem) 
     .select("id, url, network, title, position")
     .single();
   if (error) throw error;
+  // Views/likes for the post (e.g. a Reel) are fetched in the background.
+  after(() => refreshPortfolioItemStatsQuietly(data.id));
   return data;
 }
 

@@ -37,8 +37,41 @@ export type CreatorPublic = {
   /** Numbers checked automatically by the server (src/server/social). */
   creator_social_stats?: SocialStats[];
   creator_prices: { format: string; amount: number; currency: string }[];
-  portfolio_items: { id: string; url: string; network: Network; title: string | null; position: number }[];
+  portfolio_items: {
+    id: string;
+    url: string;
+    network: Network;
+    title: string | null;
+    position: number;
+    /** Checked automatically for the post itself (views/likes). One-to-one; PostgREST may return an array. */
+    portfolio_item_stats?: PostStats | PostStats[] | null;
+  }[];
 };
+
+export type PostStats = {
+  owner_handle: string | null;
+  views: number | null;
+  likes: number | null;
+  comments: number | null;
+  posted_at: string | null;
+  fetched_at: string | null;
+};
+
+/**
+ * Checked numbers for a portfolio post, shown only when the post was published by the
+ * creator's own account on that network (stops borrowing someone else's viral Reel).
+ */
+export function postNumbers(
+  c: Pick<CreatorPublic, "creator_socials">,
+  item: CreatorPublic["portfolio_items"][number],
+) {
+  const raw = item.portfolio_item_stats;
+  const st = Array.isArray(raw) ? raw[0] : raw;
+  if (!st?.fetched_at) return null;
+  const own = c.creator_socials.find((s) => s.network === item.network)?.handle.toLowerCase();
+  if (!own || st.owner_handle?.toLowerCase() !== own) return null;
+  return st;
+}
 
 export type SocialStats = {
   network: Network;

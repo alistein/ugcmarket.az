@@ -247,7 +247,7 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
 
       <div className="*:border-t! *:pt-10!">
         <FormSection id="portfolio" title={t("portfolio.title")} description={t("portfolio.subtitle")}>
-          <PortfolioEditor items={creator.portfolio_items} />
+          <PortfolioEditor items={creator.portfolio_items} creator={creator} />
         </FormSection>
       </div>
     </div>

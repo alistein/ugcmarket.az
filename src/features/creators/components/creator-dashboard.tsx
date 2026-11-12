@@ -162,7 +162,7 @@ function Home({ creator: c }: { creator: MyCreator }) {
           </TabsList>
           <TabsContent value="portfolio" className="pt-3">
             <Panel>
-              <PortfolioEditor items={c.portfolio_items} />
+              <PortfolioEditor items={c.portfolio_items} creator={c} />
             </Panel>
           </TabsContent>
           <TabsContent value="prices" className="pt-3">

@@ -20,7 +20,7 @@ import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
 import { type CreatorPublic, socialNumbers } from "../hooks";
-import { shortUrl } from "./portfolio-editor";
+import { PostStatsLine, shortUrl } from "./portfolio-editor";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
 
 const SOCIAL_URL = {
@@ -222,6 +222,7 @@ export function PublicCreatorProfile({
                         <span className="block truncate text-xs text-muted-foreground">
                           {shortUrl(p.url)}
                         </span>
+                        <PostStatsLine creator={c} item={p} />
                       </span>
                       <HugeiconsIcon
                         icon={ArrowUpRight01Icon}

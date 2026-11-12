@@ -486,6 +486,53 @@ export type Database = {
           },
         ]
       }
+      portfolio_item_stats: {
+        Row: {
+          attempted_at: string
+          comments: number | null
+          error: string | null
+          fetched_at: string | null
+          likes: number | null
+          owner_handle: string | null
+          portfolio_item_id: string
+          posted_at: string | null
+          source: string | null
+          views: number | null
+        }
+        Insert: {
+          attempted_at?: string
+          comments?: number | null
+          error?: string | null
+          fetched_at?: string | null
+          likes?: number | null
+          owner_handle?: string | null
+          portfolio_item_id: string
+          posted_at?: string | null
+          source?: string | null
+          views?: number | null
+        }
+        Update: {
+          attempted_at?: string
+          comments?: number | null
+          error?: string | null
+          fetched_at?: string | null
+          likes?: number | null
+          owner_handle?: string | null
+          portfolio_item_id?: string
+          posted_at?: string | null
+          source?: string | null
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "portfolio_item_stats_portfolio_item_id_fkey"
+            columns: ["portfolio_item_id"]
+            isOneToOne: true
+            referencedRelation: "portfolio_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       portfolio_items: {
         Row: {
           created_at: string

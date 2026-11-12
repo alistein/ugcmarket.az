@@ -3,13 +3,17 @@ import type { Json } from "@/types/database";
 import type { SessionUser } from "@/server/auth";
 import { createAdminClient } from "@/server/db/supabase";
 import { ApiError } from "@/server/http/errors";
-import { providersFor } from "@/server/social/registry";
+import { postProvidersFor, providersFor } from "@/server/social/registry";
 import { type Network, ProviderError } from "@/server/social/types";
 
 /** Successful numbers are reused for this long before a background refresh fetches again. */
 const FRESH_MS = 12 * 60 * 60 * 1000;
-/** Manual "refresh" by the creator: at most once per this window. */
-const MANUAL_COOLDOWN_MS = 60 * 60 * 1000;
+/** Manual "refresh" by the creator: at most once per this window (cost control). */
+const MANUAL_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+/** The daily cron re-checks numbers older than this (≈ weekly refresh for everyone). */
+const STALE_MS = 7 * 24 * 60 * 60 * 1000;
+/** After a failed attempt, the cron waits this long before retrying. */
+const RETRY_MS = 24 * 60 * 60 * 1000;
 
 type SocialRow = { network: Network; handle: string };
 type StatsRow = { network: Network; handle: string; fetched_at: string | null; attempted_at: string };
@@ -135,5 +139,128 @@ export async function refreshMySocialStats(user: SessionUser, creatorId: string)
     throw new ApiError(429, "stats_cooldown", "errors.stats_cooldown");
   }
   void user;
-  return refreshCreatorSocialStats(creatorId, { force: true });
+  const socials = await refreshCreatorSocialStats(creatorId, { force: true });
+  const portfolio = await refreshCreatorPortfolioStats(creatorId);
+  return { socials, portfolio };
+}
+
+// ── Portfolio posts (e.g. a Reel link) ──────────────────────────────────────
+
+/** Fetch views/likes/comments for one portfolio item. Never throws. */
+export async function refreshPortfolioItemStats(itemId: string) {
+  const db = createAdminClient();
+  const { data: item } = await db
+    .from("portfolio_items")
+    .select("id, url, network")
+    .eq("id", itemId)
+    .maybeSingle();
+  if (!item) return "missing" as const;
+  const providers = postProvidersFor(item.network as Network);
+  if (!providers.length) return "no_provider" as const;
+
+  const errors: string[] = [];
+  for (const provider of providers) {
+    try {
+      const post = await provider.fetchPost(item.url);
+      if (!post) {
+        errors.push(`${provider.id}: not found or private`);
+        continue;
+      }
+      await db.from("portfolio_item_stats").upsert({
+        portfolio_item_id: item.id,
+        ...post,
+        source: provider.id,
+        fetched_at: new Date().toISOString(),
+        attempted_at: new Date().toISOString(),
+        error: null,
+      });
+      return "updated" as const;
+    } catch (e) {
+      errors.push(e instanceof ProviderError ? e.message : `${provider.id}: ${(e as Error).message}`);
+    }
+  }
+  await db.from("portfolio_item_stats").upsert({
+    portfolio_item_id: item.id,
+    attempted_at: new Date().toISOString(),
+    error: errors.join(" | ").slice(0, 1000),
+  });
+  console.warn(`[social-stats] portfolio ${item.id}: ${errors.join(" | ")}`);
+  return "failed" as const;
+}
+
+export async function refreshPortfolioItemStatsQuietly(itemId: string) {
+  try {
+    await refreshPortfolioItemStats(itemId);
+  } catch (e) {
+    console.error("[social-stats] portfolio refresh failed", e);
+  }
+}
+
+async function refreshCreatorPortfolioStats(creatorId: string) {
+  const db = createAdminClient();
+  const { data: items } = await db.from("portfolio_items").select("id").eq("creator_id", creatorId);
+  const out: Record<string, string> = {};
+  for (const item of items ?? []) out[item.id] = await refreshPortfolioItemStats(item.id);
+  return out;
+}
+
+// ── Daily cron: weekly refresh for everyone, within a time budget ──────────
+
+const isStale = (fetched: string | null, attempted: string | null, now: number) =>
+  (!fetched || now - new Date(fetched).getTime() > STALE_MS) &&
+  (!attempted || now - new Date(attempted).getTime() > RETRY_MS);
+
+/**
+ * Re-check everything older than a week (oldest first) until the time budget runs out.
+ * The next day's run continues where this one stopped.
+ */
+export async function refreshStaleStats({ budgetMs }: { budgetMs: number }) {
+  const started = Date.now();
+  const db = createAdminClient();
+  const now = Date.now();
+
+  const [{ data: socials }, { data: stats }, { data: items }, { data: itemStats }] = await Promise.all([
+    db.from("creator_socials").select("creator_id, network"),
+    db.from("creator_social_stats").select("creator_id, network, fetched_at, attempted_at"),
+    db.from("portfolio_items").select("id, network"),
+    db.from("portfolio_item_stats").select("portfolio_item_id, fetched_at, attempted_at"),
+  ]);
+
+  const statByKey = new Map((stats ?? []).map((s) => [`${s.creator_id}:${s.network}`, s]));
+  const staleCreators = new Map<string, number>(); // creator → oldest timestamp
+  for (const s of socials ?? []) {
+    const st = statByKey.get(`${s.creator_id}:${s.network}`);
+    if (!providersFor(s.network as Network).length) continue;
+    if (!isStale(st?.fetched_at ?? null, st?.attempted_at ?? null, now)) continue;
+    const t = st?.fetched_at ? new Date(st.fetched_at).getTime() : 0;
+    staleCreators.set(s.creator_id, Math.min(staleCreators.get(s.creator_id) ?? t, t));
+  }
+  const itemStatById = new Map((itemStats ?? []).map((s) => [s.portfolio_item_id, s]));
+  const staleItems = (items ?? [])
+    .filter((i) => postProvidersFor(i.network as Network).length)
+    .map((i) => ({ id: i.id, st: itemStatById.get(i.id) }))
+    .filter((i) => isStale(i.st?.fetched_at ?? null, i.st?.attempted_at ?? null, now))
+    .sort((a, b) => (a.st?.fetched_at ?? "").localeCompare(b.st?.fetched_at ?? ""));
+
+  const queue: (() => Promise<unknown>)[] = [
+    ...[...staleCreators.entries()]
+      .sort((a, b) => a[1] - b[1])
+      .map(
+        ([id]) =>
+          () =>
+            refreshCreatorSocialStats(id, { force: true }),
+      ),
+    ...staleItems.map((i) => () => refreshPortfolioItemStats(i.id)),
+  ];
+
+  let done = 0;
+  const workers = Array.from({ length: 3 }, async () => {
+    while (queue.length && Date.now() - started < budgetMs) {
+      const job = queue.shift()!;
+      await job().catch((e) => console.error("[social-stats] cron job failed", e));
+      done++;
+    }
+  });
+  await Promise.all(workers);
+  return { done, remaining: queue.length, creators: staleCreators.size, portfolio: staleItems.length };
 }
