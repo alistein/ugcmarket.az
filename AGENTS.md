@@ -35,6 +35,16 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
   Don't blindly re-run `pnpm dlx shadcn add` over an existing file (it overwrites our changes); diff first.
 - Primitives are **Base UI** (`@base-ui/react`), not Radix. Check the Base UI API when composing (e.g. `render` prop, not `asChild`).
 - Icons: **Hugeicons** (`@hugeicons/react` + `@hugeicons/core-free-icons`). Don't add another icon library.
+- **Design language** (from the `emil-design-eng`, `apple-design`, `stageshow` skills — read them before UI work):
+  - Coral `--primary` is for the one main action on a screen. Joy tints (`brand`, `sun`, `mint`, `sky`, `rose` — Badge
+    variants and `bg-*/text-*-ink` utilities) label categories, networks and statuses — never buttons.
+  - Depth via `--shadow-soft|raised|float|press`, not borders. Filled fields (`bg-muted`) with a soft coral focus ring.
+  - Motion tokens: `ease-(--ease-snappy)` for UI (150–250ms), `ease-(--ease-drawer)` for sheets (500 in / 300 out).
+    Transitions over keyframes (interruptible); list exact properties (`transition-[scale,opacity]`), never `transition-all`.
+    Popovers scale from `--transform-origin`; modals stay centered; nothing enters from `scale(0)`; exits faster than enters.
+    Tailwind v4 `scale-*`/`translate-*` set the individual `scale`/`translate` properties — transition those, not `transform`.
+  - Buttons press to `scale(0.97)`. Named avatars get a tone from the joy palette; one initial in overlapping groups.
+  - Apple type: tighter tracking as size grows (`tracking-[-0.025em]` on titles), body at 0, `tabular-nums` for counts.
 - Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).
 - Design tokens live in `src/app/globals.css` (`:root` / `.dark` CSS variables + `@theme inline`). Change tokens, not one-off colors.
 - **Showcase:** `/ui-kit` (`src/app/[locale]/(dev)/ui-kit`) renders every kit component in all variants + product patterns.

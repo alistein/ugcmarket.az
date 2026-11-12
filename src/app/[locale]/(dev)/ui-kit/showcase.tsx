@@ -6,6 +6,7 @@ import {
   Calendar03Icon,
   Call02Icon,
   CheckmarkBadge01Icon,
+  CheckmarkCircle02Icon,
   Copy01Icon,
   Delete02Icon,
   Edit02Icon,
@@ -26,7 +27,7 @@ import {
   ViewIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -89,22 +90,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-// ─── Page scaffolding ────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const SECTIONS = [
-  ["foundations", "Foundations"],
-  ["buttons", "Buttons"],
-  ["badges", "Badges"],
-  ["forms", "Form controls"],
-  ["avatars", "Avatars"],
-  ["cards", "Cards"],
-  ["tabs", "Tabs"],
-  ["overlays", "Overlays"],
-  ["feedback", "Feedback"],
-  ["patterns", "Product patterns"],
-] as const;
-
-/** Hugeicons with kit defaults. Pass data-icon="inline-start|inline-end" inside buttons/badges for correct padding. */
+/** Hugeicons with kit defaults. data-icon="inline-start|inline-end" inside buttons/badges tightens padding. */
 function Icon({
   icon,
   ...props
@@ -112,43 +100,88 @@ function Icon({
   return <HugeiconsIcon icon={icon} strokeWidth={2} {...props} />;
 }
 
+/** Named avatars take their own color (joy palette), picked from the name so it stays stable. */
+const TONES = [
+  "bg-brand-soft text-brand-ink",
+  "bg-sun text-sun-ink",
+  "bg-mint text-mint-ink",
+  "bg-sky text-sky-ink",
+  "bg-rose text-rose-ink",
+];
+function tone(name: string) {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return TONES[h % TONES.length];
+}
+function NamedAvatar({
+  name,
+  size,
+  badge,
+  single,
+}: {
+  name: string;
+  size?: "sm" | "default" | "lg";
+  badge?: boolean;
+  /** One letter — for overlapping groups, where a second letter gets covered. */
+  single?: boolean;
+}) {
+  const initials = name
+    .split(/\s+/)
+    .slice(0, single ? 1 : 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+  return (
+    <Avatar size={size}>
+      <AvatarFallback className={tone(name)}>{initials}</AvatarFallback>
+      {badge && <AvatarBadge className="bg-mint-ink" />}
+    </Avatar>
+  );
+}
+
+const SECTIONS = [
+  ["foundations", "Foundations"],
+  ["motion", "Motion"],
+  ["buttons", "Buttons"],
+  ["badges", "Badges"],
+  ["forms", "Forms"],
+  ["cards", "Cards"],
+  ["overlays", "Overlays"],
+  ["feedback", "Feedback"],
+  ["patterns", "Patterns"],
+] as const;
+
 function Section({
   id,
+  eyebrow,
   title,
   description,
   children,
 }: {
   id: string;
+  eyebrow: string;
   title: string;
   description?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-24 space-y-4">
-      <div className="space-y-1">
-        <h2 className="font-heading text-xl font-semibold tracking-tight">{title}</h2>
-        {description && <p className="max-w-2xl text-sm text-muted-foreground">{description}</p>}
+    <section id={id} className="scroll-mt-24 space-y-6">
+      <div className="max-w-2xl space-y-2">
+        <p className="text-sm font-semibold text-primary">{eyebrow}</p>
+        <h2 className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.025em] sm:text-4xl">{title}</h2>
+        {description && <p className="text-[15px] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
       {children}
     </section>
   );
 }
 
-function Preview({
-  label,
-  className,
-  children,
-}: {
-  label?: string;
-  className?: string;
-  children: React.ReactNode;
-}) {
+/** A quiet surface for specimens: depth from shadow, not an outline. */
+function Panel({ label, className, children }: { label?: string; className?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl ring-1 ring-foreground/10">
-      {label && (
-        <div className="border-b border-border px-4 py-2 font-mono text-xs text-muted-foreground">{label}</div>
-      )}
-      <div className={cn("flex flex-wrap items-center gap-3 p-6", className)}>{children}</div>
+    <div className="rounded-3xl bg-card shadow-(--shadow-soft) ring-1 ring-foreground/[0.04] dark:ring-white/[0.07]">
+      {label && <p className="px-6 pt-5 text-xs font-medium text-muted-foreground">{label}</p>}
+      <div className={cn("flex flex-wrap items-center gap-3 p-6", label && "pt-4", className)}>{children}</div>
     </div>
   );
 }
@@ -156,141 +189,330 @@ function Preview({
 function useDarkMode() {
   const [dark, setDark] = useState(false);
   useEffect(() => {
-    // Toggle on <html> so portalled overlays (dialog, sheet, menus) follow the theme too.
-    document.documentElement.classList.toggle("dark", dark);
-    return () => document.documentElement.classList.remove("dark");
+    // Toggle on <html> so portalled overlays follow. Ease the swap (Apple: avoid abrupt brightness jumps).
+    const root = document.documentElement;
+    root.style.transition = "background-color 300ms ease";
+    root.classList.toggle("dark", dark);
+    return () => root.classList.remove("dark");
   }, [dark]);
   return [dark, setDark] as const;
 }
 
+// ─── Hero (stageshow principles: one focal object, one satellite, few real words) ─
+
+function Hero() {
+  return (
+    <section className="grid items-center gap-12 pt-6 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+      <div className="animate-rise space-y-6">
+        <Badge variant="brand" className="h-6 px-2.5">
+          UGCMarket design system
+        </Badge>
+        <h1 className="font-heading text-5xl leading-[1.02] font-semibold tracking-[-0.035em] sm:text-6xl">
+          Brendlər və kreatorlar,
+          <br />
+          <span className="text-primary">bir yerdə.</span>
+        </h1>
+        <p className="max-w-md text-lg leading-relaxed text-muted-foreground">
+          The kit behind every UGCMarket screen. Warm, quick to respond, and calm enough to let creators&apos; work be
+          the color.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Button size="lg" nativeButton={false} render={<a href="#patterns" />}>
+            See it in a product
+            <Icon icon={ArrowRight01Icon} data-icon="inline-end" />
+          </Button>
+          <Button size="lg" variant="outline" nativeButton={false} render={<a href="#foundations" />}>
+            Foundations
+          </Button>
+        </div>
+      </div>
+
+      {/* Product shot: the campaign is the subject; the new application is the satellite straddling its edge. */}
+      <div className="relative mx-auto w-full max-w-md pb-10 lg:max-w-none">
+        <div
+          aria-hidden
+          className="absolute inset-x-8 top-10 bottom-0 -z-10 rounded-[3rem] bg-[radial-gradient(60%_60%_at_30%_30%,var(--sun),transparent),radial-gradient(60%_60%_at_80%_70%,var(--brand-soft),transparent)] opacity-90 blur-2xl"
+        />
+        <Card className="animate-rise [animation-delay:80ms]">
+          <CardHeader>
+            <div className="flex items-center gap-2.5">
+              <NamedAvatar name="Decolive" size="sm" />
+              <span className="text-sm font-medium">Decolive</span>
+              <Badge variant="mint" className="ml-auto">
+                Live
+              </Badge>
+            </div>
+            <CardTitle className="pt-2 text-xl leading-snug tracking-[-0.015em]">
+              Yeni kolleksiya üçün ev interyeri Reels
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="text-xs text-muted-foreground">Per creator</div>
+                <div className="font-heading text-4xl font-semibold tracking-[-0.03em] tabular-nums">
+                  150 <span className="text-xl font-medium text-muted-foreground">AZN</span>
+                </div>
+              </div>
+              <div className="flex gap-1.5">
+                <Badge variant="sky">
+                  <Icon icon={InstagramIcon} data-icon="inline-start" />
+                  Reels
+                </Badge>
+                <Badge variant="sun">Bakı</Badge>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <AvatarGroup>
+                {["Aysel Məmmədova", "Nigar Rəhimli", "Leyla Kərimova"].map((n) => (
+                  <NamedAvatar key={n} name={n} single />
+                ))}
+                <AvatarGroupCount>+21</AvatarGroupCount>
+              </AvatarGroup>
+              <span className="text-sm text-muted-foreground">24 applied</span>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="animate-rise absolute right-3 bottom-0 w-[calc(100%-1.5rem)] rounded-3xl sm:w-[76%] bg-popover/85 p-3.5 shadow-(--shadow-float) ring-1 ring-foreground/5 backdrop-blur-xl backdrop-saturate-150 [animation-delay:260ms] sm:right-[-6%] dark:ring-white/10">
+          <div className="flex items-center gap-3">
+            <NamedAvatar name="Aysel Məmmədova" badge />
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-sm font-semibold">Aysel applied</div>
+              <div className="truncate text-xs text-muted-foreground">18.4K followers · 9.1K avg views</div>
+            </div>
+            <Button size="sm" variant="soft">
+              View
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Foundations ─────────────────────────────────────────────────────────────
 
-const COLOR_TOKENS = [
-  ["background", "foreground"],
-  ["card", "card-foreground"],
-  ["popover", "popover-foreground"],
-  ["primary", "primary-foreground"],
-  ["secondary", "secondary-foreground"],
-  ["muted", "muted-foreground"],
-  ["accent", "accent-foreground"],
-  ["destructive", null],
-  ["border", null],
-  ["input", null],
-  ["ring", null],
+const CORE_TOKENS = [
+  ["primary", "primary-foreground", "Sunset — actions"],
+  ["foreground", "background", "Ink"],
+  ["muted", "muted-foreground", "Fields & quiet surfaces"],
+  ["card", "card-foreground", "Cards & popovers"],
+  ["destructive", null, "Destructive"],
+  ["border", null, "Hairlines"],
+] as const;
+const JOY = [
+  ["brand-soft", "brand-ink", "Brand"],
+  ["sun", "sun-ink", "Sun"],
+  ["mint", "mint-ink", "Mint"],
+  ["sky", "sky-ink", "Sky"],
+  ["rose", "rose-ink", "Rose"],
 ] as const;
 
 function Foundations() {
   return (
     <Section
       id="foundations"
-      title="Foundations"
-      description="Design tokens from src/app/globals.css. Change tokens there — components follow automatically."
+      eyebrow="Foundations"
+      title="Warm, quiet, and one color that means go."
+      description="Coral is reserved for the action on a screen. Everything else is warm neutrals and depth. The joy palette tints categories, networks and statuses — never buttons."
     >
-      <Preview label="Color tokens" className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-        {COLOR_TOKENS.map(([bg, fg]) => (
-          <div key={bg} className="overflow-hidden rounded-xl ring-1 ring-foreground/10">
+      <div className="grid gap-4 md:grid-cols-[1.4fr_1fr]">
+        <Panel label="Core" className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {CORE_TOKENS.map(([bg, fg, name]) => (
+            <div key={bg} className="space-y-2">
+              <div
+                className="flex h-20 items-end rounded-2xl p-3 text-sm font-semibold ring-1 ring-foreground/[0.06] ring-inset"
+                style={{ background: `var(--${bg})`, color: fg ? `var(--${fg})` : undefined }}
+              >
+                {fg ? "Aa" : ""}
+              </div>
+              <div className="px-0.5">
+                <div className="text-sm font-medium">{name}</div>
+                <div className="font-mono text-[11px] text-muted-foreground">--{bg}</div>
+              </div>
+            </div>
+          ))}
+        </Panel>
+        <Panel label="Joy palette" className="grid gap-2">
+          {JOY.map(([bg, ink, name]) => (
             <div
-              className="flex h-16 items-end p-2 text-xs font-medium"
-              style={{ background: `var(--${bg})`, color: fg ? `var(--${fg})` : undefined }}
+              key={bg}
+              className="flex h-11 items-center justify-between rounded-2xl px-4 text-sm font-semibold"
+              style={{ background: `var(--${bg})`, color: `var(--${ink})` }}
             >
-              {fg ? "Aa" : ""}
+              {name}
+              <span className="font-mono text-[11px] font-normal opacity-80">--{bg}</span>
             </div>
-            <div className="space-y-0.5 bg-background px-2 py-1.5">
-              <div className="font-mono text-xs">--{bg}</div>
-              {fg && <div className="font-mono text-[11px] text-muted-foreground">--{fg}</div>}
-            </div>
+          ))}
+        </Panel>
+      </div>
+
+      <Panel label="Type — Geist, tracking tightens as size grows" className="block space-y-5">
+        {[
+          ["Display · 60 / −3.5%", "text-6xl font-semibold tracking-[-0.035em] leading-[1.02]", "Bir yerdə."],
+          ["Title · 36 / −2.5%", "text-4xl font-semibold tracking-[-0.025em] leading-[1.1]", "Kampaniyanı 5 dəqiqəyə yerləşdir"],
+          ["Headline · 20 / −1.5%", "text-xl font-semibold tracking-[-0.015em]", "Бренды и контент-креаторы"],
+          ["Body · 15 / 0", "text-[15px] leading-relaxed", "Bakıda yeni restoran üçün Instagram Reels çəkəcək 3 kreator axtarırıq. Barter mümkündür."],
+          ["Caption · 13", "text-[13px] text-muted-foreground", "Son tarix: 30 noyabr · Minimum 5.000 izləyici"],
+        ].map(([meta, cls, text]) => (
+          <div key={meta} className="grid gap-1 sm:grid-cols-[180px_1fr] sm:items-baseline">
+            <span className="font-mono text-[11px] text-muted-foreground">{meta}</span>
+            <span className={cn("font-heading", cls)}>{text}</span>
           </div>
         ))}
-      </Preview>
-
-      <Preview label="Chart palette" className="gap-2">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <div key={n} className="flex flex-col items-center gap-1">
-            <div className="size-10 rounded-xl" style={{ background: `var(--chart-${n})` }} />
-            <span className="font-mono text-[11px] text-muted-foreground">chart-{n}</span>
-          </div>
-        ))}
-      </Preview>
-
-      <Preview label="Typography — Geist (self-hosted)" className="block space-y-4">
-        <p className="font-heading text-4xl font-semibold tracking-tight">Brendlər və kreatorlar</p>
-        <p className="font-heading text-2xl font-semibold tracking-tight">Kampaniyanı 5 dəqiqəyə yerləşdir</p>
-        <p className="font-heading text-lg font-medium">Бренды и контент-креаторы</p>
-        <p className="text-base">
-          Body — Bakıda yeni restoran üçün Instagram Reels çəkəcək 3 kreator axtarırıq. Barter mümkündür.
-        </p>
-        <p className="text-sm text-muted-foreground">
-          Small / muted — Son tarix: 30 noyabr · Minimum 5.000 izləyici
-        </p>
-        <p className="font-mono text-sm">Mono — ugcmarket.az/creator/aysel · 12,480 views</p>
         <Separator />
         <p className="text-sm">
-          <span className="text-muted-foreground">Glyph check (AZ): </span>Ə ə · Ğ ğ · I ı · İ i · Ş ş · Ç ç · Ö ö
-          · Ü ü
-          <span className="text-muted-foreground"> · (RU): </span>Ё ё · Ж ж · Щ щ · Ы ы · Э э · Ю ю · Я я
+          <span className="text-muted-foreground">Glyphs · </span>Ə ə Ğ ğ I ı İ i Ş ş Ç ç Ö ö Ü ü · Ё ж щ ы э ю я
         </p>
-      </Preview>
+      </Panel>
 
-      <Preview label="Radius" className="gap-4">
+      <Panel label="Depth — shadows do the work outlines used to" className="grid grid-cols-2 gap-6 sm:grid-cols-4">
         {[
-          ["rounded-md", "md"],
-          ["rounded-xl", "xl"],
-          ["rounded-2xl", "2xl (cards)"],
-          ["rounded-4xl", "4xl (buttons, inputs)"],
-          ["rounded-full", "full (avatars)"],
-        ].map(([cls, name]) => (
-          <div key={cls} className="flex flex-col items-center gap-1.5">
-            <div className={cn("size-14 bg-muted ring-1 ring-foreground/10", cls)} />
-            <span className="font-mono text-[11px] text-muted-foreground">{name}</span>
+          ["soft", "Fields, chips"],
+          ["raised", "Cards"],
+          ["float", "Popovers, sheets"],
+          ["press", "Primary button"],
+        ].map(([s, use]) => (
+          <div key={s} className="space-y-3">
+            <div
+              className={cn("h-20 rounded-2xl", s === "press" ? "bg-primary" : "bg-card")}
+              style={{ boxShadow: `var(--shadow-${s})` }}
+            />
+            <div>
+              <div className="font-mono text-[11px]">--shadow-{s}</div>
+              <div className="text-xs text-muted-foreground">{use}</div>
+            </div>
           </div>
         ))}
-      </Preview>
+      </Panel>
+    </Section>
+  );
+}
+
+// ─── Motion ──────────────────────────────────────────────────────────────────
+
+const CURVES = [
+  ["--ease-snappy", "cubic-bezier(0.23, 1, 0.32, 1)", "Enter, press, popovers · 150–250ms", 220],
+  ["--ease-drawer", "cubic-bezier(0.32, 0.72, 0, 1)", "Sheets & drawers · 500ms in, 300ms out", 500],
+  ["--ease-smooth", "cubic-bezier(0.77, 0, 0.175, 1)", "Things moving on screen", 450],
+] as const;
+
+function Motion() {
+  const [on, setOn] = useState(false);
+  return (
+    <Section
+      id="motion"
+      eyebrow="Motion"
+      title="Fast to respond, never in the way."
+      description="Press feedback on pointer-down, popovers grow from their trigger, exits are quicker than entrances, and nothing animates from scale(0). Reduced-motion users get cross-fades."
+    >
+      <Panel className="block space-y-5">
+        {CURVES.map(([name, curve, use, ms]) => (
+          <div key={name} className="grid items-center gap-3 sm:grid-cols-[220px_1fr]">
+            <div>
+              <div className="font-mono text-xs">{name}</div>
+              <div className="text-xs text-muted-foreground">{use}</div>
+            </div>
+            <div className="relative h-10 rounded-full bg-muted">
+              <div className="absolute inset-1 [container-type:inline-size]">
+                <div
+                  className="size-8 rounded-full bg-primary shadow-(--shadow-press)"
+                  style={{
+                    transform: on ? "translateX(calc(100cqw - 2rem))" : "translateX(0)",
+                    transition: `transform ${ms}ms ${curve}`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+        <div className="flex items-center gap-3 pt-1">
+          <Button variant="soft" onClick={() => setOn((v) => !v)}>
+            {on ? "Back" : "Play curves"}
+          </Button>
+          <span className="text-xs text-muted-foreground">Interruptible: press again mid-flight.</span>
+        </div>
+      </Panel>
     </Section>
   );
 }
 
 // ─── Buttons ─────────────────────────────────────────────────────────────────
 
-const BUTTON_VARIANTS = ["default", "secondary", "outline", "ghost", "destructive", "link"] as const;
-const BUTTON_SIZES = ["xs", "sm", "default", "lg"] as const;
+const BUTTON_VARIANTS = ["default", "soft", "secondary", "outline", "ghost", "destructive", "link"] as const;
+
+/** State morph: idle → sending → applied. Blur bridges the crossfade (Emil Kowalski). */
+function ApplyButton() {
+  const [state, setState] = useState<"idle" | "sending" | "done">("idle");
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const label = { idle: "Apply", sending: "Sending", done: "Applied" }[state];
+  return (
+    <Button
+      size="lg"
+      className={cn(
+        "min-w-36 transition-[scale,background-color,box-shadow,color] duration-300",
+        state === "done" && "bg-mint text-mint-ink shadow-none hover:bg-mint"
+      )}
+      onClick={() => {
+        if (state === "sending") return;
+        if (state === "done") return setState("idle");
+        setState("sending");
+        timer.current = setTimeout(() => setState("done"), 1100);
+      }}
+    >
+      <span key={state} className="flex animate-morph items-center gap-2">
+        {state === "sending" && <Icon icon={Loading03Icon} className="size-4 animate-spin" />}
+        {state === "done" && <Icon icon={CheckmarkCircle02Icon} className="size-4" />}
+        {label}
+      </span>
+    </Button>
+  );
+}
 
 function Buttons() {
-  const [loading, setLoading] = useState(false);
   return (
-    <Section id="buttons" title="Buttons" description="Base UI Button. 6 variants × 4 sizes, plus icon sizes.">
-      <Preview label="Variants">
+    <Section
+      id="buttons"
+      eyebrow="Buttons"
+      title="Press it. It presses back."
+      description="Every button scales to 0.97 on pointer-down in 150ms. One primary per screen; soft for secondary actions that still belong to the brand."
+    >
+      <Panel label="Variants">
         {BUTTON_VARIANTS.map((v) => (
           <Button key={v} variant={v}>
             {v[0].toUpperCase() + v.slice(1)}
           </Button>
         ))}
-      </Preview>
-      <Preview label="Sizes">
-        {BUTTON_SIZES.map((s) => (
-          <Button key={s} size={s}>
-            Size {s}
-          </Button>
-        ))}
-      </Preview>
-      <Preview label="With icons · icon-only · states">
+      </Panel>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Panel label="Sizes">
+          <Button size="xs">Extra small</Button>
+          <Button size="sm">Small</Button>
+          <Button>Default</Button>
+          <Button size="lg">Large</Button>
+        </Panel>
+        <Panel label="State morph — try it">
+          <ApplyButton />
+          <span className="text-xs text-muted-foreground">Idle → sending → applied, with blur-masked swaps.</span>
+        </Panel>
+      </div>
+      <Panel label="With icons · icon-only · states">
         <Button>
           <Icon icon={Add01Icon} data-icon="inline-start" />
           New campaign
+        </Button>
+        <Button variant="soft">
+          <Icon icon={InstagramIcon} data-icon="inline-start" />
+          Connect Instagram
         </Button>
         <Button variant="outline">
           Apply
           <Icon icon={ArrowRight01Icon} data-icon="inline-end" />
         </Button>
-        <Button variant="secondary">
-          <Icon icon={InstagramIcon} data-icon="inline-start" />
-          Connect Instagram
-        </Button>
         <Separator orientation="vertical" className="mx-1 h-6" />
-        <Button size="icon-xs" variant="outline" aria-label="Edit">
+        <Button size="icon-sm" variant="outline" aria-label="Edit">
           <Icon icon={Edit02Icon} />
-        </Button>
-        <Button size="icon-sm" variant="outline" aria-label="Copy link">
-          <Icon icon={Copy01Icon} />
         </Button>
         <Button size="icon" variant="ghost" aria-label="More">
           <Icon icon={MoreHorizontalIcon} />
@@ -300,21 +522,11 @@ function Buttons() {
         </Button>
         <Separator orientation="vertical" className="mx-1 h-6" />
         <Button disabled>Disabled</Button>
-        <Button
-          disabled={loading}
-          onClick={() => {
-            setLoading(true);
-            setTimeout(() => setLoading(false), 1500);
-          }}
-        >
-          {loading && <Icon icon={Loading03Icon} className="animate-spin" />}
-          {loading ? "Saving…" : "Click to load"}
-        </Button>
         <Button variant="destructive">
           <Icon icon={Delete02Icon} data-icon="inline-start" />
           Delete
         </Button>
-      </Preview>
+      </Panel>
     </Section>
   );
 }
@@ -323,40 +535,43 @@ function Buttons() {
 
 function Badges() {
   return (
-    <Section id="badges" title="Badges" description="Status, compensation and network labels.">
-      <Preview label="Variants">
-        <Badge>Default</Badge>
-        <Badge variant="secondary">Secondary</Badge>
-        <Badge variant="outline">Outline</Badge>
-        <Badge variant="destructive">Destructive</Badge>
-        <Badge variant="ghost">Ghost</Badge>
-        <Badge variant="link">Link</Badge>
-      </Preview>
-      <Preview label="In product context">
-        <Badge variant="secondary">
+    <Section
+      id="badges"
+      eyebrow="Badges"
+      title="Color that sorts, not shouts."
+      description="Joy tints mark what something is — a network, a reward, a status — so a board of campaigns scans at a glance."
+    >
+      <Panel label="Variants">
+        {(["default", "brand", "sun", "mint", "sky", "rose", "secondary", "outline", "destructive"] as const).map((v) => (
+          <Badge key={v} variant={v}>
+            {v[0].toUpperCase() + v.slice(1)}
+          </Badge>
+        ))}
+      </Panel>
+      <Panel label="In product">
+        <Badge variant="sky">
           <Icon icon={InstagramIcon} data-icon="inline-start" />
           Reels
         </Badge>
-        <Badge variant="secondary">
+        <Badge variant="rose">
           <Icon icon={TiktokIcon} data-icon="inline-start" />
           TikTok
         </Badge>
-        <Badge variant="outline">
+        <Badge variant="brand">
           <Icon icon={Money03Icon} data-icon="inline-start" />
           150 AZN
         </Badge>
-        <Badge variant="outline">
+        <Badge variant="sun">
           <Icon icon={GiftIcon} data-icon="inline-start" />
           Barter
         </Badge>
-        <Badge>
+        <Badge variant="mint">
           <Icon icon={CheckmarkBadge01Icon} data-icon="inline-start" />
           Verified collaboration
         </Badge>
         <Badge variant="secondary">Pending review</Badge>
-        <Badge variant="destructive">Rejected</Badge>
         <Badge variant="outline">Self-reported</Badge>
-      </Preview>
+      </Panel>
     </Section>
   );
 }
@@ -389,12 +604,14 @@ function Field({
 }) {
   return (
     <div className="grid gap-2">
-      <Label htmlFor={id}>{label}</Label>
+      <Label htmlFor={id} className="px-1">
+        {label}
+      </Label>
       {children}
       {error ? (
-        <p className="px-3 text-xs text-destructive">{error}</p>
+        <p className="px-3.5 text-xs font-medium text-destructive">{error}</p>
       ) : (
-        hint && <p className="px-3 text-xs text-muted-foreground">{hint}</p>
+        hint && <p className="px-3.5 text-xs text-muted-foreground">{hint}</p>
       )}
     </div>
   );
@@ -404,23 +621,24 @@ function Forms() {
   return (
     <Section
       id="forms"
-      title="Form controls"
-      description="Input, Textarea, Select (Base UI) and Label. Field is a local composition — promote it to the kit when forms start."
+      eyebrow="Forms"
+      title="Filled fields, a warm halo on focus."
+      description="Fields sit on the muted surface and lift to white with a soft coral ring when focused. Errors are inline, in plain words."
     >
-      <Preview className="grid gap-6 md:grid-cols-2">
+      <Panel className="grid gap-6 md:grid-cols-2">
         <Field id="f-title" label="Campaign title" hint="Shown on the campaign board.">
           <Input id="f-title" placeholder="Yeni restoran açılışı — Reels" />
         </Field>
         <Field id="f-handle" label="Username" error="Bu istifadəçi adı artıq tutulub.">
           <Input id="f-handle" defaultValue="aysel" aria-invalid />
         </Field>
-        <Field id="f-search" label="With icon">
+        <Field id="f-search" label="Search">
           <div className="relative">
             <Icon
               icon={Search01Icon}
-              className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+              className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground"
             />
-            <Input id="f-search" placeholder="Search campaigns" className="pl-9" />
+            <Input id="f-search" placeholder="Search campaigns" className="pl-10" />
           </div>
         </Field>
         <Field id="f-disabled" label="Disabled">
@@ -440,9 +658,9 @@ function Forms() {
             </SelectContent>
           </Select>
         </Field>
-        <Field id="f-city" label="City (grouped, small)">
+        <Field id="f-city" label="City">
           <Select items={CITIES} defaultValue="baku">
-            <SelectTrigger id="f-city" size="sm" className="w-full">
+            <SelectTrigger id="f-city" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -458,56 +676,59 @@ function Forms() {
           </Select>
         </Field>
         <div className="md:col-span-2">
-          <Field id="f-desc" label="Description" hint="Grows with content (field-sizing).">
-            <Textarea
-              id="f-desc"
-              placeholder="Brendiniz, məhsul və kreatordan gözləntiləriniz haqqında yazın…"
-            />
+          <Field id="f-desc" label="Description" hint="Grows with what you write.">
+            <Textarea id="f-desc" placeholder="Brendiniz, məhsul və kreatordan gözləntiləriniz haqqında yazın…" />
           </Field>
         </div>
-      </Preview>
+      </Panel>
+      <Panel label="Segmented control (Tabs) — the indicator slides" className="grid gap-8 md:grid-cols-2">
+        <Tabs defaultValue="all">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="published">Published</TabsTrigger>
+            <TabsTrigger value="drafts">Drafts</TabsTrigger>
+          </TabsList>
+          <TabsContent value="all" className="px-1 pt-2 text-muted-foreground">
+            All campaigns.
+          </TabsContent>
+          <TabsContent value="published" className="px-1 pt-2 text-muted-foreground">
+            Live on the board.
+          </TabsContent>
+          <TabsContent value="drafts" className="px-1 pt-2 text-muted-foreground">
+            Not visible to creators yet.
+          </TabsContent>
+        </Tabs>
+        <Tabs defaultValue="profile">
+          <TabsList variant="line">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+            <TabsTrigger value="prices">Prices</TabsTrigger>
+          </TabsList>
+          <TabsContent value="profile" className="px-1 pt-2 text-muted-foreground">
+            Name, city, categories.
+          </TabsContent>
+          <TabsContent value="portfolio" className="px-1 pt-2 text-muted-foreground">
+            Instagram and TikTok links.
+          </TabsContent>
+          <TabsContent value="prices" className="px-1 pt-2 text-muted-foreground">
+            Reels, Stories, TikTok.
+          </TabsContent>
+        </Tabs>
+      </Panel>
     </Section>
   );
 }
 
-// ─── Avatars ─────────────────────────────────────────────────────────────────
-
-function Avatars() {
-  return (
-    <Section id="avatars" title="Avatars" description="Base UI Avatar with fallback initials, badge and group.">
-      <Preview>
-        <Avatar size="sm">
-          <AvatarFallback>AM</AvatarFallback>
-        </Avatar>
-        <Avatar>
-          <AvatarFallback>AM</AvatarFallback>
-        </Avatar>
-        <Avatar size="lg">
-          <AvatarFallback>AM</AvatarFallback>
-        </Avatar>
-        <Avatar size="lg">
-          <AvatarFallback>DL</AvatarFallback>
-          <AvatarBadge />
-        </Avatar>
-        <Separator orientation="vertical" className="mx-2 h-8" />
-        <AvatarGroup>
-          {["AM", "NR", "LK", "TS"].map((i) => (
-            <Avatar key={i}>
-              <AvatarFallback>{i}</AvatarFallback>
-            </Avatar>
-          ))}
-          <AvatarGroupCount>+12</AvatarGroupCount>
-        </AvatarGroup>
-      </Preview>
-    </Section>
-  );
-}
-
-// ─── Cards ───────────────────────────────────────────────────────────────────
+// ─── Cards & avatars ─────────────────────────────────────────────────────────
 
 function Cards() {
   return (
-    <Section id="cards" title="Cards" description="Card with header, action, content and footer; default and sm size.">
+    <Section
+      id="cards"
+      eyebrow="Cards & avatars"
+      title="Depth instead of borders."
+      description="Cards float on a layered shadow with a hairline you barely see. Named avatars take their own color, so a list of people never looks like a list of gray dots."
+    >
       <div className="grid items-start gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -519,79 +740,47 @@ function Cards() {
               </Button>
             </CardAction>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="grid gap-2">
-              <Label htmlFor="c-name">Name</Label>
-              <Input id="c-name" defaultValue="Decolive" />
-            </div>
+          <CardContent className="grid gap-2">
+            <Label htmlFor="c-name" className="px-1">
+              Name
+            </Label>
+            <Input id="c-name" defaultValue="Decolive" />
           </CardContent>
-          <CardFooter className="justify-end gap-2 border-t">
+          <CardFooter className="justify-end gap-2">
             <Button variant="ghost">Cancel</Button>
             <Button>Save</Button>
           </CardFooter>
         </Card>
-        <Card size="sm">
-          <CardHeader>
-            <CardTitle>Small card</CardTitle>
-            <CardDescription>size=&quot;sm&quot; — tighter spacing for dense lists.</CardDescription>
-          </CardHeader>
-          <CardContent className="grid grid-cols-3 gap-3 text-center">
-            {[
-              ["Applications", "24"],
-              ["Posts", "9"],
-              ["Views", "48.2K"],
-            ].map(([k, v]) => (
-              <div key={k} className="rounded-xl bg-muted/60 p-3">
-                <div className="font-heading text-lg font-semibold tabular-nums">{v}</div>
-                <div className="text-xs text-muted-foreground">{k}</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+        <div className="grid gap-4">
+          <Card size="sm">
+            <CardContent className="grid grid-cols-3 gap-2 text-center">
+              {[
+                ["Applications", "24", "bg-brand-soft text-brand-ink"],
+                ["Posts", "9", "bg-sky text-sky-ink"],
+                ["Views", "48.2K", "bg-mint text-mint-ink"],
+              ].map(([k, v, c]) => (
+                <div key={k} className={cn("rounded-2xl py-3", c)}>
+                  <div className="font-heading text-xl font-semibold tracking-[-0.02em] tabular-nums">{v}</div>
+                  <div className="text-[11px] font-medium opacity-80">{k}</div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+          <Panel label="Avatars">
+            <NamedAvatar name="Aysel Məmmədova" size="sm" />
+            <NamedAvatar name="Nigar Rəhimli" />
+            <NamedAvatar name="Leyla Kərimova" size="lg" />
+            <NamedAvatar name="Decolive" size="lg" badge />
+            <Separator orientation="vertical" className="mx-1 h-8" />
+            <AvatarGroup>
+              {["Aysel Məmmədova", "Nigar Rəhimli", "Leyla Kərimova", "Tural Səfərov"].map((n) => (
+                <NamedAvatar key={n} name={n} single />
+              ))}
+              <AvatarGroupCount>+12</AvatarGroupCount>
+            </AvatarGroup>
+          </Panel>
+        </div>
       </div>
-    </Section>
-  );
-}
-
-// ─── Tabs ────────────────────────────────────────────────────────────────────
-
-function TabsDemo() {
-  return (
-    <Section id="tabs" title="Tabs" description="Default (pill) and line variants.">
-      <Preview className="grid gap-8 md:grid-cols-2">
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="published">Published</TabsTrigger>
-            <TabsTrigger value="drafts">Drafts</TabsTrigger>
-          </TabsList>
-          <TabsContent value="all" className="pt-3 text-muted-foreground">
-            All campaigns.
-          </TabsContent>
-          <TabsContent value="published" className="pt-3 text-muted-foreground">
-            Live on the board.
-          </TabsContent>
-          <TabsContent value="drafts" className="pt-3 text-muted-foreground">
-            Not visible to creators yet.
-          </TabsContent>
-        </Tabs>
-        <Tabs defaultValue="profile">
-          <TabsList variant="line">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-            <TabsTrigger value="prices">Prices</TabsTrigger>
-          </TabsList>
-          <TabsContent value="profile" className="pt-3 text-muted-foreground">
-            Name, city, categories.
-          </TabsContent>
-          <TabsContent value="portfolio" className="pt-3 text-muted-foreground">
-            Instagram / TikTok links.
-          </TabsContent>
-          <TabsContent value="prices" className="pt-3 text-muted-foreground">
-            Reels, Stories, TikTok.
-          </TabsContent>
-        </Tabs>
-      </Preview>
     </Section>
   );
 }
@@ -604,23 +793,27 @@ function Overlays() {
   return (
     <Section
       id="overlays"
-      title="Overlays"
-      description="Dialog, Sheet and Dropdown menu (Base UI). Triggers use the render prop, not asChild."
+      eyebrow="Overlays"
+      title="Grows from where you tapped."
+      description="Menus and selects scale from their trigger; dialogs stay centered and dim the page lightly; sheets slide the full distance on the iOS drawer curve and leave the way they came."
     >
-      <Preview>
+      <Panel>
         <Dialog>
           <DialogTrigger render={<Button />}>Apply to campaign</DialogTrigger>
           <DialogContent>
             <DialogHeader>
+              <div className="mb-2 flex size-11 items-center justify-center rounded-2xl bg-mint text-mint-ink">
+                <Icon icon={CheckmarkCircle02Icon} className="size-5" />
+              </div>
               <DialogTitle>Application sent</DialogTitle>
-              <DialogDescription>Contact the brand directly to agree on the details.</DialogDescription>
+              <DialogDescription>Message Decolive directly to agree on the details.</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-2 rounded-xl bg-muted/60 p-4 text-sm">
-              <div className="flex items-center gap-2">
+            <div className="grid gap-1 rounded-2xl bg-muted p-1.5 text-sm">
+              <div className="flex items-center gap-3 rounded-xl px-3 py-2.5">
                 <Icon icon={InstagramIcon} className="size-4 text-muted-foreground" />
                 @decolive.az
               </div>
-              <div className="flex items-center gap-2 tabular-nums">
+              <div className="flex items-center gap-3 rounded-xl px-3 py-2.5 tabular-nums">
                 <Icon icon={Call02Icon} className="size-4 text-muted-foreground" />
                 +994 50 000 00 00
               </div>
@@ -643,7 +836,10 @@ function Overlays() {
             </DialogHeader>
             <DialogFooter>
               <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
-              <DialogClose render={<Button variant="destructive" />} onClick={() => toast.success("Campaign deleted")}>
+              <DialogClose
+                render={<Button variant="destructive" />}
+                onClick={() => toast.success("Campaign deleted")}
+              >
                 Delete
               </DialogClose>
             </DialogFooter>
@@ -658,11 +854,11 @@ function Overlays() {
           <SheetContent>
             <SheetHeader>
               <SheetTitle>Filter campaigns</SheetTitle>
-              <SheetDescription>Narrow the board by network and city.</SheetDescription>
+              <SheetDescription>Narrow the board by network and reach.</SheetDescription>
             </SheetHeader>
-            <div className="grid gap-4 px-4">
+            <div className="grid gap-5 px-6">
               <div className="grid gap-2">
-                <Label>Network</Label>
+                <Label className="px-1">Network</Label>
                 <Select items={NETWORKS}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Any network" />
@@ -677,25 +873,27 @@ function Overlays() {
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="s-min">Minimum followers</Label>
-                <Input id="s-min" inputMode="numeric" placeholder="5000" />
+                <Label htmlFor="s-min" className="px-1">
+                  Minimum followers
+                </Label>
+                <Input id="s-min" inputMode="numeric" placeholder="5 000" />
               </div>
             </div>
             <SheetFooter>
-              <Button>Show 24 campaigns</Button>
+              <Button size="lg">Show 24 campaigns</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
 
         <Sheet>
-          <SheetTrigger render={<Button variant="outline" />}>Bottom sheet (mobile)</SheetTrigger>
-          <SheetContent side="bottom">
+          <SheetTrigger render={<Button variant="outline" />}>Bottom sheet</SheetTrigger>
+          <SheetContent side="bottom" className="mx-auto max-w-lg">
             <SheetHeader>
               <SheetTitle>Share your profile</SheetTitle>
               <SheetDescription>ugcmarket.az/creator/aysel</SheetDescription>
             </SheetHeader>
             <SheetFooter>
-              <Button onClick={() => toast.success("Link copied")}>
+              <Button size="lg" onClick={() => toast.success("Link copied")}>
                 <Icon icon={Copy01Icon} data-icon="inline-start" />
                 Copy link
               </Button>
@@ -708,7 +906,7 @@ function Overlays() {
             <Icon icon={UserIcon} data-icon="inline-start" />
             Account
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
+          <DropdownMenuContent className="w-60">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Decolive</DropdownMenuLabel>
               <DropdownMenuItem>
@@ -743,7 +941,7 @@ function Overlays() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </Preview>
+      </Panel>
     </Section>
   );
 }
@@ -752,8 +950,13 @@ function Overlays() {
 
 function Feedback() {
   return (
-    <Section id="feedback" title="Feedback" description="Toasts (Sonner, mounted in Providers) and loading skeletons.">
-      <Preview label="Toasts">
+    <Section
+      id="feedback"
+      eyebrow="Feedback"
+      title="Say what happened, then get out of the way."
+      description="Toasts for completion and status, skeletons that shimmer gently while content loads."
+    >
+      <Panel label="Toasts">
         <Button variant="outline" onClick={() => toast.success("Post link submitted")}>
           Success
         </Button>
@@ -762,9 +965,6 @@ function Feedback() {
         </Button>
         <Button variant="outline" onClick={() => toast.info("Your campaign is waiting for review")}>
           Info
-        </Button>
-        <Button variant="outline" onClick={() => toast.warning("Deadline is in 2 days")}>
-          Warning
         </Button>
         <Button
           variant="outline"
@@ -789,80 +989,84 @@ function Feedback() {
         >
           With action
         </Button>
-      </Preview>
-      <Preview label="Skeleton — campaign card loading" className="grid gap-4 md:grid-cols-3">
+      </Panel>
+      <div className="grid gap-4 md:grid-cols-3">
         {[0, 1, 2].map((i) => (
-          <div key={i} className="space-y-3 rounded-2xl p-4 ring-1 ring-foreground/10">
-            <div className="flex items-center gap-3">
-              <Skeleton className="size-8 rounded-full" />
-              <div className="flex-1 space-y-1.5">
-                <Skeleton className="h-3 w-1/2" />
-                <Skeleton className="h-3 w-1/3" />
+          <Card key={i} size="sm">
+            <CardContent className="space-y-3">
+              <div className="flex items-center gap-3">
+                <Skeleton className="size-8 rounded-full" />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className="h-3 w-1/2" />
+                  <Skeleton className="h-3 w-1/3" />
+                </div>
               </div>
-            </div>
-            <Skeleton className="h-4 w-4/5" />
-            <div className="flex gap-2">
-              <Skeleton className="h-5 w-16 rounded-4xl" />
-              <Skeleton className="h-5 w-20 rounded-4xl" />
-            </div>
-          </div>
+              <Skeleton className="h-4 w-4/5" />
+              <div className="flex gap-2">
+                <Skeleton className="h-5 w-16 rounded-4xl" />
+                <Skeleton className="h-5 w-20 rounded-4xl" />
+              </div>
+            </CardContent>
+          </Card>
         ))}
-      </Preview>
+      </div>
     </Section>
   );
 }
 
-// ─── Product patterns (compositions — candidates for src/features/*/components) ─
+// ─── Patterns ────────────────────────────────────────────────────────────────
 
-function CampaignCardExample({
+function CampaignCard({
   brand,
-  initials,
   title,
   network,
   format,
-  compensation,
+  amount,
   barter,
   city,
   deadline,
+  applied,
 }: {
   brand: string;
-  initials: string;
   title: string;
   network: "instagram" | "tiktok";
   format: string;
-  compensation: string;
+  amount?: string;
   barter?: boolean;
   city: string;
   deadline: string;
+  applied: number;
 }) {
   return (
-    <Card size="sm" className="transition-shadow hover:ring-foreground/20">
+    <Card size="sm" className="group/campaign transition-[translate,box-shadow] duration-300 ease-(--ease-snappy) hover:-translate-y-0.5 hover:shadow-(--shadow-float)">
       <CardHeader>
-        <div className="flex items-center gap-2.5">
-          <Avatar size="sm">
-            <AvatarFallback>{initials}</AvatarFallback>
-          </Avatar>
-          <span className="text-sm text-muted-foreground">{brand}</span>
+        <div className="flex min-w-0 items-center gap-2.5">
+          <NamedAvatar name={brand} size="sm" />
+          <span className="min-w-0 truncate text-sm text-muted-foreground">{brand}</span>
         </div>
         <CardAction>
           <Button variant="ghost" size="icon-xs" aria-label="More">
             <Icon icon={MoreHorizontalIcon} />
           </Button>
         </CardAction>
-        <CardTitle className="leading-snug">{title}</CardTitle>
+        <CardTitle className="pt-1 leading-snug tracking-[-0.01em]">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-wrap gap-1.5">
-        <Badge variant="secondary">
+      <CardContent className="flex flex-wrap items-center gap-1.5">
+        <Badge variant={network === "instagram" ? "sky" : "rose"}>
           <Icon icon={network === "instagram" ? InstagramIcon : TiktokIcon} data-icon="inline-start" />
           {format}
         </Badge>
-        <Badge variant="outline">
-          <Icon icon={barter ? GiftIcon : Money03Icon} data-icon="inline-start" />
-          {compensation}
-        </Badge>
+        {barter ? (
+          <Badge variant="sun">
+            <Icon icon={GiftIcon} data-icon="inline-start" />
+            Barter
+          </Badge>
+        ) : (
+          <Badge variant="brand">{amount}</Badge>
+        )}
       </CardContent>
-      <CardFooter className="mt-auto justify-between gap-2 text-xs text-muted-foreground">
-        <span className="flex items-center gap-3">
+      <CardFooter className="mt-auto justify-between gap-2 pt-1 text-xs text-muted-foreground">
+        <span className="flex min-w-0 items-center gap-3">
           <span className="flex items-center gap-1">
             <Icon icon={Location01Icon} className="size-3.5" />
             {city}
@@ -871,6 +1075,7 @@ function CampaignCardExample({
             <Icon icon={Calendar03Icon} className="size-3.5" />
             {deadline}
           </span>
+          <span className="hidden sm:inline">{applied} applied</span>
         </span>
         <Button size="sm">Apply</Button>
       </CardFooter>
@@ -878,17 +1083,14 @@ function CampaignCardExample({
   );
 }
 
-function CreatorCardExample() {
+function CreatorCard() {
   return (
     <Card size="sm">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <Avatar size="lg">
-            <AvatarFallback>AM</AvatarFallback>
-            <AvatarBadge />
-          </Avatar>
+          <NamedAvatar name="Aysel Məmmədova" size="lg" badge />
           <div className="min-w-0">
-            <div className="flex items-center gap-1 font-medium">
+            <div className="flex items-center gap-1 font-semibold">
               Aysel Məmmədova
               <Icon icon={CheckmarkBadge01Icon} className="size-4 text-primary" />
             </div>
@@ -903,16 +1105,16 @@ function CreatorCardExample() {
             ["Avg views", "9.1K"],
             ["Collabs", "7"],
           ].map(([k, v]) => (
-            <div key={k} className="rounded-xl bg-muted/60 py-2">
-              <div className="font-heading font-semibold tabular-nums">{v}</div>
+            <div key={k} className="rounded-2xl bg-muted py-2.5">
+              <div className="font-heading font-semibold tracking-[-0.02em] tabular-nums">{v}</div>
               <div className="text-[11px] text-muted-foreground">{k}</div>
             </div>
           ))}
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Badge variant="outline">Food</Badge>
-          <Badge variant="outline">Lifestyle</Badge>
-          <Badge variant="outline">Barter OK</Badge>
+          <Badge variant="sun">Food</Badge>
+          <Badge variant="sky">Lifestyle</Badge>
+          <Badge variant="mint">Barter OK</Badge>
         </div>
       </CardContent>
       <CardFooter className="gap-2">
@@ -930,58 +1132,55 @@ function Patterns() {
   return (
     <Section
       id="patterns"
-      title="Product patterns"
-      description="How the kit composes into UGCMarket screens. These are mockups with demo data — when built for real they move to src/features/*/components."
+      eyebrow="Patterns"
+      title="How it comes together."
+      description="Mockups with demo data. When built for real they move to src/features/*/components."
     >
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <CampaignCardExample
+        <CampaignCard
           brand="Decolive"
-          initials="DL"
           title="Yeni kolleksiya üçün ev interyeri Reels"
           network="instagram"
           format="Reels"
-          compensation="150 AZN"
+          amount="150 AZN"
           city="Bakı"
           deadline="30 noy"
+          applied={24}
         />
-        <CampaignCardExample
+        <CampaignCard
           brand="Şirin Kafe"
-          initials="ŞK"
           title="Açılış həftəsi — 2 TikTok video, dequstasiya daxil"
           network="tiktok"
           format="TikTok video"
-          compensation="Barter"
           barter
           city="Gəncə"
           deadline="5 dek"
+          applied={11}
         />
-        <CreatorCardExample />
+        <CreatorCard />
       </div>
-      <Preview label="Stress test — long Azerbaijani/Russian strings (break-ui)" className="block">
-        <div className="grid gap-4 md:grid-cols-2">
-          <CampaignCardExample
-            brand="Azərbaycan Respublikası Gənclər və İdman Nazirliyinin Tədbirlər Mərkəzi"
-            initials="AR"
-            title="Beynəlxalq gənclər festivalının açılış mərasimi üçün çoxdilli qısa videoların hazırlanması və paylaşılması"
-            network="instagram"
-            format="Reels + Stories"
-            compensation="1 250 AZN"
-            city="Şamaxı"
-            deadline="31 dek"
-          />
-          <CampaignCardExample
-            brand="Международная сеть кофеен"
-            initials="МК"
-            title="Обзор нового сезонного меню в формате коротких вертикальных видео"
-            network="tiktok"
-            format="TikTok video"
-            compensation="Бартер"
-            barter
-            city="Сумгайыт"
-            deadline="12 янв"
-          />
-        </div>
-      </Preview>
+      <Panel label="Stress test — long Azerbaijani and Russian strings" className="grid gap-4 md:grid-cols-2">
+        <CampaignCard
+          brand="Azərbaycan Respublikası Gənclər və İdman Nazirliyinin Tədbirlər Mərkəzi"
+          title="Beynəlxalq gənclər festivalının açılış mərasimi üçün çoxdilli qısa videoların hazırlanması və paylaşılması"
+          network="instagram"
+          format="Reels + Stories"
+          amount="1 250 AZN"
+          city="Şamaxı"
+          deadline="31 dek"
+          applied={132}
+        />
+        <CampaignCard
+          brand="Международная сеть кофеен"
+          title="Обзор нового сезонного меню в формате коротких вертикальных видео"
+          network="tiktok"
+          format="TikTok video"
+          barter
+          city="Сумгайыт"
+          deadline="12 янв"
+          applied={7}
+        />
+      </Panel>
     </Section>
   );
 }
@@ -992,18 +1191,18 @@ export function UiKitShowcase() {
   const [dark, setDark] = useDarkMode();
   return (
     <div className="min-h-full bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-          <div className="flex items-baseline gap-2">
-            <span className="font-heading font-semibold">UGCMarket</span>
-            <span className="text-sm text-muted-foreground">UI kit</span>
-          </div>
-          <nav className="ml-4 hidden flex-1 gap-1 overflow-x-auto lg:flex">
+      {/* Translucent chrome; content scrolls underneath (Apple materials). */}
+      <header className="sticky top-0 z-30 bg-background/70 backdrop-blur-xl backdrop-saturate-150 [mask-image:linear-gradient(to_bottom,black_calc(100%-8px),transparent)]">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3.5">
+          <a href="#" className="font-heading text-[15px] font-semibold tracking-[-0.01em]">
+            UGCMarket <span className="font-normal text-muted-foreground">UI kit</span>
+          </a>
+          <nav className="ml-6 hidden flex-1 gap-0.5 lg:flex">
             {SECTIONS.map(([id, label]) => (
               <a
                 key={id}
                 href={`#${id}`}
-                className="rounded-4xl px-2.5 py-1 text-sm whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                className="rounded-full px-3 py-1.5 text-[13px] whitespace-nowrap text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
               >
                 {label}
               </a>
@@ -1021,22 +1220,14 @@ export function UiKitShowcase() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl space-y-16 px-4 py-10">
-        <div className="space-y-2">
-          <h1 className="font-heading text-3xl font-semibold tracking-tight">UI kit</h1>
-          <p className="max-w-2xl text-muted-foreground">
-            Every component in <code className="font-mono text-sm">src/components/ui</code>, in all variants, with
-            UGCMarket content. Base UI primitives · shadcn <code className="font-mono text-sm">base-maia</code> ·
-            Hugeicons · Geist. Edit the components or tokens and this page updates.
-          </p>
-        </div>
+      <main className="mx-auto max-w-6xl space-y-28 px-4 pt-10 pb-32 sm:pt-16">
+        <Hero />
         <Foundations />
+        <Motion />
         <Buttons />
         <Badges />
         <Forms />
-        <Avatars />
         <Cards />
-        <TabsDemo />
         <Overlays />
         <Feedback />
         <Patterns />
