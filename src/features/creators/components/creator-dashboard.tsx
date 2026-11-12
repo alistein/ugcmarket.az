@@ -399,19 +399,12 @@ function HeaderActions({ creator: c }: { creator: MyCreator }) {
               {refresh.isPending ? t("statsRefreshing") : t("statsRefresh")}
             </TooltipTrigger>
             <TooltipContent side="bottom" align="end">
-              {t("statsRefreshHint")}
+              <p>{t("statsRefreshHint")}</p>
+              <p className="mt-1.5 tabular-nums opacity-70">
+                {when ? `${t("statsLastRun")}: ${when}` : t("statsNeverRun")}
+              </p>
             </TooltipContent>
           </Tooltip>
-          <span className="flex flex-col text-xs text-muted-foreground tabular-nums sm:items-end">
-            {when ? (
-              <>
-                <span>{t("statsLastRun")}</span>
-                <span className="text-foreground/80">{when}</span>
-              </>
-            ) : (
-              t("statsNeverRun")
-            )}
-          </span>
         </>
       )}
     </div>
