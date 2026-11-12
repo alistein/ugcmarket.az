@@ -21,20 +21,20 @@
     "resetPassword": "Şifrəni bərpa et",
     "verifyEmail": "E-poçtu təsdiqlə",
     "onboarding": "Hesab növü",
-    "board": "Kampaniyalar",
+    "board": "Elanlar",
     "creatorDashboard": "Kabinet",
     "creatorProfileEdit": "Profilim",
     "creatorApplications": "Müraciətlərim",
     "creatorPosts": "Paylaşımlarım",
     "brandDashboard": "Brend kabineti",
     "brandProfile": "Brend profili",
-    "campaignNew": "Yeni kampaniya",
-    "campaignEdit": "Kampaniyanı redaktə et",
+    "campaignNew": "Yeni elan",
+    "campaignEdit": "Elanı redaktə et",
     "campaignApplicants": "Müraciət edənlər",
     "adminDashboard": "Admin panel",
     "adminCreators": "Kreatorlar",
     "adminBrands": "Brendlər",
-    "adminCampaigns": "Kampaniyalar",
+    "adminCampaigns": "Elanlar",
     "adminUsers": "İstifadəçilər"
   },
   "errors": {
@@ -51,7 +51,7 @@
       "resource": "Tapılmadı.",
       "creator": "Kreator tapılmadı.",
       "brand": "Brend tapılmadı.",
-      "campaign": "Kampaniya tapılmadı.",
+      "campaign": "Elan tapılmadı.",
       "post": "Paylaşım tapılmadı."
     },
     "creator_exists": "Sizin artıq kreator profiliniz var.",
@@ -87,21 +87,21 @@
       "brands": "brendlər",
       "creators": "kreatorlar",
       "faq": "suallar",
-      "login": "daxil ol",
-      "start": "başla"
+      "login": "daxil olun",
+      "start": "başlayın"
     },
     "hero": {
       "eyebrow": "brendlər və kreatorlar üçün yerli platforma 🇦🇿",
-      "titleA": "reklamını",
+      "titleA": "reklamınızı",
       "titleAccent": "kreatorlar",
       "titleB": "çəksin",
-      "sub": "brendlər kampaniya yerləşdirir, kreatorlar instagram və tiktok-da reklam etsin. pulla və ya barterlə",
-      "ctaBrand": "kampaniya yerləşdir",
-      "ctaCreator": "kreator kimi qoşul",
-      "note": "hazırda tam pulsuzdur",
-      "brandAsk": "brendsən?",
-      "creatorAsk": "kreatorsan?",
-      "creatorLine": "çək, paylaş, qazan"
+      "sub": "brendlər elan yerləşdirir, kreatorlar instagram və tiktok-da reklam edir. ödəniş pulla və ya barterlə olur.",
+      "ctaBrand": "elan yerləşdirin",
+      "ctaCreator": "kreator kimi qoşulun",
+      "note": "hazırda tamamilə pulsuzdur",
+      "brandAsk": "brendsiniz?",
+      "creatorAsk": "kreatorsunuz?",
+      "creatorLine": "çəkin, paylaşın, qazanın"
     },
     "props": {
       "hello": "salam, mən",
@@ -114,14 +114,14 @@
       "reels3": "payız kombini"
     },
     "board": {
-      "label": "kampaniya lövhəsi",
-      "title": "bütün kampaniyalar bir yerdə",
-      "sub": "kreatorlar baxır, uyğun olana bir toxunuşla müraciət edir",
+      "label": "elan lövhəsi",
+      "title": "bütün elanlar bir yerdə",
+      "sub": "kreatorlar elanlara baxır və uyğun olana bir toxunuşla müraciət edir.",
       "applied": "Aysel müraciət etdi",
-      "view": "bax",
+      "view": "baxın",
       "perCreator": "kreatora",
       "barter": "barter",
-      "apply": "müraciət et",
+      "apply": "müraciət edin",
       "back": "geri",
       "reward": "qonorar",
       "format": "format",
@@ -134,42 +134,42 @@
       "now": "indi",
       "followers": "izləyici",
       "notifTitle": "Aysel müraciət etdi",
-      "offer": "bizim üçün Reels çəkərsən? 🎬",
+      "offer": "bizim üçün Reels çəkərsiniz? 🎬",
       "accept": "hə, razıyam! 🙌"
     },
     "audience": {
       "brandsLabel": "brendlər üçün",
-      "brandsTitle": "doğru kreatoru tap",
-      "brands1": "kampaniyanı 2 dəqiqəyə yerləşdir",
-      "brands2": "profil və portfoliolara bax",
-      "brands3": "paylaşımları və baxışları izlə",
+      "brandsTitle": "doğru kreatoru tapın",
+      "brands1": "elanınızı 2 dəqiqəyə yerləşdirin",
+      "brands2": "profil və portfoliolara baxın",
+      "brands3": "paylaşımları və baxışları izləyin",
       "creatorsLabel": "kreatorlar üçün",
-      "creatorsTitle": "sevdiyin brendlərlə işlə",
-      "creators1": "pulsuz profil və paylaşa biləcəyin portfolio linki",
+      "creatorsTitle": "sevdiyiniz brendlərlə işləyin",
+      "creators1": "pulsuz profil və paylaşa biləcəyiniz portfolio linki",
       "creators2": "pul və ya barter",
-      "creators3": "baxışların, sənin portfolion",
+      "creators3": "baxışlarınız, sizin portfolionuz",
       "label": "kimlər üçün",
       "title": "hər iki tərəf üçün"
     },
     "steps": {
       "label": "necə işləyir",
       "title": "üç addım",
-      "one": "yerləşdir",
+      "one": "yerləşdirin",
       "oneSub": "məhsul, büdcə, son tarix",
-      "two": "seç",
-      "twoSub": "müraciətlərə bax, birini seç",
-      "three": "nəticəni gör",
+      "two": "seçin",
+      "twoSub": "müraciətlərə baxın, birini seçin",
+      "three": "nəticəni görün",
       "threeSub": "link və baxışlar bir yerdə",
       "mockCampaign": "Yeni kolleksiya · Reels",
       "mockDeadline": "30 noy",
       "brand": "brend",
       "creator": "kreator",
-      "cOne": "profil yarat",
+      "cOne": "profil yaradın",
       "cOneSub": "nişə, şəbəkələr, nümunə işlər",
-      "cTwo": "müraciət et",
-      "cTwoSub": "bəyəndiyin kampaniyaya bir kliklə",
-      "cThree": "çək və qazan",
-      "cThreeSub": "linki at, ödənişini al",
+      "cTwo": "müraciət edin",
+      "cTwoSub": "bəyəndiyiniz elana bir kliklə",
+      "cThree": "çəkin və qazanın",
+      "cThreeSub": "linki göndərin, ödənişinizi alın",
       "cFollowers": "izləyici",
       "cNiche": "ev dekoru"
     },
@@ -177,23 +177,23 @@
     "faq": {
       "title": "suallar",
       "q1": "bu pulludur?",
-      "a1": "hazırda bütün funksiyalar pulsuzdur",
+      "a1": "hazırda bütün funksiyalar pulsuzdur.",
       "q2": "ödəniş platformadan keçir?",
-      "a2": "hələlik yox, razılaşma birbaşa brendlə kreator arasında olur",
+      "a2": "hələlik yox. razılaşma birbaşa brendlə kreator arasında olur.",
       "q3": "kim kreator ola bilər?",
-      "a3": "instagram və ya tiktok hesabı olan hər kəs. kiçik auditoriya da olar",
-      "q4": "nəticəni necə görürəm?",
-      "a4": "kreator paylaşım linkini və baxışları göndərir, sən təsdiqləyirsən",
+      "a3": "instagram və ya tiktok hesabı olan hər kəs. kiçik auditoriya da olar.",
+      "q4": "nəticəni necə görə bilərəm?",
+      "a4": "kreator paylaşım linkini və baxış sayını göndərir, siz isə təsdiqləyirsiniz.",
       "q5": "ödənişi necə alıram?",
-      "a5": "hələlik platforma ödənişi idarə etmir, qonorarı və şərtləri brendlə birbaşa razılaşırsan",
+      "a5": "hələlik platforma ödənişləri idarə etmir. qonorarı və şərtləri brendlə birbaşa razılaşırsınız.",
       "q6": "kreatorları necə seçirəm?",
-      "a6": "kampaniyanı yerləşdirirsən, müraciət edənlərin profilinə, izləyici sayına və portfoliosuna baxıb özün seçirsən",
+      "a6": "elanınızı yerləşdirirsiniz, sonra müraciət edənlərin profilinə, izləyici sayına və portfoliosuna baxıb özünüz seçirsiniz.",
       "q7": "videodan reklamda istifadə edə bilərəm?",
-      "a7": "bunu brend və kreator birbaşa razılaşdırır, kampaniyada istifadə hüquqlarını qeyd et ki, sonradan sual yaranmasın"
+      "a7": "bunu brend və kreator birbaşa razılaşdırır. sonradan sual yaranmasın deyə, istifadə hüquqlarını elanda qeyd edin."
     },
     "final": {
-      "title": "ilk əməkdaşlığın bu həftə",
-      "sub": "brend və ya kreator, 2 dəqiqəyə başla",
+      "title": "ilk əməkdaşlığınız bu həftə",
+      "sub": "brend və ya kreator olmağınızdan asılı olmayaraq, 2 dəqiqəyə başlayın",
       "applied": "{handle} müraciət etdi",
       "accepted": "{handle} razılaşdı",
       "views": "baxış"
@@ -279,11 +279,11 @@
       "continue": "Davam et",
       "brand": {
         "title": "Brend",
-        "body": "Kampaniya yerləşdirin, kreatorlar sizə müraciət etsin."
+        "body": "Elan yerləşdirin, kreatorlar sizə müraciət etsin."
       },
       "creator": {
         "title": "Kreator",
-        "body": "Kampaniyalara müraciət edin və portfolionuzu göstərin."
+        "body": "Elanlara müraciət edin və portfolionuzu göstərin."
       }
     },
     "blocked": {
@@ -315,7 +315,7 @@
       "body": "Hələlik e-poçt göndərilmir. Google və ya şifrə ilə daxil olun. Şifrənizi unutmusunuzsa, komandamıza yazın."
     },
     "panel": {
-      "tagline": "reklamını kreatorlar çəksin",
+      "tagline": "reklamınızı kreatorlar çəksin",
       "views": "baxış bu ay",
       "applicants": "kreator müraciət etdi",
       "brand": "Sizin brendiniz",
@@ -329,7 +329,7 @@
   "app": {
     "account": "Hesab",
     "publicProfile": "Açıq profilim",
-    "browseCampaigns": "Kampaniyalar",
+    "browseCampaigns": "Elanlar",
     "editProfile": "Profili redaktə et",
     "myApplications": "Müraciətlərim",
     "language": "Dil"
@@ -398,7 +398,7 @@
       },
       "content": {
         "title": "Kontent tipləri",
-        "subtitle": "Kateqoriyalar sizə uyğun kampaniyaları tapmağa kömək edir."
+        "subtitle": "Kateqoriyalar sizə uyğun elanları tapmağa kömək edir."
       },
       "socials": {
         "title": "Sosial şəbəkələr",
@@ -449,7 +449,7 @@
       "username": "İstifadəçi adı və ya link",
       "followers": "İzləyici",
       "avgViews": "Orta baxış",
-      "contactsHint": "Əlaqə məlumatlarınız gizlidir. Onları yalnız müraciət etdiyiniz kampaniyanın brendi görür.",
+      "contactsHint": "Əlaqə məlumatlarınız gizlidir. Onları yalnız müraciət etdiyiniz elanın brendi görür.",
       "contactInstagram": "Əlaqə üçün Instagram",
       "contactPhone": "Telefon",
       "pricesHint": "Bir paylaşım üçün təxmini qiyməti AZN ilə yazın. Sahəni boş saxlasanız, profilinizdə \"razılaşma yolu ilə\" görünəcək.",
@@ -495,8 +495,8 @@
         "prices": "Qiymət göstərin",
         "portfolio": "Portfolioya 3 iş əlavə edin"
       },
-      "boardTitle": "Kampaniyalar",
-      "boardBody": "Brendlərin açıq kampaniyalarına baxın və müraciət edin.",
+      "boardTitle": "Elanlar",
+      "boardBody": "Brendlərin açıq elanlarına baxın və müraciət edin.",
       "status": {
         "pending": {
           "title": "Profiliniz yoxlanılır",
@@ -505,7 +505,7 @@
         },
         "approved": {
           "title": "Profiliniz aktivdir",
-          "body": "Brendlər profilinizi görə bilir. Siz də kampaniyalara müraciət edə bilərsiniz."
+          "body": "Brendlər profilinizi görə bilir. Siz də elanlara müraciət edə bilərsiniz."
         },
         "rejected": {
           "title": "Profiliniz təsdiqlənmədi",
@@ -568,8 +568,8 @@
       "prices": "Qiymətlər",
       "pricesEmpty": "Razılaşma yolu ilə",
       "ctaTitle": "Bu kreatorla işləmək istəyirsiniz?",
-      "ctaBody": "Kampaniya yerləşdirin, kreatorlar sizə özləri müraciət etsin.",
-      "ctaButton": "Kampaniya yerləşdir"
+      "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin.",
+      "ctaButton": "Elan yerləşdir"
     }
   }
 }

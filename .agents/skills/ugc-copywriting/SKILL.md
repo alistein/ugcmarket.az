@@ -46,12 +46,14 @@ More patterns:
 - English: plain and short, no em dash, full sentences with a period.
 - Keep the meaning of the Azerbaijani text, not its word order.
 
-## 5. Terms
-- Use one term per concept across the app. Before introducing a new word for an existing concept
-  (for example `elan` vs `kampaniya`), check `messages/az.json` and ask the founders.
+## 5. Terms and voice (decided)
+- **Elan**, not *kampaniya*, for a brand's listing in Azerbaijani: `Elanlar`, `Elan yerləşdir`, `elanlara müraciət edin`.
+  Mind the suffixes: elanı, elana, elanın, elanda (not -ya/-nı forms of *kampaniya*). Code identifiers stay `campaign`.
+- **Siz everywhere**, landing page included. The landing keeps its lowercase marketing style, but addresses the reader with *siz*.
+- One term per concept. Before introducing a new word for an existing concept, check `messages/az.json` and ask the founders.
 
 ## Checklist before committing copy
-1. az written first, natively, with siz and correct letters.
+1. az written first, natively, with siz, *elan* for listings and correct letters.
 2. No `—` anywhere (`pnpm copy:check`).
 3. Sentences end with a period; labels and buttons don't.
 4. ru and en updated with the same meaning.
