@@ -37,6 +37,8 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
 - Icons: **Hugeicons** (`@hugeicons/react` + `@hugeicons/core-free-icons`). Don't add another icon library.
 - Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).
 - Design tokens live in `src/app/globals.css` (`:root` / `.dark` CSS variables + `@theme inline`). Change tokens, not one-off colors.
+- **Showcase:** `/ui-kit` (`src/app/[locale]/(dev)/ui-kit`) renders every kit component in all variants + product patterns.
+  Update it when you add or change a kit component. Dev-only; in production only with `NEXT_PUBLIC_SHOW_UI_KIT=1`.
 - Product-level components (e.g. `CampaignCard`, `CreatorBadge`) go in `src/features/<domain>/components`; shared composites in `src/components/shared`.
 
 ## Folder map
