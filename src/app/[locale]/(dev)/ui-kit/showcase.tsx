@@ -29,7 +29,7 @@ import {
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Avatar, AvatarBadge, AvatarFallback, AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
+import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -87,6 +87,7 @@ import {
 } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
@@ -98,45 +99,6 @@ function Icon({
   ...props
 }: { icon: IconSvgElement; className?: string; "data-icon"?: "inline-start" | "inline-end" }) {
   return <HugeiconsIcon icon={icon} strokeWidth={2} {...props} />;
-}
-
-/** Named avatars take their own color (joy palette), picked from the name so it stays stable. */
-const TONES = [
-  "bg-brand-soft text-brand-ink",
-  "bg-sun text-sun-ink",
-  "bg-mint text-mint-ink",
-  "bg-sky text-sky-ink",
-  "bg-rose text-rose-ink",
-];
-function tone(name: string) {
-  let h = 0;
-  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  return TONES[h % TONES.length];
-}
-function NamedAvatar({
-  name,
-  size,
-  badge,
-  single,
-}: {
-  name: string;
-  size?: "sm" | "default" | "lg";
-  badge?: boolean;
-  /** One letter — for overlapping groups, where a second letter gets covered. */
-  single?: boolean;
-}) {
-  const initials = name
-    .split(/\s+/)
-    .slice(0, single ? 1 : 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-  return (
-    <Avatar size={size}>
-      <AvatarFallback className={tone(name)}>{initials}</AvatarFallback>
-      {badge && <AvatarBadge className="bg-mint-ink" />}
-    </Avatar>
-  );
 }
 
 const SECTIONS = [

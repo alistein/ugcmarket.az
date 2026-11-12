@@ -1,7 +1,7 @@
 "use client";
 
-import { PagePlaceholder } from "@/components/shared/page-placeholder";
+import { Landing } from "@/features/landing/components/landing";
 
 export default function Page() {
-  return <PagePlaceholder titleKey="pages.landing" />;
+  return <Landing />;
 }

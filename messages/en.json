@@ -55,5 +55,84 @@
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters)."
+  },
+  "landing": {
+    "nav": {
+      "how": "how it works",
+      "brands": "brands",
+      "creators": "creators",
+      "faq": "faq",
+      "login": "log in",
+      "start": "get started"
+    },
+    "hero": {
+      "eyebrow": "azerbaijan's ugc marketplace",
+      "titleA": "let",
+      "titleAccent": "creators",
+      "titleB": "make your ads.",
+      "sub": "post a campaign, creators apply, it goes live on instagram and tiktok.",
+      "ctaBrand": "post a campaign",
+      "ctaCreator": "join as a creator",
+      "note": "free during the pilot"
+    },
+    "props": {
+      "hello": "hello, i'm",
+      "barter": "barter ok?",
+      "views": "views",
+      "reels": "reels · baku",
+      "paid": "paid"
+    },
+    "board": {
+      "label": "campaign board",
+      "title": "every campaign in one place.",
+      "sub": "creators browse and apply to the right one in one tap.",
+      "applied": "Aysel applied",
+      "view": "view",
+      "perCreator": "per creator",
+      "barter": "barter",
+      "apply": "apply"
+    },
+    "audience": {
+      "brandsLabel": "for brands",
+      "brandsTitle": "find the right creator.",
+      "brands1": "post a campaign in 2 minutes",
+      "brands2": "browse profiles and portfolios",
+      "brands3": "track posts and views",
+      "creatorsLabel": "for creators",
+      "creatorsTitle": "work with brands you love.",
+      "creators1": "free profile and media-kit link",
+      "creators2": "paid or barter",
+      "creators3": "your views are your portfolio"
+    },
+    "steps": {
+      "label": "how it works",
+      "title": "three steps.",
+      "one": "post",
+      "oneSub": "product, budget, deadline.",
+      "two": "pick",
+      "twoSub": "see who applied, choose one.",
+      "three": "publish",
+      "threeSub": "link and views in one place."
+    },
+    "marquee": "food,beauty,fashion,home,tech,sport,travel,cafés,kids,auto",
+    "faq": {
+      "title": "questions",
+      "q1": "is it paid?",
+      "a1": "it's free during the pilot.",
+      "q2": "do payments go through the platform?",
+      "a2": "not yet — brands and creators agree directly.",
+      "q3": "who can be a creator?",
+      "a3": "anyone with instagram or tiktok. small audiences welcome.",
+      "q4": "how do i see results?",
+      "a4": "the creator sends the post link and views, you confirm."
+    },
+    "final": {
+      "title": "your first campaign, this week.",
+      "sub": "brand or creator — start in 2 minutes."
+    },
+    "footer": {
+      "city": "Baku, Azerbaijan",
+      "rights": "© 2026 UGCMarket"
+    }
   }
 }

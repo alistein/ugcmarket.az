@@ -55,5 +55,84 @@
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)."
+  },
+  "landing": {
+    "nav": {
+      "how": "necə işləyir",
+      "brands": "brendlər",
+      "creators": "kreatorlar",
+      "faq": "suallar",
+      "login": "daxil ol",
+      "start": "başla"
+    },
+    "hero": {
+      "eyebrow": "azərbaycanın ugc marketpleysi",
+      "titleA": "reklamını",
+      "titleAccent": "kreatorlar",
+      "titleB": "çəksin.",
+      "sub": "kampaniyanı yerləşdir, kreatorlar müraciət etsin, instagram və tiktok-da paylaşılsın.",
+      "ctaBrand": "kampaniya yerləşdir",
+      "ctaCreator": "kreator kimi qoşul",
+      "note": "pilotda pulsuz"
+    },
+    "props": {
+      "hello": "salam, mən",
+      "barter": "barter olar?",
+      "views": "baxış",
+      "reels": "reels · bakı",
+      "paid": "ödənildi"
+    },
+    "board": {
+      "label": "kampaniya lövhəsi",
+      "title": "bütün kampaniyalar bir yerdə.",
+      "sub": "kreatorlar baxır, uyğun olana bir toxunuşla müraciət edir.",
+      "applied": "Aysel müraciət etdi",
+      "view": "bax",
+      "perCreator": "kreatora",
+      "barter": "barter",
+      "apply": "müraciət et"
+    },
+    "audience": {
+      "brandsLabel": "brendlər üçün",
+      "brandsTitle": "doğru kreatoru tap.",
+      "brands1": "kampaniyanı 2 dəqiqəyə yerləşdir",
+      "brands2": "profil və portfoliolara bax",
+      "brands3": "paylaşımları və baxışları izlə",
+      "creatorsLabel": "kreatorlar üçün",
+      "creatorsTitle": "sevdiyin brendlərlə işlə.",
+      "creators1": "pulsuz profil və media-kit linki",
+      "creators2": "pul və ya barter",
+      "creators3": "baxışların — sənin portfolion"
+    },
+    "steps": {
+      "label": "necə işləyir",
+      "title": "üç addım.",
+      "one": "yerləşdir",
+      "oneSub": "məhsul, büdcə, son tarix.",
+      "two": "seç",
+      "twoSub": "müraciətlərə bax, birini seç.",
+      "three": "paylaş",
+      "threeSub": "link və baxışlar bir yerdə."
+    },
+    "marquee": "yemək,gözəllik,moda,ev,texnologiya,idman,səyahət,kafe,uşaq,avto",
+    "faq": {
+      "title": "suallar",
+      "q1": "bu pulludur?",
+      "a1": "pilot dövründə pulsuzdur.",
+      "q2": "ödəniş platformadan keçir?",
+      "a2": "hələlik yox — razılaşma birbaşa brendlə kreator arasında olur.",
+      "q3": "kim kreator ola bilər?",
+      "a3": "instagram və ya tiktok hesabı olan hər kəs. kiçik auditoriya da olar.",
+      "q4": "nəticəni necə görürəm?",
+      "a4": "kreator paylaşım linkini və baxışları göndərir, sən təsdiqləyirsən."
+    },
+    "final": {
+      "title": "ilk kampaniyan bu həftə.",
+      "sub": "brend və ya kreator — 2 dəqiqəyə başla."
+    },
+    "footer": {
+      "city": "Bakı, Azərbaycan",
+      "rights": "© 2026 UGCMarket"
+    }
   }
 }

@@ -77,11 +77,18 @@
   --animate-enter: enter 300ms var(--ease-out) both;
   /* Constant motion → linear, on transform only. */
   --animate-shimmer: shimmer 1.6s linear infinite;
+  /* Marketing marquee: constant motion → linear, transform only. */
+  --animate-marquee: marquee 40s linear infinite;
 
   @keyframes enter {
     from {
       opacity: 0;
       transform: translateY(8px);
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
     }
   }
   @keyframes shimmer {
@@ -236,6 +243,7 @@
     animation-name: fade !important;
   }
   .animate-shimmer,
+  .animate-marquee,
   .after\:animate-shimmer::after {
     animation: none !important;
   }
