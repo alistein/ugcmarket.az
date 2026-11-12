@@ -53,7 +53,10 @@
       "brand": "Brand not found.",
       "campaign": "Campaign not found.",
       "post": "Post not found."
-    }
+    },
+    "creator_exists": "You already have a profile.",
+    "portfolio_full": "Your portfolio is full.",
+    "portfolio_duplicate": "That link is already in your portfolio."
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters).",
@@ -64,7 +67,19 @@
     "passwordLetter": "Include at least one letter",
     "passwordDigit": "Include at least one digit",
     "passwordMismatch": "Passwords don’t match",
-    "otp": "Enter the 6-digit code"
+    "otp": "Enter the 6-digit code",
+    "handleReserved": "This name can’t be used",
+    "socialHandle": "Not a valid username",
+    "number": "Enter a number",
+    "duplicate": "Duplicate",
+    "phone": "Not a valid phone number",
+    "tooLong": "Too long",
+    "categoriesMin": "Pick at least one category",
+    "categoriesMax": "At most 5 categories",
+    "languagesMin": "Pick at least one language",
+    "socialsMin": "Add at least one social account",
+    "portfolioUrl": "Enter an Instagram, TikTok or YouTube link (https://…)",
+    "avatar": "Upload the photo again"
   },
   "landing": {
     "nav": {
@@ -310,5 +325,217 @@
       "apply": "Apply"
     },
     "footer": "UGCMarket · pilot · Baku"
+  },
+  "app": {
+    "account": "Account",
+    "publicProfile": "My public profile",
+    "nav": {
+      "label": "Main menu",
+      "home": "Home",
+      "campaigns": "Campaigns",
+      "applications": "Applications",
+      "profile": "Profile"
+    }
+  },
+  "taxonomy": {
+    "categories": {
+      "beauty": "Beauty",
+      "fashion": "Fashion",
+      "food": "Food",
+      "lifestyle": "Lifestyle",
+      "travel": "Travel",
+      "home": "Home & decor",
+      "family": "Family & kids",
+      "fitness": "Fitness",
+      "tech": "Tech",
+      "auto": "Auto",
+      "education": "Education",
+      "humor": "Humor",
+      "gaming": "Gaming",
+      "pets": "Pets",
+      "music": "Music",
+      "business": "Business"
+    },
+    "cities": {
+      "baku": "Baku",
+      "sumgait": "Sumgait",
+      "ganja": "Ganja",
+      "khirdalan": "Khirdalan",
+      "mingachevir": "Mingachevir",
+      "lankaran": "Lankaran",
+      "shaki": "Shaki",
+      "quba": "Quba",
+      "shirvan": "Shirvan",
+      "nakhchivan": "Nakhchivan",
+      "other": "Other"
+    },
+    "languages": {
+      "az": "Azerbaijani",
+      "ru": "Russian",
+      "en": "English",
+      "tr": "Turkish"
+    },
+    "formats": {
+      "reels": "Reels",
+      "stories": "Stories",
+      "post": "Post",
+      "tiktok_video": "TikTok video",
+      "youtube_short": "YouTube Shorts",
+      "ugc_video": "UGC video (for the brand)"
+    }
+  },
+  "creator": {
+    "setup": {
+      "step": "Step {current} of {total}",
+      "next": "Continue",
+      "back": "Back",
+      "finish": "Create profile",
+      "created": "Profile created and sent for review",
+      "reviewNote": "You can add prices later too. Your profile goes public after review."
+    },
+    "steps": {
+      "about": {
+        "title": "About you",
+        "subtitle": "This is how brands will get to know you"
+      },
+      "content": {
+        "title": "What you create",
+        "subtitle": "Categories help you find the right campaigns"
+      },
+      "socials": {
+        "title": "Social accounts",
+        "subtitle": "Show your accounts and audience"
+      },
+      "prices": {
+        "title": "Prices",
+        "subtitle": "Optional — a ballpark helps brands decide"
+      }
+    },
+    "edit": {
+      "title": "My profile",
+      "subtitle": "Changes show on your public profile right away",
+      "saved": "Saved",
+      "fixErrors": "Fix the fields marked in red",
+      "unsaved": "Unsaved changes",
+      "discard": "Discard",
+      "save": "Save"
+    },
+    "form": {
+      "avatar": "Profile photo",
+      "avatarHint": "A square photo where your face is clear",
+      "avatarPick": "Choose photo",
+      "avatarRemove": "Remove photo",
+      "avatarTooBig": "Photo is too large (max 15 MB)",
+      "avatarFailed": "Couldn’t upload the photo",
+      "displayName": "Name",
+      "displayNamePh": "Aysel Mammadova",
+      "handle": "Username",
+      "handleHint": "Your profile link: lowercase letters, digits, dot, underscore",
+      "handleFree": "Available: /creator/{handle}",
+      "city": "City",
+      "cityPh": "Choose a city",
+      "bio": "About",
+      "bioHint": "What you create, for whom, what makes you different",
+      "bioPh": "Lifestyle and beauty creator from Baku…",
+      "categories": "Categories",
+      "categoriesHint": "Pick up to 5",
+      "languages": "Content language",
+      "barter": "Open to barter",
+      "barterHint": "Collaborate in exchange for a product or service instead of money",
+      "socialsHint": "You enter these numbers yourself — your profile labels them as “reported by the creator”.",
+      "network": {
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "youtube": "YouTube"
+      },
+      "username": "Username or link",
+      "followers": "Followers",
+      "avgViews": "Avg. views",
+      "contactsHint": "Contacts stay private — only the brand of a campaign you apply to sees them.",
+      "contactInstagram": "Instagram for contact",
+      "contactPhone": "Phone",
+      "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”."
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "subtitle": "Links to your best work — brands decide faster with 3 or more",
+      "url": "Link",
+      "urlHint": "Link to an Instagram, TikTok or YouTube post",
+      "detected": "{network} link",
+      "titleLabel": "Title (optional)",
+      "titlePh": "Reels for a café",
+      "add": "Add",
+      "open": "Open",
+      "remove": "Remove",
+      "full": "Up to {max} items",
+      "networks": {
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "youtube": "YouTube"
+      }
+    },
+    "dashboard": {
+      "setupTitle": "Set up your creator profile",
+      "setupBody": "4 short steps: about you, topics, social accounts and prices. Then share your profile link.",
+      "setupCta": "Start",
+      "hello": "Hi, {name}",
+      "completeTitle": "Your profile",
+      "checklist": {
+        "photo": "Add a profile photo",
+        "bio": "Write a few lines about yourself",
+        "socials": "Add a social account",
+        "prices": "Add a price",
+        "portfolio": "Add 3 portfolio items"
+      },
+      "boardTitle": "Campaigns",
+      "boardBody": "Browse open brand campaigns and apply",
+      "status": {
+        "pending": {
+          "title": "Your profile is in review",
+          "body": "Usually within 24 hours. Meanwhile, finish your profile."
+        },
+        "approved": {
+          "title": "Your profile is live",
+          "body": "Brands can see your profile and you can apply to campaigns."
+        },
+        "rejected": {
+          "title": "Profile not approved",
+          "body": "Check and update your details, or message the team.",
+          "cta": "Edit"
+        }
+      },
+      "shareTitle": "Your profile link",
+      "shareBody": "Put it in your bio or send it to brands",
+      "sharePending": "Everyone sees it after review — for now only you can",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyFailed": "Couldn’t copy",
+      "share": "Share",
+      "preview": "View"
+    },
+    "public": {
+      "login": "Sign in",
+      "notFoundBody": "The profile was removed, the link is wrong, or it’s still in review.",
+      "home": "Home",
+      "previewPending": "Preview: your profile is in review — only you can see it for now.",
+      "previewRejected": "Preview: your profile wasn’t approved — others can’t see it.",
+      "barter": "Open to barter",
+      "edit": "Edit",
+      "followers": "followers",
+      "avgViews": "{views} avg. views",
+      "selfReported": "Numbers are reported by the creator.",
+      "portfolio": "Portfolio",
+      "portfolioEmpty": "No work added yet.",
+      "networkPost": {
+        "instagram": "Instagram post",
+        "tiktok": "TikTok video",
+        "youtube": "YouTube video"
+      },
+      "prices": "Prices",
+      "pricesEmpty": "Negotiable",
+      "ctaTitle": "Want to work with this creator?",
+      "ctaBody": "Post a campaign — creators apply to you.",
+      "ctaButton": "Post a campaign"
+    }
   }
 }

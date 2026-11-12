@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarBadge, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 /** Named avatars take their own color from the joy palette, picked from the name so it stays stable. */
@@ -23,9 +23,15 @@ export function NamedAvatar({
   size,
   badge,
   single,
+  src,
   className,
+  fallbackClassName,
 }: {
   name: string;
+  /** Photo; the toned initials stay as the fallback while it loads or if it fails. */
+  src?: string | null;
+  /** e.g. a larger text size for big avatars. */
+  fallbackClassName?: string;
   size?: "sm" | "default" | "lg";
   badge?: boolean;
   /** One letter — for overlapping groups, where a second letter gets covered. */
@@ -40,7 +46,8 @@ export function NamedAvatar({
     .toUpperCase();
   return (
     <Avatar size={size} className={className}>
-      <AvatarFallback className={cn(avatarTone(name))}>{initials}</AvatarFallback>
+      {src && <AvatarImage src={src} alt="" />}
+      <AvatarFallback className={cn(avatarTone(name), fallbackClassName)}>{initials}</AvatarFallback>
       {badge && <AvatarBadge className="bg-mint-ink" />}
     </Avatar>
   );

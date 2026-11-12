@@ -23,7 +23,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   useEffect(() => {
-    if (env.posthogKey) posthog.init(env.posthogKey, { api_host: env.posthogHost, person_profiles: "identified_only" });
+    if (env.posthogKey)
+      posthog.init(env.posthogKey, { api_host: env.posthogHost, person_profiles: "identified_only" });
   }, []);
 
   return (

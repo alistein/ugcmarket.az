@@ -1,7 +1,7 @@
 "use client";
 
-import { PagePlaceholder } from "@/components/shared/page-placeholder";
+import { CreatorDashboard } from "@/features/creators/components/creator-dashboard";
 
 export default function Page() {
-  return <PagePlaceholder titleKey="pages.creatorDashboard" />;
+  return <CreatorDashboard />;
 }

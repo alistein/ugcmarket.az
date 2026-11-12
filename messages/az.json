@@ -53,7 +53,10 @@
       "brand": "Brend tapılmadı.",
       "campaign": "Kampaniya tapılmadı.",
       "post": "Paylaşım tapılmadı."
-    }
+    },
+    "creator_exists": "Profilin artıq var.",
+    "portfolio_full": "Portfolio dolub.",
+    "portfolio_duplicate": "Bu link artıq portfolioda var."
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol).",
@@ -64,7 +67,19 @@
     "passwordLetter": "Ən azı bir hərf olmalıdır",
     "passwordDigit": "Ən azı bir rəqəm olmalıdır",
     "passwordMismatch": "Şifrələr eyni deyil",
-    "otp": "6 rəqəmli kodu daxil et"
+    "otp": "6 rəqəmli kodu daxil et",
+    "handleReserved": "Bu ad istifadə oluna bilməz",
+    "socialHandle": "İstifadəçi adı düzgün deyil",
+    "number": "Rəqəm daxil et",
+    "duplicate": "Təkrarlanır",
+    "phone": "Telefon nömrəsi düzgün deyil",
+    "tooLong": "Çox uzundur",
+    "categoriesMin": "Ən azı bir kateqoriya seç",
+    "categoriesMax": "Ən çox 5 kateqoriya",
+    "languagesMin": "Ən azı bir dil seç",
+    "socialsMin": "Ən azı bir sosial şəbəkə əlavə et",
+    "portfolioUrl": "Instagram, TikTok və ya YouTube linki daxil et (https://…)",
+    "avatar": "Şəkli yenidən yüklə"
   },
   "landing": {
     "nav": {
@@ -310,5 +325,217 @@
       "apply": "Müraciət et"
     },
     "footer": "UGCMarket · pilot versiya · Bakı"
+  },
+  "app": {
+    "account": "Hesab",
+    "publicProfile": "Açıq profilim",
+    "nav": {
+      "label": "Əsas menyu",
+      "home": "Kabinet",
+      "campaigns": "Kampaniyalar",
+      "applications": "Müraciətlər",
+      "profile": "Profil"
+    }
+  },
+  "taxonomy": {
+    "categories": {
+      "beauty": "Gözəllik",
+      "fashion": "Moda",
+      "food": "Yemək",
+      "lifestyle": "Lifestyle",
+      "travel": "Səyahət",
+      "home": "Ev və dekor",
+      "family": "Ailə və uşaq",
+      "fitness": "İdman",
+      "tech": "Texnologiya",
+      "auto": "Avto",
+      "education": "Təhsil",
+      "humor": "Yumor",
+      "gaming": "Oyunlar",
+      "pets": "Ev heyvanları",
+      "music": "Musiqi",
+      "business": "Biznes"
+    },
+    "cities": {
+      "baku": "Bakı",
+      "sumgait": "Sumqayıt",
+      "ganja": "Gəncə",
+      "khirdalan": "Xırdalan",
+      "mingachevir": "Mingəçevir",
+      "lankaran": "Lənkəran",
+      "shaki": "Şəki",
+      "quba": "Quba",
+      "shirvan": "Şirvan",
+      "nakhchivan": "Naxçıvan",
+      "other": "Digər"
+    },
+    "languages": {
+      "az": "Azərbaycan",
+      "ru": "Rus",
+      "en": "İngilis",
+      "tr": "Türk"
+    },
+    "formats": {
+      "reels": "Reels",
+      "stories": "Stories",
+      "post": "Post",
+      "tiktok_video": "TikTok video",
+      "youtube_short": "YouTube Shorts",
+      "ugc_video": "UGC video (brend üçün)"
+    }
+  },
+  "creator": {
+    "setup": {
+      "step": "Addım {current}/{total}",
+      "next": "Davam et",
+      "back": "Geri",
+      "finish": "Profili yarat",
+      "created": "Profil yaradıldı — yoxlamaya göndərildi",
+      "reviewNote": "Qiymətləri sonra da əlavə edə bilərsən. Profil yoxlamadan sonra hamıya görünəcək."
+    },
+    "steps": {
+      "about": {
+        "title": "Özün haqqında",
+        "subtitle": "Brendlər səni bu məlumatla tanıyacaq"
+      },
+      "content": {
+        "title": "Nə çəkirsən",
+        "subtitle": "Kateqoriyalar uyğun kampaniyaları tapmağa kömək edir"
+      },
+      "socials": {
+        "title": "Sosial şəbəkələr",
+        "subtitle": "Hesablarını və auditoriyanı göstər"
+      },
+      "prices": {
+        "title": "Qiymətlər",
+        "subtitle": "İstəyə bağlı — təxmini qiymət brendə qərar verməyə kömək edir"
+      }
+    },
+    "edit": {
+      "title": "Profilim",
+      "subtitle": "Dəyişikliklər açıq profilində dərhal görünür",
+      "saved": "Yadda saxlanıldı",
+      "fixErrors": "Qırmızı sahələri düzəlt",
+      "unsaved": "Yadda saxlanmamış dəyişikliklər",
+      "discard": "Ləğv et",
+      "save": "Yadda saxla"
+    },
+    "form": {
+      "avatar": "Profil şəkli",
+      "avatarHint": "Üzün aydın görünən kvadrat şəkil",
+      "avatarPick": "Şəkil seç",
+      "avatarRemove": "Şəkli sil",
+      "avatarTooBig": "Şəkil çox böyükdür (maks. 15 MB)",
+      "avatarFailed": "Şəkli yükləmək alınmadı",
+      "displayName": "Ad",
+      "displayNamePh": "Aysel Məmmədova",
+      "handle": "İstifadəçi adı",
+      "handleHint": "Profil linkin: kiçik hərflər, rəqəmlər, nöqtə, alt xətt",
+      "handleFree": "Mövcuddur: /creator/{handle}",
+      "city": "Şəhər",
+      "cityPh": "Şəhəri seç",
+      "bio": "Haqqında",
+      "bioHint": "Nə çəkirsən, kimlərə müraciət edirsən, nə ilə fərqlənirsən",
+      "bioPh": "Bakıdan lifestyle və gözəllik kreatoru…",
+      "categories": "Kateqoriyalar",
+      "categoriesHint": "5-ə qədər seç",
+      "languages": "Kontent dili",
+      "barter": "Barterə açığam",
+      "barterHint": "Pul əvəzinə məhsul və ya xidmət qarşılığında əməkdaşlıq",
+      "socialsHint": "Rəqəmləri özün daxil edirsən — profilində \"kreatorun öz göstəricisi\" kimi qeyd olunur.",
+      "network": {
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "youtube": "YouTube"
+      },
+      "username": "İstifadəçi adı və ya link",
+      "followers": "İzləyici",
+      "avgViews": "Orta baxış",
+      "contactsHint": "Əlaqə məlumatları gizlidir — yalnız sən müraciət etdiyin kampaniyanın brendi görür.",
+      "contactInstagram": "Əlaqə üçün Instagram",
+      "contactPhone": "Telefon",
+      "pricesHint": "Bir paylaşım üçün AZN-lə təxmini qiymət. Boş saxlasan, \"razılaşma ilə\" görünür."
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "subtitle": "Ən yaxşı işlərinin linkləri — 3 və daha çox olsa, brendlər daha tez seçir",
+      "url": "Link",
+      "urlHint": "Instagram, TikTok və ya YouTube paylaşımının linki",
+      "detected": "{network} linki",
+      "titleLabel": "Başlıq (istəyə bağlı)",
+      "titlePh": "Kafe üçün Reels",
+      "add": "Əlavə et",
+      "open": "Aç",
+      "remove": "Sil",
+      "full": "Maksimum {max} iş",
+      "networks": {
+        "instagram": "Instagram",
+        "tiktok": "TikTok",
+        "youtube": "YouTube"
+      }
+    },
+    "dashboard": {
+      "setupTitle": "Kreator profilini qur",
+      "setupBody": "4 qısa addım: özün haqqında, mövzular, sosial şəbəkələr və qiymətlər. Sonra profil linkini paylaşa bilərsən.",
+      "setupCta": "Başla",
+      "hello": "Salam, {name}",
+      "completeTitle": "Profilin",
+      "checklist": {
+        "photo": "Profil şəkli əlavə et",
+        "bio": "Özün haqqında bir neçə cümlə yaz",
+        "socials": "Sosial şəbəkə əlavə et",
+        "prices": "Qiymət göstər",
+        "portfolio": "Portfolioya 3 iş əlavə et"
+      },
+      "boardTitle": "Kampaniyalar",
+      "boardBody": "Brendlərin açıq kampaniyalarına bax və müraciət et",
+      "status": {
+        "pending": {
+          "title": "Profilin yoxlanılır",
+          "body": "Adətən 24 saat çəkir. Bu vaxt profilini tamamla."
+        },
+        "approved": {
+          "title": "Profilin aktivdir",
+          "body": "Brendlər profilini görə bilər, kampaniyalara müraciət edə bilərsən."
+        },
+        "rejected": {
+          "title": "Profil təsdiqlənmədi",
+          "body": "Məlumatları yoxla və yenilə və ya komandaya yaz.",
+          "cta": "Redaktə et"
+        }
+      },
+      "shareTitle": "Profil linkin",
+      "shareBody": "Bio-na əlavə et və ya brendlərə göndər",
+      "sharePending": "Təsdiqdən sonra hamı görəcək — hələlik yalnız sən görürsən",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Kopyalamaq alınmadı",
+      "share": "Paylaş",
+      "preview": "Bax"
+    },
+    "public": {
+      "login": "Daxil ol",
+      "notFoundBody": "Profil silinib, link səhvdir və ya hələ yoxlanılır.",
+      "home": "Ana səhifə",
+      "previewPending": "Önizləmə: profil yoxlanılır, hələlik yalnız sən görürsən.",
+      "previewRejected": "Önizləmə: profil təsdiqlənməyib, başqaları görmür.",
+      "barter": "Barterə açıq",
+      "edit": "Redaktə et",
+      "followers": "izləyici",
+      "avgViews": "{views} orta baxış",
+      "selfReported": "Rəqəmlər kreatorun öz göstəricisidir.",
+      "portfolio": "Portfolio",
+      "portfolioEmpty": "Hələ iş əlavə olunmayıb.",
+      "networkPost": {
+        "instagram": "Instagram paylaşımı",
+        "tiktok": "TikTok video",
+        "youtube": "YouTube video"
+      },
+      "prices": "Qiymətlər",
+      "pricesEmpty": "Razılaşma ilə",
+      "ctaTitle": "Bu kreatorla işləmək istəyirsən?",
+      "ctaBody": "Kampaniya yerləşdir — kreatorlar özləri müraciət etsin.",
+      "ctaButton": "Kampaniya yerləşdir"
+    }
   }
 }

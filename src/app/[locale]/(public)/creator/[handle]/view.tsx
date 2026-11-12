@@ -1,22 +1,24 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
-import { usePublicCreator } from "@/features/creators/hooks";
+import { useMe } from "@/features/me/hooks";
+import { PublicCreatorProfile, PublicCreatorStatus } from "@/features/creators/components/public-profile";
+import { useMyCreator, usePublicCreator } from "@/features/creators/hooks";
 
+/**
+ * Public page. Approved profiles load from /api/creators/[handle]; the owner of a pending or
+ * rejected profile sees their own data as a preview (nobody else can — RLS + API).
+ */
 export function CreatorProfileView() {
   const { handle } = useParams<{ handle: string }>();
-  const { data, isPending, error } = usePublicCreator(handle);
-  const t = useTranslations();
+  const pub = usePublicCreator(handle);
+  const { data: me } = useMe();
+  const isOwner = me?.role === "creator" && me.creator?.handle?.toLowerCase() === handle.toLowerCase();
+  const mine = useMyCreator(isOwner && pub.isError);
 
-  if (isPending) return <main className="p-10 text-sm text-neutral-500">{t("common.loading")}</main>;
-  if (error || !data) return <main className="p-10">{t("errors.notFound.creator")}</main>;
-
-  // TODO: real profile UI (use emil-design-eng + break-ui skills)
-  return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
-      <h1 className="text-2xl font-semibold">{data.display_name}</h1>
-      <p className="text-neutral-500">@{data.handle} · {data.city}</p>
-    </main>
-  );
+  if (pub.data) return <PublicCreatorProfile creator={pub.data} isOwner={isOwner} />;
+  if (pub.isError && isOwner && mine.data)
+    return <PublicCreatorProfile creator={mine.data} isOwner preview />;
+  if (pub.isPending || (isOwner && mine.isPending)) return <PublicCreatorStatus kind="loading" />;
+  return <PublicCreatorStatus kind="notFound" />;
 }

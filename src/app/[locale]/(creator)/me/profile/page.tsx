@@ -1,7 +1,7 @@
 "use client";
 
-import { PagePlaceholder } from "@/components/shared/page-placeholder";
+import { ProfileEditorPage } from "@/features/creators/components/profile-editor";
 
 export default function Page() {
-  return <PagePlaceholder titleKey="pages.creatorProfileEdit" />;
+  return <ProfileEditorPage />;
 }
