@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  CheckmarkCircle02Icon,
-  FavouriteIcon,
-  InstagramIcon,
-  PlayIcon,
-  TiktokIcon,
-} from "@hugeicons/core-free-icons";
+import { CheckmarkCircle02Icon, Comment01Icon, FavouriteIcon, TiktokIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -34,7 +28,7 @@ export function HeroProps() {
           <div className="bg-primary px-4 pt-2.5 pb-2 text-center text-primary-foreground">
             <div className="text-[13px] font-bold tracking-[0.12em] uppercase">{t("hello")}</div>
           </div>
-          <div className="px-4 py-3 text-center font-heading text-xl font-semibold tracking-[-0.02em] italic">@aysel</div>
+          <div className="px-4 py-3 text-center font-heading text-xl font-semibold tracking-[-0.02em] italic">@aysel.mmd</div>
         </div>
       </Prop>
 
@@ -46,16 +40,29 @@ export function HeroProps() {
         </div>
       </Prop>
 
-      {/* Reels polaroid */}
-      <Prop className="top-[46%] left-[-1%] hidden lg:block" delay={250} rotate="5deg">
-        <div className="w-40 rounded-md bg-card p-2.5 pb-3 shadow-(--shadow-raised)">
-          <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden rounded-sm bg-[linear-gradient(160deg,var(--sun),var(--brand-soft)_55%,var(--rose))]">
-            <span className="flex size-10 items-center justify-center rounded-full bg-white/80 text-foreground shadow-(--shadow-soft) backdrop-blur">
-              <HugeiconsIcon icon={PlayIcon} strokeWidth={2} className="size-4 translate-x-px" />
+      {/* Reels frame — recognizable UI, not a gradient blob */}
+      <Prop className="top-[40%] left-[-1%] hidden lg:block" delay={250} rotate="5deg">
+        <div className="relative flex h-64 w-36 flex-col justify-end overflow-hidden rounded-[1.4rem] bg-[#26211d] p-3 text-white shadow-(--shadow-float)">
+          <div className="absolute inset-x-6 top-10 h-24 rounded-[45%_45%_12px_12px] bg-[#8a6f5a]/60" />
+          <div className="absolute inset-x-4 top-[7.5rem] h-10 rounded-lg bg-[#6b5546]/70" />
+          <span className="absolute top-3 left-3 text-[11px] font-semibold">Reels</span>
+          <div className="absolute right-2.5 bottom-14 flex flex-col items-center gap-2.5 text-[10px] font-medium">
+            <span className="flex flex-col items-center">
+              <HugeiconsIcon icon={FavouriteIcon} strokeWidth={2} className="size-4" />
+              1 204
             </span>
-            <HugeiconsIcon icon={InstagramIcon} strokeWidth={2} className="absolute top-2 right-2 size-4 text-white" />
+            <span className="flex flex-col items-center">
+              <HugeiconsIcon icon={Comment01Icon} strokeWidth={2} className="size-4" />
+              87
+            </span>
           </div>
-          <div className="pt-2 text-center text-xs text-muted-foreground">{t("reels")}</div>
+          <div className="relative space-y-0.5 pr-7">
+            <div className="text-[11px] font-semibold">@aysel.mmd</div>
+            <div className="text-[11px] leading-tight opacity-90">{t("caption")}</div>
+          </div>
+          <div className="relative mt-2.5 h-0.5 rounded-full bg-white/25">
+            <div className="h-full w-2/5 rounded-full bg-white" />
+          </div>
         </div>
       </Prop>
 
@@ -65,7 +72,7 @@ export function HeroProps() {
           <span className="flex size-7 items-center justify-center rounded-full bg-background/15">
             <HugeiconsIcon icon={TiktokIcon} strokeWidth={2} className="size-3.5" />
           </span>
-          <span className="text-sm font-semibold tabular-nums">48.2K</span>
+          <span className="text-sm font-semibold tabular-nums">48 213</span>
           <span className="text-xs opacity-70">{t("views")}</span>
         </div>
       </Prop>

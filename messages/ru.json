@@ -80,7 +80,8 @@
       "barter": "бартер?",
       "views": "просмотров",
       "reels": "reels · баку",
-      "paid": "оплачено"
+      "paid": "оплачено",
+      "caption": "это кресло — дома"
     },
     "board": {
       "label": "доска кампаний",
@@ -90,7 +91,19 @@
       "view": "смотреть",
       "perCreator": "за креатора",
       "barter": "бартер",
-      "apply": "откликнуться"
+      "apply": "откликнуться",
+      "back": "назад",
+      "reward": "гонорар",
+      "format": "формат",
+      "deadline": "срок",
+      "city": "город",
+      "creators": "креаторы",
+      "creatorsValue": "3 человека",
+      "brief": "что нужно",
+      "applications": "23 отклика",
+      "now": "сейчас",
+      "followers": "подписчиков",
+      "notifTitle": "Айсель откликнулась"
     },
     "audience": {
       "brandsLabel": "брендам",

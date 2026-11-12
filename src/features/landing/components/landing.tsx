@@ -6,13 +6,9 @@ import {
   CheckmarkCircle02Icon,
   Globe02Icon,
   Link01Icon,
-  Megaphone01Icon,
-  UserGroupIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
-import { NamedAvatar } from "@/components/shared/named-avatar";
-import { AvatarGroup } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -151,58 +147,26 @@ function Board() {
 function Audience() {
   const t = useTranslations("landing.audience");
   const cards = [
-    {
-      id: "brands",
-      icon: Megaphone01Icon,
-      tone: "bg-brand-soft text-brand-ink",
-      label: t("brandsLabel"),
-      title: t("brandsTitle"),
-      points: [t("brands1"), t("brands2"), t("brands3")],
-      visual: (
-        <AvatarGroup>
-          {["Aysel Məmmədova", "Nigar Rəhimli", "Leyla Kərimova", "Tural Səfərov", "Rəşad Quliyev"].map((n) => (
-            <NamedAvatar key={n} name={n} single size="lg" />
-          ))}
-        </AvatarGroup>
-      ),
-    },
-    {
-      id: "creators",
-      icon: UserGroupIcon,
-      tone: "bg-mint text-mint-ink",
-      label: t("creatorsLabel"),
-      title: t("creatorsTitle"),
-      points: [t("creators1"), t("creators2"), t("creators3")],
-      visual: (
-        <div className="flex items-center gap-2 rounded-full bg-muted py-1.5 pr-4 pl-1.5 font-mono text-xs text-muted-foreground">
-          <span className="flex size-6 items-center justify-center rounded-full bg-card text-foreground shadow-(--shadow-soft)">
-            <HugeiconsIcon icon={Link01Icon} strokeWidth={2} className="size-3.5" />
-          </span>
-          ugcmarket.az/creator/aysel
-        </div>
-      ),
-    },
+    { id: "brands", label: t("brandsLabel"), title: t("brandsTitle"), points: [t("brands1"), t("brands2"), t("brands3")], link: "ugcmarket.az/c/decolive-reels" },
+    { id: "creators", label: t("creatorsLabel"), title: t("creatorsTitle"), points: [t("creators1"), t("creators2"), t("creators3")], link: "ugcmarket.az/creator/aysel.mmd" },
   ];
   return (
     <section id="brands" className="mx-auto grid max-w-6xl scroll-mt-20 gap-4 px-4 py-12 md:grid-cols-2">
       {cards.map((c) => (
-        <div key={c.id} id={c.id === "creators" ? "creators" : undefined} className="flex flex-col gap-6 rounded-[2rem] bg-card p-8 shadow-(--shadow-raised) ring-1 ring-foreground/[0.04] dark:ring-white/[0.07]">
-          <div className="flex items-center justify-between">
-            <span className={cn("flex size-11 items-center justify-center rounded-2xl", c.tone)}>
-              <HugeiconsIcon icon={c.icon} strokeWidth={2} className="size-5" />
-            </span>
-            <span className="text-sm text-muted-foreground">{c.label}</span>
-          </div>
-          <h3 className="font-heading text-3xl leading-[1.08] font-semibold tracking-[-0.03em]">{c.title}</h3>
-          <ul className="space-y-2.5">
+        <div key={c.id} id={c.id === "creators" ? "creators" : undefined} className="flex flex-col rounded-[2rem] bg-card p-8 shadow-(--shadow-raised) ring-1 ring-foreground/[0.04] dark:ring-white/[0.07]">
+          <span className="text-sm font-medium text-primary">{c.label}</span>
+          <h3 className="mt-3 font-heading text-3xl leading-[1.08] font-semibold tracking-[-0.03em]">{c.title}</h3>
+          <ul className="mt-6 divide-y divide-border/70 border-y border-border/70">
             {c.points.map((p) => (
-              <li key={p} className="flex items-center gap-2.5 text-[15px]">
-                <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-4 shrink-0 text-primary" />
+              <li key={p} className="py-3 text-[15px]">
                 {p}
               </li>
             ))}
           </ul>
-          <div className="mt-auto pt-2">{c.visual}</div>
+          <div className="mt-6 flex items-center gap-2 font-mono text-xs text-muted-foreground">
+            <HugeiconsIcon icon={Link01Icon} strokeWidth={2} className="size-3.5" />
+            {c.link}
+          </div>
         </div>
       ))}
     </section>
@@ -236,17 +200,16 @@ function Steps() {
         </div>
         <div className="flex flex-col gap-4">
           <AppWindow title="2-secim.ugc" className="flex-1">
-            <div className="space-y-1">
+            <div className="divide-y divide-border/70">
               {[
-                ["Aysel Məmmədova", "18.4K", true],
-                ["Nigar Rəhimli", "9.7K", false],
-                ["Leyla Kərimova", "31K", false],
-              ].map(([n, f, sel]) => (
-                <div key={n as string} className={cn("flex items-center gap-3 rounded-2xl px-2.5 py-2", sel && "bg-brand-soft")}>
-                  <NamedAvatar name={n as string} size="sm" />
-                  <span className="flex-1 truncate text-sm font-medium">{(n as string).split(" ")[0]}</span>
+                ["@aysel.mmd", "18 340", true],
+                ["@nigar.cooks", "9 712", false],
+                ["@leyla.home", "31 055", false],
+              ].map(([h, f, sel]) => (
+                <div key={h as string} className="flex items-center gap-3 py-2.5">
+                  <span className={cn("flex-1 truncate text-sm", sel ? "font-semibold" : "text-muted-foreground")}>{h}</span>
                   <span className="text-xs text-muted-foreground tabular-nums">{f}</span>
-                  {sel && <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-4 text-brand-ink" />}
+                  <span className={cn("size-4 rounded-full border", sel ? "border-[5px] border-primary" : "border-border")} />
                 </div>
               ))}
             </div>
@@ -261,7 +224,7 @@ function Steps() {
                 instagram.com/reel/…
               </div>
               <div className="flex items-end justify-between px-1">
-                <div className="font-heading text-4xl font-semibold tracking-[-0.03em] tabular-nums">48.2K</div>
+                <div className="font-heading text-4xl font-semibold tracking-[-0.03em] tabular-nums">48 213</div>
                 <Badge variant="mint" className="size-7 rounded-full p-0">
                   <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} />
                 </Badge>
@@ -337,8 +300,6 @@ function Final() {
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
       <div className="relative overflow-hidden rounded-[2.5rem] bg-primary px-6 py-20 text-center text-primary-foreground shadow-(--shadow-press)">
-        <div aria-hidden className="absolute -top-24 -left-16 size-72 rounded-full bg-white/10 blur-2xl" />
-        <div aria-hidden className="absolute -right-10 -bottom-28 size-80 rounded-full bg-sun/30 blur-3xl" />
         <h2 className="relative font-heading text-4xl leading-[1.05] font-semibold tracking-[-0.035em] sm:text-6xl">{t("title")}</h2>
         <p className="relative mt-4 text-lg opacity-85">{t("sub")}</p>
         <div className="relative mt-8 flex flex-wrap justify-center gap-3">

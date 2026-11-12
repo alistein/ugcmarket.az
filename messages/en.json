@@ -80,7 +80,8 @@
       "barter": "barter ok?",
       "views": "views",
       "reels": "reels · baku",
-      "paid": "paid"
+      "paid": "paid",
+      "caption": "this chair, at home"
     },
     "board": {
       "label": "campaign board",
@@ -90,7 +91,19 @@
       "view": "view",
       "perCreator": "per creator",
       "barter": "barter",
-      "apply": "apply"
+      "apply": "apply",
+      "back": "back",
+      "reward": "fee",
+      "format": "format",
+      "deadline": "deadline",
+      "city": "city",
+      "creators": "creators",
+      "creatorsValue": "3 people",
+      "brief": "what we need",
+      "applications": "23 applications",
+      "now": "now",
+      "followers": "followers",
+      "notifTitle": "Aysel applied"
     },
     "audience": {
       "brandsLabel": "for brands",

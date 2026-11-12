@@ -80,7 +80,8 @@
       "barter": "barter olar?",
       "views": "baxış",
       "reels": "reels · bakı",
-      "paid": "ödənildi"
+      "paid": "ödənildi",
+      "caption": "bu kreslo — evdə"
     },
     "board": {
       "label": "kampaniya lövhəsi",
@@ -90,7 +91,19 @@
       "view": "bax",
       "perCreator": "kreatora",
       "barter": "barter",
-      "apply": "müraciət et"
+      "apply": "müraciət et",
+      "back": "geri",
+      "reward": "qonorar",
+      "format": "format",
+      "deadline": "son tarix",
+      "city": "şəhər",
+      "creators": "kreator",
+      "creatorsValue": "3 nəfər",
+      "brief": "bizə nə lazımdır",
+      "applications": "23 müraciət",
+      "now": "indi",
+      "followers": "izləyici",
+      "notifTitle": "Aysel müraciət etdi"
     },
     "audience": {
       "brandsLabel": "brendlər üçün",
