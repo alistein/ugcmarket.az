@@ -13,7 +13,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { LanguageMenu } from "@/components/shared/language-menu";
 import { Logo } from "@/components/shared/logo";
+import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useMe } from "@/features/me/hooks";
@@ -51,16 +53,39 @@ function PublicHeader() {
   );
 }
 
+/** Header card (avatar, name, meta) and two content cards, like PublicCreatorProfile. */
+function ProfileSkeleton() {
+  return (
+    <LoadingState className="w-full text-left">
+      <div className="rounded-[2rem] bg-card p-6 shadow-(--shadow-raised) ring-1 ring-foreground/[0.04] sm:p-8 dark:ring-white/[0.07]">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+          <Skeleton className="size-24 shrink-0 rounded-full sm:size-28" />
+          <div className="grid flex-1 gap-2.5">
+            <Skeleton className="h-9 w-64 max-w-full" />
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-full max-w-md" />
+          </div>
+        </div>
+      </div>
+      <Skeleton className="mt-6 h-40 rounded-3xl" />
+      <Skeleton className="mt-6 h-64 rounded-3xl" />
+    </LoadingState>
+  );
+}
+
 export function PublicCreatorStatus({ kind }: { kind: "loading" | "notFound" }) {
   const t = useTranslations();
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader />
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-16 text-center">
+      <main
+        className={cn(
+          "mx-auto flex w-full flex-1 flex-col px-4",
+          kind === "loading" ? "max-w-4xl pb-16" : "max-w-md items-center justify-center py-16 text-center",
+        )}
+      >
         {kind === "loading" ? (
-          <p role="status" className="text-sm text-muted-foreground">
-            {t("common.loading")}
-          </p>
+          <ProfileSkeleton />
         ) : (
           <>
             <h1 className="text-2xl font-semibold tracking-[-0.03em]">{t("errors.notFound.creator")}</h1>

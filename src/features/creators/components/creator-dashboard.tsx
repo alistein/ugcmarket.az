@@ -18,7 +18,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
+import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -53,12 +55,7 @@ const known = <T extends string>(list: readonly T[], v: string): v is T =>
 export function CreatorDashboard() {
   const t = useTranslations("common");
   const { data, isPending, isError } = useMyCreator();
-  if (isPending)
-    return (
-      <p role="status" className="text-sm text-muted-foreground">
-        {t("loading")}
-      </p>
-    );
+  if (isPending) return <DashboardSkeleton />;
   if (isError)
     return (
       <p role="alert" className="text-sm text-destructive">
@@ -66,6 +63,40 @@ export function CreatorDashboard() {
       </p>
     );
   return data ? <Home creator={data} /> : <SetupPrompt />;
+}
+
+/** Same grid as Home: side meta column + avatar header, overview card and tabs. */
+function DashboardSkeleton() {
+  return (
+    <LoadingState className="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-[13rem_minmax(0,1fr)]">
+      <div className="order-2 grid content-start gap-3.5 lg:order-1 lg:pt-2">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-4 w-24" />
+        <div className="mt-4 flex flex-wrap gap-1.5 border-t border-border/70 pt-5">
+          <Skeleton className="h-6 w-20 rounded-full" />
+          <Skeleton className="h-6 w-16 rounded-full" />
+          <Skeleton className="h-6 w-24 rounded-full" />
+        </div>
+      </div>
+      <div className="order-1 grid min-w-0 grid-cols-1 content-start gap-6 lg:order-2">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+          <Skeleton className="size-28 shrink-0 rounded-full" />
+          <div className="grid flex-1 gap-2.5">
+            <Skeleton className="h-9 w-64 max-w-full" />
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-full max-w-md" />
+          </div>
+        </div>
+        <Skeleton className="h-40 rounded-3xl" />
+        <div className="grid gap-3">
+          <Skeleton className="h-9 w-64 rounded-full" />
+          <Skeleton className="h-56 rounded-3xl" />
+        </div>
+      </div>
+    </LoadingState>
+  );
 }
 
 function Home({ creator: c }: { creator: MyCreator }) {

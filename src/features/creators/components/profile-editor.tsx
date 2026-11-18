@@ -7,7 +7,9 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { LoadingState } from "@/components/shared/loading-state";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
@@ -30,12 +32,7 @@ import { AboutFields, ContentFields, PriceFields, SocialFields } from "./profile
 export function ProfileEditorPage() {
   const t = useTranslations("common");
   const { data, isPending, isError } = useMyCreator();
-  if (isPending)
-    return (
-      <p role="status" className="text-sm text-muted-foreground">
-        {t("loading")}
-      </p>
-    );
+  if (isPending) return <EditorSkeleton />;
   if (isError)
     return (
       <p role="alert" className="text-sm text-destructive">
@@ -43,6 +40,32 @@ export function ProfileEditorPage() {
       </p>
     );
   return data ? <ProfileEdit creator={data} /> : <ProfileSetup />;
+}
+
+/** Title + form sections (label column, fields column), like FormSection. */
+function EditorSkeleton() {
+  return (
+    <LoadingState>
+      <Skeleton className="mb-6 h-5 w-20" />
+      <Skeleton className="h-9 w-60 max-w-full" />
+      <Skeleton className="mt-2.5 h-4 w-80 max-w-full" />
+      <div className="mt-8">
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="grid grid-cols-1 gap-x-12 gap-y-5 border-t border-border/70 py-10 first:border-t-0 first:pt-0 lg:grid-cols-[14rem_minmax(0,1fr)]"
+          >
+            <Skeleton className="h-6 w-32" />
+            <div className="grid gap-5">
+              <Skeleton className="h-11 rounded-xl" />
+              <Skeleton className="h-11 rounded-xl" />
+              {i === 0 && <Skeleton className="h-24 rounded-xl" />}
+            </div>
+          </div>
+        ))}
+      </div>
+    </LoadingState>
+  );
 }
 
 function useServerErrors(form: ReturnType<typeof useForm<CreatorFormValues>>) {

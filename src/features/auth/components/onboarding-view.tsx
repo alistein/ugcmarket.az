@@ -5,7 +5,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { LoadingState } from "@/components/shared/loading-state";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { meKeys, useMe, useSetRole } from "@/features/me/hooks";
 import { useRouter } from "@/i18n/navigation";
 import { homeFor } from "@/lib/auth-routes";
@@ -23,13 +25,28 @@ const OPTIONS = [
   { value: "creator", icon: UserStar01Icon, tint: "bg-mint text-mint-ink" },
 ] as const;
 
+/** Title, two role cards and the button, at the AuthCard's sizes. */
+function OnboardingSkeleton() {
+  return (
+    <LoadingState className="w-full">
+      <Skeleton className="mb-10 h-5 w-16" />
+      <Skeleton className="mx-auto h-10 w-64 max-w-full" />
+      <Skeleton className="mx-auto mt-3 h-4 w-72 max-w-full" />
+      <div className="mt-9 grid gap-3">
+        <Skeleton className="h-[4.75rem] rounded-2xl" />
+        <Skeleton className="h-[4.75rem] rounded-2xl" />
+        <Skeleton className="mt-1 h-11 rounded-xl" />
+      </div>
+    </LoadingState>
+  );
+}
+
 /**
  * Post-auth router + role picker. Users with a role are sent home immediately, so every auth
  * flow can simply land here. The role is set once (API + set_my_role() in the DB).
  */
 export function OnboardingView() {
   const t = useTranslations("auth");
-  const tc = useTranslations("common");
   const params = useSearchParams();
   const router = useRouter();
   const { data: me, isPending } = useMe();
@@ -48,13 +65,7 @@ export function OnboardingView() {
   }, [me, isPending, router]);
 
   if (me?.status === "blocked") return <AccountBlocked />;
-  if (isPending || !me || me.role) {
-    return (
-      <p role="status" className="text-center text-sm text-muted-foreground">
-        {tc("loading")}
-      </p>
-    );
-  }
+  if (isPending || !me || me.role) return <OnboardingSkeleton />;
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();

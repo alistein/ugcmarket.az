@@ -6,8 +6,14 @@ import { AccountBlocked } from "@/features/auth/components/account-blocked";
 import { useMe } from "@/features/me/hooks";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { type AppRole, homeFor } from "@/lib/auth-routes";
+import { LoadingState, PageSkeleton } from "./loading-state";
 
-type Props = { role: AppRole; children: React.ReactNode };
+type Props = {
+  role: AppRole;
+  children: React.ReactNode;
+  /** Shown while the session loads. Defaults to a generic page skeleton. */
+  fallback?: React.ReactNode;
+};
 
 /**
  * Client-side guard for role areas — UX only. src/proxy.ts already bounces signed-out users;
@@ -18,22 +24,30 @@ type Props = { role: AppRole; children: React.ReactNode };
 export function RoleGate(props: Props) {
   // usePathname inside → Suspense required on dynamic routes (Next 16 + Cache Components).
   return (
-    <Suspense fallback={<GateStatus />}>
+    <Suspense fallback={props.fallback ?? <DefaultFallback />}>
       <Gate {...props} />
     </Suspense>
   );
 }
 
-function GateStatus({ failed }: { failed?: boolean }) {
-  const t = useTranslations("common");
+function DefaultFallback() {
   return (
-    <div role="status" className="flex flex-1 items-center justify-center p-10 text-sm text-muted-foreground">
-      {failed ? t("loadFailed") : t("loading")}
-    </div>
+    <LoadingState className="mx-auto w-full max-w-5xl px-4 pt-16">
+      <PageSkeleton />
+    </LoadingState>
   );
 }
 
-function Gate({ role, children }: Props) {
+function LoadFailed() {
+  const t = useTranslations("common");
+  return (
+    <p role="alert" className="flex flex-1 items-center justify-center p-10 text-sm text-destructive">
+      {t("loadFailed")}
+    </p>
+  );
+}
+
+function Gate({ role, children, fallback }: Props) {
   const { data: me, isPending, isError } = useMe();
   const router = useRouter();
   const pathname = usePathname();
@@ -49,6 +63,7 @@ function Gate({ role, children }: Props) {
   }, [me, isPending, isError, allowed, router, pathname, locale]);
 
   if (me?.status === "blocked") return <AccountBlocked />;
-  if (!allowed) return <GateStatus failed={isError} />;
+  if (isError) return <LoadFailed />;
+  if (!allowed) return fallback ?? <DefaultFallback />;
   return <>{children}</>;
 }
