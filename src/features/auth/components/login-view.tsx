@@ -12,7 +12,8 @@ import { env } from "@/lib/env";
 import { EmailInput, type EmailInput as EmailValues, LoginPasswordInput } from "@/schemas/auth";
 import { type AuthErrorKey, errorKeyOf, isAuthErrorKey } from "../errors";
 import { useAfterAuth, useNextPath, useSendEmailCode, useSignInWithPassword } from "../hooks";
-import { AuthCard, Field, FormError, GoogleButton, OrDivider, PasswordInput, SubmitButton } from "./auth-ui";
+import { AuthCard, Field, FormError, OrDivider, PasswordInput, SubmitButton } from "./auth-ui";
+import { GoogleButton } from "./google-sign-in";
 import { EmailCodeStep } from "./email-code-step";
 
 export function LoginView() {
@@ -56,7 +57,7 @@ export function LoginView() {
         </>
       }
     >
-      <GoogleButton next={next} onError={setError} />
+      <GoogleButton next={next} onError={setError} context="signin" />
       <OrDivider />
       {!env.authEmail ? (
         <PasswordForm next={next} onError={setError} error={error} onSuccess={afterAuth} />

@@ -9,5 +9,11 @@ export const env = {
    * SMTP (Resend) are set up: password + Google only, no "Confirm email" in Supabase. Set "1" to enable.
    */
   authEmail: process.env.NEXT_PUBLIC_AUTH_EMAIL === "1",
+  /**
+   * Google OAuth Web client ID. When set, Google sign-in runs on our own domain (Google Identity
+   * Services + signInWithIdToken), so Google's screen shows ugcmarket.az instead of supabase.co.
+   * Empty → the Supabase redirect flow.
+   */
+  googleClientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
   posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://eu.i.posthog.com",
 };

@@ -23,6 +23,14 @@ export function AuthHeader() {
 export function AuthFooter() {
   const t = useTranslations("auth");
   return (
-    <footer className="px-5 pb-6 text-center text-xs text-muted-foreground sm:pb-8">{t("footer")}</footer>
+    <footer className="flex flex-wrap justify-center gap-x-3 gap-y-1 px-5 pb-6 text-center text-xs text-muted-foreground sm:pb-8">
+      <span>{t("footer")}</span>
+      <Link href="/terms" className="underline-offset-4 hover:text-foreground hover:underline">
+        {t("terms")}
+      </Link>
+      <Link href="/privacy" className="underline-offset-4 hover:text-foreground hover:underline">
+        {t("privacy")}
+      </Link>
+    </footer>
   );
 }

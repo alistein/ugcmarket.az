@@ -3,7 +3,7 @@ import "server-only";
 export const serverEnv = {
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   resendApiKey: process.env.RESEND_API_KEY ?? "",
-  emailFrom: process.env.EMAIL_FROM ?? "UGCMarket <noreply@ugcmarket.az>",
+  emailFrom: process.env.EMAIL_FROM ?? "UGCMarket <team@mail.ugcmarket.az>",
 
   // Social stats providers (src/server/social). Each is skipped when its vars are empty.
   igBusinessAccountId: process.env.IG_BUSINESS_ACCOUNT_ID ?? "",

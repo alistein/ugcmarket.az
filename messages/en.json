@@ -330,7 +330,10 @@
       "deadline": "Nov 30",
       "apply": "Apply"
     },
-    "footer": "UGCMarket · pilot · Baku"
+    "footer": "UGCMarket · pilot · Baku",
+    "consent": "By continuing, you agree to the <terms>Terms of Use</terms> and <privacy>Privacy Policy</privacy>.",
+    "terms": "Terms",
+    "privacy": "Privacy"
   },
   "app": {
     "account": "Account",
@@ -612,6 +615,82 @@
       "ctaButton": "Post a listing",
       "checked": "Checked automatically",
       "termsTitle": "Terms"
+    }
+  },
+  "legal": {
+    "updated": "Last updated: 16 November 2026",
+    "contactEmail": "support@ugcmarket.az",
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "This page explains what data UGCMarket collects, how we use it and how you can control it.",
+      "collect": {
+        "title": "What we collect",
+        "body": "When you sign up, we get your email. If you sign in with Google, Google shares your name, email and profile photo with us. We also keep what you add to your profile: name, city, social accounts, prices, portfolio and brand details. We collect general usage statistics to understand how the site is used."
+      },
+      "use": {
+        "title": "How we use it",
+        "body": "We use your data to create your account, connect brands with creators, send sign-in codes and improve the platform. We don't sell your data or share it with third parties for advertising."
+      },
+      "contacts": {
+        "title": "Contact details",
+        "body": "Your Instagram and phone number are not shown on your public profile. The other side sees them only once contact is opened for a collaboration."
+      },
+      "stats": {
+        "title": "Social stats",
+        "body": "We may check follower and view counts of the accounts you list using public sources, so brands see accurate numbers."
+      },
+      "processors": {
+        "title": "Service providers",
+        "body": "To run the platform we use Supabase (database and sign-in), Vercel (hosting), Resend (email delivery), PostHog (analytics) and Google (Sign in with Google). They process your data only on our behalf."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "We only use essential cookies to keep you signed in and remember your language."
+      },
+      "retention": {
+        "title": "Retention and deletion",
+        "body": "We keep your data while your account is active. To delete your account and data, email <mail>{email}</mail>. We'll complete the request within 30 days."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "If you have questions, email <mail>{email}</mail>."
+      }
+    },
+    "terms": {
+      "title": "Terms of Use",
+      "intro": "By using UGCMarket, you agree to these terms. Please read them carefully.",
+      "about": {
+        "title": "About the platform",
+        "body": "UGCMarket is a listings board that connects brands with content creators. Brands post listings and creators apply. The platform is free during the pilot."
+      },
+      "account": {
+        "title": "Your account",
+        "body": "You must be at least 18 to sign up. You're responsible for keeping your account secure and for what's done through it. Keep your profile accurate and up to date."
+      },
+      "deals": {
+        "title": "Collaborations and payments",
+        "body": "Agreements, payments and content delivery happen directly between the brand and the creator, outside the platform. UGCMarket is not a party to these agreements and doesn't guarantee them."
+      },
+      "rules": {
+        "title": "Not allowed",
+        "body": "Don't create fake profiles or listings, impersonate others, post illegal, misleading or abusive content, or use the platform for spam or automated data collection."
+      },
+      "content": {
+        "title": "Content and suspension",
+        "body": "You keep the rights to what you upload and allow us to show it on the platform. We may hide listings and profiles that break the rules, and limit or block accounts."
+      },
+      "liability": {
+        "title": "Liability",
+        "body": "The platform is provided as is. We don't guarantee that listings or creator stats are fully accurate."
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "We may update these terms. We'll announce significant changes on the site or by email."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "If you have questions, email <mail>{email}</mail>."
+      }
     }
   }
 }

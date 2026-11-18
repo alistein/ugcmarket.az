@@ -172,19 +172,34 @@ export function OrDivider() {
   );
 }
 
-export function GoogleButton({ next, onError }: { next: string; onError: (key: AuthErrorKey) => void }) {
+/**
+ * Our own Google button: the Supabase redirect flow. Used when Google Identity Services is off or
+ * can't load, and as the placeholder while it loads (`busy` while an ID token is being verified).
+ * Use `GoogleButton` from ./google-sign-in in screens.
+ */
+export function GoogleRedirectButton({
+  next,
+  onError,
+  busy,
+}: {
+  next: string;
+  onError: (key: AuthErrorKey) => void;
+  busy?: boolean;
+}) {
   const t = useTranslations("auth");
   const google = useSignInWithGoogle(next);
+  const pending = busy || google.isPending;
   return (
     <Button
       type="button"
       variant="outline"
       size="lg"
       className={AUTH_ACTION}
-      disabled={google.isPending}
+      disabled={pending}
+      aria-busy={pending}
       onClick={() => google.mutate(undefined, { onError: (e) => onError(errorKeyOf(e)) })}
     >
-      {google.isPending ? (
+      {pending ? (
         <HugeiconsIcon
           icon={Loading03Icon}
           strokeWidth={2}

@@ -138,6 +138,26 @@ export function useUpdatePassword() {
   });
 }
 
+/**
+ * Google Identity Services: Google hands the ID token to our page, Supabase verifies it.
+ * `nonce` is the raw value; Google got its SHA-256 hash.
+ */
+export function useSignInWithGoogleIdToken() {
+  return useMutation({
+    mutationFn: async (v: { token: string; nonce: string }) => {
+      try {
+        return await run(() =>
+          supabase().auth.signInWithIdToken({ provider: "google", token: v.token, nonce: v.nonce }),
+        );
+      } catch (e) {
+        const err = toAuthFlowError(e);
+        throw err.key === "unknown" ? new AuthFlowError("oauth_failed") : err;
+      }
+    },
+  });
+}
+
+/** Redirect flow through Supabase. Fallback when Google Identity Services is unavailable. */
 export function useSignInWithGoogle(next: string) {
   return useMutation({
     mutationFn: () =>

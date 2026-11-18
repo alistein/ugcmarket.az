@@ -330,7 +330,10 @@
       "deadline": "30 noy",
       "apply": "Müraciət et"
     },
-    "footer": "UGCMarket · pilot versiya · Bakı"
+    "footer": "UGCMarket · pilot versiya · Bakı",
+    "consent": "Davam etməklə <terms>İstifadə şərtləri</terms> və <privacy>Məxfilik siyasəti</privacy> ilə razılaşırsınız.",
+    "terms": "Şərtlər",
+    "privacy": "Məxfilik"
   },
   "app": {
     "account": "Hesab",
@@ -612,6 +615,82 @@
       "ctaButton": "Elan yerləşdir",
       "checked": "Avtomatik yoxlanılıb",
       "termsTitle": "Şərtlər"
+    }
+  },
+  "legal": {
+    "updated": "Son yenilənmə: 16 noyabr 2026",
+    "contactEmail": "support@ugcmarket.az",
+    "privacy": {
+      "title": "Məxfilik siyasəti",
+      "intro": "Bu səhifə UGCMarket-in hansı məlumatları topladığını, onlardan necə istifadə etdiyini və məlumatlarınızı necə idarə edə biləcəyinizi izah edir.",
+      "collect": {
+        "title": "Hansı məlumatları toplayırıq",
+        "body": "Qeydiyyat zamanı e-poçt ünvanınızı alırıq. Google ilə daxil olduqda Google bizə adınızı, e-poçtunuzu və profil şəklinizi ötürür. Profildə özünüz doldurduğunuz məlumatları da saxlayırıq: ad, şəhər, sosial şəbəkə hesabları, qiymətlər, portfolio və brend məlumatları. Saytdan necə istifadə edildiyini anlamaq üçün ümumi statistika toplayırıq."
+      },
+      "use": {
+        "title": "Məlumatlardan necə istifadə edirik",
+        "body": "Məlumatlarınız hesabınızı yaratmaq, brendləri və kreatorları bir-biri ilə tanış etmək, giriş kodlarını göndərmək və platformanı yaxşılaşdırmaq üçün istifadə olunur. Məlumatlarınızı satmırıq və reklam üçün üçüncü tərəflərə vermirik."
+      },
+      "contacts": {
+        "title": "Əlaqə məlumatları",
+        "body": "Instagram hesabınız və telefon nömrəniz açıq profildə göstərilmir. Bu məlumatlar yalnız əməkdaşlıq üçün əlaqə açıldıqda qarşı tərəfə görünür."
+      },
+      "stats": {
+        "title": "Sosial şəbəkə statistikası",
+        "body": "Profilinizdə qeyd etdiyiniz hesabların izləyici və baxış saylarını açıq mənbələrdən yoxlaya bilərik. Bu, brendlərə dəqiq rəqəmlər göstərmək üçündür."
+      },
+      "processors": {
+        "title": "Xidmət təminatçıları",
+        "body": "Platformanın işləməsi üçün bu xidmətlərdən istifadə edirik: Supabase (verilənlər bazası və giriş), Vercel (hostinq), Resend (e-poçt göndərişi), PostHog (statistika) və Google (Google ilə giriş). Onlar məlumatlarınızı yalnız bizim tapşırığımızla emal edir."
+      },
+      "cookies": {
+        "title": "Cookie-lər",
+        "body": "Giriş sessiyanızı və dil seçiminizi yadda saxlamaq üçün zəruri cookie-lərdən istifadə edirik."
+      },
+      "retention": {
+        "title": "Saxlama və silmə",
+        "body": "Məlumatlarınızı hesabınız aktiv olduğu müddətdə saxlayırıq. Hesabınızı və məlumatlarınızı silmək üçün <mail>{email}</mail> ünvanına yazın. Müraciətinizi 30 gün ərzində icra edəcəyik."
+      },
+      "contact": {
+        "title": "Əlaqə",
+        "body": "Suallarınız varsa, <mail>{email}</mail> ünvanına yazın."
+      }
+    },
+    "terms": {
+      "title": "İstifadə şərtləri",
+      "intro": "UGCMarket-dən istifadə etməklə bu şərtlərlə razılaşırsınız. Zəhmət olmasa, onları diqqətlə oxuyun.",
+      "about": {
+        "title": "Platforma haqqında",
+        "body": "UGCMarket brendləri və kontent yaradıcılarını bir araya gətirən elan platformasıdır. Brendlər elan yerləşdirir, kreatorlar isə elanlara müraciət edir. Pilot dövründə platformadan istifadə pulsuzdur."
+      },
+      "account": {
+        "title": "Hesab",
+        "body": "Qeydiyyatdan keçmək üçün 18 yaşınız tamam olmalıdır. Hesabınızın təhlükəsizliyinə və onun vasitəsilə edilən hərəkətlərə siz cavabdehsiniz. Profilinizdəki məlumatların düzgün və aktual olmasına diqqət edin."
+      },
+      "deals": {
+        "title": "Əməkdaşlıq və ödənişlər",
+        "body": "Brend və kreator arasında razılaşma, ödəniş və kontentin təhvili birbaşa tərəflər arasında, platformadan kənarda baş tutur. UGCMarket bu razılaşmaların tərəfi deyil və onların icrasına zəmanət vermir."
+      },
+      "rules": {
+        "title": "Qadağan olunanlar",
+        "body": "Saxta profil və ya elan yaratmaq, başqasının adından çıxış etmək, qanunsuz, aldadıcı və ya təhqiramiz məzmun paylaşmaq, platformadan spam və ya avtomatlaşdırılmış məlumat toplamaq üçün istifadə etmək qadağandır."
+      },
+      "content": {
+        "title": "Məzmun və bloklama",
+        "body": "Yüklədiyiniz məzmunun hüquqları sizdə qalır. Onu platformada göstərməyimiz üçün bizə icazə verirsiniz. Qaydaları pozan elan və profilləri gizlədə, hesabı isə məhdudlaşdıra və ya bloklaya bilərik."
+      },
+      "liability": {
+        "title": "Məsuliyyət",
+        "body": "Platforma olduğu kimi təqdim olunur. Elanların məzmununa və kreatorların statistikasının tam dəqiqliyinə zəmanət vermirik."
+      },
+      "changes": {
+        "title": "Dəyişikliklər",
+        "body": "Şərtləri yeniləyə bilərik. Əhəmiyyətli dəyişikliklər barədə saytda və ya e-poçtla xəbər verəcəyik."
+      },
+      "contact": {
+        "title": "Əlaqə",
+        "body": "Suallarınız varsa, <mail>{email}</mail> ünvanına yazın."
+      }
     }
   }
 }

@@ -491,11 +491,20 @@ function Final() {
 
 function Footer() {
   const t = useTranslations("landing.footer");
+  const tAuth = useTranslations("auth");
   return (
     <footer className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 pt-10 pb-[calc(2.5rem+env(safe-area-inset-bottom))] text-sm text-muted-foreground">
       <Logo className="text-base text-foreground" />
       <span>{t("city")}</span>
       <span>{t("rights")}</span>
+      <nav className="flex gap-4">
+        <Link href="/terms" className="underline-offset-4 hover:text-foreground hover:underline">
+          {tAuth("terms")}
+        </Link>
+        <Link href="/privacy" className="underline-offset-4 hover:text-foreground hover:underline">
+          {tAuth("privacy")}
+        </Link>
+      </nav>
     </footer>
   );
 }

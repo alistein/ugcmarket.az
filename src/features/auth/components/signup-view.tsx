@@ -12,7 +12,8 @@ import { env } from "@/lib/env";
 import { OnboardingRole, SignupInput } from "@/schemas/auth";
 import { type AuthErrorKey, errorKeyOf } from "../errors";
 import { useAfterAuth, useNextPath, useSignUp } from "../hooks";
-import { AuthCard, Field, FormError, GoogleButton, OrDivider, PasswordInput, SubmitButton } from "./auth-ui";
+import { AuthCard, Field, FormError, OrDivider, PasswordInput, SubmitButton } from "./auth-ui";
+import { GoogleButton } from "./google-sign-in";
 import { EmailCodeStep } from "./email-code-step";
 import { SendCodeForm } from "./login-view";
 
@@ -66,7 +67,7 @@ export function SignupView() {
         </>
       }
     >
-      <GoogleButton next={next} onError={setError} />
+      <GoogleButton next={next} onError={setError} context="signup" />
       <OrDivider />
       {mode === "password" ? (
         <PasswordSignupForm next={next} error={error} onError={setError} onSignedIn={afterAuth} />
@@ -87,6 +88,20 @@ export function SignupView() {
           {mode === "password" ? t("signup.withCode") : t("signup.withPassword")}
         </Button>
       )}
+      <p className="mt-5 text-center text-xs text-pretty text-muted-foreground">
+        {t.rich("consent", {
+          terms: (chunks) => (
+            <Link href="/terms" className="font-medium text-foreground underline-offset-4 hover:underline">
+              {chunks}
+            </Link>
+          ),
+          privacy: (chunks) => (
+            <Link href="/privacy" className="font-medium text-foreground underline-offset-4 hover:underline">
+              {chunks}
+            </Link>
+          ),
+        })}
+      </p>
     </AuthCard>
   );
 }
