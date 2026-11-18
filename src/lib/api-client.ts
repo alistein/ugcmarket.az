@@ -24,5 +24,6 @@ export async function api<T>(path: string, init?: RequestInit & { json?: unknown
     const err = (body as ApiErrorBody | null)?.error;
     throw new ApiClientError(res.status, err?.code ?? "unknown", err?.message ?? "errors.unknown", err?.details);
   }
-  return (body as { data: T }).data;
+  // 204 No Content (and any empty body) → undefined, not a crash on `null.data`.
+  return (body as { data: T } | null)?.data as T;
 }
