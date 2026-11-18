@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useMe, useSetRole } from "@/features/me/hooks";
+import { meKeys, useMe, useSetRole } from "@/features/me/hooks";
 import { useRouter } from "@/i18n/navigation";
 import { homeFor } from "@/lib/auth-routes";
 import { cn } from "@/lib/utils";
@@ -58,14 +58,15 @@ export function OnboardingView() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!role) return;
+    // One request per choice: ignore extra submits (double tap, Enter) while it's in flight.
+    if (!role || setRole.isPending || setRole.isSuccess) return;
     setError(null);
     setRole.mutate(role, {
       onSuccess: () => router.replace(homeFor(role)),
       onError: (err) => {
         // 409 role_already_set → another tab already chose; refetching `me` routes us home.
         if (err instanceof ApiClientError && err.status === 409)
-          void qc.invalidateQueries({ queryKey: ["me"] });
+          void qc.invalidateQueries({ queryKey: meKeys.all });
         else setError(err instanceof ApiClientError && err.status === 0 ? "network" : "unknown");
       },
     });

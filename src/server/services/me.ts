@@ -18,10 +18,17 @@ export async function getMe(user: SessionUser) {
  * The DB enforces "once" too (set_my_role) — users can't update profiles.role directly.
  */
 export async function setRole(user: SessionUser, role: "brand" | "creator") {
+  // Idempotent: a repeated request for the same role (double submit, retry, second tab) succeeds.
+  if (user.role === role) return;
   if (user.role) throw errors.conflict("role_already_set");
   const supabase = await createUserClient();
   const { error } = await supabase.rpc("set_my_role", { new_role: role });
-  if (error?.message === "role_already_set") throw errors.conflict("role_already_set");
+  if (error?.message === "role_already_set") {
+    // Lost a race with a parallel request: fine if that one picked the same role.
+    const { data } = await supabase.from("profiles").select("role").eq("id", user.id).maybeSingle();
+    if (data?.role === role) return;
+    throw errors.conflict("role_already_set");
+  }
   // PGRST202 = function not found → migration 20261112000000_auth_guards.sql not applied.
   if (error?.code === "PGRST202") {
     throw new Error("set_my_role() is missing in the database. Run `pnpm db:push && pnpm db:types:remote`.");
