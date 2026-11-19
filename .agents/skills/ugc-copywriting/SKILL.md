@@ -24,7 +24,7 @@ Example from the founders:
 
 | Don't (literal, em dash, informal) | Do |
 |---|---|
-| Profilin yoxlanılır. Adətən 24 saat çəkir. Təsdiqdən sonra elanlara müraciət edə bilərsən — bu vaxt profilini tamamla. | Profiliniz 24 saat ərzində aktivləşəcək. Təsdiqdən sonra elanlara müraciət edə biləcəksiniz. Bu müddət ərzində profilinizi tamamlayın. |
+| Profilin yoxlanılır. Adətən 24 saat çəkir. Təsdiqdən sonra elanlara müraciət edə bilərsən — bu vaxt profilini tamamla. | Profiliniz 24 saat ərzində aktivləşəcək. Təsdiqdən sonra elanlara müraciət edə biləcəksiniz. Bu müddət ərzində profilinizi tamamlayın |
 
 More patterns:
 
@@ -33,17 +33,19 @@ More patterns:
 | Yenidən xoş gəldin | Xoş gəlmisiniz |
 | İstəyə bağlı — təxmini qiymət… | Bu addım məcburi deyil. Təxmini qiymət… |
 | Linkin vaxtı keçib | Linkin vaxtı bitib |
-| Nəsə alınmadı | Xəta baş verdi. Yenidən cəhd edin. |
-| Şəkli yükləmək alınmadı | Şəkli yükləmək mümkün olmadı. |
+| Nəsə alınmadı | Xəta baş verdi. Yenidən cəhd edin |
+| Şəkli yükləmək alınmadı | Şəkli yükləmək mümkün olmadı |
 
-## 3. Finish the sentences
-- Body text, hints, error and validation messages, toasts and notes are full sentences and **end with a period**.
-- Titles, field labels, buttons, tabs, chips and badges are short and have **no** period.
+## 3. No closing period (founders, 2026-11-19)
+- No text ends with a period: not titles, labels, buttons, chips or badges, and not body text, hints,
+  error and validation messages, toasts or notes either.
+- Inside a text, sentences are still separated by a period: `Profiliniz yoxlanılır. Təsdiqdən sonra müraciət edə biləcəksiniz`.
+- `?`, `!` and `…` at the end stay. Legal documents (privacy, terms) keep normal punctuation.
 - Buttons use the short imperative common in Azerbaijani apps: `Davam et`, `Yadda saxla`, `Daxil ol`, `Ləğv et`.
 
 ## 4. Russian and English
-- Russian: formal «вы», no em dash, full sentences with a period.
-- English: plain and short, no em dash, full sentences with a period.
+- Russian: formal «вы», no em dash, no closing period.
+- English: plain and short, no em dash, no closing period.
 - Keep the meaning of the Azerbaijani text, not its word order.
 
 ## 5. Terms and voice (decided)
@@ -57,5 +59,5 @@ More patterns:
 ## Checklist before committing copy
 1. az written first, natively, with siz, *elan* for listings and correct letters.
 2. No `—` anywhere (`pnpm copy:check`).
-3. Sentences end with a period; labels and buttons don't.
+3. Nothing ends with a period (legal documents excepted).
 4. ru and en updated with the same meaning.

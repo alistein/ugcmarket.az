@@ -23,6 +23,7 @@ export function NamedAvatar({
   size,
   badge,
   single,
+  square,
   src,
   className,
   fallbackClassName,
@@ -36,6 +37,8 @@ export function NamedAvatar({
   badge?: boolean;
   /** One letter — for overlapping groups, where a second letter gets covered. */
   single?: boolean;
+  /** Rounded square instead of a circle: brand logos. */
+  square?: boolean;
   className?: string;
 }) {
   const initials = name
@@ -45,9 +48,11 @@ export function NamedAvatar({
     .join("")
     .toUpperCase();
   return (
-    <Avatar size={size} className={className}>
-      {src && <AvatarImage src={src} alt="" />}
-      <AvatarFallback className={cn(avatarTone(name), fallbackClassName)}>{initials}</AvatarFallback>
+    <Avatar size={size} className={cn(square && "rounded-[28%] after:rounded-[28%]", className)}>
+      {src && <AvatarImage src={src} alt="" className={cn(square && "rounded-[28%]")} />}
+      <AvatarFallback className={cn(avatarTone(name), square && "rounded-[28%]", fallbackClassName)}>
+        {initials}
+      </AvatarFallback>
       {badge && <AvatarBadge className="bg-mint-ink" />}
     </Avatar>
   );

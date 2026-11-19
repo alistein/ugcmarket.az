@@ -1,17 +1,17 @@
 {
   "meta": {
     "title": "UGCMarket · brands and creators",
-    "description": "The platform connecting brands with content creators in Azerbaijan.",
+    "description": "The platform connecting brands with content creators in Azerbaijan",
     "notFound": "Page not found",
     "creatorDescription": "Content creator from {city} · UGCMarket"
   },
   "common": {
     "loading": "Loading…",
-    "scaffold": "This page is still being built.",
+    "scaffold": "This page is still being built",
     "save": "Save",
     "cancel": "Cancel",
     "apply": "Apply",
-    "loadFailed": "Couldn’t load. Refresh the page.",
+    "loadFailed": "Couldn’t load. Refresh the page",
     "back": "Back"
   },
   "pages": {
@@ -38,54 +38,63 @@
     "adminUsers": "Users"
   },
   "errors": {
-    "unknown": "Something went wrong.",
-    "internal": "Server error. Please try again later.",
-    "unauthorized": "Please log in to continue.",
-    "forbidden": "You don't have permission to do this.",
-    "validation": "Please check the fields.",
-    "notImplemented": "This feature isn't ready yet.",
-    "handle_taken": "This username is taken.",
-    "brand_exists": "This account already has a brand profile.",
-    "role_already_set": "Role is already set.",
+    "unknown": "Something went wrong",
+    "internal": "Server error. Please try again later",
+    "unauthorized": "Please log in to continue",
+    "forbidden": "You don't have permission to do this",
+    "validation": "Please check the fields",
+    "notImplemented": "This feature isn't ready yet",
+    "handle_taken": "This username is taken",
+    "brand_exists": "This account already has a brand profile",
+    "role_already_set": "Role is already set",
     "notFound": {
-      "resource": "Not found.",
-      "creator": "Creator not found.",
-      "brand": "Brand not found.",
-      "campaign": "Listing not found.",
-      "post": "Post not found."
+      "resource": "Not found",
+      "creator": "Creator not found",
+      "brand": "Brand not found",
+      "campaign": "Listing not found",
+      "post": "Post not found"
     },
-    "creator_exists": "You already have a profile.",
-    "portfolio_full": "Your portfolio is full.",
-    "portfolio_duplicate": "That link is already in your portfolio.",
-    "stats_cooldown": "You can refresh the numbers once a day. Try again tomorrow.",
-    "lookup_limit": "Too many checks in the last hour. Try again a bit later.",
-    "lookup_unavailable": "Automatic checks aren’t available right now. Try again later.",
-    "lookup_not_found": "Account not found or private. Check the username; the account must be public.",
-    "lookup_failed": "Couldn’t check the account. Try again."
+    "creator_exists": "You already have a profile",
+    "portfolio_full": "Your portfolio is full",
+    "portfolio_duplicate": "That link is already in your portfolio",
+    "stats_cooldown": "You can refresh the numbers once a day. Try again tomorrow",
+    "lookup_limit": "Too many checks in the last hour. Try again a bit later",
+    "lookup_unavailable": "Automatic checks aren’t available right now. Try again later",
+    "lookup_not_found": "Account not found or private. Check the username; the account must be public",
+    "lookup_failed": "Couldn’t check the account. Try again",
+    "campaign_closed": "A closed listing can't be changed. Duplicate it and post the copy instead",
+    "campaign_incomplete": "Some required fields are still empty. Edit the listing and publish it again",
+    "campaign_deadline_passed": "The deadline has passed. Pick a new date and publish again"
   },
   "validation": {
-    "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters).",
-    "required": "Fill in this field.",
-    "email": "Enter a valid email.",
-    "passwordMin": "At least 8 characters.",
-    "passwordMax": "At most 72 characters.",
-    "passwordLetter": "Include at least one letter.",
-    "passwordDigit": "Include at least one digit.",
-    "passwordMismatch": "Passwords don’t match.",
-    "otp": "Enter the 6-digit code.",
-    "handleReserved": "This name can’t be used.",
-    "socialHandle": "Not a valid username.",
-    "number": "Enter a number.",
-    "duplicate": "Duplicate.",
-    "phone": "Not a valid phone number.",
-    "tooLong": "Too long.",
-    "categoriesMin": "Pick at least one category.",
-    "categoriesMax": "At most 5 categories.",
-    "languagesMin": "Pick at least one language.",
-    "socialsMin": "Add at least one social account.",
-    "portfolioUrl": "Enter a link to an Instagram post or Reel (https://…).",
-    "avatar": "Upload the photo again.",
-    "lookupRequired": "After entering the username, press “Connect account”."
+    "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters)",
+    "required": "Fill in this field",
+    "email": "Enter a valid email",
+    "passwordMin": "At least 8 characters",
+    "passwordMax": "At most 72 characters",
+    "passwordLetter": "Include at least one letter",
+    "passwordDigit": "Include at least one digit",
+    "passwordMismatch": "Passwords don’t match",
+    "otp": "Enter the 6-digit code",
+    "handleReserved": "This name can’t be used",
+    "socialHandle": "Not a valid username",
+    "number": "Enter a number",
+    "duplicate": "Duplicate",
+    "phone": "Not a valid phone number",
+    "tooLong": "Too long",
+    "categoriesMin": "Pick at least one category",
+    "categoriesMax": "At most 5 categories",
+    "languagesMin": "Pick at least one language",
+    "socialsMin": "Add at least one social account",
+    "portfolioUrl": "Enter a link to an Instagram post or Reel (https://…)",
+    "avatar": "Upload the photo again",
+    "lookupRequired": "After entering the username, press “Connect account”",
+    "website": "Website address isn't valid",
+    "tooShort": "This is too short",
+    "amount": "Enter an amount",
+    "deadlinePast": "Pick a date after today",
+    "date": "That date isn't valid",
+    "formatsMin": "Pick at least one format"
   },
   "landing": {
     "nav": {
@@ -101,7 +110,7 @@
       "titleA": "let",
       "titleAccent": "creators",
       "titleB": "make your ads",
-      "sub": "brands post listings, creators advertise them on instagram and tiktok. paid or barter.",
+      "sub": "brands post listings, creators advertise them on instagram and tiktok. paid or barter",
       "ctaBrand": "post a listing",
       "ctaCreator": "join as a creator",
       "note": "completely free for now",
@@ -183,19 +192,19 @@
     "faq": {
       "title": "questions",
       "q1": "is it paid?",
-      "a1": "everything is free right now.",
+      "a1": "everything is free right now",
       "q2": "do payments go through the platform?",
-      "a2": "not yet, brands and creators agree directly.",
+      "a2": "not yet, brands and creators agree directly",
       "q3": "who can be a creator?",
-      "a3": "anyone with instagram or tiktok. small audiences welcome.",
+      "a3": "anyone with instagram or tiktok. small audiences welcome",
       "q4": "how do i see results?",
-      "a4": "the creator sends the post link and views, you confirm.",
+      "a4": "the creator sends the post link and views, you confirm",
       "q5": "how do i get paid?",
-      "a5": "not through the platform yet, you agree the fee and terms directly with the brand.",
+      "a5": "not through the platform yet, you agree the fee and terms directly with the brand",
       "q6": "how do i choose creators?",
-      "a6": "you post a listing, review the profiles, follower counts and portfolios of those who applied, and pick yourself.",
+      "a6": "you post a listing, review the profiles, follower counts and portfolios of those who applied, and pick yourself",
       "q7": "can i use the video in my ads?",
-      "a7": "the brand and creator agree on this directly. note the usage rights in the listing so there are no surprises later."
+      "a7": "the brand and creator agree on this directly. note the usage rights in the listing so there are no surprises later"
     },
     "final": {
       "title": "your first collaboration, this week",
@@ -228,22 +237,22 @@
     },
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign in to your account.",
+      "subtitle": "Sign in to your account",
       "tabPassword": "Password",
       "tabCode": "Email code",
       "forgot": "Forgot password?",
       "submit": "Sign in",
-      "codeHint": "We’ll email you a one-time code, no password needed.",
+      "codeHint": "We’ll email you a one-time code, no password needed",
       "noAccount": "No account yet?",
       "signupLink": "Sign up"
     },
     "signup": {
       "title": "Create your account",
-      "subtitle": "For brands and creators, free during the pilot.",
+      "subtitle": "For brands and creators, free during the pilot",
       "titleBrand": "Create a brand account",
       "titleCreator": "Create a creator account",
       "submit": "Sign up",
-      "passwordHint": "At least 8 characters, letters and digits.",
+      "passwordHint": "At least 8 characters, letters and digits",
       "withCode": "Sign up with a code instead",
       "withPassword": "Sign up with a password",
       "haveAccount": "Already have an account?",
@@ -252,73 +261,73 @@
     "code": {
       "send": "Send code",
       "title": "Check your email",
-      "sentTo": "We sent a 6-digit code to {email}.",
+      "sentTo": "We sent a 6-digit code to {email}",
       "verify": "Verify",
       "resend": "Resend code",
       "resendIn": "Resend in {seconds}s",
-      "resent": "New code sent.",
+      "resent": "New code sent",
       "changeEmail": "Use another email",
-      "spamHint": "Nothing yet? Check your spam folder."
+      "spamHint": "Nothing yet? Check your spam folder"
     },
     "verify": {
       "title": "Confirm your email",
-      "subtitle": "Enter the code we sent to {email} to finish signing up.",
+      "subtitle": "Enter the code we sent to {email} to finish signing up",
       "missingEmail": "Which email are you confirming?",
       "continue": "Continue"
     },
     "reset": {
       "title": "Reset your password",
-      "subtitle": "We’ll email you a code.",
+      "subtitle": "We’ll email you a code",
       "send": "Send code",
       "codeTitle": "Set a new password",
-      "codeSubtitle": "Enter the code we sent to {email} and your new password.",
+      "codeSubtitle": "Enter the code we sent to {email} and your new password",
       "updateTitle": "Set a new password",
-      "updateSubtitle": "Choose a new password for your account.",
+      "updateSubtitle": "Choose a new password for your account",
       "submit": "Update password",
-      "done": "Password updated.",
+      "done": "Password updated",
       "backToLogin": "Back to sign in"
     },
     "onboarding": {
       "title": "Choose your account type",
-      "subtitle": "You can’t change this later.",
-      "signedInAs": "Signed in as {email}.",
+      "subtitle": "You can’t change this later",
+      "signedInAs": "Signed in as {email}",
       "continue": "Continue",
       "brand": {
         "title": "Brand",
-        "body": "Post listings and let creators apply."
+        "body": "Post listings and let creators apply"
       },
       "creator": {
         "title": "Creator",
-        "body": "Apply to listings and show your portfolio."
+        "body": "Apply to listings and show your portfolio"
       }
     },
     "blocked": {
       "title": "Your account is restricted",
-      "body": "If you think this is a mistake, contact our team."
+      "body": "If you think this is a mistake, contact our team"
     },
     "errors": {
-      "invalid_credentials": "Wrong email or password.",
-      "email_not_confirmed": "Email not confirmed yet, we sent you a new code.",
-      "code_invalid": "The code is wrong or expired.",
-      "too_many_emails": "Too many attempts. Try again in a minute.",
-      "too_many_requests": "Too many attempts. Wait a bit and try again.",
-      "weak_password": "That password is too weak, pick a stronger one.",
-      "same_password": "New password must differ from the old one.",
-      "signup_disabled": "Sign-ups are closed right now.",
-      "email_invalid": "Enter a valid email.",
-      "blocked": "This account is restricted.",
-      "network": "Check your internet connection.",
-      "oauth_cancelled": "Google sign-in was cancelled.",
-      "oauth_failed": "Couldn’t sign in with Google. Try again.",
-      "link_invalid": "This link is invalid. Try signing in with a code.",
-      "link_expired": "This link has expired. Request a new code.",
-      "session_missing": "Your session expired. Request a new code.",
-      "unknown": "Something went wrong. Try again.",
-      "email_off": "Emails are off in test mode. Message the team to confirm your account."
+      "invalid_credentials": "Wrong email or password",
+      "email_not_confirmed": "Email not confirmed yet, we sent you a new code",
+      "code_invalid": "The code is wrong or expired",
+      "too_many_emails": "Too many attempts. Try again in a minute",
+      "too_many_requests": "Too many attempts. Wait a bit and try again",
+      "weak_password": "That password is too weak, pick a stronger one",
+      "same_password": "New password must differ from the old one",
+      "signup_disabled": "Sign-ups are closed right now",
+      "email_invalid": "Enter a valid email",
+      "blocked": "This account is restricted",
+      "network": "Check your internet connection",
+      "oauth_cancelled": "Google sign-in was cancelled",
+      "oauth_failed": "Couldn’t sign in with Google. Try again",
+      "link_invalid": "This link is invalid. Try signing in with a code",
+      "link_expired": "This link has expired. Request a new code",
+      "session_missing": "Your session expired. Request a new code",
+      "unknown": "Something went wrong. Try again",
+      "email_off": "Emails are off in test mode. Message the team to confirm your account"
     },
     "emailOff": {
       "title": "Test mode",
-      "body": "Emails aren’t being sent yet. Sign in with Google or a password. Forgot your password? Message the team."
+      "body": "Emails aren’t being sent yet. Sign in with Google or a password. Forgot your password? Message the team"
     },
     "panel": {
       "tagline": "let creators make your ads",
@@ -331,7 +340,7 @@
       "apply": "Apply"
     },
     "footer": "UGCMarket · pilot · Baku",
-    "consent": "By continuing, you agree to the <terms>Terms of Use</terms> and <privacy>Privacy Policy</privacy>.",
+    "consent": "By continuing, you agree to the <terms>Terms of Use</terms> and <privacy>Privacy Policy</privacy>",
     "terms": "Terms",
     "privacy": "Privacy"
   },
@@ -341,7 +350,11 @@
     "browseCampaigns": "Listings",
     "editProfile": "Edit profile",
     "myApplications": "My applications",
-    "language": "Language"
+    "language": "Language",
+    "myListings": "My listings",
+    "newListing": "Post a listing",
+    "brandProfile": "Brand profile",
+    "brandSetup": "Set up brand profile"
   },
   "taxonomy": {
     "categories": {
@@ -395,6 +408,28 @@
       "paid": "Paid",
       "barter": "Open to barter",
       "repost": "Free for a repost"
+    },
+    "brandCategories": {
+      "beauty": "Beauty and cosmetics",
+      "fashion": "Clothing and accessories",
+      "food": "Food, cafes and restaurants",
+      "home": "Home and decor",
+      "family": "Kids products",
+      "fitness": "Sport and health",
+      "tech": "Tech and electronics",
+      "auto": "Auto",
+      "education": "Education and courses",
+      "travel": "Travel and hotels",
+      "pets": "Pets",
+      "services": "Services",
+      "other": "Other"
+    },
+    "compensation": {
+      "money": "Paid",
+      "product": "Product",
+      "service": "Service",
+      "barter": "Barter",
+      "unpaid": "Unpaid"
     }
   },
   "creator": {
@@ -403,59 +438,59 @@
       "next": "Continue",
       "back": "Back",
       "finish": "Create profile",
-      "created": "Profile created and sent for review.",
-      "reviewNote": "You can add prices later too. Your profile goes public after review."
+      "created": "Profile created and sent for review",
+      "reviewNote": "You can add prices later too. Your profile goes public after review"
     },
     "steps": {
       "about": {
         "title": "About you",
-        "subtitle": "This is how brands will get to know you."
+        "subtitle": "This is how brands will get to know you"
       },
       "content": {
         "title": "Content types",
-        "subtitle": "Categories help you find the right listings."
+        "subtitle": "Categories help you find the right listings"
       },
       "socials": {
         "title": "Social accounts",
-        "subtitle": "Show your Instagram account and audience."
+        "subtitle": "Show your Instagram account and audience"
       },
       "prices": {
         "title": "Prices",
-        "subtitle": "Optional. A ballpark price helps brands decide."
+        "subtitle": "Optional. A ballpark price helps brands decide"
       }
     },
     "edit": {
       "title": "My profile",
-      "subtitle": "Changes show on your public profile right away.",
-      "saved": "Saved.",
-      "fixErrors": "Fix the fields marked in red.",
+      "subtitle": "Changes show on your public profile right away",
+      "saved": "Saved",
+      "fixErrors": "Fix the fields marked in red",
       "unsaved": "Unsaved changes",
       "discard": "Discard",
       "save": "Save"
     },
     "form": {
       "avatar": "Profile photo",
-      "avatarHint": "A square photo where your face is clear.",
+      "avatarHint": "A square photo where your face is clear",
       "avatarPick": "Choose photo",
       "avatarRemove": "Remove photo",
       "avatarTooBig": "Photo is too large (max 15 MB)",
-      "avatarFailed": "Couldn’t upload the photo.",
+      "avatarFailed": "Couldn’t upload the photo",
       "displayName": "Name",
       "displayNamePh": "Aysel Mammadova",
       "handle": "Username",
-      "handleHint": "Your profile link: lowercase letters, digits, dot, underscore.",
+      "handleHint": "Your profile link: lowercase letters, digits, dot, underscore",
       "handleFree": "Available: /creator/{handle}",
       "city": "City",
       "cityPh": "Choose a city",
       "bio": "About",
-      "bioHint": "What you create, for whom, what makes you different.",
+      "bioHint": "What you create, for whom, what makes you different",
       "bioPh": "Lifestyle and beauty creator from Baku…",
       "categories": "Categories",
-      "categoriesHint": "Pick up to 5.",
+      "categoriesHint": "Pick up to 5",
       "languages": "Content language",
       "barter": "Open to barter",
-      "barterHint": "Collaborate in exchange for a product or service instead of money.",
-      "socialsHint": "Enter your username and press “Connect account”. We take followers and views from your account automatically.",
+      "barterHint": "Collaborate in exchange for a product or service instead of money",
+      "socialsHint": "Enter your username and press “Connect account”. We take followers and views from your account automatically",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -464,13 +499,13 @@
       "username": "Username or link",
       "followers": "Followers",
       "avgViews": "Avg. views",
-      "contactsHint": "Your contacts stay private. Only the brand of a listing you apply to can see them.",
+      "contactsHint": "Your contacts stay private. Only the brand of a listing you apply to can see them",
       "contactInstagram": "Instagram for contact",
       "contactPhone": "Phone",
-      "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”.",
+      "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”",
       "crop": {
         "title": "Adjust your photo",
-        "hint": "Drag and zoom. Whatever is inside the circle becomes your profile photo.",
+        "hint": "Drag and zoom. Whatever is inside the circle becomes your profile photo",
         "zoom": "Zoom",
         "zoomIn": "Zoom in",
         "zoomOut": "Zoom out",
@@ -478,44 +513,44 @@
         "save": "Save",
         "saving": "Uploading…"
       },
-      "moreNetworksSoon": "TikTok and YouTube are coming soon. For now, add your Instagram account.",
+      "moreNetworksSoon": "TikTok and YouTube are coming soon. For now, add your Instagram account",
       "connect": "Connect account",
       "reconnect": "Refresh",
-      "connecting": "Checking the account. This can take up to 30 seconds.",
+      "connecting": "Checking the account. This can take up to 30 seconds",
       "connected": "Taken from Instagram",
       "statFollowers": "followers",
       "statAvgViews": "avg. views",
       "termsTitle": "Terms",
-      "termsHint": "Brands will see on your profile how you work. If you leave both unchecked, your profile will show “Paid only”.",
+      "termsHint": "Brands will see on your profile how you work. If you leave both unchecked, your profile will show “Paid only”",
       "repost": "Open to free collaborations",
-      "repostHint": "Instead of payment, the brand shares your Reel or story on its own page."
+      "repostHint": "Instead of payment, the brand shares your Reel or story on its own page"
     },
     "portfolio": {
       "title": "Portfolio",
-      "subtitle": "Add links to your best work. Brands decide faster when you have 3 or more.",
+      "subtitle": "Add links to your best work. Brands decide faster when you have 3 or more",
       "url": "Link",
-      "urlHint": "Link to an Instagram post or Reel. For Reels, we’ll check views and likes automatically.",
-      "detected": "{network} link.",
+      "urlHint": "Link to an Instagram post or Reel. For Reels, we’ll check views and likes automatically",
+      "detected": "{network} link",
       "titleLabel": "Title (optional)",
       "titlePh": "Reels for a café",
       "add": "Add",
       "open": "Open",
       "remove": "Remove",
-      "full": "Up to {max} items.",
+      "full": "Up to {max} items",
       "networks": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
         "youtube": "YouTube"
       },
-      "checked": "Numbers checked automatically.",
-      "notYours": "This post belongs to @{owner}. Numbers are shown only for your own posts.",
+      "checked": "Numbers checked automatically",
+      "notYours": "This post belongs to @{owner}. Numbers are shown only for your own posts",
       "slotEmpty": "Add a Reel",
       "addMore": "Add another piece",
       "dialogTitle": "Add to your portfolio"
     },
     "dashboard": {
       "setupTitle": "Set up your creator profile",
-      "setupBody": "Brands get to know you through your profile: who you are, what you create and your audience. 4 short steps, about 5 minutes.",
+      "setupBody": "Brands get to know you through your profile: who you are, what you create and your audience. 4 short steps, about 5 minutes",
       "setupCta": "Start setting up",
       "hello": "Hi, {name}",
       "completeTitle": "Your profile",
@@ -527,30 +562,30 @@
         "portfolio": "Add 3 portfolio items"
       },
       "boardTitle": "Listings",
-      "boardBody": "Browse open brand listings and apply.",
+      "boardBody": "Browse open brand listings and apply",
       "status": {
         "pending": {
           "title": "Your profile is in review",
-          "body": "Your profile will be activated within 24 hours. Once approved, you can apply to listings. Meanwhile, finish your profile.",
+          "body": "Your profile will be activated within 24 hours. Once approved, you can apply to listings. Meanwhile, finish your profile",
           "badge": "In review"
         },
         "approved": {
           "title": "Your profile is live",
-          "body": "Brands can see your profile and you can apply to listings."
+          "body": "Brands can see your profile and you can apply to listings"
         },
         "rejected": {
           "title": "Profile not approved",
-          "body": "Check and update your details, or message the team.",
+          "body": "Check and update your details, or message the team",
           "cta": "Edit",
           "badge": "Not approved"
         }
       },
       "shareTitle": "Your profile link",
-      "shareBody": "Put it in your bio or send it to brands.",
-      "sharePending": "Everyone can see it once approved. For now, only you can.",
+      "shareBody": "Put it in your bio or send it to brands",
+      "sharePending": "Everyone can see it once approved. For now, only you can",
       "copy": "Copy",
       "copied": "Copied",
-      "copyFailed": "Couldn’t copy.",
+      "copyFailed": "Couldn’t copy",
       "share": "Share",
       "preview": "View",
       "joined": "Joined {days, plural, =0 {today} one {# day ago} other {# days ago}}",
@@ -566,10 +601,10 @@
         "applications": "Applications"
       },
       "applicationsEmpty": "No applications yet",
-      "pricesEmpty": "No prices yet. Your profile shows “negotiable”.",
+      "pricesEmpty": "No prices yet. Your profile shows “negotiable”",
       "editPrices": "Edit prices",
       "setupEyebrow": "For creators",
-      "applyRule": "To apply to listings, your profile must be complete and approved by our team.",
+      "applyRule": "To apply to listings, your profile must be complete and approved by our team",
       "visual": {
         "city": "Baku",
         "tag1": "Beauty",
@@ -578,31 +613,31 @@
         "followers": "followers"
       },
       "checked": "Checked automatically",
-      "statsCheckedAt": "Numbers checked automatically: {when}.",
-      "statsSelfReported": "You entered these numbers. Automatic checks are coming soon.",
+      "statsCheckedAt": "Numbers checked automatically: {when}",
+      "statsSelfReported": "You entered these numbers. Automatic checks are coming soon",
       "statsRefresh": "Refresh numbers",
       "statsRefreshing": "Checking…",
-      "statsRefreshed": "Numbers updated.",
+      "statsRefreshed": "Numbers updated",
       "categoriesTitle": "Categories",
       "completeShort": "complete",
-      "statsRefreshHint": "Numbers come from Instagram. You can refresh them once a day, and they update automatically every week.",
+      "statsRefreshHint": "Numbers come from Instagram. You can refresh them once a day, and they update automatically every week",
       "statsLastRun": "Last checked",
       "statsNeverRun": "Not checked yet",
       "termsTitle": "Terms"
     },
     "public": {
       "login": "Sign in",
-      "notFoundBody": "The profile was removed, the link is wrong, or it’s still in review.",
+      "notFoundBody": "The profile was removed, the link is wrong, or it’s still in review",
       "home": "Home",
-      "previewPending": "Preview: your profile is in review. Only you can see it for now.",
-      "previewRejected": "Preview: your profile wasn’t approved, so others can’t see it.",
+      "previewPending": "Preview: your profile is in review. Only you can see it for now",
+      "previewRejected": "Preview: your profile wasn’t approved, so others can’t see it",
       "barter": "Open to barter",
       "edit": "Edit",
       "followers": "followers",
       "avgViews": "{views} avg. views",
-      "selfReported": "Numbers without a check mark are reported by the creator.",
+      "selfReported": "Numbers without a check mark are reported by the creator",
       "portfolio": "Portfolio",
-      "portfolioEmpty": "No work added yet.",
+      "portfolioEmpty": "No work added yet",
       "networkPost": {
         "instagram": "Instagram post",
         "tiktok": "TikTok video",
@@ -611,7 +646,7 @@
       "prices": "Prices",
       "pricesEmpty": "Negotiable",
       "ctaTitle": "Want to work with this creator?",
-      "ctaBody": "Post a listing and creators will apply to you.",
+      "ctaBody": "Post a listing and creators will apply to you",
       "ctaButton": "Post a listing",
       "checked": "Checked automatically",
       "termsTitle": "Terms"
@@ -692,5 +727,259 @@
         "body": "If you have questions, email <mail>{email}</mail>."
       }
     }
+  },
+  "brand": {
+    "dashboard": {
+      "setupEyebrow": "For brands",
+      "setupTitle": "Set up your brand profile",
+      "setupBody": "Creators see your listings with your brand name and logo. 2 short steps, about 2 minutes",
+      "setupCta": "Start setting up",
+      "contactRule": "Only creators who apply to your listing see your contacts",
+      "editProfile": "Edit profile",
+      "listingsTitle": "Your listings",
+      "emptyTitle": "No listings yet",
+      "emptyBody": "Post your first listing. Creators who apply will show up here",
+      "newListing": "Post a listing",
+      "status": {
+        "pending": {
+          "title": "Your brand is in review",
+          "body": "We approve brands within 24 hours. You can prepare listings now. They go live once approved",
+          "badge": "In review"
+        },
+        "approved": {
+          "title": "Your brand is approved"
+        },
+        "rejected": {
+          "title": "Brand not approved",
+          "body": "Check and update your details, or message the team",
+          "cta": "Edit",
+          "badge": "Not approved"
+        }
+      },
+      "visual": {
+        "brandName": "Nur Kafe",
+        "category": "Cafes and restaurants",
+        "title": "Reels for our new breakfast menu",
+        "city": "Baku",
+        "deadline": "Until 15 December",
+        "applicants": "12 applicants",
+        "newApplicant": "New applicant"
+      }
+    },
+    "steps": {
+      "about": {
+        "title": "About your brand",
+        "subtitle": "Name, logo and field"
+      },
+      "contacts": {
+        "title": "Contacts",
+        "subtitle": "Instagram, phone and email. This is how creators reach you"
+      }
+    },
+    "profile": {
+      "createTitle": "Set up your brand profile",
+      "createSubtitle": "Creators will see your listings with these details. You can change all of it later",
+      "create": "Create profile",
+      "created": "Your brand profile is created and sent for review",
+      "reviewNote": "Our team will review your brand within 24 hours",
+      "editTitle": "Brand profile",
+      "editSubtitle": "Changes show up on your listings right away",
+      "saved": "Changes saved",
+      "fixErrors": "Fix the fields marked in red",
+      "unsaved": "You have unsaved changes",
+      "discard": "Discard",
+      "save": "Save",
+      "logo": "Logo",
+      "logoHint": "A square logo looks best",
+      "logoRemove": "Remove logo",
+      "logoCrop": "Drag and zoom. The part inside the square becomes your logo",
+      "name": "Brand name",
+      "namePh": "For example, Nur Kafe",
+      "category": "Field",
+      "categoryPh": "Choose a field",
+      "website": "Website",
+      "contactsHint": "Only creators who apply to your listing see these",
+      "instagram": "Instagram",
+      "phone": "Phone",
+      "email": "Email"
+    }
+  },
+  "campaign": {
+    "form": {
+      "step": "Step {current} of {total}",
+      "steps": {
+        "what": {
+          "title": "What do you need?",
+          "subtitle": "Describe the listing: what to film and the rules for it"
+        },
+        "who": {
+          "title": "Who do you need?",
+          "subtitle": "How many creators, and with what audience"
+        },
+        "pay": {
+          "title": "Pay and deadline",
+          "subtitle": "What do you offer, and when should the content be ready?"
+        }
+      },
+      "title": "Listing title",
+      "titlePh": "For example, Reels for our new breakfast menu",
+      "titleHint": "This is the first thing creators see",
+      "description": "Description",
+      "descriptionPh": "What to film, what to show, what mood the video should have?",
+      "descriptionHint": "The clearer the description, the better the applicants",
+      "category": "Content topic",
+      "categoryPh": "Choose a topic",
+      "format": "Content format",
+      "less": "Fewer",
+      "more": "More",
+      "minFollowers": "Minimum followers",
+      "minFollowersHint": "Creators will see this in the listing",
+      "anyone": "Any",
+      "city": "City",
+      "anyCity": "Any",
+      "compensation": "Payment type",
+      "amount": "Amount",
+      "offer": "What do you offer?",
+      "offerHint": "Name the product or service and its rough value",
+      "offerPh": "For example, breakfast for two or a gift card",
+      "unpaidHint": "Unpaid listings usually get fewer applicants",
+      "deadline": "Deadline",
+      "deadlineHint": "The content should be posted by this date",
+      "creatorsNeeded": "Creators needed",
+      "requirements": "Requirements",
+      "requirementsPh": "For example, tag the brand, show your face in the video",
+      "back": "Back",
+      "next": "Continue",
+      "saveDraft": "Save as draft",
+      "publish": "Publish",
+      "reviewNote": "Your brand is still in review. The listing goes live once it's approved",
+      "savedDraft": "Listing saved as a draft",
+      "published": "Listing published",
+      "sentForReview": "Listing sent for review. It goes live once approved",
+      "fixErrors": "Fix the fields marked in red",
+      "previewLabel": "This is how creators will see your listing",
+      "needsBrandTitle": "Set up your brand profile first",
+      "needsBrandBody": "Creators see listings with your brand name and logo. It takes about 2 minutes",
+      "needsBrandCta": "Create profile",
+      "formatHint": "You can pick more than one",
+      "countsLabel": "How many of each?",
+      "extra": "On top of that",
+      "extraPh": "For example, breakfast for two",
+      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon"
+    },
+    "card": {
+      "noTitle": "Listing title",
+      "noCategory": "No topic yet",
+      "anyCity": "Any city",
+      "minFollowers": "{count}+ followers",
+      "deadline": "Due {date}"
+    },
+    "mine": {
+      "title": "Your listings",
+      "new": "New listing",
+      "status": {
+        "draft": "Draft",
+        "pending_review": "In review",
+        "published": "Live",
+        "paused": "Paused",
+        "closed": "Closed",
+        "rejected": "Not approved"
+      },
+      "expired": "Deadline passed",
+      "deadline": "Due {date}",
+      "applicants": "{count, plural, one {applicant} other {applicants}}",
+      "actions": "Listing actions",
+      "publish": "Publish",
+      "resume": "Resume",
+      "pause": "Pause",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "close": "Close listing",
+      "closeTitle": "Close this listing?",
+      "closeBody": "It comes off the board and stops taking applications. You keep the applications you already have",
+      "closeConfirm": "Close",
+      "cancel": "Cancel",
+      "toast": {
+        "published": "Listing published",
+        "sentForReview": "Listing sent for review. It goes live once approved",
+        "paused": "Listing paused. Creators can't see it for now",
+        "closed": "Listing closed",
+        "duplicated": "A copy was created as a draft"
+      },
+      "untitled": "Untitled draft",
+      "anyCity": "Any city",
+      "applicantsLink": "Applicants"
+    },
+    "edit": {
+      "title": "Edit listing",
+      "subtitle": "Save your changes. The listing's status stays the same",
+      "subtitleLive": "Changes show up on the board right away",
+      "closed": "This listing is closed and can't be changed. You can duplicate it from your list and post it again",
+      "saved": "Changes saved",
+      "unsaved": "You have unsaved changes",
+      "discard": "Discard",
+      "save": "Save",
+      "subtitleDraft": "Save your draft any time. Fill in the required fields to publish it",
+      "publishNote": "Once published, creators will see the listing"
+    }
+  },
+  "applicants": {
+    "copyLink": "Copy listing link",
+    "editListing": "Edit listing",
+    "linkCopied": "Listing link copied",
+    "copied": "Copied",
+    "copyFailed": "Couldn't copy",
+    "copy": "Copy",
+    "emptyTitle": "No applicants yet",
+    "emptyLive": "Share the listing link so more creators see it",
+    "emptyNotLive": "Applicants will show up here once the listing is published",
+    "contactNote": "Reach creators directly on Instagram or by phone. You agree on the terms with them yourself",
+    "followers": "followers",
+    "avgViews": "avg views",
+    "checked": "Checked automatically",
+    "noContacts": "This creator hasn't added contacts"
+  },
+  "listing": {
+    "city": "City",
+    "anyCity": "Any",
+    "deadline": "Deadline",
+    "minFollowers": "Min followers",
+    "anyone": "Any",
+    "creatorsNeeded": "Creators needed",
+    "description": "Description",
+    "requirements": "Requirements",
+    "applicants": "Applicants",
+    "edit": "Edit",
+    "previewNote": "Status: {status}. This listing isn't published yet, only you can see it",
+    "notFoundTitle": "Listing not found",
+    "notFoundBody": "It was removed or isn't published yet",
+    "browse": "Browse listings",
+    "apply": {
+      "apply": "Apply",
+      "loginNote": "Log in as a creator to apply",
+      "createProfile": "Create creator profile",
+      "noProfileNote": "Create your creator profile first to apply",
+      "pendingNote": "You can apply once your profile is approved",
+      "applyNote": "After applying you'll see the brand's contacts",
+      "dialogTitle": "Apply to this listing",
+      "dialogBody": "The brand will see your profile and contacts. You'll see theirs too",
+      "message": "A short note to the brand",
+      "messagePh": "For example, your work on this topic and when you could film",
+      "cancel": "Cancel",
+      "send": "Apply",
+      "sent": "Application sent",
+      "applied": "You applied to this listing",
+      "showContacts": "Brand contacts",
+      "contactsNote": "Contact the brand directly and agree on the terms",
+      "noContacts": "The brand hasn't added contacts",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyFailed": "Couldn't copy"
+    },
+    "back": "Back",
+    "payLogin": "Log in to see the pay",
+    "share": "Share",
+    "shareCopied": "Link copied",
+    "shareFailed": "Couldn't copy the link"
   }
 }

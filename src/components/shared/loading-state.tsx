@@ -17,7 +17,10 @@ export function LoadingState({ className, children }: { className?: string; chil
       className={cn("transition-opacity delay-150 duration-200 ease-out starting:opacity-0", className)}
     >
       <span className="sr-only">{t("loading")}</span>
-      <div aria-hidden>{children}</div>
+      {/* display: contents, so the className's grid/flex applies to the skeleton pieces. */}
+      <div aria-hidden className="contents">
+        {children}
+      </div>
     </div>
   );
 }

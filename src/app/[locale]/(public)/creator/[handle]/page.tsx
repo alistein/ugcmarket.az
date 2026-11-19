@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
+import { DynamicMarker } from "@/components/shared/dynamic-marker";
 import { routing, toLocale } from "@/i18n/routing";
 import { getPublicCreator } from "@/server/services/creators";
 import { CreatorProfileView } from "./view";
@@ -40,8 +41,11 @@ export async function generateMetadata({
 export default function Page() {
   // Suspense required: the view reads the URL (useParams) at request time.
   return (
-    <Suspense>
-      <CreatorProfileView />
-    </Suspense>
+    <>
+      <DynamicMarker />
+      <Suspense>
+        <CreatorProfileView />
+      </Suspense>
+    </>
   );
 }

@@ -34,7 +34,7 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
 Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) for every user-facing string:
 - **No em dash (—)** in any language. Use a period, comma or colon. `pnpm copy:check` must pass.
 - **Azerbaijani is written natively, never translated literally** from English or Russian. Formal **siz** everywhere (landing too); listings are **elan** / **объявление** / **listing** in copy (code stays `campaign`).
-- **Finish the sentences:** body text, hints, errors and toasts end with a period; titles, labels and buttons don't.
+- **No closing period** on any text (hints, errors, toasts, labels, buttons). Sentences inside a text are still split by a period. Legal pages keep normal punctuation.
 
 ## UI kit
 - `src/components/ui/*` came from shadcn but is **our UI kit now** — edit freely; it will diverge from upstream.

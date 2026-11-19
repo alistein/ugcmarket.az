@@ -235,14 +235,15 @@ export function useRemovePortfolioItem() {
  * Avatar: resize to a 512px WebP in the browser (phones send 4–12 MB photos), get a signed
  * upload URL from /api, upload straight to Storage, return the public URL.
  */
-export function useUploadAvatar() {
+/** Square WebP upload to the avatars (creators) or logos (brands) bucket → public URL. */
+export function useUploadAvatar(kind: "avatar" | "logo" = "avatar") {
   return useMutation({
     mutationFn: async ({ file, area }: { file: File; area?: CropArea }) => {
       if (!file.type.startsWith("image/")) throw new Error("avatar_type");
       const blob = await resizeToWebp(file, 512, area);
       const signed = await api<{ bucket: string; path: string; token: string }>("/uploads/sign", {
         method: "POST",
-        json: { kind: "avatar", ext: "webp" },
+        json: { kind, ext: "webp" },
       });
       const storage = createClient().storage.from(signed.bucket);
       const { error } = await storage.uploadToSignedUrl(signed.path, signed.token, blob, {

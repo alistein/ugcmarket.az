@@ -1,7 +1,7 @@
 "use client";
 
-import { PagePlaceholder } from "@/components/shared/page-placeholder";
+import { BrandHome } from "@/features/brands/components/brand-home";
 
 export default function Page() {
-  return <PagePlaceholder titleKey="pages.brandDashboard" />;
+  return <BrandHome />;
 }

@@ -13,7 +13,22 @@ export const CollaborationModel = z.enum(["post", "ugc"]);
 /** Spec §6: compensation types. */
 export const CompensationType = z.enum(["money", "product", "service", "barter", "unpaid"]);
 
-export const PostFormat = z.enum(["reels", "stories", "post", "tiktok_video", "youtube_short", "ugc_video", "other"]);
+/**
+ * What a brand can pick for a listing (founders, 2026-11-19): paid, barter or unpaid.
+ * "product" and "service" stay in the DB enum but are folded into barter in the product.
+ */
+export const LISTING_COMPENSATION_TYPES = ["money", "barter", "unpaid"] as const;
+export const ListingCompensationType = z.enum(LISTING_COMPENSATION_TYPES);
+
+export const PostFormat = z.enum([
+  "reels",
+  "stories",
+  "post",
+  "tiktok_video",
+  "youtube_short",
+  "ugc_video",
+  "other",
+]);
 
 export const Currency = z.enum(["AZN", "USD", "EUR"]);
 
@@ -29,3 +44,10 @@ export const Handle = z
   .min(3)
   .max(30)
   .regex(/^[a-z0-9_.]+$/, "validation.handle");
+
+/**
+ * Empty form input → null: whitespace-only text, and undefined (an untouched select or a key the
+ * client left out), so optional fields can stay plain inputs.
+ */
+export const blankToNull = (v: unknown) =>
+  v === undefined || (typeof v === "string" && v.trim() === "") ? null : v;

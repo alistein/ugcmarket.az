@@ -25,12 +25,18 @@ const MAX_ZOOM = 4;
 export function AvatarCropDialog({
   src,
   pending,
+  square,
+  hint,
   onCancel,
   onConfirm,
 }: {
   /** Object URL of the picked photo (created/revoked by the caller, in event handlers). */
   src: string | null;
   pending?: boolean;
+  /** Square crop (brand logos) instead of a circle. */
+  square?: boolean;
+  /** Overrides the creator hint text. */
+  hint?: string;
   onCancel: () => void;
   onConfirm: (area: Area) => void;
 }) {
@@ -38,7 +44,17 @@ export function AvatarCropDialog({
     <Dialog open={!!src} onOpenChange={(open) => !open && !pending && onCancel()}>
       <DialogContent className="sm:max-w-md" showCloseButton={!pending}>
         {/* keyed by photo → fresh crop/zoom state for every new photo */}
-        {src && <CropBody key={src} src={src} pending={pending} onCancel={onCancel} onConfirm={onConfirm} />}
+        {src && (
+          <CropBody
+            key={src}
+            src={src}
+            pending={pending}
+            square={square}
+            hint={hint}
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -47,11 +63,15 @@ export function AvatarCropDialog({
 function CropBody({
   src,
   pending,
+  square,
+  hint,
   onCancel,
   onConfirm,
 }: {
   src: string;
   pending?: boolean;
+  square?: boolean;
+  hint?: string;
   onCancel: () => void;
   onConfirm: (area: Area) => void;
 }) {
@@ -66,7 +86,7 @@ function CropBody({
     <>
       <DialogHeader>
         <DialogTitle>{t("title")}</DialogTitle>
-        <DialogDescription>{t("hint")}</DialogDescription>
+        <DialogDescription>{hint ?? t("hint")}</DialogDescription>
       </DialogHeader>
 
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-foreground/90">
@@ -77,7 +97,7 @@ function CropBody({
           minZoom={MIN_ZOOM}
           maxZoom={MAX_ZOOM}
           aspect={1}
-          cropShape="round"
+          cropShape={square ? "rect" : "round"}
           showGrid={false}
           objectFit="cover"
           onCropChange={setCrop}

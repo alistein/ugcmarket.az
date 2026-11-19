@@ -63,19 +63,27 @@ export function ChipGroup<T extends string>({
   );
 }
 
-/** Round photo picker → resized WebP upload → public URL. */
+/**
+ * Photo picker → crop → resized WebP upload → public URL. Round for creator photos; `logo` makes
+ * it a rounded square uploaded to the logos bucket (brands). Labels default to the creator copy.
+ */
 export function AvatarField({
   value,
   name,
   onChange,
+  logo,
+  labels,
 }: {
   value: string | null;
   name: string;
   onChange: (url: string | null) => void;
+  logo?: boolean;
+  /** Overrides of the creator copy (brands: "Loqo", …). */
+  labels?: { label: string; hint: string; remove: string; cropHint: string };
 }) {
   const t = useTranslations("creator.form");
   const input = useRef<HTMLInputElement>(null);
-  const upload = useUploadAvatar();
+  const upload = useUploadAvatar(logo ? "logo" : "avatar");
 
   const [picked, setPicked] = useState<{ file: File; url: string } | null>(null);
   const close = () => {
@@ -110,10 +118,19 @@ export function AvatarField({
         type="button"
         onClick={() => input.current?.click()}
         disabled={upload.isPending}
-        aria-label={t("avatarPick")}
-        className="group relative size-20 shrink-0 rounded-full outline-none [transition:scale_160ms_var(--ease-out)] focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.97]"
+        aria-label={labels?.label ?? t("avatarPick")}
+        className={cn(
+          "group relative size-20 shrink-0 outline-none [transition:scale_160ms_var(--ease-out)] focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.97]",
+          logo ? "rounded-[28%]" : "rounded-full",
+        )}
       >
-        <NamedAvatar name={name || "?"} src={value} className="size-20" fallbackClassName="text-xl" />
+        <NamedAvatar
+          name={name || "?"}
+          src={value}
+          square={logo}
+          className="size-20"
+          fallbackClassName="text-xl"
+        />
         <span className="absolute -right-0.5 -bottom-0.5 flex size-8 items-center justify-center rounded-full bg-card text-foreground shadow-(--shadow-raised)">
           <HugeiconsIcon
             icon={upload.isPending ? Loading03Icon : Camera01Icon}
@@ -123,21 +140,23 @@ export function AvatarField({
         </span>
       </button>
       <div className="grid gap-1 text-sm">
-        <span className="font-medium">{t("avatar")}</span>
-        <span className="text-muted-foreground">{t("avatarHint")}</span>
+        <span className="font-medium">{labels?.label ?? t("avatar")}</span>
+        <span className="text-muted-foreground">{labels?.hint ?? t("avatarHint")}</span>
         {value && (
           <button
             type="button"
             className="w-fit text-xs text-muted-foreground underline-offset-4 hover:underline"
             onClick={() => onChange(null)}
           >
-            {t("avatarRemove")}
+            {labels?.remove ?? t("avatarRemove")}
           </button>
         )}
       </div>
       <AvatarCropDialog
         src={picked?.url ?? null}
         pending={upload.isPending}
+        square={logo}
+        hint={labels?.cropHint}
         onCancel={close}
         onConfirm={save}
       />

@@ -923,7 +923,7 @@ function Feedback() {
         <Button variant="outline" onClick={() => toast.success("Post link submitted")}>
           Success
         </Button>
-        <Button variant="outline" onClick={() => toast.error("Bu istifadəçi adı artıq tutulub.")}>
+        <Button variant="outline" onClick={() => toast.error("Bu istifadəçi adı artıq tutulub")}>
           Error
         </Button>
         <Button variant="outline" onClick={() => toast.info("Your campaign is waiting for review")}>

@@ -1,7 +1,7 @@
 "use client";
 
-import { PagePlaceholder } from "@/components/shared/page-placeholder";
+import { EditCampaignPage } from "@/features/campaigns/components/campaign-edit";
 
 export default function Page() {
-  return <PagePlaceholder titleKey="pages.campaignEdit" />;
+  return <EditCampaignPage />;
 }

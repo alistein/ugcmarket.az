@@ -122,16 +122,19 @@ export type Database = {
       brand_contacts: {
         Row: {
           brand_id: string
+          email: string | null
           instagram: string | null
           phone: string | null
         }
         Insert: {
           brand_id: string
+          email?: string | null
           instagram?: string | null
           phone?: string | null
         }
         Update: {
           brand_id?: string
+          email?: string | null
           instagram?: string | null
           phone?: string | null
         }
@@ -192,7 +195,7 @@ export type Database = {
       campaigns: {
         Row: {
           brand_id: string
-          category: string
+          category: string | null
           city: string | null
           collaboration_model: Database["public"]["Enums"]["collaboration_model"]
           compensation_details: string | null
@@ -201,24 +204,22 @@ export type Database = {
           created_at: string
           creators_needed: number
           currency: string
-          deadline: string
-          description: string
-          format: Database["public"]["Enums"]["post_format"]
+          deadline: string | null
+          deliverables: Json
+          description: string | null
           id: string
           min_followers: number
           network: Database["public"]["Enums"]["social_network"]
-          posts_count: number
-          promoted_item: string | null
           published_at: string | null
           requirements: string | null
           status: Database["public"]["Enums"]["campaign_status"]
-          title: string
+          title: string | null
           updated_at: string
           usage_rights: string | null
         }
         Insert: {
           brand_id: string
-          category: string
+          category?: string | null
           city?: string | null
           collaboration_model?: Database["public"]["Enums"]["collaboration_model"]
           compensation_details?: string | null
@@ -227,24 +228,22 @@ export type Database = {
           created_at?: string
           creators_needed?: number
           currency?: string
-          deadline: string
-          description: string
-          format: Database["public"]["Enums"]["post_format"]
+          deadline?: string | null
+          deliverables?: Json
+          description?: string | null
           id?: string
           min_followers?: number
           network: Database["public"]["Enums"]["social_network"]
-          posts_count?: number
-          promoted_item?: string | null
           published_at?: string | null
           requirements?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
-          title: string
+          title?: string | null
           updated_at?: string
           usage_rights?: string | null
         }
         Update: {
           brand_id?: string
-          category?: string
+          category?: string | null
           city?: string | null
           collaboration_model?: Database["public"]["Enums"]["collaboration_model"]
           compensation_details?: string | null
@@ -253,18 +252,16 @@ export type Database = {
           created_at?: string
           creators_needed?: number
           currency?: string
-          deadline?: string
-          description?: string
-          format?: Database["public"]["Enums"]["post_format"]
+          deadline?: string | null
+          deliverables?: Json
+          description?: string | null
           id?: string
           min_followers?: number
           network?: Database["public"]["Enums"]["social_network"]
-          posts_count?: number
-          promoted_item?: string | null
           published_at?: string | null
           requirements?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
-          title?: string
+          title?: string | null
           updated_at?: string
           usage_rights?: string | null
         }

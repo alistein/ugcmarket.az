@@ -1,17 +1,17 @@
 {
   "meta": {
     "title": "UGCMarket · brendlər və kontent yaradıcıları",
-    "description": "Azərbaycanda brendləri kontent yaradıcıları ilə birləşdirən platforma.",
+    "description": "Azərbaycanda brendləri kontent yaradıcıları ilə birləşdirən platforma",
     "notFound": "Səhifə tapılmadı",
     "creatorDescription": "{city} şəhərindən kontent yaradıcısı · UGCMarket"
   },
   "common": {
     "loading": "Yüklənir…",
-    "scaffold": "Bu səhifə hələ hazırlanır.",
+    "scaffold": "Bu səhifə hələ hazırlanır",
     "save": "Yadda saxla",
     "cancel": "Ləğv et",
     "apply": "Müraciət et",
-    "loadFailed": "Məlumatları yükləmək mümkün olmadı. Səhifəni yeniləyin.",
+    "loadFailed": "Məlumatları yükləmək mümkün olmadı. Səhifəni yeniləyin",
     "back": "Geri"
   },
   "pages": {
@@ -38,54 +38,63 @@
     "adminUsers": "İstifadəçilər"
   },
   "errors": {
-    "unknown": "Naməlum xəta baş verdi.",
-    "internal": "Serverdə xəta baş verdi. Bir az sonra yenidən cəhd edin.",
-    "unauthorized": "Davam etmək üçün daxil olun.",
-    "forbidden": "Bu əməliyyat üçün icazəniz yoxdur.",
-    "validation": "Məlumatları yoxlayın.",
-    "notImplemented": "Bu funksiya hələ hazır deyil.",
-    "handle_taken": "Bu istifadəçi adı artıq tutulub.",
-    "brand_exists": "Bu hesabın artıq brend profili var.",
-    "role_already_set": "Rol artıq seçilib.",
+    "unknown": "Naməlum xəta baş verdi",
+    "internal": "Serverdə xəta baş verdi. Bir az sonra yenidən cəhd edin",
+    "unauthorized": "Davam etmək üçün daxil olun",
+    "forbidden": "Bu əməliyyat üçün icazəniz yoxdur",
+    "validation": "Məlumatları yoxlayın",
+    "notImplemented": "Bu funksiya hələ hazır deyil",
+    "handle_taken": "Bu istifadəçi adı artıq tutulub",
+    "brand_exists": "Bu hesabın artıq brend profili var",
+    "role_already_set": "Rol artıq seçilib",
     "notFound": {
-      "resource": "Tapılmadı.",
-      "creator": "Kreator tapılmadı.",
-      "brand": "Brend tapılmadı.",
-      "campaign": "Elan tapılmadı.",
-      "post": "Paylaşım tapılmadı."
+      "resource": "Tapılmadı",
+      "creator": "Kreator tapılmadı",
+      "brand": "Brend tapılmadı",
+      "campaign": "Elan tapılmadı",
+      "post": "Paylaşım tapılmadı"
     },
-    "creator_exists": "Sizin artıq kreator profiliniz var.",
-    "portfolio_full": "Portfolio doludur. Yeni iş əlavə etmək üçün birini silin.",
-    "portfolio_duplicate": "Bu link artıq portfolionuzda var.",
-    "stats_cooldown": "Rəqəmləri gündə bir dəfə yeniləmək olar. Sabah yenidən cəhd edin.",
-    "lookup_limit": "Bir saat ərzində çox yoxlama etdiniz. Bir az sonra yenidən cəhd edin.",
-    "lookup_unavailable": "Avtomatik yoxlama hazırda əlçatan deyil. Bir az sonra yenidən cəhd edin.",
-    "lookup_not_found": "Hesab tapılmadı və ya bağlıdır. İstifadəçi adını yoxlayın, hesab açıq olmalıdır.",
-    "lookup_failed": "Hesabı yoxlamaq mümkün olmadı. Yenidən cəhd edin."
+    "creator_exists": "Sizin artıq kreator profiliniz var",
+    "portfolio_full": "Portfolio doludur. Yeni iş əlavə etmək üçün birini silin",
+    "portfolio_duplicate": "Bu link artıq portfolionuzda var",
+    "stats_cooldown": "Rəqəmləri gündə bir dəfə yeniləmək olar. Sabah yenidən cəhd edin",
+    "lookup_limit": "Bir saat ərzində çox yoxlama etdiniz. Bir az sonra yenidən cəhd edin",
+    "lookup_unavailable": "Avtomatik yoxlama hazırda əlçatan deyil. Bir az sonra yenidən cəhd edin",
+    "lookup_not_found": "Hesab tapılmadı və ya bağlıdır. İstifadəçi adını yoxlayın, hesab açıq olmalıdır",
+    "lookup_failed": "Hesabı yoxlamaq mümkün olmadı. Yenidən cəhd edin",
+    "campaign_closed": "Bağlanmış elanı dəyişmək olmur. Surətini çıxarıb yeni elan kimi yerləşdirin",
+    "campaign_incomplete": "Elanda doldurulmamış vacib sahələr var. Elanı redaktə edib yenidən dərc edin",
+    "campaign_deadline_passed": "Son tarix keçib. Yeni tarix seçib yenidən dərc edin"
   },
   "validation": {
-    "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol).",
-    "required": "Bu sahəni doldurun.",
-    "email": "E-poçt ünvanı düzgün deyil.",
-    "passwordMin": "Şifrə ən azı 8 simvol olmalıdır.",
-    "passwordMax": "Şifrə ən çox 72 simvol ola bilər.",
-    "passwordLetter": "Şifrədə ən azı bir hərf olmalıdır.",
-    "passwordDigit": "Şifrədə ən azı bir rəqəm olmalıdır.",
-    "passwordMismatch": "Şifrələr eyni deyil.",
-    "otp": "6 rəqəmli kodu daxil edin.",
-    "handleReserved": "Bu addan istifadə etmək olmaz.",
-    "socialHandle": "İstifadəçi adı düzgün deyil.",
-    "number": "Rəqəm daxil edin.",
-    "duplicate": "Bu dəyər təkrarlanır.",
-    "phone": "Telefon nömrəsi düzgün deyil.",
-    "tooLong": "Mətn çox uzundur.",
-    "categoriesMin": "Ən azı bir kateqoriya seçin.",
-    "categoriesMax": "Ən çox 5 kateqoriya seçmək olar.",
-    "languagesMin": "Ən azı bir dil seçin.",
-    "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin.",
-    "portfolioUrl": "Instagram paylaşımının və ya Reels-in linkini daxil edin (https://…).",
-    "avatar": "Şəkli yenidən yükləyin.",
-    "lookupRequired": "İstifadəçi adını yazdıqdan sonra \"Hesabı qoş\" düyməsini basın."
+    "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)",
+    "required": "Bu sahəni doldurun",
+    "email": "E-poçt ünvanı düzgün deyil",
+    "passwordMin": "Şifrə ən azı 8 simvol olmalıdır",
+    "passwordMax": "Şifrə ən çox 72 simvol ola bilər",
+    "passwordLetter": "Şifrədə ən azı bir hərf olmalıdır",
+    "passwordDigit": "Şifrədə ən azı bir rəqəm olmalıdır",
+    "passwordMismatch": "Şifrələr eyni deyil",
+    "otp": "6 rəqəmli kodu daxil edin",
+    "handleReserved": "Bu addan istifadə etmək olmaz",
+    "socialHandle": "İstifadəçi adı düzgün deyil",
+    "number": "Rəqəm daxil edin",
+    "duplicate": "Bu dəyər təkrarlanır",
+    "phone": "Telefon nömrəsi düzgün deyil",
+    "tooLong": "Mətn çox uzundur",
+    "categoriesMin": "Ən azı bir kateqoriya seçin",
+    "categoriesMax": "Ən çox 5 kateqoriya seçmək olar",
+    "languagesMin": "Ən azı bir dil seçin",
+    "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin",
+    "portfolioUrl": "Instagram paylaşımının və ya Reels-in linkini daxil edin (https://…)",
+    "avatar": "Şəkli yenidən yükləyin",
+    "lookupRequired": "İstifadəçi adını yazdıqdan sonra \"Hesabı qoş\" düyməsini basın",
+    "website": "Sayt ünvanı düzgün deyil",
+    "tooShort": "Mətn çox qısadır",
+    "amount": "Məbləği daxil edin",
+    "deadlinePast": "Bu gündən sonrakı tarixi seçin",
+    "date": "Tarix düzgün deyil",
+    "formatsMin": "Ən azı bir format seçin"
   },
   "landing": {
     "nav": {
@@ -101,7 +110,7 @@
       "titleA": "reklamınızı",
       "titleAccent": "kreatorlar",
       "titleB": "çəksin",
-      "sub": "brendlər elan yerləşdirir, kreatorlar instagram və tiktok-da reklam edir. ödəniş pulla və ya barterlə olur.",
+      "sub": "brendlər elan yerləşdirir, kreatorlar instagram və tiktok-da reklam edir. ödəniş pulla və ya barterlə olur",
       "ctaBrand": "elan yerləşdirin",
       "ctaCreator": "kreator kimi qoşulun",
       "note": "hazırda tamamilə pulsuzdur",
@@ -122,7 +131,7 @@
     "board": {
       "label": "elan lövhəsi",
       "title": "bütün elanlar bir yerdə",
-      "sub": "kreatorlar elanlara baxır və uyğun olana bir toxunuşla müraciət edir.",
+      "sub": "kreatorlar elanlara baxır və uyğun olana bir toxunuşla müraciət edir",
       "applied": "Aysel müraciət etdi",
       "view": "baxın",
       "perCreator": "kreatora",
@@ -183,19 +192,19 @@
     "faq": {
       "title": "suallar",
       "q1": "bu pulludur?",
-      "a1": "hazırda bütün funksiyalar pulsuzdur.",
+      "a1": "hazırda bütün funksiyalar pulsuzdur",
       "q2": "ödəniş platformadan keçir?",
-      "a2": "hələlik yox. razılaşma birbaşa brendlə kreator arasında olur.",
+      "a2": "hələlik yox. razılaşma birbaşa brendlə kreator arasında olur",
       "q3": "kim kreator ola bilər?",
-      "a3": "instagram və ya tiktok hesabı olan hər kəs. kiçik auditoriya da olar.",
+      "a3": "instagram və ya tiktok hesabı olan hər kəs. kiçik auditoriya da olar",
       "q4": "nəticəni necə görə bilərəm?",
-      "a4": "kreator paylaşım linkini və baxış sayını göndərir, siz isə təsdiqləyirsiniz.",
+      "a4": "kreator paylaşım linkini və baxış sayını göndərir, siz isə təsdiqləyirsiniz",
       "q5": "ödənişi necə alıram?",
-      "a5": "hələlik platforma ödənişləri idarə etmir. qonorarı və şərtləri brendlə birbaşa razılaşırsınız.",
+      "a5": "hələlik platforma ödənişləri idarə etmir. qonorarı və şərtləri brendlə birbaşa razılaşırsınız",
       "q6": "kreatorları necə seçirəm?",
-      "a6": "elanınızı yerləşdirirsiniz, sonra müraciət edənlərin profilinə, izləyici sayına və portfoliosuna baxıb özünüz seçirsiniz.",
+      "a6": "elanınızı yerləşdirirsiniz, sonra müraciət edənlərin profilinə, izləyici sayına və portfoliosuna baxıb özünüz seçirsiniz",
       "q7": "videodan reklamda istifadə edə bilərəm?",
-      "a7": "bunu brend və kreator birbaşa razılaşdırır. sonradan sual yaranmasın deyə, istifadə hüquqlarını elanda qeyd edin."
+      "a7": "bunu brend və kreator birbaşa razılaşdırır. sonradan sual yaranmasın deyə, istifadə hüquqlarını elanda qeyd edin"
     },
     "final": {
       "title": "ilk əməkdaşlığınız bu həftə",
@@ -228,22 +237,22 @@
     },
     "login": {
       "title": "Xoş gəlmisiniz",
-      "subtitle": "Hesabınıza daxil olun.",
+      "subtitle": "Hesabınıza daxil olun",
       "tabPassword": "Şifrə ilə",
       "tabCode": "Kod ilə",
       "forgot": "Şifrəni unutmusunuz?",
       "submit": "Daxil ol",
-      "codeHint": "E-poçtunuza birdəfəlik kod göndərəcəyik. Şifrə lazım deyil.",
+      "codeHint": "E-poçtunuza birdəfəlik kod göndərəcəyik. Şifrə lazım deyil",
       "noAccount": "Hesabınız yoxdur?",
       "signupLink": "Qeydiyyatdan keçin"
     },
     "signup": {
       "title": "Hesab yaradın",
-      "subtitle": "Brendlər və kreatorlar üçün. Pilot dövründə pulsuzdur.",
+      "subtitle": "Brendlər və kreatorlar üçün. Pilot dövründə pulsuzdur",
       "titleBrand": "Brend hesabı yaradın",
       "titleCreator": "Kreator hesabı yaradın",
       "submit": "Qeydiyyatdan keç",
-      "passwordHint": "Şifrə ən azı 8 simvoldan ibarət olmalı, hərf və rəqəm daxil etməlidir.",
+      "passwordHint": "Şifrə ən azı 8 simvoldan ibarət olmalı, hərf və rəqəm daxil etməlidir",
       "withCode": "Şifrəsiz, kod ilə qeydiyyat",
       "withPassword": "Şifrə ilə qeydiyyat",
       "haveAccount": "Artıq hesabınız var?",
@@ -252,73 +261,73 @@
     "code": {
       "send": "Kod göndər",
       "title": "E-poçtunuzu yoxlayın",
-      "sentTo": "{email} ünvanına 6 rəqəmli kod göndərdik.",
+      "sentTo": "{email} ünvanına 6 rəqəmli kod göndərdik",
       "verify": "Təsdiqlə",
       "resend": "Kodu yenidən göndər",
       "resendIn": "{seconds} saniyədən sonra yenidən göndərə bilərsiniz",
-      "resent": "Yeni kod göndərildi.",
+      "resent": "Yeni kod göndərildi",
       "changeEmail": "Başqa e-poçt",
-      "spamHint": "Məktub gəlməyibsə, spam qovluğunu yoxlayın."
+      "spamHint": "Məktub gəlməyibsə, spam qovluğunu yoxlayın"
     },
     "verify": {
       "title": "E-poçtunuzu təsdiqləyin",
-      "subtitle": "Qeydiyyatı tamamlamaq üçün {email} ünvanına göndərdiyimiz kodu daxil edin.",
+      "subtitle": "Qeydiyyatı tamamlamaq üçün {email} ünvanına göndərdiyimiz kodu daxil edin",
       "missingEmail": "Hansı e-poçt ünvanını təsdiqləmək istəyirsiniz?",
       "continue": "Davam et"
     },
     "reset": {
       "title": "Şifrənin bərpası",
-      "subtitle": "E-poçtunuza təsdiq kodu göndərəcəyik.",
+      "subtitle": "E-poçtunuza təsdiq kodu göndərəcəyik",
       "send": "Kod göndər",
       "codeTitle": "Yeni şifrə təyin edin",
-      "codeSubtitle": "{email} ünvanına göndərdiyimiz kodu və yeni şifrənizi daxil edin.",
+      "codeSubtitle": "{email} ünvanına göndərdiyimiz kodu və yeni şifrənizi daxil edin",
       "updateTitle": "Yeni şifrə təyin edin",
-      "updateSubtitle": "Hesabınız üçün yeni şifrə seçin.",
+      "updateSubtitle": "Hesabınız üçün yeni şifrə seçin",
       "submit": "Şifrəni yenilə",
-      "done": "Şifrəniz yeniləndi.",
+      "done": "Şifrəniz yeniləndi",
       "backToLogin": "Girişə qayıt"
     },
     "onboarding": {
       "title": "Hesab növünü seçin",
-      "subtitle": "Bu seçimi sonradan dəyişmək mümkün olmayacaq.",
-      "signedInAs": "{email} hesabı ilə daxil olmusunuz.",
+      "subtitle": "Bu seçimi sonradan dəyişmək mümkün olmayacaq",
+      "signedInAs": "{email} hesabı ilə daxil olmusunuz",
       "continue": "Davam et",
       "brand": {
         "title": "Brend",
-        "body": "Elan yerləşdirin, kreatorlar sizə müraciət etsin."
+        "body": "Elan yerləşdirin, kreatorlar sizə müraciət etsin"
       },
       "creator": {
         "title": "Kreator",
-        "body": "Elanlara müraciət edin və portfolionuzu göstərin."
+        "body": "Elanlara müraciət edin və portfolionuzu göstərin"
       }
     },
     "blocked": {
       "title": "Hesabınız məhdudlaşdırılıb",
-      "body": "Bunun səhv olduğunu düşünürsünüzsə, komandamızla əlaqə saxlayın."
+      "body": "Bunun səhv olduğunu düşünürsünüzsə, komandamızla əlaqə saxlayın"
     },
     "errors": {
-      "invalid_credentials": "E-poçt və ya şifrə yanlışdır.",
-      "email_not_confirmed": "E-poçtunuz hələ təsdiqlənməyib. Sizə yeni kod göndərdik.",
-      "code_invalid": "Kod yanlışdır və ya vaxtı bitib.",
-      "too_many_emails": "Çox tez-tez cəhd edirsiniz. Bir dəqiqədən sonra yenidən yoxlayın.",
-      "too_many_requests": "Cəhdlərin sayı çox oldu. Bir az gözləyib yenidən yoxlayın.",
-      "weak_password": "Şifrə çox zəifdir. Daha güclü şifrə seçin.",
-      "same_password": "Yeni şifrə köhnə şifrə ilə eyni ola bilməz.",
-      "signup_disabled": "Qeydiyyat hazırda bağlıdır.",
-      "email_invalid": "E-poçt ünvanı düzgün deyil.",
-      "blocked": "Bu hesab məhdudlaşdırılıb.",
-      "network": "İnternet bağlantınızı yoxlayın.",
-      "oauth_cancelled": "Google ilə giriş ləğv edildi.",
-      "oauth_failed": "Google ilə daxil olmaq mümkün olmadı. Yenidən cəhd edin.",
-      "link_invalid": "Link etibarsızdır. Kod ilə daxil olmağa cəhd edin.",
-      "link_expired": "Linkin vaxtı bitib. Yeni kod tələb edin.",
-      "session_missing": "Sessiyanın vaxtı bitib. Kodu yenidən tələb edin.",
-      "unknown": "Xəta baş verdi. Yenidən cəhd edin.",
-      "email_off": "Test rejimində e-poçt göndərilmir. Hesabınızı təsdiqləmək üçün komandamıza yazın."
+      "invalid_credentials": "E-poçt və ya şifrə yanlışdır",
+      "email_not_confirmed": "E-poçtunuz hələ təsdiqlənməyib. Sizə yeni kod göndərdik",
+      "code_invalid": "Kod yanlışdır və ya vaxtı bitib",
+      "too_many_emails": "Çox tez-tez cəhd edirsiniz. Bir dəqiqədən sonra yenidən yoxlayın",
+      "too_many_requests": "Cəhdlərin sayı çox oldu. Bir az gözləyib yenidən yoxlayın",
+      "weak_password": "Şifrə çox zəifdir. Daha güclü şifrə seçin",
+      "same_password": "Yeni şifrə köhnə şifrə ilə eyni ola bilməz",
+      "signup_disabled": "Qeydiyyat hazırda bağlıdır",
+      "email_invalid": "E-poçt ünvanı düzgün deyil",
+      "blocked": "Bu hesab məhdudlaşdırılıb",
+      "network": "İnternet bağlantınızı yoxlayın",
+      "oauth_cancelled": "Google ilə giriş ləğv edildi",
+      "oauth_failed": "Google ilə daxil olmaq mümkün olmadı. Yenidən cəhd edin",
+      "link_invalid": "Link etibarsızdır. Kod ilə daxil olmağa cəhd edin",
+      "link_expired": "Linkin vaxtı bitib. Yeni kod tələb edin",
+      "session_missing": "Sessiyanın vaxtı bitib. Kodu yenidən tələb edin",
+      "unknown": "Xəta baş verdi. Yenidən cəhd edin",
+      "email_off": "Test rejimində e-poçt göndərilmir. Hesabınızı təsdiqləmək üçün komandamıza yazın"
     },
     "emailOff": {
       "title": "Test rejimi",
-      "body": "Hələlik e-poçt göndərilmir. Google və ya şifrə ilə daxil olun. Şifrənizi unutmusunuzsa, komandamıza yazın."
+      "body": "Hələlik e-poçt göndərilmir. Google və ya şifrə ilə daxil olun. Şifrənizi unutmusunuzsa, komandamıza yazın"
     },
     "panel": {
       "tagline": "reklamınızı kreatorlar çəksin",
@@ -331,7 +340,7 @@
       "apply": "Müraciət et"
     },
     "footer": "UGCMarket · pilot versiya · Bakı",
-    "consent": "Davam etməklə <terms>İstifadə şərtləri</terms> və <privacy>Məxfilik siyasəti</privacy> ilə razılaşırsınız.",
+    "consent": "Davam etməklə <terms>İstifadə şərtləri</terms> və <privacy>Məxfilik siyasəti</privacy> ilə razılaşırsınız",
     "terms": "Şərtlər",
     "privacy": "Məxfilik"
   },
@@ -341,7 +350,11 @@
     "browseCampaigns": "Elanlar",
     "editProfile": "Profili redaktə et",
     "myApplications": "Müraciətlərim",
-    "language": "Dil"
+    "language": "Dil",
+    "myListings": "Elanlarım",
+    "newListing": "Elan yerləşdir",
+    "brandProfile": "Brend profili",
+    "brandSetup": "Brend profilini yarat"
   },
   "taxonomy": {
     "categories": {
@@ -395,6 +408,28 @@
       "paid": "Ödənişli",
       "barter": "Barterə açıq",
       "repost": "Paylaşım qarşılığında pulsuz"
+    },
+    "brandCategories": {
+      "beauty": "Gözəllik və kosmetika",
+      "fashion": "Geyim və aksesuar",
+      "food": "Qida, kafe və restoran",
+      "home": "Ev və dekor",
+      "family": "Uşaq məhsulları",
+      "fitness": "İdman və sağlamlıq",
+      "tech": "Texnologiya və elektronika",
+      "auto": "Avto",
+      "education": "Təhsil və kurslar",
+      "travel": "Səyahət və otellər",
+      "pets": "Ev heyvanları",
+      "services": "Xidmətlər",
+      "other": "Digər"
+    },
+    "compensation": {
+      "money": "Ödənişli",
+      "product": "Məhsul",
+      "service": "Xidmət",
+      "barter": "Barter",
+      "unpaid": "Ödənişsiz"
     }
   },
   "creator": {
@@ -403,59 +438,59 @@
       "next": "Davam et",
       "back": "Geri",
       "finish": "Profili yarat",
-      "created": "Profiliniz yaradıldı və yoxlamaya göndərildi.",
-      "reviewNote": "Qiymətləri sonradan da əlavə edə bilərsiniz. Profiliniz yoxlanıldıqdan sonra hamıya görünəcək."
+      "created": "Profiliniz yaradıldı və yoxlamaya göndərildi",
+      "reviewNote": "Qiymətləri sonradan da əlavə edə bilərsiniz. Profiliniz yoxlanıldıqdan sonra hamıya görünəcək"
     },
     "steps": {
       "about": {
         "title": "Özünüz haqqında",
-        "subtitle": "Brendlər sizi bu məlumatlarla tanıyacaq."
+        "subtitle": "Brendlər sizi bu məlumatlarla tanıyacaq"
       },
       "content": {
         "title": "Kontent tipləri",
-        "subtitle": "Kateqoriyalar sizə uyğun elanları tapmağa kömək edir."
+        "subtitle": "Kateqoriyalar sizə uyğun elanları tapmağa kömək edir"
       },
       "socials": {
         "title": "Sosial şəbəkələr",
-        "subtitle": "Instagram hesabınızı və auditoriyanızı göstərin."
+        "subtitle": "Instagram hesabınızı və auditoriyanızı göstərin"
       },
       "prices": {
         "title": "Qiymətlər",
-        "subtitle": "Bu addım məcburi deyil. Təxmini qiymət brendə qərar verməyə kömək edir."
+        "subtitle": "Bu addım məcburi deyil. Təxmini qiymət brendə qərar verməyə kömək edir"
       }
     },
     "edit": {
       "title": "Profilim",
-      "subtitle": "Dəyişikliklər açıq profilinizdə dərhal görünür.",
-      "saved": "Dəyişikliklər yadda saxlanıldı.",
-      "fixErrors": "Qırmızı ilə qeyd olunmuş sahələri düzəldin.",
+      "subtitle": "Dəyişikliklər açıq profilinizdə dərhal görünür",
+      "saved": "Dəyişikliklər yadda saxlanıldı",
+      "fixErrors": "Qırmızı ilə qeyd olunmuş sahələri düzəldin",
       "unsaved": "Yadda saxlanılmamış dəyişikliklər var",
       "discard": "Ləğv et",
       "save": "Yadda saxla"
     },
     "form": {
       "avatar": "Profil şəkli",
-      "avatarHint": "Üzünüz aydın görünən şəkil seçin.",
+      "avatarHint": "Üzünüz aydın görünən şəkil seçin",
       "avatarPick": "Şəkil seç",
       "avatarRemove": "Şəkli sil",
-      "avatarTooBig": "Şəkil çox böyükdür. Maksimum ölçü 15 MB-dır.",
-      "avatarFailed": "Şəkli yükləmək mümkün olmadı. Yenidən cəhd edin.",
+      "avatarTooBig": "Şəkil çox böyükdür. Maksimum ölçü 15 MB-dır",
+      "avatarFailed": "Şəkli yükləmək mümkün olmadı. Yenidən cəhd edin",
       "displayName": "Ad",
       "displayNamePh": "Aysel Məmmədova",
       "handle": "İstifadəçi adı",
-      "handleHint": "Profil linkiniz: kiçik hərflər, rəqəmlər, nöqtə və alt xətt.",
+      "handleHint": "Profil linkiniz: kiçik hərflər, rəqəmlər, nöqtə və alt xətt",
       "handleFree": "Bu ad boşdur: /creator/{handle}",
       "city": "Şəhər",
       "cityPh": "Şəhəri seçin",
       "bio": "Haqqında",
-      "bioHint": "Nə çəkdiyinizi, auditoriyanızı və sizi fərqləndirən cəhətləri yazın.",
+      "bioHint": "Nə çəkdiyinizi, auditoriyanızı və sizi fərqləndirən cəhətləri yazın",
       "bioPh": "Bakıda yaşayıram, lifestyle və gözəllik mövzusunda kontent çəkirəm…",
       "categories": "Kateqoriyalar",
-      "categoriesHint": "5 kateqoriyaya qədər seçə bilərsiniz.",
+      "categoriesHint": "5 kateqoriyaya qədər seçə bilərsiniz",
       "languages": "Kontent dili",
       "barter": "Barterə açığam",
-      "barterHint": "Pul əvəzinə məhsul və ya xidmət qarşılığında əməkdaşlıq.",
-      "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik.",
+      "barterHint": "Pul əvəzinə məhsul və ya xidmət qarşılığında əməkdaşlıq",
+      "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -464,13 +499,13 @@
       "username": "İstifadəçi adı və ya link",
       "followers": "İzləyici",
       "avgViews": "Orta baxış",
-      "contactsHint": "Əlaqə məlumatlarınız gizlidir. Onları yalnız müraciət etdiyiniz elanın brendi görür.",
+      "contactsHint": "Əlaqə məlumatlarınız gizlidir. Onları yalnız müraciət etdiyiniz elanın brendi görür",
       "contactInstagram": "Əlaqə üçün Instagram",
       "contactPhone": "Telefon",
-      "pricesHint": "Bir paylaşım üçün təxmini qiyməti AZN ilə yazın. Sahəni boş saxlasanız, profilinizdə \"razılaşma yolu ilə\" görünəcək.",
+      "pricesHint": "Bir paylaşım üçün təxmini qiyməti AZN ilə yazın. Sahəni boş saxlasanız, profilinizdə \"razılaşma yolu ilə\" görünəcək",
       "crop": {
         "title": "Şəkli tənzimləyin",
-        "hint": "Şəkli sürüşdürün və böyüdün. Dairənin içindəki hissə profil şəkliniz olacaq.",
+        "hint": "Şəkli sürüşdürün və böyüdün. Dairənin içindəki hissə profil şəkliniz olacaq",
         "zoom": "Böyütmə",
         "zoomIn": "Böyüt",
         "zoomOut": "Kiçilt",
@@ -478,44 +513,44 @@
         "save": "Yadda saxla",
         "saving": "Yüklənir…"
       },
-      "moreNetworksSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik yalnız Instagram hesabınızı qeyd edin.",
+      "moreNetworksSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik yalnız Instagram hesabınızı qeyd edin",
       "connect": "Hesabı qoş",
       "reconnect": "Yenilə",
-      "connecting": "Hesab yoxlanılır. Bu, 30 saniyəyə qədər çəkə bilər.",
+      "connecting": "Hesab yoxlanılır. Bu, 30 saniyəyə qədər çəkə bilər",
       "connected": "Instagram-dan götürüldü",
       "statFollowers": "izləyici",
       "statAvgViews": "orta baxış",
       "termsTitle": "Şərtlər",
-      "termsHint": "Brendlər hansı şərtlərlə işlədiyinizi profilinizdə görəcək. Heç birini seçməsəniz, «Yalnız ödənişli» göstəriləcək.",
+      "termsHint": "Brendlər hansı şərtlərlə işlədiyinizi profilinizdə görəcək. Heç birini seçməsəniz, «Yalnız ödənişli» göstəriləcək",
       "repost": "Pulsuz əməkdaşlığa açığam",
-      "repostHint": "Ödəniş əvəzinə brend Reels və ya story-nizi öz səhifəsində paylaşır."
+      "repostHint": "Ödəniş əvəzinə brend Reels və ya story-nizi öz səhifəsində paylaşır"
     },
     "portfolio": {
       "title": "Portfolio",
-      "subtitle": "Ən yaxşı işlərinizin linklərini əlavə edin. Portfolioda 3 və daha çox iş olanda brendlər daha tez seçim edir.",
+      "subtitle": "Ən yaxşı işlərinizin linklərini əlavə edin. Portfolioda 3 və daha çox iş olanda brendlər daha tez seçim edir",
       "url": "Link",
-      "urlHint": "Instagram paylaşımının və ya Reels-in linki. Reels linki əlavə etsəniz, baxış və bəyənmə sayı avtomatik yoxlanılacaq.",
-      "detected": "{network} linki tanındı.",
+      "urlHint": "Instagram paylaşımının və ya Reels-in linki. Reels linki əlavə etsəniz, baxış və bəyənmə sayı avtomatik yoxlanılacaq",
+      "detected": "{network} linki tanındı",
       "titleLabel": "Başlıq (istəyə bağlı)",
       "titlePh": "Kafe üçün Reels",
       "add": "Əlavə et",
       "open": "Aç",
       "remove": "Sil",
-      "full": "Ən çox {max} iş əlavə etmək olar.",
+      "full": "Ən çox {max} iş əlavə etmək olar",
       "networks": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
         "youtube": "YouTube"
       },
-      "checked": "Rəqəmlər avtomatik yoxlanılıb.",
-      "notYours": "Bu paylaşım @{owner} hesabına aiddir. Rəqəmlər yalnız öz paylaşımlarınız üçün göstərilir.",
+      "checked": "Rəqəmlər avtomatik yoxlanılıb",
+      "notYours": "Bu paylaşım @{owner} hesabına aiddir. Rəqəmlər yalnız öz paylaşımlarınız üçün göstərilir",
       "slotEmpty": "Reels əlavə edin",
       "addMore": "Daha bir iş əlavə edin",
       "dialogTitle": "Portfolioya iş əlavə edin"
     },
     "dashboard": {
       "setupTitle": "Kreator profilinizi yaradın",
-      "setupBody": "Brendlər sizi profiliniz vasitəsilə tanıyır: kim olduğunuz, hansı kontenti çəkdiyiniz və auditoriyanız. Cəmi 4 qısa addım, təxminən 5 dəqiqə.",
+      "setupBody": "Brendlər sizi profiliniz vasitəsilə tanıyır: kim olduğunuz, hansı kontenti çəkdiyiniz və auditoriyanız. Cəmi 4 qısa addım, təxminən 5 dəqiqə",
       "setupCta": "Profili yaratmağa başla",
       "hello": "Salam, {name}",
       "completeTitle": "Profilin dolğunluğu",
@@ -527,30 +562,30 @@
         "portfolio": "Portfolioya 3 iş əlavə edin"
       },
       "boardTitle": "Elanlar",
-      "boardBody": "Brendlərin açıq elanlarına baxın və müraciət edin.",
+      "boardBody": "Brendlərin açıq elanlarına baxın və müraciət edin",
       "status": {
         "pending": {
           "title": "Profiliniz yoxlanılır",
-          "body": "Profiliniz 24 saat ərzində aktivləşəcək. Təsdiqdən sonra elanlara müraciət edə biləcəksiniz. Bu müddət ərzində profilinizi tamamlayın.",
+          "body": "Profiliniz 24 saat ərzində aktivləşəcək. Təsdiqdən sonra elanlara müraciət edə biləcəksiniz. Bu müddət ərzində profilinizi tamamlayın",
           "badge": "Yoxlanılır"
         },
         "approved": {
           "title": "Profiliniz aktivdir",
-          "body": "Brendlər profilinizi görə bilir. Siz də elanlara müraciət edə bilərsiniz."
+          "body": "Brendlər profilinizi görə bilir. Siz də elanlara müraciət edə bilərsiniz"
         },
         "rejected": {
           "title": "Profiliniz təsdiqlənmədi",
-          "body": "Məlumatlarınızı yoxlayıb yeniləyin və ya komandamıza yazın.",
+          "body": "Məlumatlarınızı yoxlayıb yeniləyin və ya komandamıza yazın",
           "cta": "Redaktə et",
           "badge": "Təsdiqlənməyib"
         }
       },
       "shareTitle": "Profil linkiniz",
-      "shareBody": "Linki Instagram bio-nuza əlavə edin və ya birbaşa brendlərə göndərin.",
-      "sharePending": "Profiliniz təsdiqləndikdən sonra hamı görə biləcək. Hələlik onu yalnız siz görürsünüz.",
+      "shareBody": "Linki Instagram bio-nuza əlavə edin və ya birbaşa brendlərə göndərin",
+      "sharePending": "Profiliniz təsdiqləndikdən sonra hamı görə biləcək. Hələlik onu yalnız siz görürsünüz",
       "copy": "Kopyala",
       "copied": "Kopyalandı",
-      "copyFailed": "Linki kopyalamaq mümkün olmadı.",
+      "copyFailed": "Linki kopyalamaq mümkün olmadı",
       "share": "Paylaş",
       "preview": "Bax",
       "joined": "{days, plural, =0 {Bu gün qoşulmusunuz} other {# gün əvvəl qoşulmusunuz}}",
@@ -566,10 +601,10 @@
         "applications": "Müraciətlər"
       },
       "applicationsEmpty": "Hələ müraciətiniz yoxdur",
-      "pricesEmpty": "Qiymət göstərilməyib. Profilinizdə \"razılaşma yolu ilə\" görünür.",
+      "pricesEmpty": "Qiymət göstərilməyib. Profilinizdə \"razılaşma yolu ilə\" görünür",
       "editPrices": "Qiymətləri dəyiş",
       "setupEyebrow": "Kreatorlar üçün",
-      "applyRule": "Elanlara müraciət etmək üçün profiliniz tam doldurulmalı və komandamız tərəfindən təsdiqlənməlidir.",
+      "applyRule": "Elanlara müraciət etmək üçün profiliniz tam doldurulmalı və komandamız tərəfindən təsdiqlənməlidir",
       "visual": {
         "city": "Bakı",
         "tag1": "Gözəllik",
@@ -578,31 +613,31 @@
         "followers": "izləyici"
       },
       "checked": "Avtomatik yoxlanılıb",
-      "statsCheckedAt": "Rəqəmlər avtomatik yoxlanılıb: {when}.",
-      "statsSelfReported": "Rəqəmləri özünüz daxil etmisiniz. Avtomatik yoxlama tezliklə əlavə olunacaq.",
+      "statsCheckedAt": "Rəqəmlər avtomatik yoxlanılıb: {when}",
+      "statsSelfReported": "Rəqəmləri özünüz daxil etmisiniz. Avtomatik yoxlama tezliklə əlavə olunacaq",
       "statsRefresh": "Rəqəmləri yenilə",
       "statsRefreshing": "Yoxlanılır…",
-      "statsRefreshed": "Rəqəmlər yeniləndi.",
+      "statsRefreshed": "Rəqəmlər yeniləndi",
       "categoriesTitle": "Kateqoriyalar",
       "completeShort": "dolğunluq",
-      "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir.",
+      "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir",
       "statsLastRun": "Son yoxlama",
       "statsNeverRun": "Hələ yoxlanılmayıb",
       "termsTitle": "Şərtlər"
     },
     "public": {
       "login": "Daxil ol",
-      "notFoundBody": "Profil silinib, link səhvdir və ya profil hələ yoxlanılır.",
+      "notFoundBody": "Profil silinib, link səhvdir və ya profil hələ yoxlanılır",
       "home": "Ana səhifə",
-      "previewPending": "Önizləmə: profiliniz yoxlanılır. Hələlik onu yalnız siz görürsünüz.",
-      "previewRejected": "Önizləmə: profiliniz təsdiqlənməyib, başqaları onu görmür.",
+      "previewPending": "Önizləmə: profiliniz yoxlanılır. Hələlik onu yalnız siz görürsünüz",
+      "previewRejected": "Önizləmə: profiliniz təsdiqlənməyib, başqaları onu görmür",
       "barter": "Barterə açıq",
       "edit": "Redaktə et",
       "followers": "izləyici",
       "avgViews": "{views} orta baxış",
-      "selfReported": "İşarəsi olmayan rəqəmləri kreator özü daxil edib.",
+      "selfReported": "İşarəsi olmayan rəqəmləri kreator özü daxil edib",
       "portfolio": "Portfolio",
-      "portfolioEmpty": "Hələ heç bir iş əlavə olunmayıb.",
+      "portfolioEmpty": "Hələ heç bir iş əlavə olunmayıb",
       "networkPost": {
         "instagram": "Instagram paylaşımı",
         "tiktok": "TikTok video",
@@ -611,7 +646,7 @@
       "prices": "Qiymətlər",
       "pricesEmpty": "Razılaşma yolu ilə",
       "ctaTitle": "Bu kreatorla işləmək istəyirsiniz?",
-      "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin.",
+      "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin",
       "ctaButton": "Elan yerləşdir",
       "checked": "Avtomatik yoxlanılıb",
       "termsTitle": "Şərtlər"
@@ -692,5 +727,259 @@
         "body": "Suallarınız varsa, <mail>{email}</mail> ünvanına yazın."
       }
     }
+  },
+  "brand": {
+    "dashboard": {
+      "setupEyebrow": "Brendlər üçün",
+      "setupTitle": "Brend profilinizi yaradın",
+      "setupBody": "Kreatorlar elanlarınızı brendinizin adı və loqosu ilə görür. Cəmi 2 qısa addım, təxminən 2 dəqiqə",
+      "setupCta": "Profili yaratmağa başla",
+      "contactRule": "Əlaqə məlumatlarınızı yalnız elanınıza müraciət edən kreatorlar görür",
+      "editProfile": "Profili redaktə et",
+      "listingsTitle": "Elanlarınız",
+      "emptyTitle": "Hələ elanınız yoxdur",
+      "emptyBody": "İlk elanınızı yerləşdirin. Müraciət edən kreatorları burada görəcəksiniz",
+      "newListing": "Elan yerləşdir",
+      "status": {
+        "pending": {
+          "title": "Brendiniz yoxlanılır",
+          "body": "Brendiniz 24 saat ərzində təsdiqlənəcək. Elanlarınızı indidən hazırlaya bilərsiniz. Təsdiqdən sonra onlar dərc olunacaq",
+          "badge": "Yoxlanılır"
+        },
+        "approved": {
+          "title": "Brendiniz təsdiqlənib"
+        },
+        "rejected": {
+          "title": "Brendiniz təsdiqlənmədi",
+          "body": "Məlumatlarınızı yoxlayıb yeniləyin və ya komandamıza yazın",
+          "cta": "Redaktə et",
+          "badge": "Təsdiqlənməyib"
+        }
+      },
+      "visual": {
+        "brandName": "Nur Kafe",
+        "category": "Kafe və restoran",
+        "title": "Yeni səhər menyusu üçün Reels",
+        "city": "Bakı",
+        "deadline": "15 dekabra qədər",
+        "applicants": "12 müraciət",
+        "newApplicant": "Yeni müraciət"
+      }
+    },
+    "steps": {
+      "about": {
+        "title": "Brend haqqında",
+        "subtitle": "Ad, loqo və fəaliyyət sahəsi"
+      },
+      "contacts": {
+        "title": "Əlaqə",
+        "subtitle": "Instagram, telefon və e-poçt. Kreatorlar sizinlə buradan əlaqə saxlayacaq"
+      }
+    },
+    "profile": {
+      "createTitle": "Brend profilinizi yaradın",
+      "createSubtitle": "Kreatorlar elanlarınızı bu məlumatlarla görəcək. Hamısını sonradan dəyişə bilərsiniz",
+      "create": "Profili yarat",
+      "created": "Brend profiliniz yaradıldı və yoxlamaya göndərildi",
+      "reviewNote": "Komandamız brendinizi 24 saat ərzində yoxlayacaq",
+      "editTitle": "Brend profili",
+      "editSubtitle": "Dəyişikliklər elanlarınızda dərhal görünür",
+      "saved": "Dəyişikliklər yadda saxlanıldı",
+      "fixErrors": "Qırmızı ilə qeyd olunmuş sahələri düzəldin",
+      "unsaved": "Yadda saxlanılmamış dəyişikliklər var",
+      "discard": "Ləğv et",
+      "save": "Yadda saxla",
+      "logo": "Loqo",
+      "logoHint": "Kvadrat formada loqo ən yaxşı görünür",
+      "logoRemove": "Loqonu sil",
+      "logoCrop": "Loqonu sürüşdürün və böyüdün. Kvadratın içindəki hissə loqonuz olacaq",
+      "name": "Brendin adı",
+      "namePh": "Məsələn, Nur Kafe",
+      "category": "Fəaliyyət sahəsi",
+      "categoryPh": "Sahəni seçin",
+      "website": "Sayt",
+      "contactsHint": "Bu məlumatları yalnız elanınıza müraciət edən kreatorlar görür",
+      "instagram": "Instagram",
+      "phone": "Telefon",
+      "email": "E-poçt"
+    }
+  },
+  "campaign": {
+    "form": {
+      "step": "Addım {current}/{total}",
+      "steps": {
+        "what": {
+          "title": "Nə lazımdır?",
+          "subtitle": "Elanı təsvir edin: nə çəkilməlidir və hansı qaydalarla"
+        },
+        "who": {
+          "title": "Kim lazımdır?",
+          "subtitle": "Neçə kreator və hansı auditoriya ilə"
+        },
+        "pay": {
+          "title": "Ödəniş və müddət",
+          "subtitle": "Nə təklif edirsiniz və kontent nə vaxta hazır olmalıdır?"
+        }
+      },
+      "title": "Elanın adı",
+      "titlePh": "Məsələn, yeni səhər menyumuz üçün Reels",
+      "titleHint": "Kreatorlar elanınızı ilk olaraq bu adla görəcək",
+      "description": "Təsvir",
+      "descriptionPh": "Nəyi çəkmək lazımdır, nə göstərilməlidir, videonun əhval-ruhiyyəsi necə olmalıdır?",
+      "descriptionHint": "Elanı nə qədər aydın təsvir etsəniz, bir o qədər uyğun müraciət alacaqsınız",
+      "category": "Kontent mövzusu",
+      "categoryPh": "Mövzunu seçin",
+      "format": "Kontent formatı",
+      "less": "Azalt",
+      "more": "Artır",
+      "minFollowers": "Minimum izləyici sayı",
+      "minFollowersHint": "Kreatorlar bu şərti elanda görəcək",
+      "anyone": "Fərqi yoxdur",
+      "city": "Şəhər",
+      "anyCity": "Fərqi yoxdur",
+      "compensation": "Ödəniş növü",
+      "amount": "Məbləğ",
+      "offer": "Nə təklif edirsiniz?",
+      "offerHint": "Məhsulun və ya xidmətin adını və təxmini dəyərini yazın",
+      "offerPh": "Məsələn, iki nəfərlik səhər yeməyi və ya hədiyyə sertifikatı",
+      "unpaidHint": "Ödənişsiz elanlara adətən daha az müraciət gəlir",
+      "deadline": "Son tarix",
+      "deadlineHint": "Kontent bu tarixə qədər paylaşılmalıdır",
+      "creatorsNeeded": "Neçə kreator lazımdır",
+      "requirements": "Tələblər",
+      "requirementsPh": "Məsələn, brendi işarələyin, videoda üzünüz görünsün",
+      "back": "Geri",
+      "next": "Davam et",
+      "saveDraft": "Qaralama kimi saxla",
+      "publish": "Dərc et",
+      "reviewNote": "Brendiniz hələ yoxlanılır. Elan təsdiqdən sonra dərc olunacaq",
+      "savedDraft": "Elan qaralama kimi saxlanıldı",
+      "published": "Elan dərc olundu",
+      "sentForReview": "Elan yoxlamaya göndərildi. Təsdiqdən sonra dərc olunacaq",
+      "fixErrors": "Qırmızı ilə qeyd olunmuş sahələri düzəldin",
+      "previewLabel": "Kreatorlar elanınızı belə görəcək",
+      "needsBrandTitle": "Əvvəlcə brend profilinizi yaradın",
+      "needsBrandBody": "Kreatorlar elanı brendinizin adı və loqosu ilə görür. Bu, təxminən 2 dəqiqə çəkir",
+      "needsBrandCta": "Profili yarat",
+      "formatHint": "Bir neçə format seçə bilərsiniz",
+      "countsLabel": "Hər formatdan neçə paylaşım lazımdır?",
+      "extra": "Əlavə olaraq",
+      "extraPh": "Məsələn, iki nəfərlik səhər yeməyi",
+      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq"
+    },
+    "card": {
+      "noTitle": "Elanın adı",
+      "noCategory": "Mövzu seçilməyib",
+      "anyCity": "İstənilən şəhər",
+      "minFollowers": "{count}+ izləyici",
+      "deadline": "Son tarix: {date}"
+    },
+    "mine": {
+      "title": "Elanlarınız",
+      "new": "Yeni elan",
+      "status": {
+        "draft": "Qaralama",
+        "pending_review": "Yoxlanılır",
+        "published": "Aktiv",
+        "paused": "Dayandırılıb",
+        "closed": "Bağlanıb",
+        "rejected": "Təsdiqlənməyib"
+      },
+      "expired": "Son tarix keçib",
+      "deadline": "Son tarix: {date}",
+      "applicants": "{count, plural, one {müraciət} other {müraciət}}",
+      "actions": "Elan əməliyyatları",
+      "publish": "Dərc et",
+      "resume": "Yenidən aktivləşdir",
+      "pause": "Dayandır",
+      "edit": "Redaktə et",
+      "duplicate": "Surətini çıxar",
+      "close": "Elanı bağla",
+      "closeTitle": "Elan bağlansın?",
+      "closeBody": "Elan lövhədən çıxarılacaq və yeni müraciət qəbul etməyəcək. Gələn müraciətlər sizdə qalacaq",
+      "closeConfirm": "Bağla",
+      "cancel": "Ləğv et",
+      "toast": {
+        "published": "Elan dərc olundu",
+        "sentForReview": "Elan yoxlamaya göndərildi. Təsdiqdən sonra dərc olunacaq",
+        "paused": "Elan dayandırıldı. Kreatorlar onu hələlik görmür",
+        "closed": "Elan bağlandı",
+        "duplicated": "Elanın surəti qaralama kimi yaradıldı"
+      },
+      "untitled": "Adsız qaralama",
+      "anyCity": "İstənilən şəhər",
+      "applicantsLink": "Müraciət edənlər"
+    },
+    "edit": {
+      "title": "Elanı redaktə et",
+      "subtitle": "Dəyişiklikləri yadda saxlayın. Elanın statusu dəyişməyəcək",
+      "subtitleLive": "Dəyişikliklər lövhədə dərhal görünəcək",
+      "closed": "Bu elan bağlanıb və onu dəyişmək olmur. Siyahıda surətini çıxarıb yenidən yerləşdirə bilərsiniz",
+      "saved": "Dəyişikliklər yadda saxlanıldı",
+      "unsaved": "Yadda saxlanılmamış dəyişikliklər var",
+      "discard": "Ləğv et",
+      "save": "Yadda saxla",
+      "subtitleDraft": "Qaralamanı istənilən vaxt yadda saxlaya bilərsiniz. Dərc etmək üçün vacib sahələri doldurun",
+      "publishNote": "Dərc etdikdən sonra elan kreatorlara görünəcək"
+    }
+  },
+  "applicants": {
+    "copyLink": "Elan linkini kopyala",
+    "editListing": "Elanı redaktə et",
+    "linkCopied": "Elan linki kopyalandı",
+    "copied": "Kopyalandı",
+    "copyFailed": "Kopyalamaq mümkün olmadı",
+    "copy": "Kopyala",
+    "emptyTitle": "Hələ müraciət yoxdur",
+    "emptyLive": "Elan linkini paylaşın ki, daha çox kreator görsün",
+    "emptyNotLive": "Elan dərc olunduqdan sonra müraciətlər burada görünəcək",
+    "contactNote": "Kreatorlarla birbaşa Instagram və ya telefonla əlaqə saxlayın. Şərtləri onlarla özünüz razılaşdırırsınız",
+    "followers": "izləyici",
+    "avgViews": "orta baxış",
+    "checked": "Avtomatik yoxlanılıb",
+    "noContacts": "Kreator əlaqə məlumatı qeyd etməyib"
+  },
+  "listing": {
+    "city": "Şəhər",
+    "anyCity": "İstənilən",
+    "deadline": "Son tarix",
+    "minFollowers": "Minimum izləyici",
+    "anyone": "Fərqi yoxdur",
+    "creatorsNeeded": "Kreator sayı",
+    "description": "Təsvir",
+    "requirements": "Tələblər",
+    "applicants": "Müraciət edənlər",
+    "edit": "Redaktə et",
+    "previewNote": "Status: {status}. Elan hələ dərc olunmayıb, onu yalnız siz görürsünüz",
+    "notFoundTitle": "Elan tapılmadı",
+    "notFoundBody": "Elan silinib və ya hələ dərc olunmayıb",
+    "browse": "Elanlara bax",
+    "apply": {
+      "apply": "Müraciət et",
+      "loginNote": "Müraciət etmək üçün kreator kimi daxil olun",
+      "createProfile": "Kreator profili yarat",
+      "noProfileNote": "Müraciət etmək üçün əvvəlcə kreator profilinizi yaradın",
+      "pendingNote": "Profiliniz təsdiqləndikdən sonra müraciət edə biləcəksiniz",
+      "applyNote": "Müraciət etdikdən sonra brendin əlaqə məlumatlarını görəcəksiniz",
+      "dialogTitle": "Elana müraciət",
+      "dialogBody": "Brend sizin profilinizi və əlaqə məlumatlarınızı görəcək. Siz də brendin əlaqə məlumatlarını görəcəksiniz",
+      "message": "Brendə qısa qeyd",
+      "messagePh": "Məsələn, bu mövzuda hansı işləriniz var və nə vaxt çəkə bilərsiniz",
+      "cancel": "Ləğv et",
+      "send": "Müraciət et",
+      "sent": "Müraciətiniz göndərildi",
+      "applied": "Siz bu elana müraciət etmisiniz",
+      "showContacts": "Brendin əlaqə məlumatları",
+      "contactsNote": "Brendlə birbaşa əlaqə saxlayın və şərtləri razılaşdırın",
+      "noContacts": "Brend əlaqə məlumatı qeyd etməyib",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Kopyalamaq mümkün olmadı"
+    },
+    "back": "Geri",
+    "payLogin": "Qiyməti görmək üçün daxil olun",
+    "share": "Paylaş",
+    "shareCopied": "Link kopyalandı",
+    "shareFailed": "Linki kopyalamaq alınmadı"
   }
 }

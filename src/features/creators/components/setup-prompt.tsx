@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  ArrowRight01Icon,
-  CheckmarkBadge01Icon,
-  FavouriteIcon,
-  InstagramIcon,
-  LockIcon,
-  PlayIcon,
-} from "@hugeicons/core-free-icons";
+import { CheckmarkBadge01Icon, FavouriteIcon, InstagramIcon, PlayIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { NamedAvatar } from "@/components/shared/named-avatar";
+import { SetupIntro } from "@/components/shared/setup-intro";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
 
 const STEPS = ["about", "content", "socials", "prices"] as const;
 
@@ -22,46 +14,15 @@ export function SetupPrompt() {
   const t = useTranslations("creator.dashboard");
   const ts = useTranslations("creator.steps");
   return (
-    <div className="grid items-center gap-12 py-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16 lg:py-10">
-      <div className="max-w-xl">
-        <Badge variant="mint">{t("setupEyebrow")}</Badge>
-        <h1 className="mt-4 text-4xl font-semibold tracking-[-0.035em] text-balance sm:text-5xl">
-          {t("setupTitle")}
-        </h1>
-        <p className="mt-3 text-lg text-pretty text-muted-foreground">{t("setupBody")}</p>
-
-        <ol className="mt-8 grid gap-4">
-          {STEPS.map((s, i) => (
-            <li key={s} className="flex items-start gap-4">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background tabular-nums">
-                {i + 1}
-              </span>
-              <span className="grid gap-0.5 pt-1">
-                <span className="font-medium">{ts(`${s}.title`)}</span>
-                <span className="text-sm text-muted-foreground">{ts(`${s}.subtitle`)}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-
-        <p className="mt-8 flex items-start gap-2 text-sm text-muted-foreground">
-          <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
-          {t("applyRule")}
-        </p>
-
-        <Button
-          size="lg"
-          className="mt-8 h-12 px-6 text-base"
-          nativeButton={false}
-          render={<Link href="/me/profile" />}
-        >
-          {t("setupCta")}
-          <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} data-icon="inline-end" />
-        </Button>
-      </div>
-
-      <SetupVisual />
-    </div>
+    <SetupIntro
+      eyebrow={t("setupEyebrow")}
+      title={t("setupTitle")}
+      body={t("setupBody")}
+      steps={STEPS.map((s) => ({ title: ts(`${s}.title`), subtitle: ts(`${s}.subtitle`) }))}
+      note={t("applyRule")}
+      cta={{ label: t("setupCta"), href: "/me/profile" }}
+      visual={<SetupVisual />}
+    />
   );
 }
 

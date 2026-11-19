@@ -45,7 +45,7 @@ export async function apply(user: SessionUser, campaignId: string, message?: str
   // Contacts are private (RLS); read with service role only after the application exists.
   const { data: contact } = await createAdminClient()
     .from("brand_contacts")
-    .select("instagram, phone")
+    .select("instagram, phone, email")
     .eq("brand_id", campaign.brand_id)
     .maybeSingle();
   await track(user.id, "contact_revealed", { campaign_id: campaignId });
@@ -60,7 +60,7 @@ export async function listApplicants(user: SessionUser, campaignId: string) {
   const { data, error } = await supabase
     .from("applications")
     .select(
-      "id, message, created_at, creator:creators(id, handle, display_name, avatar_url, city, categories, creator_socials(network, handle, followers, avg_views)), post_submissions(*)",
+      "id, message, created_at, creator:creators(id, handle, display_name, avatar_url, city, categories, creator_socials(network, handle, followers, avg_views), creator_social_stats(network, handle, followers, avg_views, avg_likes, fetched_at)), post_submissions(*)",
     )
     .eq("campaign_id", campaignId)
     .order("created_at", { ascending: false });

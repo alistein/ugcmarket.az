@@ -11,8 +11,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
-import { LanguageMenu } from "@/components/shared/language-menu";
-import { Logo } from "@/components/shared/logo";
+import { PublicHeader } from "@/components/shared/public-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,26 +31,6 @@ const SOCIAL_URL = {
   tiktok: (h: string) => `https://www.tiktok.com/@${h}`,
   youtube: (h: string) => `https://www.youtube.com/@${h}`,
 } as const;
-
-function PublicHeader() {
-  const t = useTranslations("creator.public");
-  const { data: me } = useMe();
-  return (
-    <header className="mx-auto flex w-full max-w-4xl items-center gap-2 px-4 py-4">
-      <Link href="/" className="group/logo text-xl">
-        <Logo />
-      </Link>
-      <div className="ml-auto flex items-center gap-1">
-        <LanguageMenu />
-        {!me && (
-          <Button size="sm" variant="ghost" nativeButton={false} render={<Link href="/login" />}>
-            {t("login")}
-          </Button>
-        )}
-      </div>
-    </header>
-  );
-}
 
 /** Header card (avatar, name, meta) and two content cards, like PublicCreatorProfile. */
 function ProfileSkeleton() {

@@ -1,7 +1,7 @@
 "use client";
 
-import { PagePlaceholder } from "@/components/shared/page-placeholder";
+import { ApplicantsPage } from "@/features/applications/components/applicants-page";
 
 export default function Page() {
-  return <PagePlaceholder titleKey="pages.campaignApplicants" />;
+  return <ApplicantsPage />;
 }

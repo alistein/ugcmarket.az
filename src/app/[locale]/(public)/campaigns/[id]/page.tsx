@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
+import { DynamicMarker } from "@/components/shared/dynamic-marker";
 import { routing, toLocale } from "@/i18n/routing";
 import { getPublicCampaign } from "@/server/services/campaigns";
 import { CampaignDetailView } from "./view";
@@ -13,8 +14,10 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/campaign
   // Draft, paused, rejected or missing → generic + noindex (no data leak).
   if (!campaign) return { title: t("notFound"), robots: { index: false } };
 
-  const title = campaign.brand ? `${campaign.title} · ${campaign.brand.name}` : campaign.title;
-  const description = campaign.description.slice(0, 160);
+  // Published listings are always complete (DB check); the types allow null for drafts.
+  const name = campaign.title ?? t("notFound");
+  const title = campaign.brand ? `${name} · ${campaign.brand.name}` : name;
+  const description = (campaign.description ?? "").slice(0, 160);
   return {
     title,
     description,
@@ -29,8 +32,11 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/campaign
 export default function Page() {
   // Suspense required: the view reads the URL (useParams) at request time.
   return (
-    <Suspense>
-      <CampaignDetailView />
-    </Suspense>
+    <>
+      <DynamicMarker />
+      <Suspense>
+        <CampaignDetailView />
+      </Suspense>
+    </>
   );
 }

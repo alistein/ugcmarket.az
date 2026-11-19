@@ -25,6 +25,25 @@ export const CREATOR_CATEGORIES = [
 export const CreatorCategory = z.enum(CREATOR_CATEGORIES);
 export type CreatorCategory = z.infer<typeof CreatorCategory>;
 
+/** What a brand does. Labels: `taxonomy.brandCategories.*`. */
+export const BRAND_CATEGORIES = [
+  "beauty",
+  "fashion",
+  "food",
+  "home",
+  "family",
+  "fitness",
+  "tech",
+  "auto",
+  "education",
+  "travel",
+  "pets",
+  "services",
+  "other",
+] as const;
+export const BrandCategory = z.enum(BRAND_CATEGORIES);
+export type BrandCategory = z.infer<typeof BrandCategory>;
+
 export const CITIES = [
   "baku",
   "sumgait",
