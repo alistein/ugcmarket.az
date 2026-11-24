@@ -48,7 +48,9 @@ export function useAfterAuth(next: string) {
   const qc = useQueryClient();
   const router = useRouter();
   return useCallback(async () => {
-    await qc.invalidateQueries({ queryKey: meKeys.all });
+    // Reset, not invalidate: a page visited while signed out cached `me = null`, and the next
+    // screen would read that stale null as "signed out" and bounce to /login.
+    await qc.resetQueries({ queryKey: meKeys.all });
     router.replace(stripLocale(next));
   }, [qc, router, next]);
 }

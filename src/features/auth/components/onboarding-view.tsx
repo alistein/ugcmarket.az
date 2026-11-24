@@ -49,7 +49,9 @@ export function OnboardingView() {
   const t = useTranslations("auth");
   const params = useSearchParams();
   const router = useRouter();
-  const { data: me, isPending } = useMe();
+  const { data: me, isPending: loading, isFetching } = useMe();
+  // Stale "signed out" (null) while refetching right after sign-in: wait for the real answer.
+  const isPending = loading || (!me && isFetching);
   const setRole = useSetRole();
   const qc = useQueryClient();
   const signOut = useSignOut();

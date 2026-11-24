@@ -48,7 +48,10 @@ function LoadFailed() {
 }
 
 function Gate({ role, children, fallback }: Props) {
-  const { data: me, isPending, isError } = useMe();
+  const { data: me, isPending: loading, isFetching, isError } = useMe();
+  // A cached "signed out" (null) that is being refetched is not an answer yet: right after sign-in
+  // it is stale, and acting on it bounces the user to /login.
+  const isPending = loading || (!me && isFetching);
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();

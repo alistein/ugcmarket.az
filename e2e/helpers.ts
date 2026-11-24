@@ -38,11 +38,40 @@ export function testEmail(tag: string) {
 
 export const PASSWORD = "e2eTest1234";
 
-/** A confirmed account (optionally with a role), created without any email. */
-export async function createUser(email: string, opts: { role?: "brand" | "creator" } = {}) {
+/** What Supabase stores for an account made with "Continue with Google". */
+const GOOGLE_METADATA = (email: string) => ({
+  user_metadata: {
+    iss: "https://accounts.google.com",
+    sub: "1".repeat(21),
+    name: "Test Kreator",
+    full_name: "Test Kreator",
+    email,
+    email_verified: true,
+    phone_verified: false,
+    picture: `https://lh3.googleusercontent.com/a/${"x".repeat(80)}=s96-c`,
+    avatar_url: `https://lh3.googleusercontent.com/a/${"x".repeat(80)}=s96-c`,
+    provider_id: "1".repeat(21),
+  },
+  app_metadata: { provider: "google", providers: ["google"] },
+});
+
+/**
+ * A confirmed account (optionally with a role), created without any email. `google: true`
+ * gives it the metadata a Google sign-in leaves (name, picture, provider), so the session
+ * cookie looks like a real Google user's. It still gets a password so the UI can sign in.
+ */
+export async function createUser(
+  email: string,
+  opts: { role?: "brand" | "creator"; google?: boolean } = {},
+) {
   const { status, body } = await admin("/users", {
     method: "POST",
-    body: JSON.stringify({ email, password: PASSWORD, email_confirm: true }),
+    body: JSON.stringify({
+      email,
+      password: PASSWORD,
+      email_confirm: true,
+      ...(opts.google && GOOGLE_METADATA(email)),
+    }),
   });
   expect(status, JSON.stringify(body)).toBe(200);
   created.add(body.id);
@@ -149,4 +178,35 @@ export async function sendCode(page: Page) {
     await page.waitForTimeout(61_000);
   }
   throw new Error("Supabase kept rate limiting code requests");
+}
+
+/** Password login through the UI. */
+export async function login(page: Page, email: string, password = PASSWORD) {
+  await open(page, "/az/login");
+  await page.getByLabel("E-poçt").fill(email);
+  await page.getByLabel("Şifrə", { exact: true }).fill(password);
+  await page.getByRole("button", { name: "Daxil ol" }).click();
+}
+
+/** Asserts the page settled on `path` and was not bounced to login or onboarding. */
+export async function expectStaysOn(page: Page, path: RegExp) {
+  // Not "networkidle": after a Google sign-in page, Google's script keeps the network busy.
+  await expect(page).toHaveURL(path);
+  // RoleGate redirects after /api/me answers; give it a moment, then check again.
+  await page.waitForTimeout(2_000);
+  await expect(page).toHaveURL(path);
+  await expect(page).not.toHaveURL(/\/login|\/onboarding/);
+}
+
+/**
+ * Records every request for a login page from now on. A signed-in user should never hit one:
+ * the server bounces it back (so the final URL looks fine), but the user sees login flash.
+ */
+export function watchLoginBounces(page: Page) {
+  const hits: string[] = [];
+  page.on("request", (r) => {
+    if (/\/(az|ru|en)\/login(\?|$)/.test(new URL(r.url()).pathname + new URL(r.url()).search.slice(0, 1)))
+      hits.push(r.url());
+  });
+  return hits;
 }

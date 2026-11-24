@@ -6,6 +6,9 @@ import { defineConfig, devices } from "@playwright/test";
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 const PORT = 3100;
+// E2E_PROD=1 runs against a production build (prefetching, caching and the proxy behave as on
+// Vercel). Default is `next dev`, which is faster to start.
+const PROD = process.env.E2E_PROD === "1";
 
 export default defineConfig({
   testDir: "e2e",
@@ -23,10 +26,12 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   webServer: {
     // Emails on (code screens visible); its own port so it never clashes with your `pnpm dev`.
-    command: `pnpm exec next dev --port ${PORT}`,
+    command: PROD
+      ? `pnpm exec next build && pnpm exec next start --port ${PORT}`
+      : `pnpm exec next dev --port ${PORT}`,
     env: { NEXT_PUBLIC_AUTH_EMAIL: "1", NEXT_PUBLIC_SITE_URL: `http://localhost:${PORT}` },
     url: `http://localhost:${PORT}/az/login`,
     reuseExistingServer: false,
-    timeout: 180_000,
+    timeout: PROD ? 600_000 : 180_000,
   },
 });
