@@ -125,10 +125,11 @@ export const CampaignArchiveChange = z.object({
   archived: z.boolean(),
 });
 
+/** Board filters. City and category are closed lists (they go into the query as-is). */
 export const CampaignFilters = Pagination.extend({
   network: SocialNetwork.optional(),
   compensation_type: CompensationType.optional(),
-  city: z.string().optional(),
-  category: z.string().optional(),
+  city: City.optional(),
+  category: CreatorCategory.optional(),
 });
 export type CampaignFilters = z.infer<typeof CampaignFilters>;

@@ -6,6 +6,7 @@ import {
   type CampaignArchiveChange,
   type CampaignFilters,
   type CampaignStatusChange,
+  type SocialNetwork,
 } from "@/schemas";
 import { track } from "@/server/analytics";
 import type { SessionUser } from "@/server/auth";
@@ -14,41 +15,127 @@ import { errors } from "@/server/http/errors";
 import { getMyBrand } from "./brands";
 
 const BOARD_FIELDS =
-  "id, title, category, network, deliverables, compensation_type, compensation_value, compensation_details, currency, city, min_followers, deadline, published_at, brand:brands(id, name, logo_url)";
+  "id, brand_id, title, category, network, deliverables, compensation_type, compensation_value, compensation_details, currency, city, min_followers, creators_needed, deadline, published_at, brand:brands(id, name, logo_url)";
 
-/**
- * Pay is for signed-in users only (founders, 2026-11-19): signed-out visitors get the listing
- * without the amount and the extra, and `pay_hidden: true` so the UI can show a log-in prompt.
- * Stripped on the server so the numbers never reach an anonymous browser.
- */
-function payFor<T extends { compensation_value: number | null; compensation_details: string | null }>(
-  row: T,
-  viewer: SessionUser | null,
-) {
-  return viewer
-    ? { ...row, pay_hidden: false }
-    : { ...row, compensation_value: null, compensation_details: null, pay_hidden: true };
+/** Today in Baku (YYYY-MM-DD): deadlines are calendar days there, not UTC. */
+export function bakuToday(now = new Date()) {
+  return now.toLocaleDateString("en-CA", { timeZone: "Asia/Baku" });
 }
 
-/** Public board: published campaigns only. */
-export async function listBoard(f: CampaignFilters, viewer: SessionUser | null = null) {
+/** Who is looking, as far as the board cares. Built once per request. */
+export type BoardViewer = {
+  user: SessionUser | null;
+  /** Set for brand accounts: their own listings show pay, others' don't. */
+  brandId: string | null;
+  /** Set for creator accounts (for the "Applied" mark and the follower check). */
+  creatorId: string | null;
+};
+
+export async function boardViewer(user: SessionUser | null): Promise<BoardViewer> {
+  if (!user || (user.role !== "brand" && user.role !== "creator"))
+    return { user, brandId: null, creatorId: null };
+  const supabase = await createUserClient();
+  const table = user.role === "brand" ? "brands" : "creators";
+  const { data } = await supabase.from(table).select("id").eq("profile_id", user.id).maybeSingle();
+  return {
+    user,
+    brandId: user.role === "brand" ? (data?.id ?? null) : null,
+    creatorId: user.role === "creator" ? (data?.id ?? null) : null,
+  };
+}
+
+export type PayHidden = "signed_out" | "brand" | null;
+
+/**
+ * Who sees pay, decided on the server so the numbers never reach a browser that shouldn't
+ * have them:
+ * - signed-out visitors: no (founders, 2026-11-19), the UI shows a log-in prompt;
+ * - brands: only on their own listings, never a competitor's (founders, 2026-11-24, D4);
+ * - creators and admins: yes.
+ */
+function payFor<
+  T extends {
+    compensation_value: number | null;
+    compensation_details: string | null;
+    brand_id: string;
+  },
+>(row: T, v: BoardViewer) {
+  const hidden: PayHidden = !v.user
+    ? "signed_out"
+    : // brand_id, not the brand join: the join is empty when the brand isn't approved yet.
+      v.user.role === "brand" && row.brand_id !== v.brandId
+      ? "brand"
+      : null;
+  return hidden
+    ? { ...row, compensation_value: null, compensation_details: null, pay_hidden: hidden }
+    : { ...row, pay_hidden: null };
+}
+
+/**
+ * Public board: published listings whose deadline is today or later (past ones drop off, D12),
+ * newest first. A city filter also keeps "any city" listings. Creators get `applied` per item,
+ * brands get `mine`. Page 1 counts as a board view (H3 funnel).
+ */
+export async function listBoard(f: CampaignFilters, v: BoardViewer, distinctId: string | null = null) {
   let q = createPublicClient()
     .from("campaigns")
     .select(BOARD_FIELDS, { count: "exact" })
     .eq("status", "published")
+    .gte("deadline", bakuToday())
     .order("published_at", { ascending: false })
     .range((f.page - 1) * f.page_size, f.page * f.page_size - 1);
   if (f.network) q = q.eq("network", f.network);
   if (f.compensation_type) q = q.eq("compensation_type", f.compensation_type);
-  if (f.city) q = q.eq("city", f.city);
+  // Both are closed lists (schema), so they're safe inside the filter string.
+  if (f.city) q = q.or(`city.eq.${f.city},city.is.null`);
   if (f.category) q = q.eq("category", f.category);
   const { data, count, error } = await q;
   if (error) throw error;
-  return { items: data.map((c) => payFor(c, viewer)), total: count ?? 0, page: f.page, page_size: f.page_size };
+
+  const applied = new Set<string>();
+  if (v.creatorId && data.length) {
+    const { data: apps } = await (
+      await createUserClient()
+    )
+      .from("applications")
+      .select("campaign_id")
+      .eq("creator_id", v.creatorId)
+      .in(
+        "campaign_id",
+        data.map((c) => c.id),
+      );
+    apps?.forEach((a) => applied.add(a.campaign_id));
+  }
+
+  const total = count ?? 0;
+  const id = v.user?.id ?? distinctId;
+  if (f.page === 1 && id)
+    await track(id, "board_viewed", {
+      signed_in: !!v.user,
+      role: v.user?.role ?? null,
+      compensation_type: f.compensation_type ?? null,
+      city: f.city ?? null,
+      category: f.category ?? null,
+      results: total,
+    });
+
+  return {
+    items: data.map((c) => ({
+      ...payFor(c, v),
+      applied: applied.has(c.id),
+      mine: !!v.brandId && c.brand_id === v.brandId,
+    })),
+    total,
+    page: f.page,
+    page_size: f.page_size,
+  };
 }
 
-/** Public detail (published only). Also used by generateMetadata. */
-export async function getPublicCampaign(id: string, viewer: SessionUser | null = null) {
+/** Public detail (published only). Also used by generateMetadata (no viewer: pay hidden). */
+export async function getPublicCampaign(
+  id: string,
+  v: BoardViewer = { user: null, brandId: null, creatorId: null },
+) {
   const { data, error } = await createPublicClient()
     .from("campaigns")
     .select("*, brand:brands(id, name, logo_url, category)")
@@ -56,7 +143,63 @@ export async function getPublicCampaign(id: string, viewer: SessionUser | null =
     .eq("status", "published")
     .maybeSingle();
   if (error) throw error;
-  return data ? payFor(data, viewer) : null;
+  if (!data) return null;
+  return { ...payFor(data, v), ended: !!data.deadline && data.deadline < bakuToday() };
+}
+
+/**
+ * The listing page as a viewer opens it: the public detail, plus for creators whether they're
+ * under the listing's minimum followers (a warning, not a block: D10), and a view event.
+ */
+export async function viewPublicCampaign(id: string, v: BoardViewer, distinctId: string | null = null) {
+  const campaign = await getPublicCampaign(id, v);
+  if (!campaign) return null;
+
+  let below_min_followers = false;
+  if (v.creatorId && campaign.min_followers > 0) {
+    const followers = await creatorFollowers(v.creatorId, campaign.network);
+    below_min_followers = followers !== null && followers < campaign.min_followers;
+  }
+
+  const who = v.user?.id ?? distinctId;
+  if (who)
+    await track(who, "campaign_viewed", {
+      campaign_id: id,
+      signed_in: !!v.user,
+      role: v.user?.role ?? null,
+    });
+
+  return { ...campaign, below_min_followers };
+}
+
+/**
+ * A creator's followers on one network: the checked number when it exists for the same handle,
+ * otherwise what they entered (same rule as `socialNumbers` in the UI). Largest account wins
+ * when they listed several. null = no account on that network.
+ */
+async function creatorFollowers(creatorId: string, network: SocialNetwork) {
+  const supabase = await createUserClient();
+  const [{ data: socials }, { data: stats }] = await Promise.all([
+    supabase
+      .from("creator_socials")
+      .select("handle, followers")
+      .eq("creator_id", creatorId)
+      .eq("network", network),
+    supabase
+      .from("creator_social_stats")
+      .select("handle, followers, fetched_at")
+      .eq("creator_id", creatorId)
+      .eq("network", network),
+  ]);
+  if (!socials?.length) return null;
+  return Math.max(
+    ...socials.map((s) => {
+      const st = stats?.find(
+        (x) => x.handle.toLowerCase() === s.handle.toLowerCase() && x.fetched_at && x.followers != null,
+      );
+      return st?.followers ?? s.followers;
+    }),
+  );
 }
 
 /** Owner view (any status). RLS limits to the brand's own campaigns. */

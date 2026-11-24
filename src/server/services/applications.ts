@@ -4,7 +4,7 @@ import type { SessionUser } from "@/server/auth";
 import { createAdminClient, createUserClient } from "@/server/db/supabase";
 import type { ApplicationInput } from "@/schemas";
 import { errors } from "@/server/http/errors";
-import { getOwnCampaign } from "./campaigns";
+import { bakuToday, getOwnCampaign } from "./campaigns";
 import { getMyCreator } from "./creators";
 
 /**
@@ -23,11 +23,13 @@ export async function apply(
 
   const { data: campaign } = await supabase
     .from("campaigns")
-    .select("id, brand_id, status, min_followers, compensation_type")
+    .select("id, brand_id, status, min_followers, compensation_type, deadline")
     .eq("id", campaignId)
     .eq("status", "published")
     .maybeSingle();
   if (!campaign) throw errors.notFound("campaign");
+  // Past its deadline: off the board, and no new applications (showing contacts again is fine).
+  const ended = !!campaign.deadline && campaign.deadline < bakuToday();
 
   const isBid = campaign.compensation_type === "bid";
 
@@ -40,6 +42,7 @@ export async function apply(
 
   let applicationId = existing?.id;
   if (!applicationId) {
+    if (ended) throw errors.conflict("campaign_ended");
     // A bid is set once, with the application; showing the contacts again needs no bid.
     if (isBid && !bid_amount)
       throw errors.validation({ formErrors: [], fieldErrors: { bid_amount: ["validation.bidRequired"] } });

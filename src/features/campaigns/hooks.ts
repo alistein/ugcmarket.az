@@ -1,6 +1,7 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import posthog from "posthog-js";
 import type { z } from "zod";
 import { ApiClientError, api } from "@/lib/api-client";
 import type { CampaignDraft, CampaignFilters, CampaignStatusChange, Deliverable } from "@/schemas";
@@ -13,26 +14,52 @@ export const campaignKeys = {
 
 function toQuery(f: Partial<CampaignFilters>) {
   const p = new URLSearchParams();
-  Object.entries(f).forEach(([k, v]) => v !== undefined && v !== "" && p.set(k, String(v)));
+  Object.entries(f).forEach(([k, v]) => v !== undefined && String(v) !== "" && p.set(k, String(v)));
   const s = p.toString();
   return s ? `?${s}` : "";
 }
 
-export function useCampaignBoard(filters: Partial<CampaignFilters>) {
-  return useQuery({
-    queryKey: campaignKeys.board(filters),
-    queryFn: () =>
-      api<{ items: CampaignCard[]; total: number; page: number; page_size: number }>(
-        `/campaigns${toQuery(filters)}`,
-      ),
+/**
+ * The browser's anonymous PostHog id, so the server can count signed-out board and listing
+ * views (H3 funnel). Empty when PostHog isn't set up.
+ */
+function viewHeaders(): Record<string, string> {
+  try {
+    const id = posthog.__loaded ? posthog.get_distinct_id() : null;
+    return id ? { "x-posthog-id": id } : {};
+  } catch {
+    return {};
+  }
+}
+
+/** Cache key part for data that depends on who is looking (pay, "Applied", "Yours"). */
+export function viewerKey(
+  me:
+    | { role: string | null; brand?: { id: string } | null; creator?: { id: string } | null }
+    | null
+    | undefined,
+) {
+  return me ? `${me.role ?? "none"}:${me.brand?.id ?? me.creator?.id ?? ""}` : "out";
+}
+
+export type BoardPage = { items: CampaignCard[]; total: number; page: number; page_size: number };
+
+/** The public board, 20 at a time ("Show more"). Keyed by signed-in state: pay depends on it. */
+export function useCampaignBoard(filters: Partial<CampaignFilters>, viewerKey: string) {
+  return useInfiniteQuery({
+    queryKey: [...campaignKeys.board(filters), viewerKey],
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) =>
+      api<BoardPage>(`/campaigns${toQuery({ ...filters, page: pageParam })}`, { headers: viewHeaders() }),
+    getNextPageParam: (last) => (last.page * last.page_size < last.total ? last.page + 1 : undefined),
   });
 }
 
-/** Pay is hidden from signed-out visitors, so the cache is split by signed-in state. */
-export function useCampaign(id: string, signedIn = false) {
+/** Pay is hidden from signed-out visitors and other brands, so the cache is split by viewer. */
+export function useCampaign(id: string, viewerKey = "out") {
   return useQuery({
-    queryKey: [...campaignKeys.detail(id), signedIn ? "in" : "out"],
-    queryFn: () => api<CampaignDetail>(`/campaigns/${id}`),
+    queryKey: [...campaignKeys.detail(id), viewerKey],
+    queryFn: () => api<CampaignDetail>(`/campaigns/${id}`, { headers: viewHeaders() }),
     // A 404 means "not published" (or gone): don't retry, the owner preview takes over.
     retry: (n, e) => !(e instanceof ApiClientError && e.status === 404) && n < 2,
   });
@@ -167,11 +194,23 @@ export type CampaignCard = {
   currency: string;
   city: string | null;
   deadline: string;
+  min_followers: number;
+  creators_needed: number;
+  published_at: string | null;
   brand: { id: string; name: string; logo_url: string | null } | null;
+  /** Why pay was left out by the server: signed out, or another brand's listing. null = shown. */
+  pay_hidden: PayHidden;
+  /** Creators: already applied. */
+  applied?: boolean;
+  /** Brands: their own listing. */
+  mine?: boolean;
 };
 
+export type PayHidden = "signed_out" | "brand" | null;
+
 /** Public listing page data (published only; the owner sees any status via useOwnCampaign). */
-export type CampaignDetail = Omit<CampaignCard, "brand"> & {
+export type CampaignDetail = Omit<CampaignCard, "brand" | "applied" | "mine" | "pay_hidden"> & {
+  pay_hidden?: PayHidden;
   brand_id: string;
   status: CampaignStatusValue;
   description: string;
@@ -179,6 +218,8 @@ export type CampaignDetail = Omit<CampaignCard, "brand"> & {
   min_followers: number;
   creators_needed: number;
   brand: { id: string; name: string; logo_url: string | null; category: string } | null;
-  /** True for signed-out visitors: amount and extra were left out by the server. */
-  pay_hidden?: boolean;
+  /** Deadline passed: still opens from a link, but takes no applications. */
+  ended?: boolean;
+  /** Creators under the listing's minimum followers: a warning, they may still apply. */
+  below_min_followers?: boolean;
 };

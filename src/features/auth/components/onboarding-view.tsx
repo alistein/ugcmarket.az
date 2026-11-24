@@ -63,7 +63,10 @@ export function OnboardingView() {
   useEffect(() => {
     if (isPending) return;
     if (!me) router.replace({ pathname: "/login", query: { next: window.location.pathname } });
-    else if (me.role && me.status !== "blocked") router.replace(homeFor(me.role));
+    // Returning creators land on the board: listings are why they came (D14). New ones go on to
+    // their profile right after picking the role (below).
+    else if (me.role && me.status !== "blocked")
+      router.replace(me.role === "creator" ? "/campaigns" : homeFor(me.role));
   }, [me, isPending, router]);
 
   if (me?.status === "blocked") return <AccountBlocked />;

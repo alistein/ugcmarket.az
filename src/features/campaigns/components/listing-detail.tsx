@@ -26,7 +26,7 @@ import { useMe } from "@/features/me/hooks";
 import { ApplyBlock } from "@/features/applications/components/apply-block";
 import { Link } from "@/i18n/navigation";
 import { BRAND_CATEGORIES, CITIES, CREATOR_CATEGORIES } from "@/schemas";
-import { type CampaignDetail, useCampaign, useOwnCampaign } from "../hooks";
+import { type CampaignDetail, useCampaign, useOwnCampaign, viewerKey } from "../hooks";
 import { useShareListing } from "../share";
 import { Pay } from "./listing-card";
 
@@ -40,7 +40,7 @@ const known = <T extends string>(list: readonly T[], v: string | null | undefine
 export function ListingDetailView() {
   const { id } = useParams<{ id: string }>();
   const { data: me, isPending: meLoading } = useMe();
-  const pub = useCampaign(id, !!me);
+  const pub = useCampaign(id, viewerKey(me));
   const isBrand = me?.role === "brand" && !!me.brand;
   const own = useOwnCampaign(id, isBrand && pub.isError);
   const brand = useMyBrand(isBrand && pub.isError);
@@ -150,6 +150,7 @@ function Listing({
   const t = useTranslations("listing");
   const tt = useTranslations("taxonomy");
   const tm = useTranslations("campaign.mine");
+  const ta = useTranslations("listing.apply");
   const share = useShareListing();
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
@@ -209,7 +210,7 @@ function Listing({
         <p className="mt-2 text-muted-foreground">{tt(`categories.${d.category}`)}</p>
       )}
 
-      {d.pay_hidden ? <HiddenPay campaignId={d.id} /> : <Pay data={d} />}
+      {d.pay_hidden ? <HiddenPay campaignId={d.id} reason={d.pay_hidden} /> : <Pay data={d} />}
 
       {d.deliverables.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-1.5">
@@ -236,13 +237,28 @@ function Listing({
       </dl>
 
       {/* Creators act right after the key facts; owners and previews don't apply. */}
-      {d.status === "published" && !isOwner && (
-        <div className="mt-6">
-          <ApplyBlock
-            campaignId={d.id}
-            bidCurrency={d.compensation_type === "bid" ? d.currency : undefined}
-          />
-        </div>
+      {d.ended && !preview ? (
+        <p className="mt-6 flex items-start gap-2 text-sm text-pretty text-muted-foreground">
+          <HugeiconsIcon icon={Clock01Icon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
+          {t("ended")}
+        </p>
+      ) : (
+        d.status === "published" &&
+        !isOwner && (
+          <div className="mt-6 grid gap-3">
+            {/* Under the minimum: a heads-up, not a block. The brand decides (D10). */}
+            {d.below_min_followers && (
+              <p className="flex items-start gap-2 text-sm text-pretty text-muted-foreground">
+                <HugeiconsIcon icon={UserGroupIcon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
+                {ta("belowMin", { count: compact.format(d.min_followers) })}
+              </p>
+            )}
+            <ApplyBlock
+              campaignId={d.id}
+              bidCurrency={d.compensation_type === "bid" ? d.currency : undefined}
+            />
+          </div>
+        )
       )}
 
       {d.description && (
@@ -293,10 +309,10 @@ function Listing({
 }
 
 /**
- * Signed-out visitors: a blurred stand-in (not the real amount; the server never sent it) and a
- * log-in link that comes back to this listing.
+ * Pay the server left out: a blurred stand-in (not the real amount; it was never sent). Signed-out
+ * visitors get a log-in link back to this listing; other brands just hear that only creators see it.
  */
-function HiddenPay({ campaignId }: { campaignId: string }) {
+function HiddenPay({ campaignId, reason }: { campaignId: string; reason: "signed_out" | "brand" }) {
   const t = useTranslations("listing");
   const locale = useLocale();
   return (
@@ -305,13 +321,20 @@ function HiddenPay({ campaignId }: { campaignId: string }) {
         000
         <span className="ml-1.5 text-base font-medium tracking-normal text-muted-foreground">AZN</span>
       </p>
-      <Link
-        href={{ pathname: "/login", query: { next: `/${locale}/campaigns/${campaignId}` } }}
-        className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 underline-offset-4 hover:text-foreground hover:underline"
-      >
-        <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="size-4" />
-        {t("payLogin")}
-      </Link>
+      {reason === "brand" ? (
+        <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="size-4" />
+          {t("payCreators")}
+        </p>
+      ) : (
+        <Link
+          href={{ pathname: "/login", query: { next: `/${locale}/campaigns/${campaignId}` } }}
+          className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 underline-offset-4 hover:text-foreground hover:underline"
+        >
+          <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="size-4" />
+          {t("payLogin")}
+        </Link>
+      )}
     </div>
   );
 }

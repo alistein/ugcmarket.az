@@ -1,15 +1,16 @@
 import { CampaignUpdate } from "@/schemas";
+import { anonymousIdOf } from "@/server/analytics";
 import { getUser, requireRole } from "@/server/auth";
 import { errors } from "@/server/http/errors";
 import { handler, ok, parseBody } from "@/server/http/handler";
-import { getOwnCampaign, getPublicCampaign, updateCampaign } from "@/server/services/campaigns";
+import { boardViewer, getOwnCampaign, updateCampaign, viewPublicCampaign } from "@/server/services/campaigns";
 
 /** Public detail; `?own=1` returns the owner's view (any status). */
 export const GET = handler<{ id: string }>(async (req, { params }) => {
   const { id } = await params;
   if (new URL(req.url).searchParams.get("own"))
     return ok(await getOwnCampaign(await requireRole("brand"), id));
-  const campaign = await getPublicCampaign(id, await getUser());
+  const campaign = await viewPublicCampaign(id, await boardViewer(await getUser()), anonymousIdOf(req));
   if (!campaign) throw errors.notFound("campaign");
   return ok(campaign);
 });

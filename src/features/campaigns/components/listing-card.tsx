@@ -1,6 +1,13 @@
 "use client";
 
-import { Calendar03Icon, InstagramIcon, Location01Icon, UserGroupIcon } from "@hugeicons/core-free-icons";
+import {
+  Calendar03Icon,
+  InstagramIcon,
+  Location01Icon,
+  LockIcon,
+  UserGroupIcon,
+  UserMultiple02Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { NamedAvatar } from "@/components/shared/named-avatar";
@@ -21,7 +28,28 @@ export type ListingCardData = {
   city: string | null;
   deadline: string | null;
   min_followers: number;
+  creators_needed?: number;
+  /** ISO time: "New" for 48 hours after publishing. */
+  published_at?: string | null;
+  /** Set when the server left the pay out (signed out, or another brand's listing). */
+  pay_hidden?: "signed_out" | "brand" | null;
+  /** Creator already applied. */
+  applied?: boolean;
+  /** The viewing brand's own listing. */
+  mine?: boolean;
 };
+
+const DAY = 86_400_000;
+
+/** Whole days from today (local calendar) to a YYYY-MM-DD deadline. 0 = last day. */
+export function daysLeft(deadline: string, now = new Date()) {
+  const [y, m, d] = deadline.split("-").map(Number);
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((Date.UTC(y, m - 1, d) - today) / DAY);
+}
+
+export const isNew = (publishedAt: string | null | undefined, now = Date.now()) =>
+  !!publishedAt && now - new Date(publishedAt).getTime() < 2 * DAY;
 
 const known = <T extends string>(list: readonly T[], v: string | null | undefined): v is T =>
   !!v && (list as readonly string[]).includes(v);
@@ -33,20 +61,32 @@ export function ListingCard({ data: d, className }: { data: ListingCardData; cla
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
 
-  // DD.MM.YYYY: browsers often lack Azerbaijani month names (they print "M12"), and this is
-  // how dates are written in Azerbaijan and Russia anyway.
-  const deadline = d.deadline ? d.deadline.split("-").reverse().join(".") : null;
+  const left = d.deadline ? daysLeft(d.deadline) : null;
 
   return (
     <article className={cn("rounded-3xl bg-card p-5 shadow-(--shadow-raised)", className)}>
       <div className="flex items-center gap-3">
         <NamedAvatar name={d.brand.name || "?"} src={d.brand.logo_url} square className="size-11" />
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate font-semibold tracking-[-0.02em]">{d.brand.name}</p>
           <p className="truncate text-sm text-muted-foreground">
             {known(CREATOR_CATEGORIES, d.category) ? tt(`categories.${d.category}`) : t("noCategory")}
           </p>
         </div>
+        {/* One mark at most, by what matters to this viewer: theirs, done, then fresh. */}
+        {d.mine ? (
+          <Badge variant="brand" className="shrink-0">
+            {t("mine")}
+          </Badge>
+        ) : d.applied ? (
+          <Badge variant="mint" className="shrink-0">
+            {t("applied")}
+          </Badge>
+        ) : isNew(d.published_at) ? (
+          <Badge variant="sun" className="shrink-0">
+            {t("new")}
+          </Badge>
+        ) : null}
       </div>
 
       <h3
@@ -58,7 +98,14 @@ export function ListingCard({ data: d, className }: { data: ListingCardData; cla
         {d.title || t("noTitle")}
       </h3>
 
-      <Pay data={d} />
+      {d.pay_hidden ? (
+        <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="size-4 shrink-0" />
+          {d.pay_hidden === "brand" ? t("payCreators") : t("payLogin")}
+        </p>
+      ) : (
+        <Pay data={d} />
+      )}
 
       <div className="mt-3 flex flex-wrap gap-1.5">
         {d.deliverables.map((x, i) => (
@@ -81,10 +128,16 @@ export function ListingCard({ data: d, className }: { data: ListingCardData; cla
             {t("minFollowers", { count: compact.format(d.min_followers) })}
           </span>
         )}
-        {deadline && (
-          <span className="flex items-center gap-1.5">
+        {d.creators_needed !== undefined && d.creators_needed > 0 && (
+          <span className="flex items-center gap-1.5 tabular-nums">
+            <HugeiconsIcon icon={UserMultiple02Icon} strokeWidth={2} className="size-4" />
+            {t("creatorsNeeded", { count: d.creators_needed })}
+          </span>
+        )}
+        {left !== null && left >= 0 && (
+          <span className={cn("flex items-center gap-1.5 tabular-nums", left <= 2 && "text-foreground")}>
             <HugeiconsIcon icon={Calendar03Icon} strokeWidth={2} className="size-4" />
-            {t("deadline", { date: deadline })}
+            {t("daysLeft", { count: left })}
           </span>
         )}
       </div>
