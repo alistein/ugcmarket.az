@@ -70,6 +70,7 @@ export type CampaignStatusValue = "draft" | "pending_review" | "published" | "pa
 /** A brand's own listing, any status, with its application count. */
 export type MyCampaign = {
   id: string;
+  slug: string | null;
   /** null only on drafts (they can be saved half-filled). */
   title: string | null;
   status: CampaignStatusValue;
@@ -184,6 +185,8 @@ export function useChangeCampaignStatus(id: string) {
 
 export type CampaignCard = {
   id: string;
+  /** Readable URL part, set when first published (null on drafts). */
+  slug: string | null;
   title: string;
   category: string;
   network: string;

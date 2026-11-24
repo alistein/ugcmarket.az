@@ -17,13 +17,15 @@ export async function generateMetadata({ params }: PageProps<"/[locale]/campaign
   // Published listings are always complete (DB check); the types allow null for drafts.
   const name = campaign.title ?? t("notFound");
   const title = campaign.brand ? `${name} · ${campaign.brand.name}` : name;
+  // One URL per listing for search engines, even when opened by an old id link.
+  const path = campaign.slug ?? campaign.id;
   const description = (campaign.description ?? "").slice(0, 160);
   return {
     title,
     description,
     alternates: {
-      canonical: `/${locale}/campaigns/${id}`,
-      languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}/campaigns/${id}`])),
+      canonical: `/${locale}/campaigns/${path}`,
+      languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}/campaigns/${path}`])),
     },
     openGraph: { title, description, images: campaign.brand?.logo_url ? [campaign.brand.logo_url] : [] },
   };

@@ -216,6 +216,7 @@ export type Database = {
           network: Database["public"]["Enums"]["social_network"]
           published_at: string | null
           requirements: string | null
+          slug: string | null
           status: Database["public"]["Enums"]["campaign_status"]
           title: string | null
           updated_at: string
@@ -241,6 +242,7 @@ export type Database = {
           network: Database["public"]["Enums"]["social_network"]
           published_at?: string | null
           requirements?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
           title?: string | null
           updated_at?: string
@@ -266,6 +268,7 @@ export type Database = {
           network?: Database["public"]["Enums"]["social_network"]
           published_at?: string | null
           requirements?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["campaign_status"]
           title?: string | null
           updated_at?: string
@@ -765,6 +768,11 @@ export type Database = {
       set_my_role: {
         Args: { new_role: Database["public"]["Enums"]["user_role"] }
         Returns: undefined
+      }
+      slugify: { Args: { t: string }; Returns: string }
+      unique_campaign_slug: {
+        Args: { self: string; t: string }
+        Returns: string
       }
     }
     Enums: {

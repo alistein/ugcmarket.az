@@ -122,7 +122,7 @@ export function ListingBoardView() {
               {items.map((c) => (
                 <li key={c.id} className="min-w-0">
                   <Link
-                    href={`/campaigns/${c.id}`}
+                    href={`/campaigns/${c.slug ?? c.id}`}
                     className="group/card block h-full rounded-3xl outline-none focus-visible:ring-4 focus-visible:ring-ring/25"
                   >
                     <ListingCard

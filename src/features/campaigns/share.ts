@@ -12,8 +12,8 @@ export function useShareListing() {
   const t = useTranslations("listing");
   const locale = useLocale();
 
-  return async (campaign: { id: string; title: string | null }) => {
-    const url = `${window.location.origin}/${locale}/campaigns/${campaign.id}`;
+  return async (campaign: { id: string; slug?: string | null; title: string | null }) => {
+    const url = `${window.location.origin}/${locale}/campaigns/${campaign.slug ?? campaign.id}`;
     const result = await shareOrCopy({ title: campaign.title ?? undefined, url });
     if (result === "copied") toast.success(t("shareCopied"));
     else if (result === "failed") toast.error(t("shareFailed"));

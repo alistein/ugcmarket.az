@@ -5,6 +5,7 @@ import type { OwnCampaign } from "./hooks";
 
 const saved: OwnCampaign = {
   id: "c1",
+  slug: null,
   brand_id: "b1",
   title: "Reels for our menu",
   description: "Film our new breakfast in the morning light.",
@@ -48,8 +49,9 @@ describe("campaign form helpers", () => {
 
   it("round-trips a saved listing through the form unchanged", () => {
     const parsed = CampaignInput.parse(campaignToForm(saved));
-    const { id, brand_id, status, created_at, published_at, archived_at, ...content } = saved;
+    const { id, slug, brand_id, status, created_at, published_at, archived_at, ...content } = saved;
     void id;
+    void slug;
     void brand_id;
     void status;
     void created_at;

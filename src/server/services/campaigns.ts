@@ -15,7 +15,7 @@ import { errors } from "@/server/http/errors";
 import { getMyBrand } from "./brands";
 
 const BOARD_FIELDS =
-  "id, brand_id, title, category, network, deliverables, compensation_type, compensation_value, compensation_details, currency, city, min_followers, creators_needed, deadline, published_at, brand:brands(id, name, logo_url)";
+  "id, slug, brand_id, title, category, network, deliverables, compensation_type, compensation_value, compensation_details, currency, city, min_followers, creators_needed, deadline, published_at, brand:brands(id, name, logo_url)";
 
 /** Today in Baku (YYYY-MM-DD): deadlines are calendar days there, not UTC. */
 export function bakuToday(now = new Date()) {
@@ -131,15 +131,20 @@ export async function listBoard(f: CampaignFilters, v: BoardViewer, distinctId: 
   };
 }
 
-/** Public detail (published only). Also used by generateMetadata (no viewer: pay hidden). */
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * Public detail (published only), by slug or by id (links shared before slugs existed).
+ * Also used by generateMetadata (no viewer: pay hidden).
+ */
 export async function getPublicCampaign(
-  id: string,
+  idOrSlug: string,
   v: BoardViewer = { user: null, brandId: null, creatorId: null },
 ) {
   const { data, error } = await createPublicClient()
     .from("campaigns")
     .select("*, brand:brands(id, name, logo_url, category)")
-    .eq("id", id)
+    .eq(UUID.test(idOrSlug) ? "id" : "slug", idOrSlug.toLowerCase())
     .eq("status", "published")
     .maybeSingle();
   if (error) throw error;
@@ -151,8 +156,8 @@ export async function getPublicCampaign(
  * The listing page as a viewer opens it: the public detail, plus for creators whether they're
  * under the listing's minimum followers (a warning, not a block: D10), and a view event.
  */
-export async function viewPublicCampaign(id: string, v: BoardViewer, distinctId: string | null = null) {
-  const campaign = await getPublicCampaign(id, v);
+export async function viewPublicCampaign(idOrSlug: string, v: BoardViewer, distinctId: string | null = null) {
+  const campaign = await getPublicCampaign(idOrSlug, v);
   if (!campaign) return null;
 
   let below_min_followers = false;
@@ -164,7 +169,7 @@ export async function viewPublicCampaign(id: string, v: BoardViewer, distinctId:
   const who = v.user?.id ?? distinctId;
   if (who)
     await track(who, "campaign_viewed", {
-      campaign_id: id,
+      campaign_id: campaign.id,
       signed_in: !!v.user,
       role: v.user?.role ?? null,
     });
@@ -336,8 +341,10 @@ function assertPublishable(campaign: Record<string, unknown>) {
 
 export async function duplicateCampaign(user: SessionUser, id: string) {
   const c = await getOwnCampaign(user, id);
-  const { id: _id, created_at, updated_at, published_at, status, archived_at, ...rest } = c;
+  // The copy is a new draft: no slug until it's published (the trigger sets it).
+  const { id: _id, created_at, updated_at, published_at, status, archived_at, slug, ...rest } = c;
   void _id;
+  void slug;
   void archived_at;
   void created_at;
   void updated_at;

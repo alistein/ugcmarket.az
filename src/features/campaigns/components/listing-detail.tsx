@@ -15,6 +15,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { PublicHeader } from "@/components/shared/public-header";
@@ -24,7 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMyBrand } from "@/features/brands/hooks";
 import { useMe } from "@/features/me/hooks";
 import { ApplyBlock } from "@/features/applications/components/apply-block";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { BRAND_CATEGORIES, CITIES, CREATOR_CATEGORIES } from "@/schemas";
 import { type CampaignDetail, useCampaign, useOwnCampaign, viewerKey } from "../hooks";
 import { useShareListing } from "../share";
@@ -41,6 +42,12 @@ export function ListingDetailView() {
   const { id } = useParams<{ id: string }>();
   const { data: me, isPending: meLoading } = useMe();
   const pub = useCampaign(id, viewerKey(me));
+  const router = useRouter();
+  const slug = pub.data?.slug;
+  // Old links use the id: once the listing is known, show its readable URL instead.
+  useEffect(() => {
+    if (slug && id !== slug) router.replace(`/campaigns/${slug}`, { scroll: false });
+  }, [id, slug, router]);
   const isBrand = me?.role === "brand" && !!me.brand;
   const own = useOwnCampaign(id, isBrand && pub.isError);
   const brand = useMyBrand(isBrand && pub.isError);
@@ -211,7 +218,7 @@ function Listing({
       )}
 
       {d.pay_hidden ? (
-        <HiddenPay campaignId={d.id} reason={d.pay_hidden} currency={d.currency} />
+        <HiddenPay campaignId={d.slug ?? d.id} reason={d.pay_hidden} currency={d.currency} />
       ) : (
         <Pay data={d} />
       )}

@@ -252,7 +252,7 @@ function ListingTile({ campaign: c }: { campaign: MyCampaign }) {
         : c.compensation_details;
   const deadline = c.deadline?.split("-").reverse().join(".");
   // The tile opens the listing page (the public link; the owner sees a preview until it's live).
-  const href = `/campaigns/${c.id}`;
+  const href = `/campaigns/${c.slug ?? c.id}`;
 
   return (
     <li
