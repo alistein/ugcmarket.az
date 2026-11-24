@@ -6,9 +6,11 @@ import {
   InstagramIcon,
   Loading03Icon,
   LockIcon,
+  ManIcon,
   RefreshIcon,
   SmartPhone01Icon,
   TiktokIcon,
+  WomanIcon,
   YoutubeIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -78,6 +80,18 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
         )}
       </Field>
       <HandleField form={form} currentHandle={currentHandle} />
+      <Field label={t("birthYear")} error={errors.birth_year} hint={t("birthYearHint")}>
+        {(a) => (
+          <Input
+            {...a}
+            {...register("birth_year")}
+            inputMode="numeric"
+            autoComplete="bday-year"
+            maxLength={4}
+            placeholder={t("birthYearPh")}
+          />
+        )}
+      </Field>
       <Field label={t("gender")} error={errors.gender}>
         {(a) => (
           <Controller
@@ -90,22 +104,11 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
                 value={field.value ? [field.value] : []}
                 onChange={(v) => field.onChange(v[0] ?? "")}
                 label={(g) => tt(`genders.${g}`)}
+                icon={(g) => (g === "female" ? WomanIcon : ManIcon)}
                 invalid={a["aria-invalid"]}
                 describedBy={a["aria-describedby"]}
               />
             )}
-          />
-        )}
-      </Field>
-      <Field label={t("birthYear")} error={errors.birth_year} hint={t("birthYearHint")}>
-        {(a) => (
-          <Input
-            {...a}
-            {...register("birth_year")}
-            inputMode="numeric"
-            autoComplete="bday-year"
-            maxLength={4}
-            placeholder={t("birthYearPh")}
           />
         )}
       </Field>

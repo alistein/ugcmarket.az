@@ -1,7 +1,7 @@
 "use client";
 
 import { Camera01Icon, Loading03Icon, Tick02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ export function ChipGroup<T extends string>({
   invalid,
   describedBy,
   single,
+  icon,
 }: {
   options: readonly T[];
   value: T[];
@@ -30,6 +31,8 @@ export function ChipGroup<T extends string>({
   describedBy?: string;
   /** Exactly one choice (radio group): tapping picks it, tapping it again keeps it. */
   single?: boolean;
+  /** An icon per option, shown in place of the tick (the selected fill already says "chosen"). */
+  icon?: (v: T) => IconSvgElement;
 }) {
   const full = max !== undefined && value.length >= max;
   return (
@@ -57,7 +60,11 @@ export function ChipGroup<T extends string>({
                 : "bg-muted text-foreground hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]",
             )}
           >
-            {on && <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3.5" />}
+            {icon ? (
+              <HugeiconsIcon icon={icon(o)} strokeWidth={2} className="size-4" />
+            ) : (
+              on && <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3.5" />
+            )}
             {label(o)}
           </button>
         );
