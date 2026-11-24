@@ -64,7 +64,9 @@
     "lookup_failed": "Couldn’t check the account. Try again",
     "campaign_closed": "A closed listing can't be changed. Duplicate it and post the copy instead",
     "campaign_incomplete": "Some required fields are still empty. Edit the listing and publish it again",
-    "campaign_deadline_passed": "The deadline has passed. Pick a new date and publish again"
+    "campaign_deadline_passed": "The deadline has passed. Pick a new date and publish again",
+    "campaign_archived": "An archived listing can't be changed. Restore it first",
+    "campaign_not_archivable": "A live listing can't be archived. Close it first"
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters)",
@@ -1041,11 +1043,16 @@
         "sentForReview": "Listing sent for review. It goes live once approved",
         "paused": "Listing paused. Creators can't see it for now",
         "closed": "Listing closed",
-        "duplicated": "A copy was created as a draft"
+        "duplicated": "A copy was created as a draft",
+        "archived": "Listing moved to archive",
+        "restored": "Listing restored from archive"
       },
       "untitled": "Untitled draft",
       "anyCity": "Any city",
-      "applicantsLink": "Applicants"
+      "applicantsLink": "Applicants",
+      "archived": "Archive",
+      "archive": "Move to archive",
+      "restore": "Restore from archive"
     },
     "edit": {
       "title": "Edit listing",

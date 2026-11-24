@@ -3,6 +3,7 @@ import type { z } from "zod";
 import {
   CampaignInput,
   type CampaignDraft,
+  type CampaignArchiveChange,
   type CampaignFilters,
   type CampaignStatusChange,
 } from "@/schemas";
@@ -110,6 +111,7 @@ export async function updateCampaign(user: SessionUser, id: string, input: Campa
   const current = await getOwnCampaign(user, id);
   // Closed listings are history (applications point at them); duplicate to reuse one.
   if (current.status === "closed") throw errors.conflict("campaign_closed");
+  if (current.archived_at) throw errors.conflict("campaign_archived");
   if (current.status !== "draft") CampaignInput.parse(input); // ZodError → 422 with field errors
   const { data, error } = await supabase.from("campaigns").update(input).eq("id", id).select().single();
   if (error) throw error;
@@ -130,6 +132,7 @@ export async function changeCampaignStatus(
   const campaign = await getOwnCampaign(user, id);
   const brand = await getMyBrand(user);
 
+  if (campaign.archived_at) throw errors.conflict("campaign_archived");
   if (status === "published") assertPublishable(campaign);
 
   let next: string = status;
@@ -152,6 +155,32 @@ export async function changeCampaignStatus(
   return data;
 }
 
+/** Statuses a listing can be archived from: nothing live or waiting on review. */
+const ARCHIVABLE = new Set(["draft", "rejected", "closed"]);
+
+/**
+ * Archive hides a finished listing from the brand's main list (it keeps its status and its
+ * applications); restore brings it back as it was. Live listings are closed first, so nothing
+ * on the board disappears silently. Written with the service role (no column grant), like status.
+ */
+export async function setCampaignArchived(
+  user: SessionUser,
+  id: string,
+  { archived }: z.infer<typeof CampaignArchiveChange>,
+) {
+  const campaign = await getOwnCampaign(user, id);
+  if (archived && !ARCHIVABLE.has(campaign.status)) throw errors.conflict("campaign_not_archivable");
+  const { data, error } = await createAdminClient()
+    .from("campaigns")
+    .update({ archived_at: archived ? (campaign.archived_at ?? new Date().toISOString()) : null })
+    .eq("id", id)
+    .eq("brand_id", campaign.brand_id)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
 /** A listing goes live only when complete and its deadline is ahead (drafts may be partial). */
 function assertPublishable(campaign: Record<string, unknown>) {
   const check = CampaignInput.safeParse(campaign);
@@ -164,8 +193,9 @@ function assertPublishable(campaign: Record<string, unknown>) {
 
 export async function duplicateCampaign(user: SessionUser, id: string) {
   const c = await getOwnCampaign(user, id);
-  const { id: _id, created_at, updated_at, published_at, status, ...rest } = c;
+  const { id: _id, created_at, updated_at, published_at, status, archived_at, ...rest } = c;
   void _id;
+  void archived_at;
   void created_at;
   void updated_at;
   void published_at;

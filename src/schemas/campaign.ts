@@ -120,6 +120,11 @@ export const CampaignStatusChange = z.object({
   status: z.enum(["draft", "published", "paused", "closed"]),
 });
 
+/** Archive (true) or restore (false) an own listing. Only finished ones: drafts, rejected, closed. */
+export const CampaignArchiveChange = z.object({
+  archived: z.boolean(),
+});
+
 export const CampaignFilters = Pagination.extend({
   network: SocialNetwork.optional(),
   compensation_type: CompensationType.optional(),

@@ -54,6 +54,8 @@ export type MyCampaign = {
   deadline: string | null;
   created_at: string;
   published_at: string | null;
+  /** Set when the brand archived it (hidden from the main list, status unchanged). */
+  archived_at: string | null;
   compensation_details: string | null;
   city: string | null;
   applications: { count: number }[];
@@ -92,6 +94,19 @@ export function useSetCampaignStatus() {
   return useMutation({
     mutationFn: ({ id, status }: { id: string } & z.infer<typeof CampaignStatusChange>) =>
       api<{ id: string; status: string }>(`/campaigns/${id}/status`, { method: "POST", json: { status } }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+  });
+}
+
+/** Archive a finished listing, or restore it (the status stays as it was). */
+export function useArchiveCampaign() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, archived }: { id: string; archived: boolean }) =>
+      api<{ id: string; archived_at: string | null }>(`/campaigns/${id}/archive`, {
+        method: "POST",
+        json: { archived },
+      }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
   });
 }

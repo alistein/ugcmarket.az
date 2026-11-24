@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
+import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
 import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES } from "@/schemas";
 import { BoostCard, SectionSheet, type SheetSection } from "./boost-card";
@@ -322,7 +323,7 @@ function StatusNote({ status }: { status: "pending" | "rejected" }) {
 const ACTION =
   "inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary [&_svg]:size-4";
 
-/** Top-right of the profile: edit, and share the public link (share sheet on phones, else copy). */
+/** Top-right of the profile: edit, and share the public link (share sheet on phones, copy on computers). */
 function HeaderActions({ creator }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
   const locale = useLocale();
@@ -330,17 +331,11 @@ function HeaderActions({ creator }: { creator: MyCreator }) {
 
   const share = async () => {
     const url = `${window.location.origin}/${locale}/creator/${creator.handle}`;
-    if (navigator.share) {
-      await navigator.share({ title: creator.display_name, url }).catch(() => {});
-      return;
-    }
-    try {
-      await navigator.clipboard.writeText(url);
+    const result = await shareOrCopy({ title: creator.display_name, url });
+    if (result === "copied") {
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
-    } catch {
-      toast.error(t("copyFailed"));
-    }
+    } else if (result === "failed") toast.error(t("copyFailed"));
   };
 
   return (

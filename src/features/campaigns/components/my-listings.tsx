@@ -2,6 +2,9 @@
 
 import {
   Add01Icon,
+  Archive02Icon,
+  ArchiveRestoreIcon,
+  ArrowDown01Icon,
   Cancel01Icon,
   Calendar03Icon,
   Location01Icon,
@@ -48,6 +51,7 @@ import { localToday } from "../form";
 import {
   type CampaignStatusValue,
   type MyCampaign,
+  useArchiveCampaign,
   useDuplicateCampaign,
   useMyCampaigns,
   useSetCampaignStatus,
@@ -78,10 +82,16 @@ export function MyListings() {
   const t = useTranslations("campaign.mine");
   const tc = useTranslations("common");
   const { data, isPending, isError } = useMyCampaigns();
+  const [showArchived, setShowArchived] = useState(false);
 
-  const list = [...(data ?? [])].sort(
+  const sorted = [...(data ?? [])].sort(
     (a, b) => ORDER[a.status] - ORDER[b.status] || b.created_at.localeCompare(a.created_at),
   );
+  const list = sorted.filter((c) => !c.archived_at);
+  // Archived: most recently archived first.
+  const archived = sorted
+    .filter((c) => c.archived_at)
+    .sort((a, b) => (b.archived_at ?? "").localeCompare(a.archived_at ?? ""));
 
   return (
     <section aria-labelledby="listings-title" className="grid gap-4">
@@ -112,14 +122,46 @@ export function MyListings() {
         <p role="alert" className="text-sm text-destructive">
           {tc("loadFailed")}
         </p>
-      ) : list.length === 0 ? (
-        <EmptyListings />
       ) : (
-        <ul className={GRID}>
-          {list.map((c) => (
-            <ListingTile key={c.id} campaign={c} />
-          ))}
-        </ul>
+        <>
+          {list.length === 0 ? (
+            <EmptyListings />
+          ) : (
+            <ul className={GRID}>
+              {list.map((c) => (
+                <ListingTile key={c.id} campaign={c} />
+              ))}
+            </ul>
+          )}
+          {archived.length > 0 && (
+            <div className="grid gap-4">
+              <Button
+                variant="ghost"
+                className="justify-self-start text-muted-foreground"
+                aria-expanded={showArchived}
+                aria-controls="archived-listings"
+                onClick={() => setShowArchived((v) => !v)}
+              >
+                <HugeiconsIcon icon={Archive02Icon} strokeWidth={2} data-icon="inline-start" />
+                {t("archived")}
+                <span className="tabular-nums">{archived.length}</span>
+                <HugeiconsIcon
+                  icon={ArrowDown01Icon}
+                  strokeWidth={2}
+                  data-icon="inline-end"
+                  className={cn("[transition:rotate_200ms_var(--ease-out)]", showArchived && "rotate-180")}
+                />
+              </Button>
+              {showArchived && (
+                <ul id="archived-listings" className={GRID}>
+                  {archived.map((c) => (
+                    <ListingTile key={c.id} campaign={c} />
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </>
       )}
     </section>
   );
@@ -332,6 +374,7 @@ function ListingMenu({ campaign: c }: { campaign: MyCampaign }) {
   const router = useRouter();
   const setStatus = useSetCampaignStatus();
   const duplicate = useDuplicateCampaign();
+  const archive = useArchiveCampaign();
   const [confirmClose, setConfirmClose] = useState(false);
   const share = useShareListing();
 
@@ -357,12 +400,22 @@ function ListingMenu({ campaign: c }: { campaign: MyCampaign }) {
       },
     );
 
-  const canEdit = c.status !== "closed";
+  const setArchived = (archived: boolean) =>
+    archive.mutate(
+      { id: c.id, archived },
+      { onSuccess: () => toast.success(t(archived ? "toast.archived" : "toast.restored")), onError },
+    );
+
+  // An archived listing is put away: it can only be restored, duplicated or have its applicants seen.
+  const isArchived = !!c.archived_at;
+  const canEdit = c.status !== "closed" && !isArchived;
   const canSeeApplicants = c.status === "published" || c.status === "paused" || c.status === "closed";
-  const canPublish = c.status === "draft" || c.status === "rejected";
+  const canPublish = (c.status === "draft" || c.status === "rejected") && !isArchived;
   const canResume = c.status === "paused";
   const canPause = c.status === "published";
   const canClose = c.status === "published" || c.status === "paused";
+  // Live listings are closed first, so nothing leaves the board without the brand saying so.
+  const canArchive = (c.status === "draft" || c.status === "rejected" || c.status === "closed") && !isArchived;
 
   return (
     <>
@@ -419,6 +472,18 @@ function ListingMenu({ campaign: c }: { campaign: MyCampaign }) {
             <HugeiconsIcon icon={Copy01Icon} strokeWidth={2} />
             {t("duplicate")}
           </DropdownMenuItem>
+          {canArchive && (
+            <DropdownMenuItem disabled={archive.isPending} onClick={() => setArchived(true)}>
+              <HugeiconsIcon icon={Archive02Icon} strokeWidth={2} />
+              {t("archive")}
+            </DropdownMenuItem>
+          )}
+          {isArchived && (
+            <DropdownMenuItem disabled={archive.isPending} onClick={() => setArchived(false)}>
+              <HugeiconsIcon icon={ArchiveRestoreIcon} strokeWidth={2} />
+              {t("restore")}
+            </DropdownMenuItem>
+          )}
           {canClose && (
             <>
               <DropdownMenuSeparator />

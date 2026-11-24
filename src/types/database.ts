@@ -197,6 +197,7 @@ export type Database = {
       }
       campaigns: {
         Row: {
+          archived_at: string | null
           brand_id: string
           category: string | null
           city: string | null
@@ -221,6 +222,7 @@ export type Database = {
           usage_rights: string | null
         }
         Insert: {
+          archived_at?: string | null
           brand_id: string
           category?: string | null
           city?: string | null
@@ -245,6 +247,7 @@ export type Database = {
           usage_rights?: string | null
         }
         Update: {
+          archived_at?: string | null
           brand_id?: string
           category?: string | null
           city?: string | null

@@ -64,7 +64,9 @@
     "lookup_failed": "Hesabı yoxlamaq mümkün olmadı. Yenidən cəhd edin",
     "campaign_closed": "Bağlanmış elanı dəyişmək olmur. Surətini çıxarıb yeni elan kimi yerləşdirin",
     "campaign_incomplete": "Elanda doldurulmamış vacib sahələr var. Elanı redaktə edib yenidən dərc edin",
-    "campaign_deadline_passed": "Son tarix keçib. Yeni tarix seçib yenidən dərc edin"
+    "campaign_deadline_passed": "Son tarix keçib. Yeni tarix seçib yenidən dərc edin",
+    "campaign_archived": "Arxivdəki elanı dəyişmək olmur. Əvvəlcə onu arxivdən çıxarın",
+    "campaign_not_archivable": "Aktiv elanı arxivə köçürmək olmur. Əvvəlcə elanı bağlayın"
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)",
@@ -1041,11 +1043,16 @@
         "sentForReview": "Elan yoxlamaya göndərildi. Təsdiqdən sonra dərc olunacaq",
         "paused": "Elan dayandırıldı. Kreatorlar onu hələlik görmür",
         "closed": "Elan bağlandı",
-        "duplicated": "Elanın surəti qaralama kimi yaradıldı"
+        "duplicated": "Elanın surəti qaralama kimi yaradıldı",
+        "archived": "Elan arxivə köçürüldü",
+        "restored": "Elan arxivdən çıxarıldı"
       },
       "untitled": "Adsız qaralama",
       "anyCity": "İstənilən şəhər",
-      "applicantsLink": "Müraciət edənlər"
+      "applicantsLink": "Müraciət edənlər",
+      "archived": "Arxiv",
+      "archive": "Arxivə köçür",
+      "restore": "Arxivdən çıxar"
     },
     "edit": {
       "title": "Elanı redaktə et",
