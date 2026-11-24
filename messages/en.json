@@ -525,7 +525,11 @@
       "stylist": "Stylist",
       "designer": "Designer"
     },
-    "age": "{age} y.o."
+    "age": "{age} y.o.",
+    "collaboration": {
+      "post": "Posted on your account",
+      "ugc": "Video for the brand only"
+    }
   },
   "creator": {
     "setup": {

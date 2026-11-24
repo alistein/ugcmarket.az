@@ -525,7 +525,11 @@
       "stylist": "Стилист",
       "designer": "Дизайнер"
     },
-    "age": "{age, plural, one {# год} few {# года} many {# лет} other {# года}}"
+    "age": "{age, plural, one {# год} few {# года} many {# лет} other {# года}}",
+    "collaboration": {
+      "post": "Публикация в вашем аккаунте",
+      "ugc": "Видео только для бренда"
+    }
   },
   "creator": {
     "setup": {

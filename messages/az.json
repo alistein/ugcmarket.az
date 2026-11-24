@@ -525,7 +525,11 @@
       "stylist": "Stilist",
       "designer": "Dizayner"
     },
-    "age": "{age} yaş"
+    "age": "{age} yaş",
+    "collaboration": {
+      "post": "Hesabınızda paylaşım",
+      "ugc": "Yalnız brend üçün video"
+    }
   },
   "creator": {
     "setup": {

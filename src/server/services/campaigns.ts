@@ -15,7 +15,7 @@ import { errors } from "@/server/http/errors";
 import { getMyBrand } from "./brands";
 
 const BOARD_FIELDS =
-  "id, slug, brand_id, title, category, network, deliverables, compensation_type, compensation_value, compensation_details, currency, city, min_followers, creators_needed, deadline, published_at, brand:brands(id, name, logo_url)";
+  "id, slug, brand_id, title, category, network, collaboration_model, deliverables, compensation_type, compensation_value, compensation_details, currency, city, min_followers, creators_needed, deadline, published_at, brand:brands(id, name, logo_url)";
 
 /** Today in Baku (YYYY-MM-DD): deadlines are calendar days there, not UTC. */
 export function bakuToday(now = new Date()) {

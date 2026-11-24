@@ -21,6 +21,8 @@ export type ListingCardData = {
   category: string | null | undefined;
   deliverables: { format: string; count: number }[];
   compensation_type: string;
+  /** "post" or "ugc"; missing in the create-form preview before formats are picked. */
+  collaboration_model?: string | null;
   compensation_value: number | null;
   /** Barter: what the brand offers (e.g. "breakfast for two"). */
   compensation_details?: string | null;
@@ -97,6 +99,8 @@ export function ListingCard({ data: d, className }: { data: ListingCardData; cla
       >
         {d.title || t("noTitle")}
       </h3>
+
+      <TypeBadges data={d} className="mt-2.5" />
 
       {d.pay_hidden ? (
         <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
@@ -215,4 +219,26 @@ export function Pay({
       </div>
     );
   return <p className={cn("mt-3 text-muted-foreground", big)}>{label}</p>;
+}
+
+/**
+ * What kind of deal it is, readable before the pay: payment type (paid, bid, barter, unpaid) and
+ * where the content goes (the creator's account or the brand only). Shown even when pay is hidden.
+ */
+export function TypeBadges({
+  data: d,
+  className,
+}: {
+  data: Pick<ListingCardData, "compensation_type" | "collaboration_model">;
+  className?: string;
+}) {
+  const tt = useTranslations("taxonomy");
+  const collab =
+    d.collaboration_model === "post" || d.collaboration_model === "ugc" ? d.collaboration_model : null;
+  return (
+    <div className={cn("flex flex-wrap gap-1.5", className)}>
+      <Badge variant="mint">{tt(`compensation.${d.compensation_type}` as never)}</Badge>
+      {collab && <Badge variant="rose">{tt(`collaboration.${collab}`)}</Badge>}
+    </div>
+  );
 }

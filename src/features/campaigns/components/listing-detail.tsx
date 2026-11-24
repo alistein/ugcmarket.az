@@ -29,7 +29,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { BRAND_CATEGORIES, CITIES, CREATOR_CATEGORIES } from "@/schemas";
 import { type CampaignDetail, useCampaign, useOwnCampaign, viewerKey } from "../hooks";
 import { useShareListing } from "../share";
-import { Pay } from "./listing-card";
+import { Pay, TypeBadges } from "./listing-card";
 
 const known = <T extends string>(list: readonly T[], v: string | null | undefined): v is T =>
   !!v && (list as readonly string[]).includes(v);
@@ -216,6 +216,7 @@ function Listing({
       {known(CREATOR_CATEGORIES, d.category) && (
         <p className="mt-2 text-muted-foreground">{tt(`categories.${d.category}`)}</p>
       )}
+      <TypeBadges data={d} className="mt-3" />
 
       {d.pay_hidden ? (
         <HiddenPay campaignId={d.slug ?? d.id} reason={d.pay_hidden} currency={d.currency} />

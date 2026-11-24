@@ -190,6 +190,8 @@ export type CampaignCard = {
   title: string;
   category: string;
   network: string;
+  /** "post": published on the creator's account; "ugc": a video for the brand only. */
+  collaboration_model: string;
   deliverables: Deliverable[];
   compensation_type: string;
   compensation_value: number | null;
