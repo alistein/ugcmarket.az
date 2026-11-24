@@ -28,6 +28,7 @@ const saved: OwnCampaign = {
   status: "pending_review",
   created_at: "2026-11-19T00:00:00Z",
   published_at: null,
+  archived_at: null,
 };
 
 describe("campaign form helpers", () => {
@@ -47,12 +48,13 @@ describe("campaign form helpers", () => {
 
   it("round-trips a saved listing through the form unchanged", () => {
     const parsed = CampaignInput.parse(campaignToForm(saved));
-    const { id, brand_id, status, created_at, published_at, ...content } = saved;
+    const { id, brand_id, status, created_at, published_at, archived_at, ...content } = saved;
     void id;
     void brand_id;
     void status;
     void created_at;
     void published_at;
+    void archived_at;
     expect(toPayload(parsed)).toEqual(content);
   });
 
