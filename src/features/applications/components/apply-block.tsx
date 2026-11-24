@@ -21,7 +21,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { formatAmount } from "@/features/campaigns/components/listing-card";
 import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
@@ -31,15 +33,17 @@ import { type ApplyResult, useApply, useMyApplications } from "../hooks";
 /**
  * The creator's action on a live listing: apply (with an optional note), then see the brand's
  * contacts. The deal itself happens off-platform. Shown to guests (log in), creators (apply or
- * the steps before it) and nobody else.
+ * the steps before it) and nobody else. On a bid listing (`bidCurrency` set) the creator also
+ * names their price.
  */
-export function ApplyBlock({ campaignId }: { campaignId: string }) {
+export function ApplyBlock({ campaignId, bidCurrency }: { campaignId: string; bidCurrency?: string }) {
   const t = useTranslations("listing.apply");
   const locale = useLocale();
   const { data: me, isPending } = useMe();
   const isCreator = me?.role === "creator";
   const mine = useMyApplications(isCreator && !!me?.creator);
-  const applied = !!mine.data?.some((a) => a.campaign?.id === campaignId);
+  const application = mine.data?.find((a) => a.campaign?.id === campaignId);
+  const applied = !!application;
   const [contact, setContact] = useState<ApplyResult["contact"] | undefined>(undefined);
 
   if (isPending) return null;
@@ -92,9 +96,17 @@ export function ApplyBlock({ campaignId }: { campaignId: string }) {
   if (contact !== undefined) return <Contacts contact={contact} />;
 
   return applied ? (
-    <AlreadyApplied campaignId={campaignId} onContact={setContact} />
+    <AlreadyApplied
+      campaignId={campaignId}
+      bid={
+        bidCurrency && application?.bid_amount
+          ? { amount: application.bid_amount, currency: bidCurrency }
+          : null
+      }
+      onContact={setContact}
+    />
   ) : (
-    <ApplyAction campaignId={campaignId} onContact={setContact} />
+    <ApplyAction campaignId={campaignId} bidCurrency={bidCurrency} onContact={setContact} />
   );
 }
 
@@ -114,31 +126,47 @@ function Note({ children, icon }: { children: React.ReactNode; icon?: typeof Clo
 function useApplyAction(campaignId: string, onContact: (c: ApplyResult["contact"]) => void) {
   const te = useTranslations();
   const apply = useApply(campaignId);
-  const run = (message?: string, success?: string) =>
-    apply.mutate(message?.trim() ? message.trim() : undefined, {
-      onSuccess: (res) => {
-        if (success) toast.success(success);
-        onContact(res.contact);
+  const run = (input: { message?: string; bid_amount?: number } = {}, success?: string) =>
+    apply.mutate(
+      { message: input.message?.trim() || undefined, bid_amount: input.bid_amount },
+      {
+        onSuccess: (res) => {
+          if (success) toast.success(success);
+          onContact(res.contact);
+        },
+        onError: (e) => {
+          const key = e instanceof ApiClientError ? e.message : "errors.unknown";
+          toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
+        },
       },
-      onError: (e) => {
-        const key = e instanceof ApiClientError ? e.message : "errors.unknown";
-        toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
-      },
-    });
+    );
   return { run, pending: apply.isPending };
 }
 
-/** Apply with an optional short note to the brand, confirmed in a dialog. */
+/** Apply with an optional short note to the brand (and a price on bid listings), in a dialog. */
 function ApplyAction({
   campaignId,
+  bidCurrency,
   onContact,
 }: {
   campaignId: string;
+  bidCurrency?: string;
   onContact: (c: ApplyResult["contact"]) => void;
 }) {
   const t = useTranslations("listing.apply");
+  const te = useTranslations();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [bid, setBid] = useState("");
+  const [bidError, setBidError] = useState(false);
+  const bidAmount = Number(bid.replace(",", "."));
+  const send = () => {
+    if (bidCurrency && !(Number.isFinite(bidAmount) && bidAmount > 0 && bidAmount <= 1_000_000)) {
+      setBidError(true);
+      return;
+    }
+    run({ message, bid_amount: bidCurrency ? bidAmount : undefined }, t("sent"));
+  };
   const { run, pending } = useApplyAction(campaignId, (c) => {
     setOpen(false);
     onContact(c);
@@ -155,8 +183,40 @@ function ApplyAction({
         <DialogContent className="sm:max-w-md" showCloseButton={!pending}>
           <DialogHeader>
             <DialogTitle>{t("dialogTitle")}</DialogTitle>
-            <DialogDescription>{t("dialogBody")}</DialogDescription>
+            <DialogDescription>{t(bidCurrency ? "dialogBodyBid" : "dialogBody")}</DialogDescription>
           </DialogHeader>
+          {bidCurrency && (
+            <div className="grid gap-2">
+              <label htmlFor="apply-bid" className="text-sm font-medium">
+                {t("bid")}
+              </label>
+              <div className="relative sm:max-w-56">
+                <Input
+                  id="apply-bid"
+                  value={bid}
+                  onChange={(e) => {
+                    setBid(e.target.value);
+                    setBidError(false);
+                  }}
+                  inputMode="decimal"
+                  placeholder="150"
+                  aria-invalid={bidError || undefined}
+                  aria-describedby={bidError ? "apply-bid-error" : undefined}
+                  className="pr-14 tabular-nums"
+                />
+                <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-muted-foreground">
+                  {bidCurrency}
+                </span>
+              </div>
+              {bidError ? (
+                <p id="apply-bid-error" className="text-sm text-destructive">
+                  {te("validation.bidRequired")}
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">{t("bidHint")}</p>
+              )}
+            </div>
+          )}
           <div className="grid gap-2">
             <label htmlFor="apply-message" className="text-sm font-medium">
               {t("message")}
@@ -175,7 +235,7 @@ function ApplyAction({
             <Button variant="ghost" disabled={pending} onClick={() => setOpen(false)}>
               {t("cancel")}
             </Button>
-            <Button disabled={pending} onClick={() => run(message, t("sent"))}>
+            <Button disabled={pending} onClick={send}>
               {t("send")}
             </Button>
           </DialogFooter>
@@ -185,15 +245,18 @@ function ApplyAction({
   );
 }
 
-/** Already applied: say so, and let them see the contacts again (apply is idempotent). */
+/** Already applied: say so (and the bid), and let them see the contacts again (apply is idempotent). */
 function AlreadyApplied({
   campaignId,
+  bid,
   onContact,
 }: {
   campaignId: string;
+  bid: { amount: number; currency: string } | null;
   onContact: (c: ApplyResult["contact"]) => void;
 }) {
   const t = useTranslations("listing.apply");
+  const locale = useLocale();
   const { run, pending } = useApplyAction(campaignId, onContact);
   return (
     <Block>
@@ -201,6 +264,11 @@ function AlreadyApplied({
         <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-5 text-mint-ink" />
         {t("applied")}
       </p>
+      {bid && (
+        <p className="text-sm text-muted-foreground tabular-nums">
+          {t("yourBid", { amount: formatAmount(bid.amount, locale), currency: bid.currency })}
+        </p>
+      )}
       <Button variant="outline" disabled={pending} onClick={() => run()}>
         {t("showContacts")}
       </Button>

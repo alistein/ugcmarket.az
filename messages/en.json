@@ -94,7 +94,8 @@
     "amount": "Enter an amount",
     "deadlinePast": "Pick a date after today",
     "date": "That date isn't valid",
-    "formatsMin": "Pick at least one format"
+    "formatsMin": "Pick at least one format",
+    "bidRequired": "Enter your price"
   },
   "landing": {
     "nav": {
@@ -429,8 +430,10 @@
       "product": "Product",
       "service": "Service",
       "barter": "Barter",
-      "unpaid": "Unpaid"
-    }
+      "unpaid": "Unpaid",
+      "bid": "Bids"
+    },
+    "bidUpTo": "Budget up to {amount} {currency}"
   },
   "creator": {
     "setup": {
@@ -865,7 +868,9 @@
       "countsLabel": "How many of each?",
       "extra": "On top of that",
       "extraPh": "For example, breakfast for two",
-      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon"
+      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon",
+      "budget": "Max budget",
+      "budgetHint": "Optional. Creators name their price when they apply"
     },
     "card": {
       "noTitle": "Listing title",
@@ -937,7 +942,8 @@
     "followers": "followers",
     "avgViews": "avg views",
     "checked": "Checked automatically",
-    "noContacts": "This creator hasn't added contacts"
+    "noContacts": "This creator hasn't added contacts",
+    "bid": "their price"
   },
   "listing": {
     "city": "City",
@@ -974,7 +980,11 @@
       "noContacts": "The brand hasn't added contacts",
       "copy": "Copy",
       "copied": "Copied",
-      "copyFailed": "Couldn't copy"
+      "copyFailed": "Couldn't copy",
+      "dialogBodyBid": "Only the brand will see your price. They'll also see your profile and contacts. You'll see theirs too",
+      "bid": "Your price",
+      "bidHint": "Total for all content in the listing",
+      "yourBid": "Your price: {amount} {currency}"
     },
     "back": "Back",
     "payLogin": "Log in to see the pay",

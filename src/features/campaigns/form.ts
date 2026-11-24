@@ -15,7 +15,7 @@ export const STEP_FIELDS = {
 /** Minimum follower presets offered as chips (0 = anyone). */
 export const MIN_FOLLOWER_OPTIONS = [0, 1_000, 5_000, 10_000, 50_000, 100_000] as const;
 
-/** Payment types a brand picks from: paid, barter, unpaid. */
+/** Payment types a brand picks from: paid, bid, barter, unpaid. */
 export { LISTING_COMPENSATION_TYPES as COMPENSATION_TYPES } from "@/schemas";
 
 export function emptyCampaignForm(): CampaignFormValues {
@@ -47,14 +47,16 @@ export function localToday() {
 
 /**
  * Form values → API payload: the model is "ugc" only when every format is a UGC video;
- * drop what doesn't apply to the payment type (amount only when paid, no extras when unpaid).
+ * drop what doesn't apply to the payment type (amount only when paid or as a bid ceiling, no
+ * extras when unpaid).
  */
 export function toPayload<T extends CampaignDraft>(v: T): T {
   return {
     ...v,
     collaboration_model:
       v.deliverables.length > 0 && v.deliverables.every((d) => d.format === "ugc_video") ? "ugc" : "post",
-    compensation_value: v.compensation_type === "money" ? v.compensation_value : null,
+    compensation_value:
+      v.compensation_type === "money" || v.compensation_type === "bid" ? v.compensation_value : null,
     // Paid listings may add a product/service on top; unpaid ones offer nothing.
     compensation_details: v.compensation_type === "unpaid" ? null : v.compensation_details,
   };

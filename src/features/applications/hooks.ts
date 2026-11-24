@@ -13,8 +13,8 @@ export type ApplyResult = {
 export function useApply(campaignId: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (message?: string) =>
-      api<ApplyResult>(`/campaigns/${campaignId}/apply`, { method: "POST", json: { message } }),
+    mutationFn: (input: { message?: string; bid_amount?: number }) =>
+      api<ApplyResult>(`/campaigns/${campaignId}/apply`, { method: "POST", json: input }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["applications"] }),
   });
 }
@@ -22,6 +22,8 @@ export function useApply(campaignId: string) {
 /** The creator's own applications (newest first). */
 export type MyApplication = {
   id: string;
+  /** The creator's price on a bid listing. */
+  bid_amount: number | null;
   created_at: string;
   campaign: { id: string; title: string | null; status: string; deadline: string | null } | null;
 };
@@ -38,6 +40,8 @@ export function useMyApplications(enabled = true) {
 export type Applicant = {
   id: string;
   message: string | null;
+  /** The creator's price on a bid listing (sealed: only this brand sees it). */
+  bid_amount: number | null;
   created_at: string;
   creator: {
     id: string;

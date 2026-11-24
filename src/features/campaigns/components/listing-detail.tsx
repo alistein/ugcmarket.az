@@ -238,7 +238,10 @@ function Listing({
       {/* Creators act right after the key facts; owners and previews don't apply. */}
       {d.status === "published" && !isOwner && (
         <div className="mt-6">
-          <ApplyBlock campaignId={d.id} />
+          <ApplyBlock
+            campaignId={d.id}
+            bidCurrency={d.compensation_type === "bid" ? d.currency : undefined}
+          />
         </div>
       )}
 

@@ -94,9 +94,15 @@ export function ListingCard({ data: d, className }: { data: ListingCardData; cla
 
 /**
  * The pay is what creators scan for first, so it is the card's big figure: the amount for paid
- * listings (plus any product/service on top), the word plus what's offered for barter.
- * Unpaid and "amount not set yet" stay quiet.
+ * listings (plus any product/service on top), the word plus what's offered for barter or bid
+ * (with the bid ceiling, if any). Unpaid and "amount not set yet" stay quiet.
  */
+export function formatAmount(value: number, locale: string) {
+  // az/ru group with a space ("1 200"); browsers often lack az number data and fall back to
+  // English commas, so az borrows ru formatting.
+  return new Intl.NumberFormat(locale === "en" ? "en" : "ru", { maximumFractionDigits: 2 }).format(value);
+}
+
 export function Pay({
   data: d,
 }: {
@@ -110,11 +116,7 @@ export function Pay({
   const big = "text-3xl font-semibold tracking-[-0.035em]";
 
   if (d.compensation_type === "money" && d.compensation_value) {
-    // az/ru group with a space ("1 200"); browsers often lack az number data and fall back to
-    // English commas, so az borrows ru formatting.
-    const amount = new Intl.NumberFormat(locale === "en" ? "en" : "ru", { maximumFractionDigits: 2 }).format(
-      d.compensation_value,
-    );
+    const amount = formatAmount(d.compensation_value, locale);
     return (
       <div className="mt-3">
         <p className={cn("tabular-nums", big)}>
@@ -132,6 +134,22 @@ export function Pay({
     );
   }
   const label = tt(`compensation.${d.compensation_type}` as never);
+  if (d.compensation_type === "bid")
+    return (
+      <div className="mt-3">
+        <p className={big}>{label}</p>
+        {d.compensation_value ? (
+          <p className="mt-0.5 text-sm text-muted-foreground tabular-nums">
+            {tt("bidUpTo", { amount: formatAmount(d.compensation_value, locale), currency: d.currency })}
+          </p>
+        ) : null}
+        {d.compensation_details && (
+          <p className="mt-0.5 line-clamp-2 text-sm text-pretty text-muted-foreground">
+            + {d.compensation_details}
+          </p>
+        )}
+      </div>
+    );
   if (d.compensation_type === "barter")
     return (
       <div className="mt-3">

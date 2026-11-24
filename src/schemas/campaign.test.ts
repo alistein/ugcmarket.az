@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ApplicationInput } from "./application";
 import { CampaignDraft, CampaignInput } from "./campaign";
 
 const future = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
@@ -40,6 +41,14 @@ describe("CampaignInput", () => {
     expect(paths({ ...base, compensation_type: "barter", compensation_value: "" })).toEqual([]);
   });
 
+  it("bid listings take an optional budget ceiling", () => {
+    expect(paths({ ...base, compensation_type: "bid", compensation_value: "" })).toEqual([]);
+    expect(
+      CampaignInput.parse({ ...base, compensation_type: "bid", compensation_value: "500" })
+        .compensation_value,
+    ).toBe(500);
+  });
+
   it("rejects a past deadline", () => {
     expect(paths({ ...base, deadline: "2020-01-01" })).toEqual(["deadline"]);
   });
@@ -59,7 +68,7 @@ describe("CampaignInput", () => {
     ]);
   });
 
-  it("offers paid, barter and unpaid only", () => {
+  it("offers paid, bid, barter and unpaid only", () => {
     expect(paths({ ...base, compensation_type: "product" })).toEqual(["compensation_type"]);
     expect(paths({ ...base, compensation_type: "unpaid", compensation_value: "" })).toEqual([]);
   });
@@ -127,5 +136,18 @@ describe("CampaignDraft", () => {
     const row = CampaignDraft.parse({ ...base, description: "" });
     expect(CampaignInput.safeParse(row).success).toBe(false);
     expect(CampaignInput.safeParse({ ...row, description: base.description }).success).toBe(true);
+  });
+});
+
+describe("ApplicationInput", () => {
+  it("parses a bid from a form string; empty means no bid", () => {
+    expect(ApplicationInput.parse({ bid_amount: "250" }).bid_amount).toBe(250);
+    expect(ApplicationInput.parse({ bid_amount: "" }).bid_amount).toBeNull();
+    expect(ApplicationInput.parse({}).bid_amount).toBeUndefined();
+  });
+
+  it("rejects a zero, negative or huge bid", () => {
+    for (const bid_amount of [0, -5, 2_000_000])
+      expect(ApplicationInput.safeParse({ bid_amount }).success).toBe(false);
   });
 });

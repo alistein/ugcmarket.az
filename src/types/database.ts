@@ -79,6 +79,7 @@ export type Database = {
       }
       applications: {
         Row: {
+          bid_amount: number | null
           campaign_id: string
           contact_revealed_at: string | null
           created_at: string
@@ -87,6 +88,7 @@ export type Database = {
           message: string | null
         }
         Insert: {
+          bid_amount?: number | null
           campaign_id: string
           contact_revealed_at?: string | null
           created_at?: string
@@ -95,6 +97,7 @@ export type Database = {
           message?: string | null
         }
         Update: {
+          bid_amount?: number | null
           campaign_id?: string
           contact_revealed_at?: string | null
           created_at?: string
@@ -707,7 +710,13 @@ export type Database = {
         | "closed"
         | "rejected"
       collaboration_model: "post" | "ugc"
-      compensation_type: "money" | "product" | "service" | "barter" | "unpaid"
+      compensation_type:
+        | "money"
+        | "product"
+        | "service"
+        | "barter"
+        | "unpaid"
+        | "bid"
       post_format:
         | "reels"
         | "stories"
@@ -859,7 +868,14 @@ export const Constants = {
         "rejected",
       ],
       collaboration_model: ["post", "ugc"],
-      compensation_type: ["money", "product", "service", "barter", "unpaid"],
+      compensation_type: [
+        "money",
+        "product",
+        "service",
+        "barter",
+        "unpaid",
+        "bid",
+      ],
       post_format: [
         "reels",
         "stories",

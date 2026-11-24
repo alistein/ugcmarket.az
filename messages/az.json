@@ -94,7 +94,8 @@
     "amount": "Məbləği daxil edin",
     "deadlinePast": "Bu gündən sonrakı tarixi seçin",
     "date": "Tarix düzgün deyil",
-    "formatsMin": "Ən azı bir format seçin"
+    "formatsMin": "Ən azı bir format seçin",
+    "bidRequired": "Qiymətinizi daxil edin"
   },
   "landing": {
     "nav": {
@@ -429,8 +430,10 @@
       "product": "Məhsul",
       "service": "Xidmət",
       "barter": "Barter",
-      "unpaid": "Ödənişsiz"
-    }
+      "unpaid": "Ödənişsiz",
+      "bid": "Qiymət təklifi"
+    },
+    "bidUpTo": "Büdcə {amount} {currency}-dək"
   },
   "creator": {
     "setup": {
@@ -865,7 +868,9 @@
       "countsLabel": "Hər formatdan neçə paylaşım lazımdır?",
       "extra": "Əlavə olaraq",
       "extraPh": "Məsələn, iki nəfərlik səhər yeməyi",
-      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq"
+      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq",
+      "budget": "Maksimum büdcə",
+      "budgetHint": "Məcburi deyil. Kreatorlar qiymətlərini müraciət edərkən yazacaq"
     },
     "card": {
       "noTitle": "Elanın adı",
@@ -937,7 +942,8 @@
     "followers": "izləyici",
     "avgViews": "orta baxış",
     "checked": "Avtomatik yoxlanılıb",
-    "noContacts": "Kreator əlaqə məlumatı qeyd etməyib"
+    "noContacts": "Kreator əlaqə məlumatı qeyd etməyib",
+    "bid": "qiymət təklifi"
   },
   "listing": {
     "city": "Şəhər",
@@ -974,7 +980,11 @@
       "noContacts": "Brend əlaqə məlumatı qeyd etməyib",
       "copy": "Kopyala",
       "copied": "Kopyalandı",
-      "copyFailed": "Kopyalamaq mümkün olmadı"
+      "copyFailed": "Kopyalamaq mümkün olmadı",
+      "dialogBodyBid": "Qiymətinizi yalnız brend görəcək. Brend həm də profilinizi və əlaqə məlumatlarınızı görəcək. Siz də brendin əlaqə məlumatlarını görəcəksiniz",
+      "bid": "Sizin qiymətiniz",
+      "bidHint": "Elandakı bütün kontent üçün ümumi məbləğ",
+      "yourBid": "Sizin qiymətiniz: {amount} {currency}"
     },
     "back": "Geri",
     "payLogin": "Qiyməti görmək üçün daxil olun",

@@ -2,6 +2,7 @@ import "server-only";
 import { track } from "@/server/analytics";
 import type { SessionUser } from "@/server/auth";
 import { createAdminClient, createUserClient } from "@/server/db/supabase";
+import type { ApplicationInput } from "@/schemas";
 import { errors } from "@/server/http/errors";
 import { getOwnCampaign } from "./campaigns";
 import { getMyCreator } from "./creators";
@@ -9,19 +10,26 @@ import { getMyCreator } from "./creators";
 /**
  * Creator applies → application is logged → brand contact is revealed.
  * The deal itself happens off-platform (Instagram/phone). See wiki: off-platform-deal-model.
+ * On a "bid" listing the creator also names their price (sealed: only the brand sees it).
  */
-export async function apply(user: SessionUser, campaignId: string, message?: string) {
+export async function apply(
+  user: SessionUser,
+  campaignId: string,
+  { message, bid_amount }: ApplicationInput,
+) {
   const supabase = await createUserClient();
   const creator = await getMyCreator(user);
   if (creator.review_status !== "approved") throw errors.forbidden();
 
   const { data: campaign } = await supabase
     .from("campaigns")
-    .select("id, brand_id, status, min_followers")
+    .select("id, brand_id, status, min_followers, compensation_type")
     .eq("id", campaignId)
     .eq("status", "published")
     .maybeSingle();
   if (!campaign) throw errors.notFound("campaign");
+
+  const isBid = campaign.compensation_type === "bid";
 
   const { data: existing } = await supabase
     .from("applications")
@@ -32,14 +40,26 @@ export async function apply(user: SessionUser, campaignId: string, message?: str
 
   let applicationId = existing?.id;
   if (!applicationId) {
+    // A bid is set once, with the application; showing the contacts again needs no bid.
+    if (isBid && !bid_amount)
+      throw errors.validation({ formErrors: [], fieldErrors: { bid_amount: ["validation.bidRequired"] } });
     const { data, error } = await supabase
       .from("applications")
-      .insert({ campaign_id: campaignId, creator_id: creator.id, message, contact_revealed_at: new Date().toISOString() })
+      .insert({
+        campaign_id: campaignId,
+        creator_id: creator.id,
+        message,
+        bid_amount: isBid ? bid_amount : null,
+        contact_revealed_at: new Date().toISOString(),
+      })
       .select("id")
       .single();
     if (error) throw error;
     applicationId = data.id;
-    await track(user.id, "application_created", { campaign_id: campaignId });
+    await track(user.id, "application_created", {
+      campaign_id: campaignId,
+      ...(isBid && { bid_amount }),
+    });
   }
 
   // Contacts are private (RLS); read with service role only after the application exists.
@@ -60,7 +80,7 @@ export async function listApplicants(user: SessionUser, campaignId: string) {
   const { data, error } = await supabase
     .from("applications")
     .select(
-      "id, message, created_at, creator:creators(id, handle, display_name, avatar_url, city, categories, creator_socials(network, handle, followers, avg_views), creator_social_stats(network, handle, followers, avg_views, avg_likes, fetched_at)), post_submissions(*)",
+      "id, message, bid_amount, created_at, creator:creators(id, handle, display_name, avatar_url, city, categories, creator_socials(network, handle, followers, avg_views), creator_social_stats(network, handle, followers, avg_views, avg_likes, fetched_at)), post_submissions(*)",
     )
     .eq("campaign_id", campaignId)
     .order("created_at", { ascending: false });
@@ -81,7 +101,9 @@ export async function listMyApplications(user: SessionUser) {
   const creator = await getMyCreator(user);
   const { data, error } = await supabase
     .from("applications")
-    .select("id, created_at, campaign:campaigns(id, title, status, deadline, brand:brands(name, logo_url)), post_submissions(*)")
+    .select(
+      "id, bid_amount, created_at, campaign:campaigns(id, title, status, deadline, compensation_type, currency, brand:brands(name, logo_url)), post_submissions(*)",
+    )
     .eq("creator_id", creator.id)
     .order("created_at", { ascending: false });
   if (error) throw error;

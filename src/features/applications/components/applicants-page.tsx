@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BackToBrand } from "@/features/campaigns/components/campaign-form";
+import { formatAmount } from "@/features/campaigns/components/listing-card";
 import { type OwnCampaign, useOwnCampaign } from "@/features/campaigns/hooks";
 import { type CreatorPublic, socialNumbers } from "@/features/creators/hooks";
 import { Link } from "@/i18n/navigation";
@@ -184,7 +185,7 @@ function Applicants({ campaign: c, list }: { campaign: OwnCampaign; list: Applic
           <p className="mt-6 text-sm text-pretty text-muted-foreground">{t("contactNote")}</p>
           <ul className="mt-4 grid gap-4 lg:grid-cols-2">
             {list.map((a) => (
-              <ApplicantCard key={a.id} applicant={a} />
+              <ApplicantCard key={a.id} applicant={a} currency={c.currency} />
             ))}
           </ul>
         </>
@@ -202,8 +203,11 @@ async function copy(text: string, ok: string, failed: string) {
   }
 }
 
-/** One applicant: who they are, their Instagram numbers, their note, and how to reach them. */
-function ApplicantCard({ applicant: a }: { applicant: Applicant }) {
+/**
+ * One applicant: who they are, their bid (on bid listings), their Instagram numbers, their note,
+ * and how to reach them.
+ */
+function ApplicantCard({ applicant: a, currency }: { applicant: Applicant; currency: string }) {
   const t = useTranslations("applicants");
   const tt = useTranslations("taxonomy");
   const locale = useLocale();
@@ -247,29 +251,44 @@ function ApplicantCard({ applicant: a }: { applicant: Applicant }) {
         <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{applied}</span>
       </div>
 
-      {numbers && (
-        <div className="mt-4 flex items-end gap-6">
-          <div>
-            <p className="flex items-center gap-1.5 text-2xl font-semibold tracking-[-0.03em] tabular-nums">
-              {numbers.followers != null ? compact.format(numbers.followers) : "?"}
-              {numbers.checked && (
-                <HugeiconsIcon
-                  icon={CheckmarkBadge01Icon}
-                  strokeWidth={2}
-                  className="size-4 text-mint-ink"
-                  aria-label={t("checked")}
-                />
-              )}
-            </p>
-            <p className="text-xs text-muted-foreground">{t("followers")}</p>
-          </div>
-          {numbers.avg_views != null && (
+      {(numbers || a.bid_amount != null) && (
+        <div className="mt-4 flex flex-wrap items-end gap-x-6 gap-y-3">
+          {a.bid_amount != null && (
             <div>
               <p className="text-2xl font-semibold tracking-[-0.03em] tabular-nums">
-                {compact.format(numbers.avg_views)}
+                {formatAmount(a.bid_amount, locale)}
+                <span className="ml-1 text-sm font-medium tracking-normal text-muted-foreground">
+                  {currency}
+                </span>
               </p>
-              <p className="text-xs text-muted-foreground">{t("avgViews")}</p>
+              <p className="text-xs text-muted-foreground">{t("bid")}</p>
             </div>
+          )}
+          {numbers && (
+            <>
+              <div>
+                <p className="flex items-center gap-1.5 text-2xl font-semibold tracking-[-0.03em] tabular-nums">
+                  {numbers.followers != null ? compact.format(numbers.followers) : "?"}
+                  {numbers.checked && (
+                    <HugeiconsIcon
+                      icon={CheckmarkBadge01Icon}
+                      strokeWidth={2}
+                      className="size-4 text-mint-ink"
+                      aria-label={t("checked")}
+                    />
+                  )}
+                </p>
+                <p className="text-xs text-muted-foreground">{t("followers")}</p>
+              </div>
+              {numbers.avg_views != null && (
+                <div>
+                  <p className="text-2xl font-semibold tracking-[-0.03em] tabular-nums">
+                    {compact.format(numbers.avg_views)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{t("avgViews")}</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

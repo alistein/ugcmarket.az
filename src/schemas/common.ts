@@ -11,13 +11,14 @@ export type SocialNetwork = z.infer<typeof SocialNetwork>;
 export const CollaborationModel = z.enum(["post", "ugc"]);
 
 /** Spec §6: compensation types. */
-export const CompensationType = z.enum(["money", "product", "service", "barter", "unpaid"]);
+export const CompensationType = z.enum(["money", "product", "service", "barter", "unpaid", "bid"]);
 
 /**
- * What a brand can pick for a listing (founders, 2026-11-19): paid, barter or unpaid.
+ * What a brand can pick for a listing (founders, 2026-11-19): paid, bid, barter or unpaid.
  * "product" and "service" stay in the DB enum but are folded into barter in the product.
+ * "bid" (2026-11-23): creators name their price when applying; the amount is an optional ceiling.
  */
-export const LISTING_COMPENSATION_TYPES = ["money", "barter", "unpaid"] as const;
+export const LISTING_COMPENSATION_TYPES = ["money", "bid", "barter", "unpaid"] as const;
 export const ListingCompensationType = z.enum(LISTING_COMPENSATION_TYPES);
 
 export const PostFormat = z.enum([

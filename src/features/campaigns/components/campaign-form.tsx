@@ -624,17 +624,23 @@ export function PayFields({ form }: { form: CampaignForm }) {
         )}
       </Field>
 
-      {type === "money" && (
-        // Amount, plus an optional extra on top: a product, a service or both.
+      {(type === "money" || type === "bid") && (
+        // Paid: the amount. Bid: an optional ceiling, creators name their price when applying.
+        // Either way an optional extra on top: a product, a service or both.
         <div className="grid gap-5 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
-          <Field required label={t("amount")} error={errors.compensation_value}>
+          <Field
+            required={type === "money"}
+            label={t(type === "bid" ? "budget" : "amount")}
+            hint={type === "bid" ? t("budgetHint") : undefined}
+            error={errors.compensation_value}
+          >
             {(a) => (
               <div className="relative">
                 <Input
                   {...a}
                   {...register("compensation_value")}
                   inputMode="decimal"
-                  placeholder="150"
+                  placeholder={type === "bid" ? "500" : "150"}
                   className="pr-14 tabular-nums"
                 />
                 <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-muted-foreground">

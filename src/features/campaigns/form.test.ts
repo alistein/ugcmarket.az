@@ -31,6 +31,14 @@ const saved: OwnCampaign = {
 };
 
 describe("campaign form helpers", () => {
+  it("bid listings keep the budget ceiling and the extra", () => {
+    const p = toPayload(
+      CampaignInput.parse({ ...campaignToForm(saved), compensation_type: "bid", compensation_value: "500" }),
+    );
+    expect(p.compensation_value).toBe(500);
+    expect(p.compensation_details).toBe("Breakfast for two");
+  });
+
   it("unpaid listings offer nothing extra", () => {
     const p = toPayload(CampaignInput.parse({ ...campaignToForm(saved), compensation_type: "unpaid" }));
     expect(p.compensation_details).toBeNull();
