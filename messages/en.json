@@ -721,8 +721,7 @@
       "ctaBody": "Post a listing and creators will apply to you",
       "ctaButton": "Post a listing",
       "priceFrom": "from {amount} {currency}",
-      "tagsTitle": "About them",
-      "dashboard": "Dashboard"
+      "tagsTitle": "About them"
     },
     "why": {
       "link": "Why do we ask?",

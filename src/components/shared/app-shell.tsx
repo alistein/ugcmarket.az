@@ -37,26 +37,37 @@ import { homeFor } from "@/lib/auth-routes";
  * Parts that read the URL sit in their own Suspense, so the shell can also be a loading fallback.
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const { data: me } = useMe();
   return (
     <div className="flex min-h-dvh flex-col bg-background">
-      <header className="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 pt-5 pb-2 sm:pt-7">
-        <Link href={me?.role ? homeFor(me.role) : "/"} className="group/logo text-xl">
-          <Logo />
-        </Link>
-        <div className="ml-auto flex items-center gap-2">
-          {/* Both use usePathname → each in its own Suspense (the shell is also a Suspense fallback). */}
-          <Suspense fallback={null}>
-            <HeaderAction role={me?.role} hasBrand={!!me?.brand} hasCreator={!!me?.creator} />
-          </Suspense>
-          <Suspense fallback={<span className="h-9 w-16" aria-hidden />}>
-            <LanguageMenu />
-          </Suspense>
-          <AccountMenu />
-        </div>
-      </header>
+      <AppHeader className="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 pt-5 pb-2 sm:pt-7" />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-16 sm:pt-10">{children}</main>
     </div>
+  );
+}
+
+/**
+ * The signed-in header: logo (to the dashboard), the role's one action, language and the avatar
+ * menu. Shared by the app pages and by public pages (board, listing, creator profile) when the
+ * visitor is signed in, so the navbar stays the same everywhere. `className` sets the width.
+ */
+export function AppHeader({ className }: { className: string }) {
+  const { data: me } = useMe();
+  return (
+    <header className={className}>
+      <Link href={me?.role ? homeFor(me.role) : "/"} className="group/logo text-xl">
+        <Logo />
+      </Link>
+      <div className="ml-auto flex items-center gap-2">
+        {/* Both use usePathname → each in its own Suspense (the shell is also a Suspense fallback). */}
+        <Suspense fallback={null}>
+          <HeaderAction role={me?.role} hasBrand={!!me?.brand} hasCreator={!!me?.creator} />
+        </Suspense>
+        <Suspense fallback={<span className="h-9 w-16" aria-hidden />}>
+          <LanguageMenu />
+        </Suspense>
+        <AccountMenu />
+      </div>
+    </header>
   );
 }
 
@@ -73,6 +84,8 @@ function HeaderAction({
   const t = useTranslations("app");
   const pathname = usePathname();
   const cls = "hidden bg-foreground text-background hover:bg-foreground/90 sm:inline-flex";
+  // The board has its own "post a listing" button and is itself "browse listings".
+  if (pathname === "/campaigns") return null;
   if (role === "creator" && hasCreator)
     return (
       <Button className={cls} nativeButton={false} render={<Link href="/campaigns" />}>
