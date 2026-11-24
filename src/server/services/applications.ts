@@ -66,9 +66,11 @@ export async function apply(
   }
 
   // Contacts are private (RLS); read with service role only after the application exists.
+  // Creators get the brand's Instagram only. Phone and email are personal (often an employee's
+  // own) and never leave the server (founders, 2026-11-24).
   const { data: contact } = await createAdminClient()
     .from("brand_contacts")
-    .select("instagram, phone, email")
+    .select("instagram")
     .eq("brand_id", campaign.brand_id)
     .maybeSingle();
   await track(user.id, "contact_revealed", { campaign_id: campaignId });

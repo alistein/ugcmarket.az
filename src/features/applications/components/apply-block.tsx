@@ -5,8 +5,6 @@ import {
   Clock01Icon,
   Copy01Icon,
   InstagramIcon,
-  Mail01Icon,
-  SmartPhone01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
@@ -286,18 +284,6 @@ function Contacts({ contact }: { contact: ApplyResult["contact"] }) {
       value: `@${contact.instagram}`,
       copy: contact.instagram,
       external: true,
-    },
-    contact?.phone && {
-      icon: SmartPhone01Icon,
-      href: `tel:${contact.phone.replace(/[^\d+]/g, "")}`,
-      value: contact.phone,
-      copy: contact.phone,
-    },
-    contact?.email && {
-      icon: Mail01Icon,
-      href: `mailto:${contact.email}`,
-      value: contact.email,
-      copy: contact.email,
     },
   ].filter(Boolean) as {
     icon: typeof InstagramIcon;

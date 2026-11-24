@@ -7,7 +7,8 @@ import { api } from "@/lib/api-client";
 export type ApplyResult = {
   application_id: string;
   already_applied: boolean;
-  contact: { instagram: string | null; phone: string | null; email: string | null } | null;
+  /** Brand Instagram only: phone and email are never sent to creators. */
+  contact: { instagram: string | null } | null;
 };
 
 export function useApply(campaignId: string) {
