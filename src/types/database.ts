@@ -755,6 +755,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      brand_has_published_listing: { Args: { b: string }; Returns: boolean }
       handle_available: { Args: { h: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       my_role: {
