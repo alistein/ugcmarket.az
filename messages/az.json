@@ -95,7 +95,8 @@
     "deadlinePast": "Bu gündən sonrakı tarixi seçin",
     "date": "Tarix düzgün deyil",
     "formatsMin": "Ən azı bir format seçin",
-    "bidRequired": "Qiymətinizi daxil edin"
+    "bidRequired": "Qiymətinizi daxil edin",
+    "birthYear": "İli 4 rəqəmlə yazın. Yaşınız 16 ilə 80 arasında olmalıdır"
   },
   "landing": {
     "nav": {
@@ -354,8 +355,7 @@
     "language": "Dil",
     "myListings": "Elanlarım",
     "newListing": "Elan yerləşdir",
-    "brandProfile": "Brend profili",
-    "brandSetup": "Brend profilini yarat"
+    "brandProfile": "Brend profili"
   },
   "taxonomy": {
     "categories": {
@@ -433,7 +433,18 @@
       "unpaid": "Ödənişsiz",
       "bid": "Qiymət təklifi"
     },
-    "bidUpTo": "Büdcə {amount} {currency}-dək"
+    "bidUpTo": "Büdcə {amount} {currency}-dək",
+    "genders": {
+      "female": "Qadın",
+      "male": "Kişi"
+    },
+    "ageRanges": {
+      "under_18": "18-dən kiçik",
+      "18_24": "18–24 yaş",
+      "25_34": "25–34 yaş",
+      "35_44": "35–44 yaş",
+      "45_plus": "45+ yaş"
+    }
   },
   "creator": {
     "setup": {
@@ -483,26 +494,27 @@
       "handle": "İstifadəçi adı",
       "handleHint": "Profil linkiniz: kiçik hərflər, rəqəmlər, nöqtə və alt xətt",
       "handleFree": "Bu ad boşdur: /creator/{handle}",
+      "gender": "Cins",
+      "birthYear": "Doğum ili",
+      "birthYearPh": "1998",
+      "birthYearHint": "Brendlər yalnız yaş aralığınızı görəcək, məsələn 25–34",
       "city": "Şəhər",
       "cityPh": "Şəhəri seçin",
       "bio": "Haqqında",
-      "bioHint": "Nə çəkdiyinizi, auditoriyanızı və sizi fərqləndirən cəhətləri yazın",
       "bioPh": "Bakıda yaşayıram, lifestyle və gözəllik mövzusunda kontent çəkirəm…",
       "categories": "Kateqoriyalar",
       "categoriesHint": "5 kateqoriyaya qədər seçə bilərsiniz",
       "languages": "Kontent dili",
       "barter": "Barterə açığam",
       "barterHint": "Pul əvəzinə məhsul və ya xidmət qarşılığında əməkdaşlıq",
-      "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
         "youtube": "YouTube"
       },
-      "username": "İstifadəçi adı və ya link",
       "followers": "İzləyici",
       "avgViews": "Orta baxış",
-      "contactsHint": "Əlaqə məlumatlarınız gizlidir. Onları yalnız müraciət etdiyiniz elanın brendi görür",
+      "contactsHint": "Gizlidir. Yalnız müraciət etdiyiniz elanın brendi görür",
       "contactInstagram": "Əlaqə üçün Instagram",
       "contactPhone": "Telefon",
       "pricesHint": "Bir paylaşım üçün təxmini qiyməti AZN ilə yazın. Sahəni boş saxlasanız, profilinizdə \"razılaşma yolu ilə\" görünəcək",
@@ -516,7 +528,7 @@
         "save": "Yadda saxla",
         "saving": "Yüklənir…"
       },
-      "moreNetworksSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik yalnız Instagram hesabınızı qeyd edin",
+      "soon": "Tezliklə",
       "connect": "Hesabı qoş",
       "reconnect": "Yenilə",
       "connecting": "Hesab yoxlanılır. Bu, 30 saniyəyə qədər çəkə bilər",
@@ -526,7 +538,10 @@
       "termsTitle": "Şərtlər",
       "termsHint": "Brendlər hansı şərtlərlə işlədiyinizi profilinizdə görəcək. Heç birini seçməsəniz, «Yalnız ödənişli» göstəriləcək",
       "repost": "Pulsuz əməkdaşlığa açığam",
-      "repostHint": "Ödəniş əvəzinə brend Reels və ya story-nizi öz səhifəsində paylaşır"
+      "repostHint": "Ödəniş əvəzinə brend Reels və ya story-nizi öz səhifəsində paylaşır",
+      "contactsTitle": "Əlaqə",
+      "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik",
+      "username": "İstifadəçi adı və ya link"
     },
     "portfolio": {
       "title": "Portfolio",
@@ -552,9 +567,6 @@
       "dialogTitle": "Portfolioya iş əlavə edin"
     },
     "dashboard": {
-      "setupTitle": "Kreator profilinizi yaradın",
-      "setupBody": "Brendlər sizi profiliniz vasitəsilə tanıyır: kim olduğunuz, hansı kontenti çəkdiyiniz və auditoriyanız. Cəmi 4 qısa addım, təxminən 5 dəqiqə",
-      "setupCta": "Profili yaratmağa başla",
       "hello": "Salam, {name}",
       "completeTitle": "Profilin dolğunluğu",
       "checklist": {
@@ -606,15 +618,6 @@
       "applicationsEmpty": "Hələ müraciətiniz yoxdur",
       "pricesEmpty": "Qiymət göstərilməyib. Profilinizdə \"razılaşma yolu ilə\" görünür",
       "editPrices": "Qiymətləri dəyiş",
-      "setupEyebrow": "Kreatorlar üçün",
-      "applyRule": "Elanlara müraciət etmək üçün profiliniz tam doldurulmalı və komandamız tərəfindən təsdiqlənməlidir",
-      "visual": {
-        "city": "Bakı",
-        "tag1": "Gözəllik",
-        "tag2": "Lifestyle",
-        "barter": "Barterə açıq",
-        "followers": "izləyici"
-      },
       "checked": "Avtomatik yoxlanılıb",
       "statsCheckedAt": "Rəqəmlər avtomatik yoxlanılıb: {when}",
       "statsSelfReported": "Rəqəmləri özünüz daxil etmisiniz. Avtomatik yoxlama tezliklə əlavə olunacaq",

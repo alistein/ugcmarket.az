@@ -1,11 +1,13 @@
 import { z } from "zod";
 import {
+  BirthYear,
   City,
   ContentLanguage,
   CreatorCategory,
   CreatorHandle,
   ENABLED_NETWORKS,
   ENABLED_PRICE_FORMATS,
+  Gender,
   PRICE_FORMATS,
   Phone,
   SocialUsername,
@@ -25,17 +27,34 @@ const optionalCount = z
   .trim()
   .refine((v) => v === "" || /^\d{1,9}$/.test(v.replace(/[\s.,]/g, "")), "validation.number");
 
-const SocialRow = z
-  .object({ handle: z.string().trim(), followers: optionalCount, avg_views: optionalCount })
-  .superRefine((row, ctx) => {
-    if (!row.handle) return;
-    if (!SocialUsername.safeParse(row.handle).success) {
-      ctx.addIssue({ code: "custom", path: ["handle"], message: "validation.socialHandle" });
-    }
-    // Numbers come only from "connect account" (API lookup); typing a handle isn't enough.
-    if (!row.followers)
-      ctx.addIssue({ code: "custom", path: ["handle"], message: "validation.lookupRequired" });
-  });
+/**
+ * One network row. Editing a profile: numbers come only from "connect account" (API lookup), so
+ * typing a handle isn't enough. Sign-up asks for the username only; the server looks it up on create.
+ */
+const socialRow = (requireLookup: boolean) =>
+  z
+    .object({ handle: z.string().trim(), followers: optionalCount, avg_views: optionalCount })
+    .superRefine((row, ctx) => {
+      if (!row.handle) return;
+      if (!SocialUsername.safeParse(row.handle).success) {
+        ctx.addIssue({ code: "custom", path: ["handle"], message: "validation.socialHandle" });
+        return;
+      }
+      if (requireLookup && !row.followers)
+        ctx.addIssue({ code: "custom", path: ["handle"], message: "validation.lookupRequired" });
+    });
+
+const socials = (requireLookup: boolean) =>
+  z
+    .object({
+      instagram: socialRow(requireLookup),
+      tiktok: socialRow(requireLookup),
+      youtube: socialRow(requireLookup),
+    })
+    .refine((s) => NETWORKS.some((n) => s[n].handle), {
+      message: "validation.socialsMin",
+      path: ["instagram", "handle"],
+    });
 
 const price = z
   .string()
@@ -55,17 +74,18 @@ export const CreatorForm = z.object({
   display_name: z.string().trim().min(1, "validation.required").max(80, "validation.tooLong"),
   handle: CreatorHandle,
   city: z.union([City, z.literal("")]).refine((v) => v !== "", "validation.required"),
+  gender: z.union([Gender, z.literal("")]).refine((v) => v !== "", "validation.required"),
+  birth_year: z
+    .string()
+    .trim()
+    .refine((v) => v !== "", "validation.required")
+    .refine((v) => v === "" || BirthYear.safeParse(v).success, "validation.birthYear"),
   bio: z.string().trim().max(600, "validation.tooLong"),
   categories: z.array(CreatorCategory).min(1, "validation.categoriesMin").max(5, "validation.categoriesMax"),
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin"),
   barter_open: z.boolean(),
   repost_open: z.boolean(),
-  socials: z
-    .object({ instagram: SocialRow, tiktok: SocialRow, youtube: SocialRow })
-    .refine((s) => NETWORKS.some((n) => s[n].handle), {
-      message: "validation.socialsMin",
-      path: ["instagram", "handle"],
-    }),
+  socials: socials(true),
   prices: z.object(priceShape),
   contact_instagram: z
     .string()
@@ -78,9 +98,12 @@ export const CreatorForm = z.object({
 });
 export type CreatorFormValues = z.input<typeof CreatorForm>;
 
+/** Sign-up wizard: same fields, but the social accounts are just usernames (no "connect"). */
+export const CreatorSetupForm = CreatorForm.extend({ socials: socials(false) });
+
 /** Which fields each wizard step owns (validated with form.trigger before moving on). */
 export const STEP_FIELDS = {
-  about: ["avatar_url", "display_name", "handle", "city", "bio"],
+  about: ["avatar_url", "display_name", "handle", "gender", "birth_year", "city", "bio"],
   content: ["categories", "languages"],
   socials: ["socials", "contact_instagram", "contact_phone"],
   prices: ["prices", "barter_open", "repost_open"],
@@ -96,6 +119,8 @@ export function emptyCreatorForm(): CreatorFormValues {
     display_name: "",
     handle: "",
     city: "",
+    gender: "",
+    birth_year: "",
     bio: "",
     categories: [],
     languages: ["az"],
@@ -130,6 +155,8 @@ export function creatorToForm(c: MyCreator): CreatorFormValues {
     display_name: c.display_name,
     handle: c.handle,
     city: City.safeParse(c.city).success ? (c.city as CreatorFormValues["city"]) : "",
+    gender: Gender.safeParse(c.gender).success ? (c.gender as CreatorFormValues["gender"]) : "",
+    birth_year: c.birth_year ? String(c.birth_year) : "",
     bio: c.bio ?? "",
     categories: c.categories.filter(
       (x) => CreatorCategory.safeParse(x).success,
@@ -152,6 +179,8 @@ export function toPayload(v: CreatorFormValues): CreatorProfileInput & { avatar_
     display_name: v.display_name,
     handle: v.handle,
     city: v.city as z.infer<typeof City>,
+    gender: v.gender as z.infer<typeof Gender>,
+    birth_year: Number(v.birth_year),
     bio: v.bio || null,
     categories: v.categories,
     languages: v.languages,
@@ -160,7 +189,7 @@ export function toPayload(v: CreatorFormValues): CreatorProfileInput & { avatar_
     socials: NETWORKS.filter((n) => v.socials[n].handle).map((n) => ({
       network: n,
       handle: SocialUsername.parse(v.socials[n].handle),
-      followers: toInt(v.socials[n].followers),
+      ...(v.socials[n].followers ? { followers: toInt(v.socials[n].followers) } : {}),
       ...(v.socials[n].avg_views ? { avg_views: toInt(v.socials[n].avg_views) } : {}),
     })),
     prices: ENABLED_PRICE_FORMATS.filter((f) => v.prices[f]).map((f) => ({

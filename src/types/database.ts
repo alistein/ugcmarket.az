@@ -432,11 +432,13 @@ export type Database = {
           avatar_url: string | null
           barter_open: boolean
           bio: string | null
+          birth_year: number | null
           categories: string[]
           city: string
           country: string
           created_at: string
           display_name: string
+          gender: string | null
           handle: string
           id: string
           languages: string[]
@@ -449,11 +451,13 @@ export type Database = {
           avatar_url?: string | null
           barter_open?: boolean
           bio?: string | null
+          birth_year?: number | null
           categories?: string[]
           city: string
           country?: string
           created_at?: string
           display_name: string
+          gender?: string | null
           handle: string
           id?: string
           languages?: string[]
@@ -466,11 +470,13 @@ export type Database = {
           avatar_url?: string | null
           barter_open?: boolean
           bio?: string | null
+          birth_year?: number | null
           categories?: string[]
           city?: string
           country?: string
           created_at?: string
           display_name?: string
+          gender?: string | null
           handle?: string
           id?: string
           languages?: string[]

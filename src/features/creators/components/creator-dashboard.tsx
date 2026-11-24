@@ -16,7 +16,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
@@ -31,7 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
@@ -39,8 +39,8 @@ import { completeness } from "../form";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
 import { DealTerms } from "./deal-terms";
 import { PortfolioEditor } from "./portfolio-editor";
-import { SetupPrompt } from "./setup-prompt";
 import { NETWORK_ICON } from "./profile-sections";
+import { useCreatorWho } from "../who";
 
 const SOCIAL_URL = {
   instagram: (h: string) => `https://www.instagram.com/${h}/`,
@@ -54,15 +54,21 @@ const known = <T extends string>(list: readonly T[], v: string): v is T =>
 /** /me — the creator's home: their profile with everything on one page (Luhive-style). */
 export function CreatorDashboard() {
   const t = useTranslations("common");
+  const router = useRouter();
   const { data, isPending, isError } = useMyCreator();
-  if (isPending) return <DashboardSkeleton />;
+  const noProfile = !isPending && !isError && !data;
+  // No profile yet: straight into the setup form.
+  useEffect(() => {
+    if (noProfile) router.replace("/me/profile");
+  }, [noProfile, router]);
+  if (isPending || noProfile) return <DashboardSkeleton />;
   if (isError)
     return (
       <p role="alert" className="text-sm text-destructive">
         {t("loadFailed")}
       </p>
     );
-  return data ? <Home creator={data} /> : <SetupPrompt />;
+  return <Home creator={data!} />;
 }
 
 /** Same grid as Home: side meta column + avatar header, overview card and tabs. */
@@ -102,6 +108,7 @@ function DashboardSkeleton() {
 function Home({ creator: c }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
   const tt = useTranslations("taxonomy");
+  const who = useCreatorWho();
   const [now] = useState(() => Date.now());
   const days = Math.max(0, Math.floor((now - new Date(c.created_at).getTime()) / 86_400_000));
 
@@ -110,6 +117,7 @@ function Home({ creator: c }: { creator: MyCreator }) {
       {/* Side column: meta + links */}
       <aside className="order-2 grid content-start gap-3 text-sm lg:order-1 lg:pt-2">
         <p className="text-muted-foreground">{t("joined", { days })}</p>
+        {who(c) && <p>{who(c)}</p>}
         <p className="flex items-center gap-2.5">
           <HugeiconsIcon icon={Location01Icon} strokeWidth={2} className="size-4 text-muted-foreground" />
           {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}

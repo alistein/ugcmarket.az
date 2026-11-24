@@ -15,6 +15,7 @@ import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import {
   CreatorForm,
+  CreatorSetupForm,
   type CreatorFormValues,
   creatorToForm,
   emptyCreatorForm,
@@ -99,7 +100,7 @@ function ProfileSetup() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("about");
   const form = useForm<CreatorFormValues>({
-    resolver: zodResolver(CreatorForm),
+    resolver: zodResolver(CreatorSetupForm),
     defaultValues: emptyCreatorForm(),
     mode: "onTouched",
   });
@@ -186,7 +187,7 @@ function ProfileSetup() {
 
         {step === "about" && <AboutFields form={form} />}
         {step === "content" && <ContentFields form={form} />}
-        {step === "socials" && <SocialFields form={form} />}
+        {step === "socials" && <SocialFields form={form} connect={false} />}
         {step === "prices" && <PriceFields form={form} />}
 
         <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-border/70 pt-6">

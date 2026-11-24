@@ -80,7 +80,7 @@ export async function listApplicants(user: SessionUser, campaignId: string) {
   const { data, error } = await supabase
     .from("applications")
     .select(
-      "id, message, bid_amount, created_at, creator:creators(id, handle, display_name, avatar_url, city, categories, creator_socials(network, handle, followers, avg_views), creator_social_stats(network, handle, followers, avg_views, avg_likes, fetched_at)), post_submissions(*)",
+      "id, message, bid_amount, created_at, creator:creators(id, handle, display_name, avatar_url, gender, birth_year, city, categories, creator_socials(network, handle, followers, avg_views), creator_social_stats(network, handle, followers, avg_views, avg_likes, fetched_at)), post_submissions(*)",
     )
     .eq("campaign_id", campaignId)
     .order("created_at", { ascending: false });

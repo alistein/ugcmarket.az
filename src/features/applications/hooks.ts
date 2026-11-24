@@ -48,6 +48,8 @@ export type Applicant = {
     handle: string;
     display_name: string;
     avatar_url: string | null;
+    gender: "female" | "male" | null;
+    birth_year: number | null;
     city: string;
     categories: string[];
     creator_socials: {

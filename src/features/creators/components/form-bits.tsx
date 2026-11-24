@@ -19,6 +19,7 @@ export function ChipGroup<T extends string>({
   max,
   invalid,
   describedBy,
+  single,
 }: {
   options: readonly T[];
   value: T[];
@@ -27,11 +28,13 @@ export function ChipGroup<T extends string>({
   max?: number;
   invalid?: boolean;
   describedBy?: string;
+  /** Exactly one choice (radio group): tapping picks it, tapping it again keeps it. */
+  single?: boolean;
 }) {
   const full = max !== undefined && value.length >= max;
   return (
     <div
-      role="group"
+      role={single ? "radiogroup" : "group"}
       aria-describedby={describedBy}
       data-invalid={invalid || undefined}
       className="flex flex-wrap gap-2 rounded-2xl data-invalid:ring-2 data-invalid:ring-destructive/30 data-invalid:ring-offset-4 data-invalid:ring-offset-card"
@@ -42,9 +45,9 @@ export function ChipGroup<T extends string>({
           <button
             key={o}
             type="button"
-            aria-pressed={on}
+            {...(single ? { role: "radio", "aria-checked": on } : { "aria-pressed": on })}
             disabled={!on && full}
-            onClick={() => onChange(on ? value.filter((v) => v !== o) : [...value, o])}
+            onClick={() => onChange(single ? [o] : on ? value.filter((v) => v !== o) : [...value, o])}
             className={cn(
               "inline-flex h-9 items-center gap-1.5 rounded-full px-3.5 text-sm select-none",
               "[transition:scale_160ms_var(--ease-out),background-color_150ms_ease,color_150ms_ease] active:scale-[0.97]",

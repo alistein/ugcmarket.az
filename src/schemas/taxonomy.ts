@@ -58,6 +58,10 @@ export const CITIES = [
   "other",
 ] as const;
 export const City = z.enum(CITIES);
+
+export const GENDERS = ["female", "male"] as const;
+export const Gender = z.enum(GENDERS);
+export type Gender = z.infer<typeof Gender>;
 export type City = z.infer<typeof City>;
 
 export const CONTENT_LANGUAGES = ["az", "ru", "en", "tr"] as const;

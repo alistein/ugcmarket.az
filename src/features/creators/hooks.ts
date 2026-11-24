@@ -24,6 +24,8 @@ export type CreatorPublic = {
   handle: string;
   display_name: string;
   avatar_url: string | null;
+  gender: "female" | "male" | null;
+  birth_year: number | null;
   city: string;
   country: string;
   categories: string[];
@@ -141,6 +143,19 @@ export function useRefreshSocialStats() {
     mutationFn: () => api<Record<string, string>>("/creators/me/socials/refresh", { method: "POST" }),
     onSuccess: () => qc.invalidateQueries({ queryKey: creatorKeys.mine }),
   });
+}
+
+/** Brands see an age range, not the birth year. null when the year isn't set. */
+export const AGE_RANGES = ["18_24", "25_34", "35_44", "45_plus"] as const;
+export type AgeRange = (typeof AGE_RANGES)[number] | "under_18";
+export function ageRange(birthYear: number | null | undefined, now = new Date()): AgeRange | null {
+  if (!birthYear) return null;
+  const age = now.getFullYear() - birthYear;
+  if (age < 18) return "under_18";
+  if (age <= 24) return "18_24";
+  if (age <= 34) return "25_34";
+  if (age <= 44) return "35_44";
+  return "45_plus";
 }
 
 export type MyCreator = CreatorPublic & { contact_instagram: string | null; contact_phone: string | null };

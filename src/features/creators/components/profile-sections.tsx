@@ -7,6 +7,7 @@ import {
   Loading03Icon,
   LockIcon,
   RefreshIcon,
+  SmartPhone01Icon,
   TiktokIcon,
   YoutubeIcon,
 } from "@hugeicons/core-free-icons";
@@ -16,7 +17,9 @@ import { useEffect, useState } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { Field } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiClientError } from "@/lib/api-client";
@@ -27,6 +30,7 @@ import {
   CREATOR_CATEGORIES,
   CreatorHandle,
   ENABLED_PRICE_FORMATS,
+  GENDERS,
   SocialUsername,
 } from "@/schemas";
 import { type CreatorFormValues, NETWORKS, suggestHandle } from "../form";
@@ -74,6 +78,37 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
         )}
       </Field>
       <HandleField form={form} currentHandle={currentHandle} />
+      <Field label={t("gender")} error={errors.gender}>
+        {(a) => (
+          <Controller
+            control={control}
+            name="gender"
+            render={({ field }) => (
+              <ChipGroup
+                single
+                options={GENDERS}
+                value={field.value ? [field.value] : []}
+                onChange={(v) => field.onChange(v[0] ?? "")}
+                label={(g) => tt(`genders.${g}`)}
+                invalid={a["aria-invalid"]}
+                describedBy={a["aria-describedby"]}
+              />
+            )}
+          />
+        )}
+      </Field>
+      <Field label={t("birthYear")} error={errors.birth_year} hint={t("birthYearHint")}>
+        {(a) => (
+          <Input
+            {...a}
+            {...register("birth_year")}
+            inputMode="numeric"
+            autoComplete="bday-year"
+            maxLength={4}
+            placeholder={t("birthYearPh")}
+          />
+        )}
+      </Field>
       <Field label={t("city")} error={errors.city}>
         {(a) => (
           <Controller
@@ -109,7 +144,6 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
         className="sm:col-span-2"
         label={t("bio")}
         error={errors.bio}
-        hint={t("bioHint")}
         aside={<span className="text-xs text-muted-foreground tabular-nums">{bio.length}/600</span>}
       >
         {(a) => <Textarea {...a} {...register("bio")} rows={4} maxLength={600} placeholder={t("bioPh")} />}
@@ -232,53 +266,128 @@ export function ContentFields({ form }: { form: Form }) {
 }
 
 // ── Socials + private contacts ─────────────────────────────────────────────
-export function SocialFields({ form }: { form: Form }) {
+/**
+ * Public accounts (one row per network), then the private contacts brands get after an
+ * application. `connect`: editing looks numbers up per account; sign-up only asks for the username.
+ */
+export function SocialFields({ form, connect = true }: { form: Form; connect?: boolean }) {
   const t = useTranslations("creator.form");
-  const { register, formState } = form;
-  const errors = formState.errors.socials;
+  const errors = form.formState.errors.socials;
   const rootError = (errors as { root?: { message?: string } } | undefined)?.root;
   return (
     <>
-      <p className="-mt-2 text-sm text-muted-foreground">{t("socialsHint")}</p>
+      {connect && <p className="-mt-2 text-sm text-muted-foreground">{t("socialsHint")}</p>}
       {NETWORKS.map((n) => (
         <SocialConnectRow
+          connect={connect}
           key={n}
           form={form}
           network={n}
           rootError={n === "instagram" ? rootError : undefined}
         />
       ))}
-      <p className="text-sm text-muted-foreground">{t("moreNetworksSoon")}</p>
-      <div className="grid gap-4 pt-1 md:grid-cols-2">
-        <p className="flex items-start gap-2 text-sm text-muted-foreground md:col-span-2">
-          <HugeiconsIcon icon={LockIcon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
-          {t("contactsHint")}
-        </p>
-        <Field label={t("contactInstagram")} error={formState.errors.contact_instagram}>
-          {(a) => (
-            <Input
-              {...a}
-              {...register("contact_instagram")}
-              autoCapitalize="none"
-              autoCorrect="off"
-              placeholder="@"
-            />
-          )}
-        </Field>
-        <Field label={t("contactPhone")} error={formState.errors.contact_phone}>
-          {(a) => (
-            <Input
-              {...a}
-              {...register("contact_phone")}
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              placeholder="+994 50 123 45 67"
-            />
-          )}
-        </Field>
-      </div>
+      <SoonRow network="tiktok" />
+      <SubSection title={t("contactsTitle")} subtitle={t("contactsHint")} icon={LockIcon}>
+        <ContactFields form={form} />
+      </SubSection>
     </>
+  );
+}
+
+/** A network we're adding next: same row as a live one, but switched off with a "Soon" badge. */
+function SoonRow({ network }: { network: "tiktok" }) {
+  const t = useTranslations("creator.form");
+  return (
+    <div
+      aria-disabled
+      className="grid gap-3 border-b border-border/70 pb-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-4"
+    >
+      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground md:mt-[1.375rem] md:h-9">
+        <span className="flex size-7 items-center justify-center rounded-full bg-muted">
+          <HugeiconsIcon icon={NETWORK_ICON[network]} strokeWidth={2} className="size-4" />
+        </span>
+        {t(`network.${network}`)}
+      </div>
+      <div className="grid content-start gap-2">
+        <div className="flex items-center gap-2">
+          <Label htmlFor={`soon-${network}`} className="text-muted-foreground">
+            {t("username")}
+          </Label>
+          <Badge variant="secondary">{t("soon")}</Badge>
+        </div>
+        <Input id={`soon-${network}`} disabled placeholder="@" />
+      </div>
+    </div>
+  );
+}
+
+function SubSection({
+  title,
+  subtitle,
+  icon,
+  children,
+}: {
+  title: string;
+  subtitle: string;
+  icon?: typeof LockIcon;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="grid gap-5 pt-2">
+      <div className="grid gap-1">
+        <h3 className="flex items-center gap-1.5 font-semibold tracking-[-0.02em]">
+          {title}
+          {icon && <HugeiconsIcon icon={icon} strokeWidth={2} className="size-4 text-muted-foreground" />}
+        </h3>
+        <p className="text-sm text-pretty text-muted-foreground">{subtitle}</p>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+/**
+ * Only the phone is asked. Brands write to the Instagram account above, so the private contact
+ * Instagram is kept equal to it (no second field to explain).
+ */
+function ContactFields({ form }: { form: Form }) {
+  const t = useTranslations("creator.form");
+  const { register, control, setValue, formState } = form;
+  const publicHandle = useWatch({ control, name: "socials.instagram.handle" }) ?? "";
+
+  useEffect(() => {
+    setValue("contact_instagram", publicHandle, { shouldDirty: true });
+  }, [publicHandle, setValue]);
+
+  const te = useTranslations();
+  const error = formState.errors.contact_phone?.message;
+  return (
+    // Same row as the accounts above: label on the left, field on the right.
+    <div className="grid gap-2 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-4">
+      <Label htmlFor="contact-phone" className="gap-2 md:h-9">
+        <span className="flex size-7 items-center justify-center rounded-full bg-muted">
+          <HugeiconsIcon icon={SmartPhone01Icon} strokeWidth={2} className="size-4" />
+        </span>
+        {t("contactPhone")}
+      </Label>
+      <div className="grid content-start gap-2">
+        <Input
+          id="contact-phone"
+          {...register("contact_phone")}
+          aria-invalid={!!error || undefined}
+          aria-describedby={error ? "contact-phone-msg" : undefined}
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder="+994 50 123 45 67"
+        />
+        {error && (
+          <p id="contact-phone-msg" className="text-xs text-destructive">
+            {te.has(error as never) ? te(error as never) : te("validation.required")}
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -290,10 +399,12 @@ function SocialConnectRow({
   form,
   network,
   rootError,
+  connect: withConnect,
 }: {
   form: Form;
   network: (typeof NETWORKS)[number];
   rootError?: { message?: string };
+  connect: boolean;
 }) {
   const t = useTranslations("creator.form");
   const te = useTranslations();
@@ -338,7 +449,8 @@ function SocialConnectRow({
 
   return (
     <div className="grid gap-3 border-b border-border/70 pb-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-4">
-      <div className="flex items-center gap-2 text-sm font-medium md:pt-8">
+      {/* Label row (14px) + gap (8px) above the field: centre on the 36px input, not below it */}
+      <div className="flex items-center gap-2 text-sm font-medium md:mt-[1.375rem] md:h-9">
         <span className={cn("flex size-7 items-center justify-center rounded-full", NETWORK_TINT[network])}>
           <HugeiconsIcon icon={NETWORK_ICON[network]} strokeWidth={2} className="size-4" />
         </span>
@@ -364,7 +476,7 @@ function SocialConnectRow({
                   }
                 }}
                 onKeyDown={(ev) => {
-                  if (ev.key === "Enter") {
+                  if (ev.key === "Enter" && withConnect) {
                     ev.preventDefault();
                     connect();
                   }
@@ -376,25 +488,27 @@ function SocialConnectRow({
                 placeholder="@"
                 className="flex-1"
               />
-              <Button
-                type="button"
-                variant={connected ? "outline" : "default"}
-                disabled={lookup.isPending}
-                onClick={connect}
-                className="shrink-0"
-              >
-                {lookup.isPending ? (
-                  <HugeiconsIcon
-                    icon={Loading03Icon}
-                    strokeWidth={2}
-                    className="animate-spin"
-                    data-icon="inline-start"
-                  />
-                ) : connected ? (
-                  <HugeiconsIcon icon={RefreshIcon} strokeWidth={2} data-icon="inline-start" />
-                ) : null}
-                {connected ? t("reconnect") : t("connect")}
-              </Button>
+              {withConnect && (
+                <Button
+                  type="button"
+                  variant={connected ? "outline" : "default"}
+                  disabled={lookup.isPending}
+                  onClick={connect}
+                  className="shrink-0"
+                >
+                  {lookup.isPending ? (
+                    <HugeiconsIcon
+                      icon={Loading03Icon}
+                      strokeWidth={2}
+                      className="animate-spin"
+                      data-icon="inline-start"
+                    />
+                  ) : connected ? (
+                    <HugeiconsIcon icon={RefreshIcon} strokeWidth={2} data-icon="inline-start" />
+                  ) : null}
+                  {connected ? t("reconnect") : t("connect")}
+                </Button>
+              )}
             </div>
           )}
         </Field>

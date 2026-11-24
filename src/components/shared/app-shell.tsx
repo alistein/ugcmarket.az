@@ -47,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="ml-auto flex items-center gap-2">
           {/* Both use usePathname → each in its own Suspense (the shell is also a Suspense fallback). */}
           <Suspense fallback={null}>
-            <HeaderAction role={me?.role} hasBrand={!!me?.brand} />
+            <HeaderAction role={me?.role} hasBrand={!!me?.brand} hasCreator={!!me?.creator} />
           </Suspense>
           <Suspense fallback={<span className="h-9 w-16" aria-hidden />}>
             <LanguageMenu />
@@ -60,12 +60,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** The one header action: creators browse listings, brands post one (after setup). */
-function HeaderAction({ role, hasBrand }: { role: string | null | undefined; hasBrand: boolean }) {
+/** The one header action: creators browse listings, brands post one. Both only after setup. */
+function HeaderAction({
+  role,
+  hasBrand,
+  hasCreator,
+}: {
+  role: string | null | undefined;
+  hasBrand: boolean;
+  hasCreator: boolean;
+}) {
   const t = useTranslations("app");
   const pathname = usePathname();
   const cls = "hidden bg-foreground text-background hover:bg-foreground/90 sm:inline-flex";
-  if (role === "creator")
+  if (role === "creator" && hasCreator)
     return (
       <Button className={cls} nativeButton={false} render={<Link href="/campaigns" />}>
         {t("browseCampaigns")}
@@ -91,6 +99,8 @@ function AccountMenu() {
   const signOut = useSignOut();
   const name = creator?.display_name ?? brand?.name ?? me?.brand?.name ?? me?.email ?? "?";
   const avatar = isBrand ? brand?.logo_url : creator?.avatar_url;
+  // Until the profile exists the only place to be is its setup form: no shortcuts elsewhere.
+  const setUp = isBrand ? !!me?.brand : !!me?.creator;
 
   return (
     <DropdownMenu>
@@ -110,10 +120,14 @@ function AccountMenu() {
             )}
           </div>
         </div>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          {isBrand ? <BrandItems hasBrand={!!brand} /> : <CreatorItems handle={me?.creator?.handle} />}
-        </DropdownMenuGroup>
+        {setUp && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              {isBrand ? <BrandItems /> : <CreatorItems handle={me?.creator?.handle} />}
+            </DropdownMenuGroup>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem disabled={signOut.isPending} onClick={() => signOut.mutate()}>
           <HugeiconsIcon icon={Logout03Icon} strokeWidth={2} />
@@ -150,7 +164,7 @@ function CreatorItems({ handle }: { handle: string | undefined }) {
   );
 }
 
-function BrandItems({ hasBrand }: { hasBrand: boolean }) {
+function BrandItems() {
   const t = useTranslations("app");
   return (
     <>
@@ -158,15 +172,13 @@ function BrandItems({ hasBrand }: { hasBrand: boolean }) {
         <HugeiconsIcon icon={Task01Icon} strokeWidth={2} />
         {t("myListings")}
       </DropdownMenuItem>
-      {hasBrand && (
-        <DropdownMenuItem render={<Link href="/brand/campaigns/new" />}>
-          <HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
-          {t("newListing")}
-        </DropdownMenuItem>
-      )}
+      <DropdownMenuItem render={<Link href="/brand/campaigns/new" />}>
+        <HugeiconsIcon icon={Add01Icon} strokeWidth={2} />
+        {t("newListing")}
+      </DropdownMenuItem>
       <DropdownMenuItem render={<Link href="/brand/profile" />}>
         <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
-        {t(hasBrand ? "brandProfile" : "brandSetup")}
+        {t("brandProfile")}
       </DropdownMenuItem>
       <DropdownMenuItem render={<Link href="/campaigns" />}>
         <HugeiconsIcon icon={Megaphone01Icon} strokeWidth={2} />

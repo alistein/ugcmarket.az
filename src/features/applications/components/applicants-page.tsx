@@ -29,6 +29,7 @@ import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES, isEnabledNetwork } from "@/schemas";
 import { type Applicant, useApplicants } from "../hooks";
+import { useCreatorWho } from "@/features/creators/who";
 
 const STATUS_BADGE = {
   draft: "secondary",
@@ -210,6 +211,7 @@ async function copy(text: string, ok: string, failed: string) {
 function ApplicantCard({ applicant: a, currency }: { applicant: Applicant; currency: string }) {
   const t = useTranslations("applicants");
   const tt = useTranslations("taxonomy");
+  const who = useCreatorWho();
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
   const c = a.creator;
@@ -246,6 +248,7 @@ function ApplicantCard({ applicant: a, currency }: { applicant: Applicant; curre
           <p className="flex items-center gap-1.5 truncate text-sm text-muted-foreground">
             <HugeiconsIcon icon={Location01Icon} strokeWidth={2} className="size-3.5 shrink-0" />
             {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
+            {who(c) && <span>· {who(c)}</span>}
           </p>
         </div>
         <span className="shrink-0 text-xs text-muted-foreground tabular-nums">{applied}</span>

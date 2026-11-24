@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Currency, Handle, PostFormat, SocialNetwork } from "./common";
-import { City, ContentLanguage, CreatorCategory, EnabledNetwork, isEnabledNetwork } from "./taxonomy";
+import { City, ContentLanguage, CreatorCategory, EnabledNetwork, Gender, isEnabledNetwork } from "./taxonomy";
 
 /**
  * Creator profile schemas — shared by the profile forms and /api/creators*.
@@ -61,7 +61,8 @@ const Count = (max: number) =>
 export const CreatorSocialInput = z.object({
   network: EnabledNetwork,
   handle: SocialUsername,
-  followers: Count(500_000_000),
+  /** Missing at sign-up: the numbers are looked up right after the profile is created. */
+  followers: Count(500_000_000).optional(),
   avg_views: Count(500_000_000).optional(),
 });
 export type CreatorSocialInput = z.infer<typeof CreatorSocialInput>;
@@ -96,6 +97,17 @@ export const CreatorPrices = z
     "validation.duplicate",
   );
 
+/** Creators are 16 to 80. Checked against the current year, so it moves with time. */
+export const MIN_CREATOR_AGE = 16;
+export const MAX_CREATOR_AGE = 80;
+export const BirthYear = z.coerce
+  .number({ error: "validation.birthYear" })
+  .int("validation.birthYear")
+  .refine((y) => {
+    const age = new Date().getFullYear() - y;
+    return age >= MIN_CREATOR_AGE && age <= MAX_CREATOR_AGE;
+  }, "validation.birthYear");
+
 export const Phone = z
   .string()
   .trim()
@@ -107,6 +119,8 @@ const profileShape = {
   /** Must be our own avatars bucket URL — checked again in the service. */
   avatar_url: z.url().nullable(),
   city: City,
+  gender: Gender,
+  birth_year: BirthYear,
   categories: z.array(CreatorCategory).min(1, "validation.categoriesMin").max(5, "validation.categoriesMax"),
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin").max(6),
   bio: z.string().trim().max(600, "validation.tooLong").nullable(),

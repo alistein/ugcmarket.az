@@ -25,6 +25,7 @@ import { type CreatorPublic, socialNumbers } from "../hooks";
 import { DealTerms } from "./deal-terms";
 import { PostStatsLine, shortUrl } from "./portfolio-editor";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
+import { useCreatorWho } from "../who";
 
 const SOCIAL_URL = {
   instagram: (h: string) => `https://www.instagram.com/${h}/`,
@@ -90,6 +91,7 @@ export function PublicCreatorProfile({
 }) {
   const t = useTranslations("creator.public");
   const tt = useTranslations("taxonomy");
+  const who = useCreatorWho();
   const locale = useLocale();
   const { data: me } = useMe();
   const money = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
@@ -127,6 +129,7 @@ export function PublicCreatorProfile({
                   <HugeiconsIcon icon={Location01Icon} strokeWidth={2} className="size-4" />
                   {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
                 </span>
+                {who(c) && <span>{who(c)}</span>}
                 <span>{c.languages.map((l) => l.toUpperCase()).join(" · ")}</span>
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
