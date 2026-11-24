@@ -39,6 +39,7 @@ import { BoostCard, SectionSheet, type SheetSection } from "./boost-card";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
 import { DealTerms } from "./deal-terms";
 import { PortfolioEditor } from "./portfolio-editor";
+import { PortfolioSummary } from "./portfolio-summary";
 import { NETWORK_ICON } from "./profile-sections";
 import { useCreatorWho } from "../who";
 
@@ -244,6 +245,7 @@ function Home({ creator: c }: { creator: MyCreator }) {
                 flash && "ring-2 ring-primary dark:ring-primary",
               )}
             >
+              <PortfolioSummary creator={c} className="mb-5 border-b border-border/70 pb-5" />
               <PortfolioEditor items={c.portfolio_items} creator={c} />
             </Panel>
           </TabsContent>

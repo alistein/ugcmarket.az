@@ -7,20 +7,23 @@ import type {
   CreatorPriceInput,
   CreatorSocialInput,
 } from "@/schemas";
-import { PORTFOLIO_MAX } from "@/schemas";
 import type { PortfolioItem } from "@/schemas/creator";
 import { track } from "@/server/analytics";
 import type { SessionUser } from "@/server/auth";
 import { createPublicClient, createUserClient } from "@/server/db/supabase";
 import { ApiError, errors } from "@/server/http/errors";
-import { refreshCreatorSocialStatsQuietly, refreshPortfolioItemStatsQuietly } from "./social-stats";
+import {
+  checkPost,
+  ownsPost,
+  refreshCreatorSocialStatsQuietly,
+  refreshPortfolioItemStatsQuietly,
+  savePostStats,
+} from "./social-stats";
 
 type Db = Awaited<ReturnType<typeof createUserClient>>;
 
 const PUBLIC_FIELDS =
   "id, handle, display_name, avatar_url, gender, birth_year, city, country, categories, languages, bio, paid_open, barter_open, repost_open, lifestyle_tags, shoot_options, skills, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position, portfolio_item_stats(owner_handle, views, likes, comments, posted_at, fetched_at, thumbnail_url, caption, hashtags, mentions, duration_seconds, music, paid_partnership))";
-
-const MAX_PORTFOLIO = PORTFOLIO_MAX;
 
 /**
  * Public profile. Uses the cookie-less client so it can also run in generateMetadata.
@@ -166,10 +169,24 @@ export async function updateMyCreator(user: SessionUser, input: CreatorProfileUp
 export async function addPortfolioItem(user: SessionUser, input: PortfolioItem) {
   const supabase = await createUserClient();
   const me = await getMyCreator(user);
-  if (me.portfolio_items.length >= MAX_PORTFOLIO) {
-    throw new ApiError(409, "portfolio_full", "errors.portfolio_full");
-  }
   if (me.portfolio_items.some((p) => p.url === input.url)) throw errors.conflict("portfolio_duplicate");
+
+  // Only the creator's own posts. When the link names the account we know without a lookup;
+  // otherwise one (cached) lookup tells us, and a foreign post is refused and never stored.
+  const own = me.creator_socials.find((s) => s.network === input.network)?.handle.toLowerCase();
+  const notYours = () => new ApiError(422, "portfolio_not_yours", "errors.portfolio_not_yours");
+  if (own && input.account && input.account !== own) throw notYours();
+
+  // Gate before saving: things only the post itself can tell us (it's gone, the account is
+  // private, it's a photo). Provider outages aren't the creator's fault: save and check later.
+  const check = await checkPost(input.network, input.url);
+  if (check.status === "not_found")
+    throw new ApiError(422, "portfolio_not_found", "errors.portfolio_not_found");
+  if (check.status === "private") throw new ApiError(422, "portfolio_private", "errors.portfolio_private");
+  if (check.status === "not_video")
+    throw new ApiError(422, "portfolio_not_video", "errors.portfolio_not_video");
+  if (check.status === "ok" && own && !ownsPost(check.value, own)) throw notYours();
+
   const position = Math.max(-1, ...me.portfolio_items.map((p) => p.position)) + 1;
   const { data, error } = await supabase
     .from("portfolio_items")
@@ -183,8 +200,8 @@ export async function addPortfolioItem(user: SessionUser, input: PortfolioItem) 
     .select("id, url, network, title, position")
     .single();
   if (error) throw error;
-  // Views/likes for the post (e.g. a Reel) are fetched in the background.
-  after(() => refreshPortfolioItemStatsQuietly(data.id));
+  if (check.status === "ok") await savePostStats(data.id, check);
+  else after(() => refreshPortfolioItemStatsQuietly(data.id));
   return data;
 }
 

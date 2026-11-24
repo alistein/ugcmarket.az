@@ -190,28 +190,97 @@ const HOSTS: Record<string, z.infer<typeof SocialNetwork>> = {
   "youtu.be": "youtube",
 };
 
-export function networkOfUrl(raw: string): z.infer<typeof SocialNetwork> | null {
+/** Parse what people paste: spaces around it, no "https://", "www." or not. */
+function parseLink(raw: string) {
+  const text = raw.trim();
+  if (!text || /\s/.test(text)) return null;
   try {
-    const url = new URL(raw);
-    if (url.protocol !== "https:") return null;
-    return HOSTS[url.hostname.replace(/^www\./, "")] ?? null;
+    const url = new URL(/^[a-z]+:\/\//i.test(text) ? text : `https://${text}`);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    if (!url.hostname.includes(".")) return null;
+    return url;
   } catch {
     return null;
   }
 }
 
+export function networkOfUrl(raw: string): z.infer<typeof SocialNetwork> | null {
+  const url = parseLink(raw);
+  return url ? (HOSTS[url.hostname.toLowerCase().replace(/^www\./, "")] ?? null) : null;
+}
+
+/**
+ * Why a pasted portfolio link can't be used, as the i18n key that explains the fix. Every case
+ * the creator can correct is caught here, before anything is sent (see creator.test.ts).
+ */
+export const PORTFOLIO_URL_ISSUES = [
+  "validation.portfolioEmpty",
+  "validation.portfolioNotLink",
+  "validation.portfolioUnsupported",
+  "validation.portfolioNetworkSoon",
+  "validation.portfolioProfile",
+  "validation.portfolioStory",
+  "validation.portfolioNotPost",
+] as const;
+export type PortfolioUrlIssue = (typeof PORTFOLIO_URL_ISSUES)[number];
+
+/** Instagram paths that point at one post: /reel/ID, /p/ID, /tv/ID, also with the account first. */
+const IG_POST = /^\/(?:([\w.]+)\/)?(?:reel|reels|p|tv)\/([\w-]{5,})\/?$/i;
+
+/**
+ * Check a pasted link and turn it into the one form we store (so the same Reel shared from the app,
+ * the website or with tracking parameters counts as one link).
+ */
+export function checkPortfolioUrl(raw: string):
+  | {
+      ok: true;
+      network: z.infer<typeof SocialNetwork>;
+      url: string;
+      /** Account named in the link ("/natgeo/reel/…"), when there is one: lets us refuse someone
+       * else's post without looking it up. Most links copied from the app don't carry it. */
+      account: string | null;
+    }
+  | { ok: false; issue: PortfolioUrlIssue } {
+  if (!raw.trim()) return { ok: false, issue: "validation.portfolioEmpty" };
+  const url = parseLink(raw);
+  if (!url) return { ok: false, issue: "validation.portfolioNotLink" };
+  const network = HOSTS[url.hostname.toLowerCase().replace(/^www\./, "")];
+  if (!network) return { ok: false, issue: "validation.portfolioUnsupported" };
+  if (!isEnabledNetwork(network)) return { ok: false, issue: "validation.portfolioNetworkSoon" };
+
+  // Instagram (the only live network for now).
+  const path = url.pathname.replace(/\/{2,}/g, "/");
+  if (/^\/stories\//i.test(path)) return { ok: false, issue: "validation.portfolioStory" };
+  const post = path.match(IG_POST);
+  if (post) {
+    const kind = /\/p\//i.test(path) ? "p" : "reel";
+    return {
+      ok: true,
+      network,
+      url: `https://www.instagram.com/${kind}/${post[2]}/`,
+      account: post[1]?.toLowerCase() ?? null,
+    };
+  }
+  const parts = path.split("/").filter(Boolean);
+  const reserved = ["explore", "reels", "direct", "accounts", "about", "legal", "p", "reel", "tv"];
+  // "/natgeo" or "/natgeo/reels" (the profile or its Reels tab), not one post.
+  if (parts.length >= 1 && parts.length <= 2 && !reserved.includes(parts[0].toLowerCase()))
+    return { ok: false, issue: "validation.portfolioProfile" };
+  return { ok: false, issue: "validation.portfolioNotPost" };
+}
+
 export const PortfolioItemInput = z
   .object({
-    url: z.string().trim().max(500, "validation.tooLong"),
+    url: z.string().max(500, "validation.tooLong"),
     title: z.string().trim().max(100, "validation.tooLong").optional(),
   })
   .transform((v, ctx) => {
-    const network = networkOfUrl(v.url);
-    if (!network || !isEnabledNetwork(network)) {
-      ctx.addIssue({ code: "custom", path: ["url"], message: "validation.portfolioUrl" });
+    const checked = checkPortfolioUrl(v.url);
+    if (!checked.ok) {
+      ctx.addIssue({ code: "custom", path: ["url"], message: checked.issue });
       return z.NEVER;
     }
-    return { ...v, network };
+    return { ...v, url: checked.url, network: checked.network, account: checked.account };
   });
 export type PortfolioItemInput = z.input<typeof PortfolioItemInput>;
 export type PortfolioItem = z.output<typeof PortfolioItemInput>;

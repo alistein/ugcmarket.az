@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Add01Icon, Delete02Icon, FavouriteIcon, ViewIcon } from "@hugeicons/core-free-icons";
+import { Add01Icon, Delete02Icon, FavouriteIcon, Loading03Icon, ViewIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { ApiClientError } from "@/lib/api-client";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
-import { isEnabledNetwork, networkOfUrl, PORTFOLIO_MAX, PortfolioItemInput } from "@/schemas";
+import { checkPortfolioUrl, PortfolioItemInput } from "@/schemas";
 import {
   type CreatorPublic,
   postCover,
@@ -32,23 +32,32 @@ const SLOTS = 3;
 export function PortfolioEditor({
   items,
   creator,
+  readOnly,
 }: {
   items: CreatorPublic["portfolio_items"];
   /** Used to show a post's numbers only when it belongs to the creator's own account. */
   creator: Pick<CreatorPublic, "creator_socials">;
+  /** Public profile: the same grid, without empty slots, "+" or delete. */
+  readOnly?: boolean;
 }) {
   const t = useTranslations("creator.portfolio");
   const [open, setOpen] = useState(false);
   const [viewing, setViewing] = useState<string | null>(null);
-  const empty = Math.max(0, SLOTS - items.length);
-  const canAddMore = items.length >= SLOTS && items.length < PORTFOLIO_MAX;
+  const empty = readOnly ? 0 : Math.max(0, SLOTS - items.length);
+  // No upper limit: after the first three slots there is always one more "+" tile.
+  const canAddMore = !readOnly && items.length >= SLOTS;
 
   return (
     <div className="grid grid-cols-1 gap-3">
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
         {items.map((item) => (
           <li key={item.id}>
-            <PortfolioTile item={item} creator={creator} onOpen={() => setViewing(item.id)} />
+            <PortfolioTile
+              item={item}
+              creator={creator}
+              onOpen={() => setViewing(item.id)}
+              removable={!readOnly}
+            />
           </li>
         ))}
         {Array.from({ length: empty }, (_, i) => (
@@ -79,15 +88,12 @@ export function PortfolioEditor({
           </li>
         )}
       </ul>
-      {items.length >= PORTFOLIO_MAX && (
-        <p className="text-sm text-muted-foreground">{t("full", { max: PORTFOLIO_MAX })}</p>
-      )}
-      <AddPortfolioSheet open={open} onOpenChange={setOpen} />
+      {!readOnly && <AddPortfolioSheet open={open} onOpenChange={setOpen} />}
       <PostSheet
         item={items.find((i) => i.id === viewing) ?? null}
         creator={creator}
         onClose={() => setViewing(null)}
-        explainMismatch
+        explainMismatch={!readOnly}
       />
     </div>
   );
@@ -100,11 +106,13 @@ function PortfolioTile({
   item,
   creator,
   onOpen,
+  removable = true,
 }: {
   item: CreatorPublic["portfolio_items"][number];
   creator: Pick<CreatorPublic, "creator_socials">;
   /** Opens the post's details sheet. */
   onOpen: () => void;
+  removable?: boolean;
 }) {
   const t = useTranslations("creator.portfolio");
   const tp = useTranslations("creator.post");
@@ -150,20 +158,22 @@ function PortfolioTile({
             <HugeiconsIcon icon={NETWORK_ICON[item.network]} strokeWidth={2} className="size-4" />
           </span>
         )}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-xs"
-          aria-label={t("remove")}
-          disabled={remove.isPending}
-          onClick={() => remove.mutate(item.id)}
-          className={cn(
-            "relative z-10",
-            cover && "bg-black/40 text-white hover:bg-black/60 hover:text-white",
-          )}
-        >
-          <HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />
-        </Button>
+        {removable && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-xs"
+            aria-label={t("remove")}
+            disabled={remove.isPending}
+            onClick={() => remove.mutate(item.id)}
+            className={cn(
+              "relative z-10",
+              cover && "bg-black/40 text-white hover:bg-black/60 hover:text-white",
+            )}
+          >
+            <HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />
+          </Button>
+        )}
       </div>
       <button
         type="button"
@@ -190,6 +200,15 @@ function PortfolioTile({
 
 const NETWORK_LABEL = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" } as const;
 
+/** API errors about the link itself: shown under the field, not as a toast. */
+const LINK_ERRORS = new Set([
+  "portfolio_not_found",
+  "portfolio_private",
+  "portfolio_not_video",
+  "portfolio_duplicate",
+  "portfolio_not_yours",
+]);
+
 function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const t = useTranslations("creator.portfolio");
   const te = useTranslations();
@@ -200,8 +219,8 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
     defaultValues: { url: "", title: "" },
   });
   const url = useWatch({ control: form.control, name: "url" });
-  const found = url ? networkOfUrl(url.trim()) : null;
-  const detected = found && isEnabledNetwork(found) ? found : null;
+  const checked = url ? checkPortfolioUrl(url) : null;
+  const detected = checked?.ok ? checked.network : null;
 
   const submit = form.handleSubmit((v) =>
     add.mutate(
@@ -212,6 +231,12 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
           onOpenChange(false);
         },
         onError: (e) => {
+          // Problems with this link (gone, private account, a photo, already added, portfolio
+          // full) belong under the field with what to do; anything else is a toast.
+          if (e instanceof ApiClientError && LINK_ERRORS.has(e.code)) {
+            form.setError("url", { message: e.message }, { shouldFocus: true });
+            return;
+          }
           const key = e instanceof ApiClientError ? e.message : "errors.unknown";
           toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
         },
@@ -233,7 +258,13 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
             <Field
               label={t("url")}
               error={form.formState.errors.url}
-              hint={detected ? t("detected", { network: t(`networks.${detected}`) }) : t("urlHint")}
+              hint={
+                add.isPending
+                  ? t("checking")
+                  : detected
+                    ? t("detected", { network: t(`networks.${detected}`) })
+                    : t("urlHint")
+              }
             >
               {(a) => (
                 <Input
@@ -242,7 +273,10 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
                   type="url"
                   inputMode="url"
                   autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   autoFocus
+                  readOnly={add.isPending}
                   placeholder="https://www.instagram.com/reel/…"
                 />
               )}
@@ -253,8 +287,13 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
           </div>
           <SheetFooter>
             <Button type="submit" disabled={add.isPending}>
-              <HugeiconsIcon icon={Add01Icon} strokeWidth={2} data-icon="inline-start" />
-              {t("add")}
+              <HugeiconsIcon
+                icon={add.isPending ? Loading03Icon : Add01Icon}
+                strokeWidth={2}
+                data-icon="inline-start"
+                className={add.isPending ? "animate-spin" : undefined}
+              />
+              {add.isPending ? t("checkingShort") : t("add")}
             </Button>
           </SheetFooter>
         </form>

@@ -55,7 +55,6 @@
       "post": "Post not found"
     },
     "creator_exists": "You already have a profile",
-    "portfolio_full": "Your portfolio is full",
     "portfolio_duplicate": "That link is already in your portfolio",
     "stats_cooldown": "You can refresh the numbers once a day. Try again tomorrow",
     "lookup_limit": "Too many checks in the last hour. Try again a bit later",
@@ -66,7 +65,12 @@
     "campaign_incomplete": "Some required fields are still empty. Edit the listing and publish it again",
     "campaign_deadline_passed": "The deadline has passed. Pick a new date and publish again",
     "campaign_archived": "An archived listing can't be changed. Restore it first",
-    "campaign_not_archivable": "A live listing can't be archived. Close it first"
+    "campaign_not_archivable": "A live listing can't be archived. Close it first",
+    "portfolio_not_found": "We couldn't find this Reel. The link may be cut off or the post deleted. Copy the link again",
+    "portfolio_private": "The account is private, so brands can't see this Reel. Make the account public on Instagram and try again",
+    "portfolio_not_video": "That's a photo or carousel post. The portfolio needs video, so add a Reels link",
+    "portfolio_not_yours": "This Reel isn't on your Instagram account. Add Reels from your own account or ones you're credited on (Collab)",
+    "campaign_ended": "This listing has ended. It no longer takes applications"
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters)",
@@ -87,7 +91,6 @@
     "categoriesMin": "Pick at least one category",
     "languagesMin": "Pick at least one language",
     "socialsMin": "Add at least one social account",
-    "portfolioUrl": "Enter a link to an Instagram post or Reel (https://…)",
     "avatar": "Upload the photo again",
     "lookupRequired": "After entering the username, press “Connect account”",
     "website": "Website address isn't valid",
@@ -99,7 +102,14 @@
     "bidRequired": "Enter your price",
     "birthYear": "Enter a 4-digit year. You need to be between 16 and 80",
     "lifestyleExclusive": "Single and Married can't both be picked",
-    "dealFormatsMin": "Pick at least one format"
+    "dealFormatsMin": "Pick at least one format",
+    "portfolioEmpty": "Paste a Reels link",
+    "portfolioNotLink": "That's not a link. Open the Reel on Instagram, tap Share, then Copy link, and paste it here",
+    "portfolioUnsupported": "For now we only accept Instagram Reels links",
+    "portfolioNetworkSoon": "TikTok and YouTube are coming soon. For now, add an Instagram Reels link",
+    "portfolioProfile": "That's a profile link. Open one specific Reel and copy its link",
+    "portfolioStory": "Stories disappear after 24 hours. Add a Reels link instead",
+    "portfolioNotPost": "This link doesn't lead to one post. Open the Reel and use Copy link"
   },
   "landing": {
     "nav": {
@@ -611,13 +621,12 @@
       "title": "Portfolio",
       "subtitle": "Add links to your best work. Brands decide faster when you have 3 or more",
       "url": "Link",
-      "urlHint": "Link to an Instagram post or Reel. For Reels, we’ll check views and likes automatically",
+      "urlHint": "Open the Reel on Instagram, tap Share, then Copy link, and paste it here",
       "detected": "{network} link",
       "titleLabel": "Title (optional)",
       "titlePh": "Reels for a café",
       "add": "Add",
       "remove": "Remove",
-      "full": "Up to {max} items",
       "networks": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -627,7 +636,17 @@
       "notYours": "This post belongs to @{owner}. Numbers are shown only for your own posts",
       "slotEmpty": "Add a Reel",
       "addMore": "Add another piece",
-      "dialogTitle": "Add to your portfolio"
+      "dialogTitle": "Add to your portfolio",
+      "checking": "Checking the Reel. This can take up to a minute",
+      "checkingShort": "Checking",
+      "summary": {
+        "medianViews": "Typical views",
+        "medianViewsHint": "Half the Reels got more views than this, half fewer (median). One viral video can't inflate it",
+        "er": "Average ER",
+        "erHint": "Engagement rate: likes and comments relative to views, averaged over all Reels",
+        "totalViews": "Total views",
+        "bestViews": "Best result"
+      }
     },
     "dashboard": {
       "hello": "Hi, {name}",
@@ -688,26 +707,18 @@
       "home": "Home",
       "previewPending": "Preview: your profile is in review. Only you can see it for now",
       "previewRejected": "Preview: your profile wasn’t approved, so others can’t see it",
-      "barter": "Open to barter",
       "edit": "Edit",
-      "followers": "followers",
-      "avgViews": "{views} avg. views",
       "selfReported": "Numbers without a check mark are reported by the creator",
       "portfolio": "Portfolio",
       "portfolioEmpty": "No work added yet",
-      "networkPost": {
-        "instagram": "Instagram post",
-        "tiktok": "TikTok video",
-        "youtube": "YouTube video"
-      },
       "prices": "Prices",
       "pricesEmpty": "Negotiable",
       "ctaTitle": "Want to work with this creator?",
       "ctaBody": "Post a listing and creators will apply to you",
       "ctaButton": "Post a listing",
-      "checked": "Checked automatically",
-      "termsTitle": "Terms",
-      "priceFrom": "from {amount} {currency}"
+      "priceFrom": "from {amount} {currency}",
+      "tagsTitle": "About them",
+      "dashboard": "Dashboard"
     },
     "why": {
       "link": "Why do we ask?",
@@ -1011,7 +1022,14 @@
       "noCategory": "No topic yet",
       "anyCity": "Any city",
       "minFollowers": "{count}+ followers",
-      "deadline": "Due {date}"
+      "deadline": "Due {date}",
+      "daysLeft": "{count, plural, =0 {Last day today} one {# day left} other {# days left}}",
+      "new": "New",
+      "applied": "Applied",
+      "mine": "Your listing",
+      "creatorsNeeded": "{count, plural, one {# creator needed} other {# creators needed}}",
+      "payLogin": "Log in to see the pay",
+      "payCreators": "Only creators see the pay"
     },
     "mine": {
       "title": "Your listings",
@@ -1123,12 +1141,43 @@
       "dialogBodyBid": "Only the brand will see your price. They'll also see your profile and contacts. You'll see theirs too",
       "bid": "Your price",
       "bidHint": "Total for all content in the listing",
-      "yourBid": "Your price: {amount} {currency}"
+      "yourBid": "Your price: {amount} {currency}",
+      "belowMin": "This listing is for creators with {count}+ followers. You have fewer, but you can still apply"
     },
     "back": "Back",
     "payLogin": "Log in to see the pay",
     "share": "Share",
     "shareCopied": "Link copied",
-    "shareFailed": "Couldn't copy the link"
+    "shareFailed": "Couldn't copy the link",
+    "ended": "This listing has ended. It no longer takes applications",
+    "payCreators": "Only creators see the pay"
+  },
+  "board": {
+    "title": "Listings",
+    "count": "{count, plural, one {# open listing} other {# open listings}}",
+    "sub": "Brand listings for creators. Pick one that fits and apply",
+    "post": "Post a listing",
+    "forBrands": "For brands",
+    "payType": "Payment type",
+    "all": "All",
+    "city": "City",
+    "anyCity": "All cities",
+    "clear": "Clear filters",
+    "more": "Show more",
+    "emptyTitle": "No open listings yet",
+    "emptyBody": "New listings will appear here",
+    "emptyBrand": "Post the first listing",
+    "noResultsTitle": "No listings match these filters",
+    "noResultsBody": "Change or clear the filters",
+    "error": "Couldn't load listings",
+    "retry": "Try again",
+    "guestTitle": "Want to apply to listings?",
+    "guestBody": "Create a creator profile, see the pay and apply in one tap",
+    "guestCta": "Sign up as a creator",
+    "createProfileNote": "Create your creator profile to apply to listings",
+    "createProfileCta": "Create profile",
+    "pendingNote": "Your profile is being reviewed. You can apply once it's approved",
+    "metaTitle": "Listings",
+    "metaDescription": "Listings from brands in Azerbaijan for content creators: paid, barter and price offers"
   }
 }

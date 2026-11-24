@@ -60,6 +60,7 @@ export const youtubeVideo: PostStatsProvider = {
       likes: num(video.statistics?.likeCount),
       comments: num(video.statistics?.commentCount),
       posted_at: video.snippet?.publishedAt ?? null,
+      media_type: "video",
       thumbnail_source:
         video.snippet?.thumbnails?.high?.url ?? video.snippet?.thumbnails?.medium?.url ?? null,
     };

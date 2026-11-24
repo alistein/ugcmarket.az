@@ -101,6 +101,37 @@ export function postNumbers(
   return st;
 }
 
+const median = (xs: number[]) => {
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+
+/**
+ * Portfolio at a glance for brands, from the creator's own checked posts only (the same rule as
+ * the tiles). Median views is the headline: one viral Reel can't inflate it the way an average
+ * would. null when no post has checked numbers yet.
+ */
+export function portfolioSummary(c: Pick<CreatorPublic, "creator_socials" | "portfolio_items">) {
+  const posts = c.portfolio_items.flatMap((item) => {
+    const n = postNumbers(c, item);
+    return n?.views != null ? [n as PostStats & { views: number }] : [];
+  });
+  if (!posts.length) return null;
+  const views = posts.map((p) => p.views);
+  const rates = posts
+    .filter((p) => p.views > 0 && (p.likes != null || p.comments != null))
+    .map((p) => (((p.likes ?? 0) + (p.comments ?? 0)) / p.views) * 100);
+  return {
+    count: posts.length,
+    medianViews: Math.round(median(views)),
+    totalViews: views.reduce((a, b) => a + b, 0),
+    bestViews: Math.max(...views),
+    /** Average engagement rate in %, over posts that report likes or comments. */
+    er: rates.length ? rates.reduce((a, b) => a + b, 0) / rates.length : null,
+  };
+}
+
 export type SocialStats = {
   network: Network;
   handle: string;

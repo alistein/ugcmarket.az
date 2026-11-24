@@ -55,7 +55,6 @@
       "post": "Paylaşım tapılmadı"
     },
     "creator_exists": "Sizin artıq kreator profiliniz var",
-    "portfolio_full": "Portfolio doludur. Yeni iş əlavə etmək üçün birini silin",
     "portfolio_duplicate": "Bu link artıq portfolionuzda var",
     "stats_cooldown": "Rəqəmləri gündə bir dəfə yeniləmək olar. Sabah yenidən cəhd edin",
     "lookup_limit": "Bir saat ərzində çox yoxlama etdiniz. Bir az sonra yenidən cəhd edin",
@@ -66,7 +65,12 @@
     "campaign_incomplete": "Elanda doldurulmamış vacib sahələr var. Elanı redaktə edib yenidən dərc edin",
     "campaign_deadline_passed": "Son tarix keçib. Yeni tarix seçib yenidən dərc edin",
     "campaign_archived": "Arxivdəki elanı dəyişmək olmur. Əvvəlcə onu arxivdən çıxarın",
-    "campaign_not_archivable": "Aktiv elanı arxivə köçürmək olmur. Əvvəlcə elanı bağlayın"
+    "campaign_not_archivable": "Aktiv elanı arxivə köçürmək olmur. Əvvəlcə elanı bağlayın",
+    "portfolio_not_found": "Bu Reels tapılmadı. Link tam kopyalanmaya bilər və ya paylaşım silinib. Linki yenidən kopyalayıb yoxlayın",
+    "portfolio_private": "Hesab gizlidir, ona görə brendlər bu Reels-i görə bilməz. Instagram-da hesabı açıq edin və yenidən cəhd edin",
+    "portfolio_not_video": "Bu, şəkil və ya karusel paylaşımıdır. Portfolioya video lazımdır, Reels linkini əlavə edin",
+    "portfolio_not_yours": "Bu Reels sizin Instagram hesabınızda deyil. Yalnız öz hesabınızda paylaşdığınız və ya birgə (Collab) paylaşdığınız Reels-i əlavə edin",
+    "campaign_ended": "Bu elanın müddəti bitib. Müraciət qəbul olunmur"
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)",
@@ -87,7 +91,6 @@
     "categoriesMin": "Ən azı bir kateqoriya seçin",
     "languagesMin": "Ən azı bir dil seçin",
     "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin",
-    "portfolioUrl": "Instagram paylaşımının və ya Reels-in linkini daxil edin (https://…)",
     "avatar": "Şəkli yenidən yükləyin",
     "lookupRequired": "İstifadəçi adını yazdıqdan sonra \"Hesabı qoş\" düyməsini basın",
     "website": "Sayt ünvanı düzgün deyil",
@@ -99,7 +102,14 @@
     "bidRequired": "Qiymətinizi daxil edin",
     "birthYear": "İli 4 rəqəmlə yazın. Yaşınız 16 ilə 80 arasında olmalıdır",
     "lifestyleExclusive": "Subay və Ailəvi birlikdə seçilə bilməz",
-    "dealFormatsMin": "Ən azı bir format seçin"
+    "dealFormatsMin": "Ən azı bir format seçin",
+    "portfolioEmpty": "Reels linkini yapışdırın",
+    "portfolioNotLink": "Bu link deyil. Instagram-da Reels-i açın, «Paylaş» və sonra «Linki kopyala» basın, sonra bura yapışdırın",
+    "portfolioUnsupported": "Hələlik yalnız Instagram Reels linkləri qəbul olunur",
+    "portfolioNetworkSoon": "TikTok və YouTube tezliklə əlavə olunacaq. Hələlik Instagram Reels linkini əlavə edin",
+    "portfolioProfile": "Bu, profilin linkidir. Konkret Reels-i açın və onun linkini kopyalayın",
+    "portfolioStory": "Story 24 saatdan sonra silinir. Onun yerinə Reels linkini əlavə edin",
+    "portfolioNotPost": "Bu link konkret paylaşıma aparmır. Reels-i açın və «Linki kopyala» ilə linkini götürün"
   },
   "landing": {
     "nav": {
@@ -611,13 +621,12 @@
       "title": "Portfolio",
       "subtitle": "Ən yaxşı işlərinizin linklərini əlavə edin. Portfolioda 3 və daha çox iş olanda brendlər daha tez seçim edir",
       "url": "Link",
-      "urlHint": "Instagram paylaşımının və ya Reels-in linki. Reels linki əlavə etsəniz, baxış və bəyənmə sayı avtomatik yoxlanılacaq",
+      "urlHint": "Instagram-da Reels-i açın, «Paylaş» və sonra «Linki kopyala» basın, sonra bura yapışdırın",
       "detected": "{network} linki tanındı",
       "titleLabel": "Başlıq (istəyə bağlı)",
       "titlePh": "Kafe üçün Reels",
       "add": "Əlavə et",
       "remove": "Sil",
-      "full": "Ən çox {max} iş əlavə etmək olar",
       "networks": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -627,7 +636,17 @@
       "notYours": "Bu paylaşım @{owner} hesabına aiddir. Rəqəmlər yalnız öz paylaşımlarınız üçün göstərilir",
       "slotEmpty": "Reels əlavə edin",
       "addMore": "Daha bir iş əlavə edin",
-      "dialogTitle": "Portfolioya iş əlavə edin"
+      "dialogTitle": "Portfolioya iş əlavə edin",
+      "checking": "Reels yoxlanılır. Bu, bir dəqiqəyə qədər çəkə bilər",
+      "checkingShort": "Yoxlanılır",
+      "summary": {
+        "medianViews": "Orta baxış",
+        "medianViewsHint": "Reels-lərin yarısı bundan çox, yarısı bundan az baxış toplayıb (median). Bir viral video bu rəqəmi şişirtmir",
+        "er": "Orta ER",
+        "erHint": "Engagement rate: bəyənmə və şərhlərin baxışlara nisbəti, bütün Reels-lər üzrə orta",
+        "totalViews": "Ümumi baxış",
+        "bestViews": "Ən çox baxış"
+      }
     },
     "dashboard": {
       "hello": "Salam, {name}",
@@ -688,26 +707,18 @@
       "home": "Ana səhifə",
       "previewPending": "Önizləmə: profiliniz yoxlanılır. Hələlik onu yalnız siz görürsünüz",
       "previewRejected": "Önizləmə: profiliniz təsdiqlənməyib, başqaları onu görmür",
-      "barter": "Barterə açıq",
       "edit": "Redaktə et",
-      "followers": "izləyici",
-      "avgViews": "{views} orta baxış",
       "selfReported": "İşarəsi olmayan rəqəmləri kreator özü daxil edib",
       "portfolio": "Portfolio",
       "portfolioEmpty": "Hələ heç bir iş əlavə olunmayıb",
-      "networkPost": {
-        "instagram": "Instagram paylaşımı",
-        "tiktok": "TikTok video",
-        "youtube": "YouTube video"
-      },
       "prices": "Qiymətlər",
       "pricesEmpty": "Razılaşma yolu ilə",
       "ctaTitle": "Bu kreatorla işləmək istəyirsiniz?",
       "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin",
       "ctaButton": "Elan yerləşdir",
-      "checked": "Avtomatik yoxlanılıb",
-      "termsTitle": "Şərtlər",
-      "priceFrom": "{amount} {currency}-dən"
+      "priceFrom": "{amount} {currency}-dən",
+      "tagsTitle": "Xüsusiyyətlər",
+      "dashboard": "Kabinet"
     },
     "why": {
       "link": "Niyə soruşuruq?",
@@ -1011,7 +1022,14 @@
       "noCategory": "Mövzu seçilməyib",
       "anyCity": "İstənilən şəhər",
       "minFollowers": "{count}+ izləyici",
-      "deadline": "Son tarix: {date}"
+      "deadline": "Son tarix: {date}",
+      "daysLeft": "{count, plural, =0 {Bu gün son gündür} other {# gün qalıb}}",
+      "new": "Yeni",
+      "applied": "Müraciət etmisiniz",
+      "mine": "Sizin elan",
+      "creatorsNeeded": "{count} kreator lazımdır",
+      "payLogin": "Qiyməti görmək üçün daxil olun",
+      "payCreators": "Qiyməti yalnız kreatorlar görür"
     },
     "mine": {
       "title": "Elanlarınız",
@@ -1123,12 +1141,43 @@
       "dialogBodyBid": "Qiymətinizi yalnız brend görəcək. Brend həm də profilinizi və əlaqə məlumatlarınızı görəcək. Siz də brendin əlaqə məlumatlarını görəcəksiniz",
       "bid": "Sizin qiymətiniz",
       "bidHint": "Elandakı bütün kontent üçün ümumi məbləğ",
-      "yourBid": "Sizin qiymətiniz: {amount} {currency}"
+      "yourBid": "Sizin qiymətiniz: {amount} {currency}",
+      "belowMin": "Bu elan {count}+ izləyicisi olan kreatorlar üçündür. Sizin izləyiciniz azdır, amma yenə də müraciət edə bilərsiniz"
     },
     "back": "Geri",
     "payLogin": "Qiyməti görmək üçün daxil olun",
     "share": "Paylaş",
     "shareCopied": "Link kopyalandı",
-    "shareFailed": "Linki kopyalamaq alınmadı"
+    "shareFailed": "Linki kopyalamaq alınmadı",
+    "ended": "Bu elanın müddəti bitib. Müraciət qəbul olunmur",
+    "payCreators": "Qiyməti yalnız kreatorlar görür"
+  },
+  "board": {
+    "title": "Elanlar",
+    "count": "{count} aktiv elan",
+    "sub": "Brendlərin kreatorlar üçün elanları. Uyğun olanı seçin və müraciət edin",
+    "post": "Elan yerləşdir",
+    "forBrands": "Brendlər üçün",
+    "payType": "Ödəniş növü",
+    "all": "Hamısı",
+    "city": "Şəhər",
+    "anyCity": "Bütün şəhərlər",
+    "clear": "Filtrləri sıfırla",
+    "more": "Daha çox göstər",
+    "emptyTitle": "Hələ aktiv elan yoxdur",
+    "emptyBody": "Yeni elanlar burada görünəcək",
+    "emptyBrand": "İlk elanı siz yerləşdirin",
+    "noResultsTitle": "Bu filtrlərə uyğun elan tapılmadı",
+    "noResultsBody": "Filtrləri dəyişin və ya sıfırlayın",
+    "error": "Elanları yükləmək mümkün olmadı",
+    "retry": "Yenidən cəhd et",
+    "guestTitle": "Elanlara müraciət etmək istəyirsiniz?",
+    "guestBody": "Kreator profilinizi yaradın, qiymətləri görün və bir toxunuşla müraciət edin",
+    "guestCta": "Kreator kimi qeydiyyatdan keç",
+    "createProfileNote": "Elanlara müraciət etmək üçün kreator profilinizi yaradın",
+    "createProfileCta": "Profil yarat",
+    "pendingNote": "Profiliniz yoxlanılır. Təsdiqdən sonra müraciət edə biləcəksiniz",
+    "metaTitle": "Elanlar",
+    "metaDescription": "Azərbaycan brendlərinin kontent yaradıcıları üçün elanları: ödənişli, barter və qiymət təklifi ilə"
   }
 }

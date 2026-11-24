@@ -165,6 +165,3 @@ export const ENABLED_PRICE_FORMATS = [
   "post",
   "ugc_video",
 ] as const satisfies readonly (typeof PRICE_FORMATS)[number][];
-
-/** Most portfolio links a creator can keep. */
-export const PORTFOLIO_MAX = 5;

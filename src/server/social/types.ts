@@ -52,6 +52,10 @@ export type PostStats = {
   /** "Artist · Song", or null for original audio. */
   music?: string | null;
   paid_partnership?: boolean | null;
+  /** Accounts credited as co-authors (Instagram Collab posts), lowercased. */
+  coauthors?: string[];
+  /** Reels and videos are "video"; photo posts and carousels can't be a video portfolio item. */
+  media_type?: "video" | "image" | "carousel" | null;
   /** The provider's cover image URL (often short-lived). The service copies it into our storage. */
   thumbnail_source: string | null;
 };
@@ -62,8 +66,15 @@ export interface PostStatsProvider {
   network: Network;
   kind: "official" | "third_party";
   isConfigured(): boolean;
-  /** null = post not found, private or deleted. */
+  /** null = post not found or deleted. Throws PostUnavailableError("private") for private accounts. */
   fetchPost(url: string): Promise<PostStats | null>;
+}
+
+/** The post exists but can't be read publicly: the creator has to change something. */
+export class PostUnavailableError extends Error {
+  constructor(public reason: "private") {
+    super(reason);
+  }
 }
 
 export class ProviderError extends Error {

@@ -4,8 +4,8 @@ import type { SessionUser } from "@/server/auth";
 import { createAdminClient } from "@/server/db/supabase";
 import { ApiError } from "@/server/http/errors";
 import { postProvidersFor, providersFor } from "@/server/social/registry";
-import { type Network, ProviderError } from "@/server/social/types";
-import { postKey, readPost, readProfile, writePost, writeProfile } from "./social-cache";
+import { type Network, PostUnavailableError, ProviderError } from "@/server/social/types";
+import { type CachedPost, postKey, readPost, readProfile, writePost, writeProfile } from "./social-cache";
 
 /** Successful numbers are reused for this long before a background refresh fetches again. */
 const FRESH_MS = 12 * 60 * 60 * 1000;
@@ -170,68 +170,126 @@ export async function refreshMySocialStats(user: SessionUser, creatorId: string)
 // ── Portfolio posts (e.g. a Reel link) ──────────────────────────────────────
 
 /** Fetch views/likes/comments for one portfolio item. Never throws. */
-export async function refreshPortfolioItemStats(itemId: string) {
-  const db = createAdminClient();
-  const { data: item } = await db
-    .from("portfolio_items")
-    .select("id, url, network")
-    .eq("id", itemId)
-    .maybeSingle();
-  if (!item) return "missing" as const;
-  const network = item.network as Network;
+/** What a post check found. Only "ok" posts become (or stay) portfolio items with numbers. */
+export type PostCheck =
+  | { status: "ok"; value: CachedPost; source: string; fetched_at: string }
+  | { status: "not_found" | "private" | "not_video" }
+  | { status: "unavailable"; error: string };
 
-  // The same post fetched recently (re-added, or another creator's link): reuse numbers and cover.
-  const cached = await readPost(network, item.url);
+const isVideo = (p: { media_type?: string | null }) =>
+  p.media_type !== "image" && p.media_type !== "carousel";
+
+/**
+ * Look a post up (cache first, then providers in order) and say whether it can be a portfolio
+ * item. "unavailable" means every provider failed on our side; the caller decides what to do.
+ */
+export async function checkPost(network: Network, url: string): Promise<PostCheck> {
+  const cached = await readPost(network, url);
   if (cached) {
-    await db.from("portfolio_item_stats").upsert({
-      portfolio_item_id: item.id,
-      ...cached.value,
-      source: cached.source,
-      fetched_at: cached.fetched_at,
-      attempted_at: new Date().toISOString(),
-      error: null,
-    });
-    return "cached" as const;
+    if (!isVideo(cached.value)) return { status: "not_video" };
+    return { status: "ok", ...cached };
   }
 
   const providers = postProvidersFor(network);
-  if (!providers.length) return "no_provider" as const;
+  if (!providers.length) return { status: "unavailable", error: "no provider" };
 
   const errors: string[] = [];
+  let notFound = false;
   for (const provider of providers) {
     try {
-      const post = await provider.fetchPost(item.url);
+      const post = await provider.fetchPost(url);
       if (!post) {
-        errors.push(`${provider.id}: not found or private`);
+        notFound = true;
         continue;
       }
       const { thumbnail_source, ...numbers } = post;
       const thumbnail_url = thumbnail_source
-        ? await storeThumbnail(postKey(network, item.url), thumbnail_source)
+        ? await storeThumbnail(postKey(network, url), thumbnail_source)
         : null;
-      await writePost(network, item.url, provider.id, { ...numbers, thumbnail_url });
-      await db.from("portfolio_item_stats").upsert({
-        portfolio_item_id: item.id,
-        ...numbers,
-        // Keep the previous cover when this fetch didn't bring one.
-        ...(thumbnail_url ? { thumbnail_url } : {}),
-        source: provider.id,
-        fetched_at: new Date().toISOString(),
-        attempted_at: new Date().toISOString(),
-        error: null,
-      });
-      return "updated" as const;
+      const value: CachedPost = { ...numbers, thumbnail_url };
+      const fetched_at = await writePost(network, url, provider.id, value);
+      if (!isVideo(value)) return { status: "not_video" };
+      return { status: "ok", value, source: provider.id, fetched_at };
     } catch (e) {
+      if (e instanceof PostUnavailableError) return { status: e.reason };
       errors.push(e instanceof ProviderError ? e.message : `${provider.id}: ${(e as Error).message}`);
     }
   }
+  if (notFound && !errors.length) return { status: "not_found" };
+  return { status: "unavailable", error: [...(notFound ? ["not found"] : []), ...errors].join(" | ") };
+}
+
+/** The creator's own post: they published it, or are credited on it (Instagram Collab). */
+export function ownsPost(post: { owner_handle?: string | null; coauthors?: string[] }, handle: string) {
+  const h = handle.toLowerCase();
+  return post.owner_handle?.toLowerCase() === h || !!post.coauthors?.includes(h);
+}
+
+/** Store a successful check on a portfolio item. */
+export async function savePostStats(itemId: string, check: Extract<PostCheck, { status: "ok" }>) {
+  // media_type decides the gate; it isn't a column of portfolio_item_stats.
+  // media_type and coauthors decide the gates; they aren't columns of portfolio_item_stats.
+  const { media_type: _media, coauthors: _co, thumbnail_url, ...numbers } = check.value;
+  void _media;
+  void _co;
+  await createAdminClient()
+    .from("portfolio_item_stats")
+    .upsert({
+      portfolio_item_id: itemId,
+      ...numbers,
+      // Keep the previous cover when this fetch didn't bring one.
+      ...(thumbnail_url ? { thumbnail_url } : {}),
+      source: check.source,
+      fetched_at: check.fetched_at,
+      attempted_at: new Date().toISOString(),
+      error: null,
+    });
+}
+
+export async function refreshPortfolioItemStats(itemId: string) {
+  const db = createAdminClient();
+  const { data: item } = await db
+    .from("portfolio_items")
+    .select("id, url, network, creator_id, portfolio_item_stats(owner_handle)")
+    .eq("id", itemId)
+    .maybeSingle();
+  if (!item) return "missing" as const;
+
+  // Someone else's post (added before the ownership gate): never sent to the provider again.
+  const raw = item.portfolio_item_stats as
+    { owner_handle: string | null } | { owner_handle: string | null }[] | null;
+  const owner = (Array.isArray(raw) ? raw[0] : raw)?.owner_handle;
+  if (owner) {
+    const { data: own } = await db
+      .from("creator_socials")
+      .select("handle")
+      .eq("creator_id", item.creator_id)
+      .eq("network", item.network)
+      .maybeSingle();
+    if (own && !ownsPost({ owner_handle: owner }, own.handle)) return "foreign" as const;
+  }
+
+  const check = await checkPost(item.network as Network, item.url);
+  if (check.status === "ok") {
+    await savePostStats(item.id, check);
+    return "updated" as const;
+  }
+  const error = check.status === "unavailable" ? check.error : check.status;
   await db.from("portfolio_item_stats").upsert({
     portfolio_item_id: item.id,
     attempted_at: new Date().toISOString(),
-    error: errors.join(" | ").slice(0, 1000),
+    error: error.slice(0, 1000),
   });
-  console.warn(`[social-stats] portfolio ${item.id}: ${errors.join(" | ")}`);
+  console.warn(`[social-stats] portfolio ${item.id}: ${error}`);
   return "failed" as const;
+}
+
+export async function refreshPortfolioItemStatsQuietly(itemId: string) {
+  try {
+    await refreshPortfolioItemStats(itemId);
+  } catch (e) {
+    console.error("[social-stats] portfolio refresh failed", e);
+  }
 }
 
 const THUMB_MAX_BYTES = 2 * 1024 * 1024;
@@ -258,14 +316,6 @@ async function storeThumbnail(key: string, source: string) {
   } catch (e) {
     console.warn(`[social-stats] thumbnail for ${key} failed`, e);
     return null;
-  }
-}
-
-export async function refreshPortfolioItemStatsQuietly(itemId: string) {
-  try {
-    await refreshPortfolioItemStats(itemId);
-  } catch (e) {
-    console.error("[social-stats] portfolio refresh failed", e);
   }
 }
 

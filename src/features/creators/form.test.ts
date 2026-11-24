@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CreatorForm, CreatorSetupForm, emptyCreatorForm, profileCompleteness, toPayload } from "./form";
 import { LifestyleTags } from "@/schemas";
-import type { MyCreator } from "./hooks";
+import { type MyCreator, portfolioSummary } from "./hooks";
 import { ageFrom } from "./who";
 
 const filled = () => {
@@ -146,5 +146,47 @@ describe("profile completeness", () => {
       creator_prices: [{ format: "reels", amount: 80, currency: "AZN" }] as MyCreator["creator_prices"],
     });
     expect([r.sections.lifestyle, r.sections.portfolio, r.sections.terms]).toEqual([100, 67, 50]);
+  });
+});
+
+describe("portfolio summary", () => {
+  const item = (owner: string, views: number | null, likes: number, comments: number) => ({
+    id: Math.random().toString(),
+    url: "https://www.instagram.com/reel/x/",
+    network: "instagram" as const,
+    title: null,
+    position: 0,
+    portfolio_item_stats: {
+      owner_handle: owner,
+      views,
+      likes,
+      comments,
+      posted_at: null,
+      fetched_at: "2026-11-24",
+    },
+  });
+  const creator = (items: ReturnType<typeof item>[]) => ({
+    creator_socials: [
+      { network: "instagram" as const, handle: "nigar", followers: 0, avg_views: null, verified: false },
+    ],
+    portfolio_items: items,
+  });
+
+  it("is empty without checked numbers", () => {
+    expect(portfolioSummary(creator([]))).toBeNull();
+    expect(portfolioSummary(creator([item("nigar", null, 0, 0)]))).toBeNull();
+  });
+
+  it("uses median views, so one viral Reel doesn't inflate it", () => {
+    const s = portfolioSummary(
+      creator([item("nigar", 1000, 50, 0), item("nigar", 2000, 100, 0), item("nigar", 1_000_000, 10_000, 0)]),
+    )!;
+    expect(s).toMatchObject({ count: 3, medianViews: 2000, totalViews: 1_003_000, bestViews: 1_000_000 });
+    expect(s.er).toBeCloseTo((5 + 5 + 1) / 3);
+  });
+
+  it("leaves out posts from other accounts", () => {
+    const s = portfolioSummary(creator([item("nigar", 1000, 10, 0), item("someone", 9_000_000, 0, 0)]))!;
+    expect(s).toMatchObject({ count: 1, totalViews: 1000 });
   });
 });
