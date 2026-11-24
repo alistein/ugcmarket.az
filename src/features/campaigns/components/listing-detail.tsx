@@ -210,7 +210,11 @@ function Listing({
         <p className="mt-2 text-muted-foreground">{tt(`categories.${d.category}`)}</p>
       )}
 
-      {d.pay_hidden ? <HiddenPay campaignId={d.id} reason={d.pay_hidden} /> : <Pay data={d} />}
+      {d.pay_hidden ? (
+        <HiddenPay campaignId={d.id} reason={d.pay_hidden} currency={d.currency} />
+      ) : (
+        <Pay data={d} />
+      )}
 
       {d.deliverables.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-1.5">
@@ -312,14 +316,23 @@ function Listing({
  * Pay the server left out: a blurred stand-in (not the real amount; it was never sent). Signed-out
  * visitors get a log-in link back to this listing; other brands just hear that only creators see it.
  */
-function HiddenPay({ campaignId, reason }: { campaignId: string; reason: "signed_out" | "brand" }) {
+function HiddenPay({
+  campaignId,
+  reason,
+  currency,
+}: {
+  campaignId: string;
+  reason: "signed_out" | "brand";
+  currency: string;
+}) {
   const t = useTranslations("listing");
   const locale = useLocale();
   return (
     <div className="mt-3">
-      <p aria-hidden className="text-3xl font-semibold tracking-[-0.035em] blur-[6px] select-none">
-        000
-        <span className="ml-1.5 text-base font-medium tracking-normal text-muted-foreground">AZN</span>
+      {/* Only the number is blurred; the currency stays readable. */}
+      <p aria-hidden className="text-3xl font-semibold tracking-[-0.035em] select-none">
+        <span className="inline-block blur-[6px]">000</span>
+        <span className="ml-1.5 text-base font-medium tracking-normal text-muted-foreground">{currency}</span>
       </p>
       {reason === "brand" ? (
         <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
