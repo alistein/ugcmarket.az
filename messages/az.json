@@ -83,7 +83,6 @@
     "phone": "Telefon nömrəsi düzgün deyil",
     "tooLong": "Mətn çox uzundur",
     "categoriesMin": "Ən azı bir kateqoriya seçin",
-    "categoriesMax": "Ən çox 5 kateqoriya seçmək olar",
     "languagesMin": "Ən azı bir dil seçin",
     "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin",
     "portfolioUrl": "Instagram paylaşımının və ya Reels-in linkini daxil edin (https://…)",
@@ -96,7 +95,9 @@
     "date": "Tarix düzgün deyil",
     "formatsMin": "Ən azı bir format seçin",
     "bidRequired": "Qiymətinizi daxil edin",
-    "birthYear": "İli 4 rəqəmlə yazın. Yaşınız 16 ilə 80 arasında olmalıdır"
+    "birthYear": "İli 4 rəqəmlə yazın. Yaşınız 16 ilə 80 arasında olmalıdır",
+    "lifestyleExclusive": "Subay və Ailəvi birlikdə seçilə bilməz",
+    "dealFormatsMin": "Ən azı bir format seçin"
   },
   "landing": {
     "nav": {
@@ -368,13 +369,29 @@
       "family": "Ailə və uşaq",
       "fitness": "İdman",
       "tech": "Texnologiya",
-      "auto": "Avto",
+      "auto": "Avtomobil",
       "education": "Təhsil",
       "humor": "Yumor",
       "gaming": "Oyunlar",
       "pets": "Ev heyvanları",
       "music": "Musiqi",
-      "business": "Biznes"
+      "business": "Biznes",
+      "health": "Sağlamlıq",
+      "finance": "Maliyyə",
+      "shopping": "Alış-veriş",
+      "restaurants": "Restoran və kafe",
+      "entertainment": "Əyləncə",
+      "skincare": "Dəri baxımı",
+      "haircare": "Saç baxımı",
+      "baby": "Ana və körpə",
+      "jewelry": "Zərgərlik və aksesuarlar",
+      "art_design": "İncəsənət və dizayn",
+      "photo_video": "Foto və video",
+      "film_tv": "Kino və serial",
+      "books": "Kitablar",
+      "electronics": "Elektronika",
+      "apps": "Mobil tətbiqlər",
+      "real_estate": "Daşınmaz əmlak"
     },
     "cities": {
       "baku": "Bakı",
@@ -393,7 +410,8 @@
       "az": "Azərbaycan",
       "ru": "Rus",
       "en": "İngilis",
-      "tr": "Türk"
+      "tr": "Türk",
+      "other": "Digər"
     },
     "formats": {
       "reels": "Reels",
@@ -404,12 +422,6 @@
       "ugc_video": "UGC video (brend üçün)"
     },
     "barter": "Barterə açıq",
-    "terms": {
-      "paidOnly": "Yalnız ödənişli",
-      "paid": "Ödənişli",
-      "barter": "Barterə açıq",
-      "repost": "Paylaşım qarşılığında pulsuz"
-    },
     "brandCategories": {
       "beauty": "Gözəllik və kosmetika",
       "fashion": "Geyim və aksesuar",
@@ -438,13 +450,70 @@
       "female": "Qadın",
       "male": "Kişi"
     },
-    "ageRanges": {
-      "under_18": "18-dən kiçik",
-      "18_24": "18–24 yaş",
-      "25_34": "25–34 yaş",
-      "35_44": "35–44 yaş",
-      "45_plus": "45+ yaş"
-    }
+    "dealFormats": {
+      "paid": "Ödənişli",
+      "barter": "Barter",
+      "collab": "Kollaborasiya"
+    },
+    "lifestyleGroups": {
+      "education": "Təhsil",
+      "occupation": "Məşğuliyyət",
+      "family": "Ailə və valideynlik",
+      "pets": "Ev heyvanları",
+      "transport": "Nəqliyyat",
+      "sport": "İdman və aktiv həyat",
+      "hobbies": "Həyat tərzi və hobbilər",
+      "profession": "Peşə"
+    },
+    "lifestyle": {
+      "student": "Tələbə",
+      "teacher": "Müəllim",
+      "employee": "İşçi",
+      "entrepreneur": "Sahibkar",
+      "freelancer": "Freelancer",
+      "homemaker": "Evdar",
+      "single": "Subay",
+      "married": "Ailəvi",
+      "has_kids": "Uşaqlı",
+      "cat_owner": "Pişik sahibi",
+      "dog_owner": "İt sahibi",
+      "other_pet_owner": "Digər ev heyvanı sahibi",
+      "car_owner": "Avtomobil sahibi",
+      "motorcycle_rider": "Motosiklet sürücüsü",
+      "cyclist": "Velosiped sürücüsü",
+      "athlete": "İdmançı",
+      "fitness_fan": "Fitness həvəskarı",
+      "runner": "Qaçış həvəskarı",
+      "swimmer": "Üzgüçü",
+      "yoga": "Yoga həvəskarı",
+      "pilates": "Pilates həvəskarı",
+      "football_fan": "Futbol həvəskarı",
+      "hiking": "Təbiət gəzintisi həvəskarı",
+      "bookworm": "Kitabsevər",
+      "home_cook": "Evdə yemək bişirən",
+      "coffee_lover": "Qəhvə həvəskarı",
+      "gardening": "Bağçılıq həvəskarı",
+      "crafts": "Əl işi həvəskarı",
+      "healthy_eating": "Sağlam qidalanan",
+      "chef": "Aşpaz",
+      "barista": "Barista",
+      "fitness_coach": "Fitness məşqçisi",
+      "it_specialist": "IT mütəxəssisi",
+      "marketer": "Marketoloq",
+      "musician": "Musiqiçi"
+    },
+    "shootOptions": {
+      "at_home": "Evdə çəkiliş",
+      "at_brand_location": "Brendin məkanında çəkiliş"
+    },
+    "skills": {
+      "photographer": "Fotoqraf",
+      "videographer": "Videoqraf",
+      "makeup_artist": "Vizajist",
+      "stylist": "Stilist",
+      "designer": "Dizayner"
+    },
+    "age": "{age} yaş"
   },
   "creator": {
     "setup": {
@@ -453,7 +522,7 @@
       "back": "Geri",
       "finish": "Profili yarat",
       "created": "Profiliniz yaradıldı və yoxlamaya göndərildi",
-      "reviewNote": "Qiymətləri sonradan da əlavə edə bilərsiniz. Profiliniz yoxlanıldıqdan sonra hamıya görünəcək"
+      "reviewNote": "Profili yaratdıqdan sonra ən azı 1 iş əlavə edin: yoxlama ondan sonra başlayır"
     },
     "steps": {
       "about": {
@@ -461,16 +530,12 @@
         "subtitle": "Brendlər sizi bu məlumatlarla tanıyacaq"
       },
       "content": {
-        "title": "Kontent tipləri",
-        "subtitle": "Kateqoriyalar sizə uyğun elanları tapmağa kömək edir"
+        "title": "Kontent və ixtisaslaşma",
+        "subtitle": "Sizə uyğun əməkdaşlıqları tapmaqda kömək edəcək"
       },
       "socials": {
         "title": "Sosial şəbəkələr",
         "subtitle": "Instagram hesabınızı və auditoriyanızı göstərin"
-      },
-      "prices": {
-        "title": "Qiymətlər",
-        "subtitle": "Bu addım məcburi deyil. Təxmini qiymət brendə qərar verməyə kömək edir"
       }
     },
     "edit": {
@@ -497,16 +562,13 @@
       "gender": "Cins",
       "birthYear": "Doğum ili",
       "birthYearPh": "1998",
-      "birthYearHint": "Brendlər yalnız yaş aralığınızı görəcək, məsələn 25–34",
+      "birthYearHint": "Brendlər doğum ilinizi yox, yaşınızı görəcək",
       "city": "Şəhər",
       "cityPh": "Şəhəri seçin",
       "bio": "Haqqında",
       "bioPh": "Bakıda yaşayıram, lifestyle və gözəllik mövzusunda kontent çəkirəm…",
       "categories": "Kateqoriyalar",
-      "categoriesHint": "5 kateqoriyaya qədər seçə bilərsiniz",
       "languages": "Kontent dili",
-      "barter": "Barterə açığam",
-      "barterHint": "Pul əvəzinə məhsul və ya xidmət qarşılığında əməkdaşlıq",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -517,7 +579,6 @@
       "contactsHint": "Gizlidir. Yalnız müraciət etdiyiniz elanın brendi görür",
       "contactInstagram": "Əlaqə üçün Instagram",
       "contactPhone": "Telefon",
-      "pricesHint": "Bir paylaşım üçün təxmini qiyməti AZN ilə yazın. Sahəni boş saxlasanız, profilinizdə \"razılaşma yolu ilə\" görünəcək",
       "crop": {
         "title": "Şəkli tənzimləyin",
         "hint": "Şəkli sürüşdürün və böyüdün. Dairənin içindəki hissə profil şəkliniz olacaq",
@@ -535,13 +596,14 @@
       "connected": "Instagram-dan götürüldü",
       "statFollowers": "izləyici",
       "statAvgViews": "orta baxış",
-      "termsTitle": "Şərtlər",
-      "termsHint": "Brendlər hansı şərtlərlə işlədiyinizi profilinizdə görəcək. Heç birini seçməsəniz, «Yalnız ödənişli» göstəriləcək",
-      "repost": "Pulsuz əməkdaşlığa açığam",
-      "repostHint": "Ödəniş əvəzinə brend Reels və ya story-nizi öz səhifəsində paylaşır",
       "contactsTitle": "Əlaqə",
       "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik",
-      "username": "İstifadəçi adı və ya link"
+      "username": "İstifadəçi adı və ya link",
+      "categoriesCount": "{count} kateqoriya seçilib",
+      "moreCategories": "Daha çox kateqoriya ({count})",
+      "languagesHint": "Kontent yarada bildiyiniz dilləri seçin",
+      "dealFormats": "Əməkdaşlıq formatı",
+      "dealFormatsHint": "Hansı şərtlərlə işlədiyinizi seçin. Bir neçəsini seçə bilərsiniz"
     },
     "portfolio": {
       "title": "Portfolio",
@@ -552,7 +614,6 @@
       "titleLabel": "Başlıq (istəyə bağlı)",
       "titlePh": "Kafe üçün Reels",
       "add": "Əlavə et",
-      "open": "Aç",
       "remove": "Sil",
       "full": "Ən çox {max} iş əlavə etmək olar",
       "networks": {
@@ -568,14 +629,6 @@
     },
     "dashboard": {
       "hello": "Salam, {name}",
-      "completeTitle": "Profilin dolğunluğu",
-      "checklist": {
-        "photo": "Profil şəkli əlavə edin",
-        "bio": "Özünüz haqqında bir neçə cümlə yazın",
-        "socials": "Sosial şəbəkə əlavə edin",
-        "prices": "Qiymət göstərin",
-        "portfolio": "Portfolioya 3 iş əlavə edin"
-      },
       "boardTitle": "Elanlar",
       "boardBody": "Brendlərin açıq elanlarına baxın və müraciət edin",
       "status": {
@@ -596,9 +649,6 @@
         }
       },
       "shareTitle": "Profil linkiniz",
-      "shareBody": "Linki Instagram bio-nuza əlavə edin və ya birbaşa brendlərə göndərin",
-      "sharePending": "Profiliniz təsdiqləndikdən sonra hamı görə biləcək. Hələlik onu yalnız siz görürsünüz",
-      "copy": "Kopyala",
       "copied": "Kopyalandı",
       "copyFailed": "Linki kopyalamaq mümkün olmadı",
       "share": "Paylaş",
@@ -625,7 +675,6 @@
       "statsRefreshing": "Yoxlanılır…",
       "statsRefreshed": "Rəqəmlər yeniləndi",
       "categoriesTitle": "Kateqoriyalar",
-      "completeShort": "dolğunluq",
       "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir",
       "statsLastRun": "Son yoxlama",
       "statsNeverRun": "Hələ yoxlanılmayıb",
@@ -655,7 +704,87 @@
       "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin",
       "ctaButton": "Elan yerləşdir",
       "checked": "Avtomatik yoxlanılıb",
-      "termsTitle": "Şərtlər"
+      "termsTitle": "Şərtlər",
+      "priceFrom": "{amount} {currency}-dən"
+    },
+    "why": {
+      "link": "Niyə soruşuruq?",
+      "title": "Niyə bu məlumatı soruşuruq?",
+      "aboutBody": "Brendlər məhsulları üçün auditoriyasına yaxın kreator axtarır. Yaş və cins onlara uyğun üzü tapmağa kömək edir. Doğum iliniz görünmür, brendlər yalnız yaşınızı görür",
+      "lifestyleBody": "Brendlər məhsulları üçün uyğun üz axtarır: məsələn, uşaq məhsulu üçün uşaqlı valideyn, ev heyvanı yeməyi üçün pişik sahibi",
+      "point1": "Seçdikləriniz profilinizdə görünür və sizi uyğun elanlara yaxınlaşdırır",
+      "point2": "Hamısını istədiyiniz vaxt dəyişə və ya silə bilərsiniz",
+      "ok": "Aydındır"
+    },
+    "lifestyle": {
+      "count": "{count} xüsusiyyət seçilib · Könüllü məlumatlar"
+    },
+    "terms": {
+      "pricesTitle": "Minimum qiymət",
+      "pricesHint": "Hər format üçün ən aşağı qiymətinizi yazın. Brendlər onu «80 AZN-dən» kimi görəcək. Etmədiyiniz formatı boş saxlayın",
+      "pricePh": "0",
+      "aznFrom": "AZN-dən",
+      "shootTitle": "Çəkiliş imkanı",
+      "shootHint": "Harada çəkə bildiyinizi seçin",
+      "skillsTitle": "Bacarıqlar",
+      "skillsHint": "Özünüz etdiyiniz işlər: brendə əlavə komanda lazım olmur"
+    },
+    "sections": {
+      "about": {
+        "title": "Özünüz haqqında",
+        "hint": "Şəkil və qısa məlumat əlavə edin",
+        "missing": "Əlavə edin: {fields}",
+        "panelHint": "Yalnız çatışmayanları doldurun, qalanı artıq hazırdır"
+      },
+      "content": {
+        "title": "Kontent və ixtisaslaşma",
+        "hint": "Kateqoriya, dil və əməkdaşlıq formatı"
+      },
+      "socials": {
+        "title": "Sosial şəbəkələr",
+        "hint": "Instagram və telefon"
+      },
+      "lifestyle": {
+        "title": "Həyat tərzi və maraqlar",
+        "hint": "Brendlərin sizi daha dəqiq tapmasına kömək edin"
+      },
+      "portfolio": {
+        "title": "Portfolio",
+        "hint": "Ən yaxşı işlərinizdən nümunələr əlavə edin"
+      },
+      "terms": {
+        "title": "Qiymətlər və şərtlər",
+        "hint": "Minimum qiymətlərinizi və çəkiliş imkanlarınızı qeyd edin"
+      }
+    },
+    "boost": {
+      "title": "Profilinizi gücləndirin",
+      "subtitle": "Tam profil brendlərin sizi seçmə şansını 3 dəfə artırır",
+      "done": "{done}/{total} bölmə tamamlanıb",
+      "save": "Yadda saxla",
+      "saved": "Yadda saxlanıldı",
+      "fieldDone": "tamamlanıb",
+      "fieldMissing": "əlavə edilməyib"
+    },
+    "post": {
+      "title": "{network} paylaşımı",
+      "views": "Baxış",
+      "likes": "Bəyənmə",
+      "comments": "Şərh",
+      "engagement": "ER",
+      "engagementHint": "Engagement rate: bəyənmə və şərhlərin baxışlara nisbəti. Auditoriyanın paylaşıma nə qədər reaksiya verdiyini göstərir",
+      "duration": "Müddət",
+      "posted": "Paylaşılıb",
+      "paidPartnership": "Ödənişli əməkdaşlıq",
+      "mentions": "Qeyd olunan hesablar",
+      "caption": "Mətn",
+      "more": "Daha çox",
+      "less": "Daha az",
+      "open": "{network}-da aç",
+      "noStats": "Rəqəmlər hələ yoxlanılmayıb",
+      "notYours": "Bu paylaşım @{owner} hesabınındır, ona görə rəqəmləri göstərmirik",
+      "player": "Video",
+      "play": "Videonu oynat"
     }
   },
   "legal": {

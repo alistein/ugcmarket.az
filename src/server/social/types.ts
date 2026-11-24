@@ -44,6 +44,16 @@ export type PostStats = {
   likes: number | null;
   comments: number | null;
   posted_at: string | null;
+  caption?: string | null;
+  hashtags?: string[];
+  /** Accounts tagged in the post, without @. */
+  mentions?: string[];
+  duration_seconds?: number | null;
+  /** "Artist · Song", or null for original audio. */
+  music?: string | null;
+  paid_partnership?: boolean | null;
+  /** The provider's cover image URL (often short-lived). The service copies it into our storage. */
+  thumbnail_source: string | null;
 };
 
 /** Same idea as SocialStatsProvider, for a single post URL. */

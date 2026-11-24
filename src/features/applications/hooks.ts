@@ -50,6 +50,9 @@ export type Applicant = {
     avatar_url: string | null;
     gender: "female" | "male" | null;
     birth_year: number | null;
+    lifestyle_tags: string[];
+    skills: string[];
+    shoot_options: string[];
     city: string;
     categories: string[];
     creator_socials: {

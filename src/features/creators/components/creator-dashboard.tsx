@@ -7,7 +7,6 @@ import {
   CheckmarkBadge01Icon,
   CheckmarkCircle02Icon,
   Clock01Icon,
-  Copy01Icon,
   RefreshIcon,
   Location01Icon,
   PencilEdit02Icon,
@@ -34,8 +33,8 @@ import {
 import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
-import { completeness } from "../form";
+import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES } from "@/schemas";
+import { BoostCard, SectionSheet, type SheetSection } from "./boost-card";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
 import { DealTerms } from "./deal-terms";
 import { PortfolioEditor } from "./portfolio-editor";
@@ -112,6 +111,23 @@ function Home({ creator: c }: { creator: MyCreator }) {
   const [now] = useState(() => Date.now());
   const days = Math.max(0, Math.floor((now - new Date(c.created_at).getTime()) / 86_400_000));
 
+  // The card's Portfolio row: open the tab, bring it into view and outline it for a moment.
+  const [tab, setTab] = useState<"portfolio" | "applications">("portfolio");
+  const [flash, setFlash] = useState(false);
+  // One panel per section (about, lifestyle, terms), opened from the card or the bio link.
+  const [sheet, setSheet] = useState<SheetSection | null>(null);
+  const showPortfolio = () => {
+    setTab("portfolio");
+    requestAnimationFrame(() => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document
+        .getElementById("portfolio")
+        ?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      setFlash(true);
+      setTimeout(() => setFlash(false), 1600);
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-[13rem_minmax(0,1fr)]">
       {/* Side column: meta + links */}
@@ -123,7 +139,7 @@ function Home({ creator: c }: { creator: MyCreator }) {
           {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
           {c.languages.length > 0 && (
             <span className="text-muted-foreground">
-              · {c.languages.map((l) => l.toUpperCase()).join(" ")}
+              · {c.languages.map((l) => (known(CONTENT_LANGUAGES, l) ? tt(`languages.${l}`) : l)).join(", ")}
             </span>
           )}
         </p>
@@ -192,26 +208,41 @@ function Home({ creator: c }: { creator: MyCreator }) {
             {c.bio ? (
               <p className="mt-2 max-w-xl text-pretty">{c.bio}</p>
             ) : (
-              <Link href="/me/profile#about" className="mt-2 inline-block text-primary hover:underline">
+              <button
+                type="button"
+                onClick={() => setSheet("about")}
+                className="mt-2 inline-block text-primary hover:underline"
+              >
                 {t("addBio")}
-              </Link>
+              </button>
             )}
             <ProfileStatsLine creator={c} />
           </div>
-          <HeaderActions />
+          <HeaderActions creator={c} />
         </section>
 
-        {c.review_status !== "approved" && <StatusNote status={c.review_status} />}
+        {/* Pending without a portfolio item isn't in review yet: the card says what to add instead. */}
+        {(c.review_status === "rejected" ||
+          (c.review_status === "pending" && c.portfolio_items.length > 0)) && (
+          <StatusNote status={c.review_status} />
+        )}
 
-        <Overview creator={c} />
+        <BoostCard creator={c} onPortfolio={showPortfolio} onOpen={setSheet} />
+        <SectionSheet creator={c} section={sheet} onClose={() => setSheet(null)} />
 
-        <Tabs defaultValue="portfolio">
+        <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)}>
           <TabsList>
             <TabsTrigger value="portfolio">{t("tabs.portfolio")}</TabsTrigger>
             <TabsTrigger value="applications">{t("tabs.applications")}</TabsTrigger>
           </TabsList>
           <TabsContent value="portfolio" className="pt-3">
-            <Panel>
+            <Panel
+              id="portfolio"
+              className={cn(
+                "scroll-mt-24 [transition:box-shadow_300ms_ease]",
+                flash && "ring-2 ring-primary dark:ring-primary",
+              )}
+            >
               <PortfolioEditor items={c.portfolio_items} creator={c} />
             </Panel>
           </TabsContent>
@@ -236,9 +267,10 @@ function Home({ creator: c }: { creator: MyCreator }) {
   );
 }
 
-function Panel({ className, children }: { className?: string; children: React.ReactNode }) {
+function Panel({ id, className, children }: { id?: string; className?: string; children: React.ReactNode }) {
   return (
     <div
+      id={id}
       className={cn(
         "rounded-3xl bg-card p-5 shadow-(--shadow-soft) ring-1 ring-foreground/[0.05] sm:p-6 dark:ring-white/[0.07]",
         className,
@@ -287,43 +319,21 @@ function StatusNote({ status }: { status: "pending" | "rejected" }) {
   );
 }
 
-/** Audience numbers, completeness and the share link in one card (Luhive's "Activity" spot). */
-function Overview({ creator: c }: { creator: MyCreator }) {
-  const t = useTranslations("creator.dashboard");
-  const { items } = completeness(c);
-  // Portfolio has its own empty slots in the Portfolio tab.
-  const todo = items.filter((i) => !i.done && i.key !== "portfolio");
+const ACTION =
+  "inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary [&_svg]:size-4";
 
-  return (
-    <Panel className="grid grid-cols-1 gap-5">
-      {todo.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {todo.map((i) => (
-            <Link
-              key={i.key}
-              href={i.section === "portfolio" ? "/me" : `/me/profile#${i.section}`}
-              className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-sm transition-colors hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_6%)]"
-            >
-              <HugeiconsIcon icon={Add01Icon} strokeWidth={2} className="size-3.5" />
-              {t(`checklist.${i.key}`)}
-            </Link>
-          ))}
-        </div>
-      )}
-
-      <ShareRow creator={c} />
-    </Panel>
-  );
-}
-
-function ShareRow({ creator }: { creator: MyCreator }) {
+/** Top-right of the profile: edit, and share the public link (share sheet on phones, else copy). */
+function HeaderActions({ creator }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
-  const url =
-    typeof window === "undefined" ? "" : `${window.location.origin}/${locale}/creator/${creator.handle}`;
 
-  const copy = async () => {
+  const share = async () => {
+    const url = `${window.location.origin}/${locale}/creator/${creator.handle}`;
+    if (navigator.share) {
+      await navigator.share({ title: creator.display_name, url }).catch(() => {});
+      return;
+    }
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -332,44 +342,18 @@ function ShareRow({ creator }: { creator: MyCreator }) {
       toast.error(t("copyFailed"));
     }
   };
-  const share = async () => {
-    if (navigator.share) await navigator.share({ title: creator.display_name, url }).catch(() => {});
-    else await copy();
-  };
 
   return (
-    <div className="grid grid-cols-1 gap-2 not-first:border-t not-first:border-border/70 not-first:pt-4">
-      <p className="text-sm text-muted-foreground">
-        {creator.review_status === "approved" ? t("shareBody") : t("sharePending")}
-      </p>
-      <div className="flex items-center gap-2">
-        <div className="flex min-w-0 flex-1 items-center gap-2 rounded-full bg-muted py-1 pr-1 pl-4">
-          <span className="min-w-0 flex-1 truncate text-sm" title={url}>
-            {url.replace(/^https?:\/\//, "")}
-          </span>
-          <Button size="sm" variant="outline" onClick={copy}>
-            <HugeiconsIcon icon={copied ? Tick02Icon : Copy01Icon} strokeWidth={2} data-icon="inline-start" />
-            <span aria-live="polite">{copied ? t("copied") : t("copy")}</span>
-          </Button>
-        </div>
-        <Button size="icon" variant="soft" onClick={share} aria-label={t("share")}>
-          <HugeiconsIcon icon={Share08Icon} strokeWidth={2} />
-        </Button>
-      </div>
+    <div className="flex items-center gap-5 self-start sm:pt-2">
+      <button type="button" onClick={share} className={ACTION}>
+        <HugeiconsIcon icon={copied ? Tick02Icon : Share08Icon} strokeWidth={2} />
+        <span aria-live="polite">{copied ? t("copied") : t("share")}</span>
+      </button>
+      <Link href="/me/profile" className={ACTION}>
+        <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
+        {t("edit")}
+      </Link>
     </div>
-  );
-}
-
-function HeaderActions() {
-  const t = useTranslations("creator.dashboard");
-  return (
-    <Link
-      href="/me/profile"
-      className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-foreground transition-colors hover:text-primary sm:pt-2 [&_svg]:size-4"
-    >
-      <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
-      {t("edit")}
-    </Link>
   );
 }
 
@@ -426,12 +410,11 @@ function formatDateTime(d: Date) {
   return `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-/** One small line under the bio: followers (✓ when checked) · portfolio items · completeness. */
+/** One small line under the bio: followers (✓ when checked) · portfolio items. */
 function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
-  const { percent } = completeness(c);
   return (
     <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
       {c.creator_socials.map((s) => {
@@ -455,20 +438,6 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
       <span className="whitespace-nowrap">
         <span className="font-semibold text-foreground tabular-nums">{c.portfolio_items.length}</span>{" "}
         {t("works")}
-      </span>
-      <span className="inline-flex items-center gap-2 whitespace-nowrap">
-        <span className="font-semibold text-foreground tabular-nums">{percent}%</span>
-        {t("completeShort")}
-        <span
-          className="h-1 w-12 shrink-0 overflow-hidden rounded-full bg-muted"
-          role="progressbar"
-          aria-valuenow={percent}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label={t("completeTitle")}
-        >
-          <span className="block h-full rounded-full bg-primary" style={{ width: `${percent}%` }} />
-        </span>
       </span>
     </div>
   );

@@ -29,6 +29,7 @@ import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 import { CITIES, CREATOR_CATEGORIES, isEnabledNetwork } from "@/schemas";
 import { type Applicant, useApplicants } from "../hooks";
+import { CreatorTags } from "@/features/creators/components/creator-tags";
 import { useCreatorWho } from "@/features/creators/who";
 
 const STATUS_BADGE = {
@@ -305,6 +306,9 @@ function ApplicantCard({ applicant: a, currency }: { applicant: Applicant; curre
           ))}
         </div>
       )}
+      <div className="mt-2">
+        <CreatorTags creator={c} limit={4} />
+      </div>
 
       {a.message && (
         <p className="mt-4 text-sm text-pretty break-words whitespace-pre-line text-foreground/80">

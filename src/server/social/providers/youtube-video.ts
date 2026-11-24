@@ -4,7 +4,11 @@ import { fetchJson, type PostStats, type PostStatsProvider } from "../types";
 
 type Videos = {
   items?: {
-    snippet?: { channelId?: string; publishedAt?: string };
+    snippet?: {
+      channelId?: string;
+      publishedAt?: string;
+      thumbnails?: Record<string, { url?: string } | undefined>;
+    };
     statistics?: { viewCount?: string; likeCount?: string; commentCount?: string };
   }[];
 };
@@ -56,6 +60,8 @@ export const youtubeVideo: PostStatsProvider = {
       likes: num(video.statistics?.likeCount),
       comments: num(video.statistics?.commentCount),
       posted_at: video.snippet?.publishedAt ?? null,
+      thumbnail_source:
+        video.snippet?.thumbnails?.high?.url ?? video.snippet?.thumbnails?.medium?.url ?? null,
     };
   },
 };

@@ -11,6 +11,14 @@ type ApifyPost = {
   /** Deprecated by Instagram; fallback only. */
   videoViewCount?: number;
   timestamp?: string;
+  caption?: string;
+  hashtags?: string[];
+  mentions?: string[];
+  videoDuration?: number;
+  musicInfo?: { artist_name?: string; song_name?: string; uses_original_audio?: boolean };
+  paidPartnership?: boolean;
+  /** Cover image (Instagram CDN, expires). */
+  displayUrl?: string;
   error?: string;
 };
 
@@ -46,6 +54,16 @@ export const instagramApifyPost: PostStatsProvider = {
       likes: p.likesCount ?? null,
       comments: p.commentsCount ?? null,
       posted_at: p.timestamp ?? null,
+      thumbnail_source: p.displayUrl ?? null,
+      caption: p.caption ? p.caption.slice(0, 2200) : null,
+      hashtags: (p.hashtags ?? []).slice(0, 30),
+      mentions: (p.mentions ?? []).map((m) => m.toLowerCase()).slice(0, 30),
+      duration_seconds: p.videoDuration != null ? Math.round(p.videoDuration * 100) / 100 : null,
+      music:
+        p.musicInfo && !p.musicInfo.uses_original_audio && p.musicInfo.song_name
+          ? [p.musicInfo.artist_name, p.musicInfo.song_name].filter(Boolean).join(" · ")
+          : null,
+      paid_partnership: p.paidPartnership ?? null,
     };
   },
 };

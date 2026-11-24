@@ -5,6 +5,12 @@ import {
   ContentLanguage,
   CreatorCategory,
   CreatorHandle,
+  CreatorSkill,
+  DEAL_FORMATS,
+  type DealFormat,
+  LifestyleTag,
+  LifestyleTags,
+  ShootOption,
   ENABLED_NETWORKS,
   ENABLED_PRICE_FORMATS,
   Gender,
@@ -13,7 +19,12 @@ import {
   SocialUsername,
   type CreatorProfileInput,
 } from "@/schemas";
-import { type MyCreator, type Network, socialNumbers } from "./hooks";
+import { type CreatorPublic, type MyCreator, type Network, socialNumbers } from "./hooks";
+
+/** Whether a creator takes this kind of deal ("collab" is the repost deal). */
+export function dealOpen(c: Pick<CreatorPublic, "paid_open" | "barter_open" | "repost_open">, f: DealFormat) {
+  return f === "paid" ? c.paid_open : f === "barter" ? c.barter_open : c.repost_open;
+}
 
 /**
  * Form shape for the creator profile (setup wizard + edit). Inputs are strings; toPayload()
@@ -81,10 +92,13 @@ export const CreatorForm = z.object({
     .refine((v) => v !== "", "validation.required")
     .refine((v) => v === "" || BirthYear.safeParse(v).success, "validation.birthYear"),
   bio: z.string().trim().max(600, "validation.tooLong"),
-  categories: z.array(CreatorCategory).min(1, "validation.categoriesMin").max(5, "validation.categoriesMax"),
+  categories: z.array(CreatorCategory).min(1, "validation.categoriesMin"),
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin"),
-  barter_open: z.boolean(),
-  repost_open: z.boolean(),
+  /** Paid / barter / collab (repost). At least one; stored as paid_open, barter_open, repost_open. */
+  deal_formats: z.array(z.enum(DEAL_FORMATS)).min(1, "validation.dealFormatsMin"),
+  lifestyle_tags: LifestyleTags,
+  shoot_options: z.array(ShootOption),
+  skills: z.array(CreatorSkill),
   socials: socials(true),
   prices: z.object(priceShape),
   contact_instagram: z
@@ -104,9 +118,8 @@ export const CreatorSetupForm = CreatorForm.extend({ socials: socials(false) });
 /** Which fields each wizard step owns (validated with form.trigger before moving on). */
 export const STEP_FIELDS = {
   about: ["avatar_url", "display_name", "handle", "birth_year", "gender", "city", "bio"],
-  content: ["categories", "languages"],
+  content: ["categories", "languages", "deal_formats"],
   socials: ["socials", "contact_instagram", "contact_phone"],
-  prices: ["prices", "barter_open", "repost_open"],
 } as const;
 export type Step = keyof typeof STEP_FIELDS;
 export const STEPS = Object.keys(STEP_FIELDS) as Step[];
@@ -124,8 +137,10 @@ export function emptyCreatorForm(): CreatorFormValues {
     bio: "",
     categories: [],
     languages: ["az"],
-    barter_open: false,
-    repost_open: false,
+    deal_formats: [],
+    lifestyle_tags: [],
+    shoot_options: [],
+    skills: [],
     socials: { instagram: { ...emptyRow }, tiktok: { ...emptyRow }, youtube: { ...emptyRow } },
     prices: Object.fromEntries(PRICE_FORMATS.map((f) => [f, ""])) as CreatorFormValues["prices"],
     contact_instagram: "",
@@ -164,8 +179,14 @@ export function creatorToForm(c: MyCreator): CreatorFormValues {
     languages: c.languages.filter(
       (x) => ContentLanguage.safeParse(x).success,
     ) as CreatorFormValues["languages"],
-    barter_open: c.barter_open,
-    repost_open: c.repost_open,
+    deal_formats: DEAL_FORMATS.filter((f) => dealOpen(c, f)),
+    lifestyle_tags: c.lifestyle_tags.filter(
+      (x) => LifestyleTag.safeParse(x).success,
+    ) as CreatorFormValues["lifestyle_tags"],
+    shoot_options: c.shoot_options.filter(
+      (x) => ShootOption.safeParse(x).success,
+    ) as CreatorFormValues["shoot_options"],
+    skills: c.skills.filter((x) => CreatorSkill.safeParse(x).success) as CreatorFormValues["skills"],
     contact_instagram: c.contact_instagram ?? "",
     contact_phone: c.contact_phone ?? "",
   };
@@ -184,8 +205,12 @@ export function toPayload(v: CreatorFormValues): CreatorProfileInput & { avatar_
     bio: v.bio || null,
     categories: v.categories,
     languages: v.languages,
-    barter_open: v.barter_open,
-    repost_open: v.repost_open,
+    paid_open: v.deal_formats.includes("paid"),
+    barter_open: v.deal_formats.includes("barter"),
+    repost_open: v.deal_formats.includes("collab"),
+    lifestyle_tags: v.lifestyle_tags,
+    shoot_options: v.shoot_options,
+    skills: v.skills,
     socials: NETWORKS.filter((n) => v.socials[n].handle).map((n) => ({
       network: n,
       handle: SocialUsername.parse(v.socials[n].handle),
@@ -215,14 +240,45 @@ export function suggestHandle(name: string) {
     .slice(0, 30);
 }
 
-/** Profile completeness for the dashboard checklist. */
-export function completeness(c: MyCreator) {
-  const items = [
-    { key: "photo", done: !!c.avatar_url, section: "about" },
-    { key: "bio", done: !!c.bio && c.bio.length >= 40, section: "about" },
-    { key: "socials", done: c.creator_socials.length > 0, section: "socials" },
-    { key: "prices", done: c.creator_prices.length > 0, section: "prices" },
-    { key: "portfolio", done: c.portfolio_items.length >= 3, section: "portfolio" },
-  ] as const;
-  return { items, percent: Math.round((items.filter((i) => i.done).length / items.length) * 100) };
+/** "Özünüz haqqında" fields in display order, and whether each is filled. */
+export const ABOUT_FIELDS = ["avatar_url", "display_name", "handle", "birth_year", "gender", "city", "bio"] as const;
+export function aboutStatus(c: MyCreator) {
+  return ABOUT_FIELDS.map((f) => ({ field: f, done: !!c[f] }));
+}
+
+/** The six parts of a creator profile: 3 from onboarding, 3 from the enhancer. */
+export const PROFILE_SECTIONS = ["about", "content", "socials", "lifestyle", "portfolio", "terms"] as const;
+export type ProfileSection = (typeof PROFILE_SECTIONS)[number];
+/** Sections that open in their own sheet from the completeness card (the rest go to the edit page). */
+export const ENHANCER_SECTIONS = [
+  "lifestyle",
+  "portfolio",
+  "terms",
+] as const satisfies readonly ProfileSection[];
+
+const share = (done: boolean[]) => Math.round((done.filter(Boolean).length / done.length) * 100);
+
+/**
+ * Completeness per section and in total (the average, each section counting the same).
+ * Spec: "Creator Onboarding & Profile Completeness", Part 2.
+ */
+export function profileCompleteness(c: MyCreator) {
+  const sections: Record<ProfileSection, number> = {
+    about: share(aboutStatus(c).map((x) => x.done)),
+    content: share([
+      c.categories.length > 0,
+      c.languages.length > 0,
+      c.paid_open || c.barter_open || c.repost_open,
+    ]),
+    socials: share([c.creator_socials.length > 0, !!c.contact_phone]),
+    lifestyle: c.lifestyle_tags.length > 0 ? 100 : 0,
+    portfolio: Math.round((Math.min(c.portfolio_items.length, 3) / 3) * 100),
+    terms: (c.creator_prices.length > 0 ? 50 : 0) + (c.shoot_options.length > 0 ? 50 : 0),
+  };
+  const values = Object.values(sections);
+  return {
+    sections,
+    total: Math.round(values.reduce((a, b) => a + b, 0) / values.length),
+    done: values.filter((v) => v === 100).length,
+  };
 }

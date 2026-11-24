@@ -1,13 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Add01Icon,
-  ArrowUpRight01Icon,
-  Delete02Icon,
-  FavouriteIcon,
-  ViewIcon,
-} from "@hugeicons/core-free-icons";
+import { Add01Icon, Delete02Icon, FavouriteIcon, ViewIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -21,7 +15,14 @@ import { ApiClientError } from "@/lib/api-client";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 import { isEnabledNetwork, networkOfUrl, PORTFOLIO_MAX, PortfolioItemInput } from "@/schemas";
-import { type CreatorPublic, postNumbers, useAddPortfolioItem, useRemovePortfolioItem } from "../hooks";
+import {
+  type CreatorPublic,
+  postCover,
+  postNumbers,
+  useAddPortfolioItem,
+  useRemovePortfolioItem,
+} from "../hooks";
+import { PostSheet } from "./post-sheet";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
 
 /** Three slots are shown from the start (a complete profile needs 3), then a + tile up to the limit. */
@@ -38,6 +39,7 @@ export function PortfolioEditor({
 }) {
   const t = useTranslations("creator.portfolio");
   const [open, setOpen] = useState(false);
+  const [viewing, setViewing] = useState<string | null>(null);
   const empty = Math.max(0, SLOTS - items.length);
   const canAddMore = items.length >= SLOTS && items.length < PORTFOLIO_MAX;
 
@@ -46,7 +48,7 @@ export function PortfolioEditor({
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
         {items.map((item) => (
           <li key={item.id}>
-            <PortfolioTile item={item} creator={creator} />
+            <PortfolioTile item={item} creator={creator} onOpen={() => setViewing(item.id)} />
           </li>
         ))}
         {Array.from({ length: empty }, (_, i) => (
@@ -81,6 +83,12 @@ export function PortfolioEditor({
         <p className="text-sm text-muted-foreground">{t("full", { max: PORTFOLIO_MAX })}</p>
       )}
       <AddPortfolioSheet open={open} onOpenChange={setOpen} />
+      <PostSheet
+        item={items.find((i) => i.id === viewing) ?? null}
+        creator={creator}
+        onClose={() => setViewing(null)}
+        explainMismatch
+      />
     </div>
   );
 }
@@ -91,23 +99,57 @@ const slotClass =
 function PortfolioTile({
   item,
   creator,
+  onOpen,
 }: {
   item: CreatorPublic["portfolio_items"][number];
   creator: Pick<CreatorPublic, "creator_socials">;
+  /** Opens the post's details sheet. */
+  onOpen: () => void;
 }) {
   const t = useTranslations("creator.portfolio");
+  const tp = useTranslations("creator.post");
   const remove = useRemovePortfolioItem();
+  const cover = postCover(item);
   return (
-    <div className="group relative flex aspect-[3/4] w-full flex-col rounded-2xl bg-muted/60 p-3">
-      <div className="flex items-start justify-between gap-1">
-        <span
-          className={cn(
-            "flex size-9 shrink-0 items-center justify-center rounded-lg",
-            NETWORK_TINT[item.network],
-          )}
-        >
-          <HugeiconsIcon icon={NETWORK_ICON[item.network]} strokeWidth={2} className="size-4" />
-        </span>
+    // The whole tile is one button (an invisible layer under the delete button). It presses down
+    // to 0.97 (160ms ease-out, every tap), and on pointer hover the cover drifts in a little.
+    <div
+      className={cn(
+        "group relative flex aspect-[3/4] w-full flex-col overflow-hidden rounded-2xl bg-muted/60 p-3",
+        "[transition:scale_160ms_var(--ease-out),background-color_150ms_ease] has-[[data-tile]:active]:scale-[0.97]",
+        "has-[[data-tile]:focus-visible]:ring-4 has-[[data-tile]:focus-visible]:ring-ring/25",
+        cover ? "text-white" : "hover:bg-muted",
+      )}
+    >
+      {cover && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element -- our own storage URL, small cover */}
+          <img
+            src={cover}
+            alt=""
+            loading="lazy"
+            className="absolute inset-0 size-full object-cover [transition:scale_300ms_var(--ease-out)] group-hover:scale-[1.04]"
+          />
+          <span
+            aria-hidden
+            className="absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent"
+          />
+        </>
+      )}
+      <div className="relative flex items-start justify-between gap-1">
+        {/* The cover already shows what it is; the network chip is only for link-only tiles. */}
+        {cover ? (
+          <span />
+        ) : (
+          <span
+            className={cn(
+              "flex size-9 shrink-0 items-center justify-center rounded-lg",
+              NETWORK_TINT[item.network],
+            )}
+          >
+            <HugeiconsIcon icon={NETWORK_ICON[item.network]} strokeWidth={2} className="size-4" />
+          </span>
+        )}
         <Button
           type="button"
           variant="ghost"
@@ -115,29 +157,38 @@ function PortfolioTile({
           aria-label={t("remove")}
           disabled={remove.isPending}
           onClick={() => remove.mutate(item.id)}
-          className="relative z-10"
+          className={cn(
+            "relative z-10",
+            cover && "bg-black/40 text-white hover:bg-black/60 hover:text-white",
+          )}
         >
           <HugeiconsIcon icon={Delete02Icon} strokeWidth={2} />
         </Button>
       </div>
-      <a
-        href={item.url}
-        target="_blank"
-        rel="noopener noreferrer nofollow"
-        className="mt-auto min-w-0 outline-none after:absolute after:inset-0 after:rounded-2xl focus-visible:after:ring-4 focus-visible:after:ring-ring/25"
-      >
-        <span className="line-clamp-3 text-sm font-medium text-pretty break-words">
-          {item.title || shortUrl(item.url)}
-        </span>
-        <span className="mt-0.5 inline-flex items-center gap-0.5 text-xs text-muted-foreground">
-          {t("open")}
-          <HugeiconsIcon icon={ArrowUpRight01Icon} strokeWidth={2} className="size-3" />
-        </span>
-        <PostStatsLine creator={creator} item={item} explainMismatch />
-      </a>
+      <button
+        type="button"
+        data-tile
+        onClick={onOpen}
+        aria-label={item.title || tp("title", { network: NETWORK_LABEL[item.network] })}
+        className="absolute inset-0 z-[1] cursor-pointer rounded-2xl outline-none"
+      />
+      <div className="pointer-events-none relative mt-auto min-w-0">
+        {/* With a cover, the picture says what it is; the link text would only cover it. */}
+        {!cover && (
+          <span className="line-clamp-3 text-sm font-medium text-pretty break-words">
+            {item.title || shortUrl(item.url)}
+          </span>
+        )}
+        {cover && item.title && (
+          <span className="line-clamp-2 text-sm font-medium text-pretty break-words">{item.title}</span>
+        )}
+        <PostStatsLine creator={creator} item={item} explainMismatch inverse={!!cover} />
+      </div>
     </div>
   );
 }
+
+const NETWORK_LABEL = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" } as const;
 
 function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const t = useTranslations("creator.portfolio");
@@ -229,10 +280,13 @@ export function PostStatsLine({
   creator,
   item,
   explainMismatch,
+  inverse,
 }: {
   creator: Pick<CreatorPublic, "creator_socials">;
   item: CreatorPublic["portfolio_items"][number];
   explainMismatch?: boolean;
+  /** White text, for use on a cover image. */
+  inverse?: boolean;
 }) {
   const t = useTranslations("creator.portfolio");
   const locale = useLocale();
@@ -243,7 +297,7 @@ export function PostStatsLine({
     const st = Array.isArray(raw) ? raw[0] : raw;
     if (explainMismatch && st?.fetched_at && st.owner_handle) {
       return (
-        <span className="mt-0.5 block text-xs text-muted-foreground">
+        <span className={cn("mt-0.5 block text-xs", inverse ? "text-white/80" : "text-muted-foreground")}>
           {t("notYours", { owner: st.owner_handle })}
         </span>
       );
@@ -252,7 +306,10 @@ export function PostStatsLine({
   }
   return (
     <span
-      className="mt-1 flex items-center gap-3 text-xs text-muted-foreground tabular-nums"
+      className={cn(
+        "mt-1 flex items-center gap-3 text-xs tabular-nums",
+        inverse ? "text-white/90" : "text-muted-foreground",
+      )}
       title={t("checked")}
     >
       {n.views != null && (

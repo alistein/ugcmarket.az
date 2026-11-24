@@ -27,7 +27,8 @@ import {
 import { type MyCreator, useCreateCreator, useMyCreator, useUpdateCreator } from "../hooks";
 import { FormSection } from "./form-bits";
 import { PortfolioEditor } from "./portfolio-editor";
-import { AboutFields, ContentFields, PriceFields, SocialFields } from "./profile-sections";
+import { LifestyleFields, TermsFields } from "./enhancer-fields";
+import { AboutFields, ContentFields, SocialFields } from "./profile-sections";
 
 /** /me/profile — setup wizard before the profile exists, sectioned editor after. */
 export function ProfileEditorPage() {
@@ -81,15 +82,16 @@ function useServerErrors(form: ReturnType<typeof useForm<CreatorFormValues>>) {
   };
 }
 
+/** Round back arrow, left of the page title (same as the listing page). */
 function BackToMe() {
   const t = useTranslations("common");
   return (
     <Link
       href="/me"
-      className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
+      aria-label={t("back")}
+      className="-ml-2 flex size-10 shrink-0 items-center justify-center rounded-full text-foreground/80 outline-none [transition:scale_160ms_var(--ease-out),background-color_150ms_ease] hover:bg-muted hover:text-foreground focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.97]"
     >
-      <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} className="size-4" />
-      {t("back")}
+      <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} className="size-5" />
     </Link>
   );
 }
@@ -188,7 +190,6 @@ function ProfileSetup() {
         {step === "about" && <AboutFields form={form} />}
         {step === "content" && <ContentFields form={form} />}
         {step === "socials" && <SocialFields form={form} connect={false} />}
-        {step === "prices" && <PriceFields form={form} />}
 
         <div className="mt-2 flex flex-wrap items-center gap-3 border-t border-border/70 pt-6">
           {index > 0 && (
@@ -197,7 +198,7 @@ function ProfileSetup() {
               {t("setup.back")}
             </Button>
           )}
-          {step === "prices" && <p className="text-sm text-muted-foreground">{t("setup.reviewNote")}</p>}
+          {last && <p className="text-sm text-muted-foreground">{t("setup.reviewNote")}</p>}
           <Button type="submit" size="lg" className="ml-auto min-w-40" disabled={create.isPending}>
             {last ? t("setup.finish") : t("setup.next")}
             {!last && <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} data-icon="inline-end" />}
@@ -234,8 +235,10 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
 
   return (
     <div>
-      <BackToMe />
-      <h1 className="text-3xl font-semibold tracking-[-0.03em]">{t("edit.title")}</h1>
+      <div className="flex items-center gap-1">
+        <BackToMe />
+        <h1 className="text-3xl font-semibold tracking-[-0.03em]">{t("edit.title")}</h1>
+      </div>
       <p className="mt-1.5 text-muted-foreground">{t("edit.subtitle")}</p>
 
       <form noValidate onSubmit={save} className="mt-8 grid grid-cols-1">
@@ -248,8 +251,11 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
         <FormSection id="socials" title={t("steps.socials.title")}>
           <SocialFields form={form} />
         </FormSection>
-        <FormSection id="prices" title={t("steps.prices.title")}>
-          <PriceFields form={form} />
+        <FormSection id="lifestyle" title={t("sections.lifestyle.title")}>
+          <LifestyleFields form={form} />
+        </FormSection>
+        <FormSection id="terms" title={t("sections.terms.title")}>
+          <TermsFields form={form} />
         </FormSection>
 
         {/* Sticky save bar: above the mobile tab bar, only while there are unsaved changes. */}

@@ -83,7 +83,6 @@
     "phone": "Not a valid phone number",
     "tooLong": "Too long",
     "categoriesMin": "Pick at least one category",
-    "categoriesMax": "At most 5 categories",
     "languagesMin": "Pick at least one language",
     "socialsMin": "Add at least one social account",
     "portfolioUrl": "Enter a link to an Instagram post or Reel (https://…)",
@@ -96,7 +95,9 @@
     "date": "That date isn't valid",
     "formatsMin": "Pick at least one format",
     "bidRequired": "Enter your price",
-    "birthYear": "Enter a 4-digit year. You need to be between 16 and 80"
+    "birthYear": "Enter a 4-digit year. You need to be between 16 and 80",
+    "lifestyleExclusive": "Single and Married can't both be picked",
+    "dealFormatsMin": "Pick at least one format"
   },
   "landing": {
     "nav": {
@@ -368,13 +369,29 @@
       "family": "Family & kids",
       "fitness": "Fitness",
       "tech": "Tech",
-      "auto": "Auto",
+      "auto": "Cars",
       "education": "Education",
       "humor": "Humor",
       "gaming": "Gaming",
       "pets": "Pets",
       "music": "Music",
-      "business": "Business"
+      "business": "Business",
+      "health": "Health",
+      "finance": "Finance",
+      "shopping": "Shopping",
+      "restaurants": "Restaurants and cafes",
+      "entertainment": "Entertainment",
+      "skincare": "Skincare",
+      "haircare": "Haircare",
+      "baby": "Mom and baby",
+      "jewelry": "Jewelry and accessories",
+      "art_design": "Art and design",
+      "photo_video": "Photo and video",
+      "film_tv": "Film and TV",
+      "books": "Books",
+      "electronics": "Electronics",
+      "apps": "Mobile apps",
+      "real_estate": "Real estate"
     },
     "cities": {
       "baku": "Baku",
@@ -393,7 +410,8 @@
       "az": "Azerbaijani",
       "ru": "Russian",
       "en": "English",
-      "tr": "Turkish"
+      "tr": "Turkish",
+      "other": "Other"
     },
     "formats": {
       "reels": "Reels",
@@ -404,12 +422,6 @@
       "ugc_video": "UGC video (for the brand)"
     },
     "barter": "Open to barter",
-    "terms": {
-      "paidOnly": "Paid only",
-      "paid": "Paid",
-      "barter": "Open to barter",
-      "repost": "Free for a repost"
-    },
     "brandCategories": {
       "beauty": "Beauty and cosmetics",
       "fashion": "Clothing and accessories",
@@ -438,13 +450,70 @@
       "female": "Female",
       "male": "Male"
     },
-    "ageRanges": {
-      "under_18": "Under 18",
-      "18_24": "18–24",
-      "25_34": "25–34",
-      "35_44": "35–44",
-      "45_plus": "45+"
-    }
+    "dealFormats": {
+      "paid": "Paid",
+      "barter": "Barter",
+      "collab": "Collaboration"
+    },
+    "lifestyleGroups": {
+      "education": "Education",
+      "occupation": "Occupation",
+      "family": "Family and parenting",
+      "pets": "Pets",
+      "transport": "Getting around",
+      "sport": "Sport and active life",
+      "hobbies": "Lifestyle and hobbies",
+      "profession": "Profession"
+    },
+    "lifestyle": {
+      "student": "Student",
+      "teacher": "Teacher",
+      "employee": "Employee",
+      "entrepreneur": "Entrepreneur",
+      "freelancer": "Freelancer",
+      "homemaker": "Homemaker",
+      "single": "Single",
+      "married": "Married",
+      "has_kids": "Has kids",
+      "cat_owner": "Cat owner",
+      "dog_owner": "Dog owner",
+      "other_pet_owner": "Other pet owner",
+      "car_owner": "Car owner",
+      "motorcycle_rider": "Motorcycle rider",
+      "cyclist": "Cyclist",
+      "athlete": "Athlete",
+      "fitness_fan": "Fitness fan",
+      "runner": "Runner",
+      "swimmer": "Swimmer",
+      "yoga": "Yoga",
+      "pilates": "Pilates",
+      "football_fan": "Football fan",
+      "hiking": "Hiking",
+      "bookworm": "Bookworm",
+      "home_cook": "Home cook",
+      "coffee_lover": "Coffee lover",
+      "gardening": "Gardening",
+      "crafts": "Crafts",
+      "healthy_eating": "Healthy eating",
+      "chef": "Chef",
+      "barista": "Barista",
+      "fitness_coach": "Fitness coach",
+      "it_specialist": "IT specialist",
+      "marketer": "Marketer",
+      "musician": "Musician"
+    },
+    "shootOptions": {
+      "at_home": "Filming at home",
+      "at_brand_location": "Filming at the brand's place"
+    },
+    "skills": {
+      "photographer": "Photographer",
+      "videographer": "Videographer",
+      "makeup_artist": "Makeup artist",
+      "stylist": "Stylist",
+      "designer": "Designer"
+    },
+    "age": "{age} y.o."
   },
   "creator": {
     "setup": {
@@ -453,7 +522,7 @@
       "back": "Back",
       "finish": "Create profile",
       "created": "Profile created and sent for review",
-      "reviewNote": "You can add prices later too. Your profile goes public after review"
+      "reviewNote": "After creating your profile, add at least 1 piece of work: review starts after that"
     },
     "steps": {
       "about": {
@@ -461,16 +530,12 @@
         "subtitle": "This is how brands will get to know you"
       },
       "content": {
-        "title": "Content types",
-        "subtitle": "Categories help you find the right listings"
+        "title": "Content and focus",
+        "subtitle": "Helps you find the right collaborations"
       },
       "socials": {
         "title": "Social accounts",
         "subtitle": "Show your Instagram account and audience"
-      },
-      "prices": {
-        "title": "Prices",
-        "subtitle": "Optional. A ballpark price helps brands decide"
       }
     },
     "edit": {
@@ -497,16 +562,13 @@
       "gender": "Gender",
       "birthYear": "Birth year",
       "birthYearPh": "1998",
-      "birthYearHint": "Brands only see your age range, like 25–34",
+      "birthYearHint": "Brands see your age, not your birth year",
       "city": "City",
       "cityPh": "Choose a city",
       "bio": "About",
       "bioPh": "Lifestyle and beauty creator from Baku…",
       "categories": "Categories",
-      "categoriesHint": "Pick up to 5",
       "languages": "Content language",
-      "barter": "Open to barter",
-      "barterHint": "Collaborate in exchange for a product or service instead of money",
       "network": {
         "instagram": "Instagram",
         "tiktok": "TikTok",
@@ -517,7 +579,6 @@
       "contactsHint": "Private. Only the brand of a listing you apply to sees them",
       "contactInstagram": "Instagram for contact",
       "contactPhone": "Phone",
-      "pricesHint": "Ballpark price per post in AZN. Leave empty to show “negotiable”",
       "crop": {
         "title": "Adjust your photo",
         "hint": "Drag and zoom. Whatever is inside the circle becomes your profile photo",
@@ -535,13 +596,14 @@
       "connected": "Taken from Instagram",
       "statFollowers": "followers",
       "statAvgViews": "avg. views",
-      "termsTitle": "Terms",
-      "termsHint": "Brands will see on your profile how you work. If you leave both unchecked, your profile will show “Paid only”",
-      "repost": "Open to free collaborations",
-      "repostHint": "Instead of payment, the brand shares your Reel or story on its own page",
       "contactsTitle": "Contacts",
       "socialsHint": "Enter your username and press “Connect account”. We take followers and views from your account automatically",
-      "username": "Username or link"
+      "username": "Username or link",
+      "categoriesCount": "{count} categories picked",
+      "moreCategories": "More categories ({count})",
+      "languagesHint": "Pick the languages you can create content in",
+      "dealFormats": "Deal format",
+      "dealFormatsHint": "How you work with brands. You can pick several"
     },
     "portfolio": {
       "title": "Portfolio",
@@ -552,7 +614,6 @@
       "titleLabel": "Title (optional)",
       "titlePh": "Reels for a café",
       "add": "Add",
-      "open": "Open",
       "remove": "Remove",
       "full": "Up to {max} items",
       "networks": {
@@ -568,14 +629,6 @@
     },
     "dashboard": {
       "hello": "Hi, {name}",
-      "completeTitle": "Your profile",
-      "checklist": {
-        "photo": "Add a profile photo",
-        "bio": "Write a few lines about yourself",
-        "socials": "Add a social account",
-        "prices": "Add a price",
-        "portfolio": "Add 3 portfolio items"
-      },
       "boardTitle": "Listings",
       "boardBody": "Browse open brand listings and apply",
       "status": {
@@ -596,9 +649,6 @@
         }
       },
       "shareTitle": "Your profile link",
-      "shareBody": "Put it in your bio or send it to brands",
-      "sharePending": "Everyone can see it once approved. For now, only you can",
-      "copy": "Copy",
       "copied": "Copied",
       "copyFailed": "Couldn’t copy",
       "share": "Share",
@@ -625,7 +675,6 @@
       "statsRefreshing": "Checking…",
       "statsRefreshed": "Numbers updated",
       "categoriesTitle": "Categories",
-      "completeShort": "complete",
       "statsRefreshHint": "Numbers come from Instagram. You can refresh them once a day, and they update automatically every week",
       "statsLastRun": "Last checked",
       "statsNeverRun": "Not checked yet",
@@ -655,7 +704,87 @@
       "ctaBody": "Post a listing and creators will apply to you",
       "ctaButton": "Post a listing",
       "checked": "Checked automatically",
-      "termsTitle": "Terms"
+      "termsTitle": "Terms",
+      "priceFrom": "from {amount} {currency}"
+    },
+    "why": {
+      "link": "Why do we ask?",
+      "title": "Why we ask for this",
+      "aboutBody": "Brands look for creators who resemble their audience. Age and gender help them find the right face. Your birth year isn't shown, brands only see your age",
+      "lifestyleBody": "Brands look for the right face for their product: a parent for kids' products, a cat owner for pet food",
+      "point1": "What you pick shows on your profile and brings you closer to matching listings",
+      "point2": "You can change or remove any of it at any time",
+      "ok": "Got it"
+    },
+    "lifestyle": {
+      "count": "{count} picked · Optional"
+    },
+    "terms": {
+      "pricesTitle": "Minimum price",
+      "pricesHint": "Enter your lowest price for each format. Brands see it as \"from 80 AZN\". Leave formats you don't do empty",
+      "pricePh": "0",
+      "aznFrom": "AZN, from",
+      "shootTitle": "Where you film",
+      "shootHint": "Pick where you can film",
+      "skillsTitle": "Skills",
+      "skillsHint": "What you do yourself, so the brand needs no crew"
+    },
+    "sections": {
+      "about": {
+        "title": "About you",
+        "hint": "Add a photo and a short intro",
+        "missing": "Add: {fields}",
+        "panelHint": "Fill in only what's missing, the rest is already done"
+      },
+      "content": {
+        "title": "Content and focus",
+        "hint": "Categories, languages and deal formats"
+      },
+      "socials": {
+        "title": "Social accounts",
+        "hint": "Instagram and phone"
+      },
+      "lifestyle": {
+        "title": "Lifestyle and interests",
+        "hint": "Help brands find you more precisely"
+      },
+      "portfolio": {
+        "title": "Portfolio",
+        "hint": "Add examples of your best work"
+      },
+      "terms": {
+        "title": "Prices and terms",
+        "hint": "Add your minimum prices and where you can film"
+      }
+    },
+    "boost": {
+      "title": "Boost your profile",
+      "subtitle": "A complete profile makes brands 3x more likely to pick you",
+      "done": "{done}/{total} sections done",
+      "save": "Save",
+      "saved": "Saved",
+      "fieldDone": "done",
+      "fieldMissing": "missing"
+    },
+    "post": {
+      "title": "{network} post",
+      "views": "Views",
+      "likes": "Likes",
+      "comments": "Comments",
+      "engagement": "ER",
+      "engagementHint": "Engagement rate: likes and comments relative to views. Shows how much the audience reacts to the post",
+      "duration": "Length",
+      "posted": "Posted",
+      "paidPartnership": "Paid partnership",
+      "mentions": "Tagged accounts",
+      "caption": "Caption",
+      "more": "More",
+      "less": "Less",
+      "open": "Open on {network}",
+      "noStats": "Numbers aren't checked yet",
+      "notYours": "This post belongs to @{owner}, so we don't show its numbers",
+      "player": "Video",
+      "play": "Play video"
     }
   },
   "legal": {

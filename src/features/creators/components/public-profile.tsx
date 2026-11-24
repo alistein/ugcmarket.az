@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ArrowRight01Icon,
   ArrowUpRight01Icon,
   CheckmarkBadge01Icon,
   CheckmarkCircle02Icon,
@@ -11,6 +12,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 import { PublicHeader } from "@/components/shared/public-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
@@ -20,8 +22,10 @@ import { Button } from "@/components/ui/button";
 import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
-import { type CreatorPublic, socialNumbers } from "../hooks";
+import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
+import { type CreatorPublic, postCover, socialNumbers } from "../hooks";
+import { CreatorTags } from "./creator-tags";
+import { PostSheet } from "./post-sheet";
 import { DealTerms } from "./deal-terms";
 import { PostStatsLine, shortUrl } from "./portfolio-editor";
 import { NETWORK_ICON, NETWORK_TINT } from "./profile-sections";
@@ -94,6 +98,7 @@ export function PublicCreatorProfile({
   const who = useCreatorWho();
   const locale = useLocale();
   const { data: me } = useMe();
+  const [viewing, setViewing] = useState<string | null>(null);
   const money = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
   const known = <T extends string>(list: readonly T[], v: string): v is T =>
     (list as readonly string[]).includes(v);
@@ -130,7 +135,11 @@ export function PublicCreatorProfile({
                   {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
                 </span>
                 {who(c) && <span>{who(c)}</span>}
-                <span>{c.languages.map((l) => l.toUpperCase()).join(" · ")}</span>
+                <span>
+                  {c.languages
+                    .map((l) => (known(CONTENT_LANGUAGES, l) ? tt(`languages.${l}`) : l))
+                    .join(" · ")}
+                </span>
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {c.categories.map((cat) => (
@@ -142,6 +151,9 @@ export function PublicCreatorProfile({
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 <span className="mr-1 text-xs text-muted-foreground">{t("termsTitle")}</span>
                 <DealTerms creator={c} />
+              </div>
+              <div className="mt-3">
+                <CreatorTags creator={c} />
               </div>
             </div>
             {isOwner && (
@@ -210,20 +222,29 @@ export function PublicCreatorProfile({
               <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                 {c.portfolio_items.map((p) => (
                   <li key={p.id}>
-                    <a
-                      href={p.url}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                      className="flex items-center gap-3 rounded-2xl bg-muted/60 p-3 transition-colors hover:bg-muted"
+                    <button
+                      type="button"
+                      onClick={() => setViewing(p.id)}
+                      className="flex w-full items-center gap-3 rounded-2xl bg-muted/60 p-3 text-left outline-none [transition:scale_160ms_var(--ease-out),background-color_150ms_ease] hover:bg-muted focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.98]"
                     >
-                      <span
-                        className={cn(
-                          "flex size-10 shrink-0 items-center justify-center rounded-xl",
-                          NETWORK_TINT[p.network],
-                        )}
-                      >
-                        <HugeiconsIcon icon={NETWORK_ICON[p.network]} strokeWidth={2} className="size-5" />
-                      </span>
+                      {postCover(p) ? (
+                        // eslint-disable-next-line @next/next/no-img-element -- our own storage URL, small cover
+                        <img
+                          src={postCover(p)!}
+                          alt=""
+                          loading="lazy"
+                          className="aspect-[3/4] w-12 shrink-0 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <span
+                          className={cn(
+                            "flex size-10 shrink-0 items-center justify-center rounded-xl",
+                            NETWORK_TINT[p.network],
+                          )}
+                        >
+                          <HugeiconsIcon icon={NETWORK_ICON[p.network]} strokeWidth={2} className="size-5" />
+                        </span>
+                      )}
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium">
                           {p.title || t(`networkPost.${p.network}`)}
@@ -234,17 +255,22 @@ export function PublicCreatorProfile({
                         <PostStatsLine creator={c} item={p} />
                       </span>
                       <HugeiconsIcon
-                        icon={ArrowUpRight01Icon}
+                        icon={ArrowRight01Icon}
                         strokeWidth={2}
                         className="size-4 shrink-0 text-muted-foreground"
                       />
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
             ) : (
               <p className="mt-2 text-sm text-muted-foreground">{t("portfolioEmpty")}</p>
             )}
+            <PostSheet
+              item={c.portfolio_items.find((i) => i.id === viewing) ?? null}
+              creator={c}
+              onClose={() => setViewing(null)}
+            />
           </section>
 
           {/* Prices + CTA */}
@@ -259,7 +285,7 @@ export function PublicCreatorProfile({
                         {known(PRICE_FORMATS, p.format) ? tt(`formats.${p.format}`) : p.format}
                       </dt>
                       <dd className="font-medium tabular-nums">
-                        {money.format(Number(p.amount))} {p.currency}
+                        {t("priceFrom", { amount: money.format(Number(p.amount)), currency: p.currency })}
                       </dd>
                     </div>
                   ))}

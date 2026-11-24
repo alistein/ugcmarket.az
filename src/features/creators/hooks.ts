@@ -31,8 +31,13 @@ export type CreatorPublic = {
   categories: string[];
   languages: string[];
   bio: string | null;
+  paid_open: boolean;
   barter_open: boolean;
+  /** "Kollaborasiya" in copy. */
   repost_open: boolean;
+  lifestyle_tags: string[];
+  shoot_options: string[];
+  skills: string[];
   review_status: "pending" | "approved" | "rejected";
   created_at: string;
   creator_socials: {
@@ -63,7 +68,22 @@ export type PostStats = {
   comments: number | null;
   posted_at: string | null;
   fetched_at: string | null;
+  /** Cover image copied into our storage (portfolio-thumbs). */
+  thumbnail_url?: string | null;
+  caption?: string | null;
+  hashtags?: string[];
+  mentions?: string[];
+  duration_seconds?: number | null;
+  music?: string | null;
+  paid_partnership?: boolean | null;
 };
+
+/** The post's cover, if the server has fetched one. Shown whoever posted it (it's the creator's link). */
+export function postCover(item: CreatorPublic["portfolio_items"][number]) {
+  const raw = item.portfolio_item_stats;
+  const st = Array.isArray(raw) ? raw[0] : raw;
+  return st?.thumbnail_url ?? null;
+}
 
 /**
  * Checked numbers for a portfolio post, shown only when the post was published by the
@@ -143,19 +163,6 @@ export function useRefreshSocialStats() {
     mutationFn: () => api<Record<string, string>>("/creators/me/socials/refresh", { method: "POST" }),
     onSuccess: () => qc.invalidateQueries({ queryKey: creatorKeys.mine }),
   });
-}
-
-/** Brands see an age range, not the birth year. null when the year isn't set. */
-export const AGE_RANGES = ["18_24", "25_34", "35_44", "45_plus"] as const;
-export type AgeRange = (typeof AGE_RANGES)[number] | "under_18";
-export function ageRange(birthYear: number | null | undefined, now = new Date()): AgeRange | null {
-  if (!birthYear) return null;
-  const age = now.getFullYear() - birthYear;
-  if (age < 18) return "under_18";
-  if (age <= 24) return "18_24";
-  if (age <= 34) return "25_34";
-  if (age <= 44) return "35_44";
-  return "45_plus";
 }
 
 export type MyCreator = CreatorPublic & { contact_instagram: string | null; contact_phone: string | null };

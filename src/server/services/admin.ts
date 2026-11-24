@@ -42,7 +42,10 @@ export async function listQueue(kind: "creators" | "brands" | "campaigns") {
   const q =
     kind === "campaigns"
       ? db.from("campaigns").select("*, brand:brands(name)").eq("status", "pending_review")
-      : db.from(kind).select("*").eq("review_status", "pending");
+      : kind === "creators"
+        ? // Spec: a creator is reviewed only once they've added at least one portfolio item.
+          db.from("creators").select("*, portfolio_items!inner(id)").eq("review_status", "pending")
+        : db.from("brands").select("*").eq("review_status", "pending");
   const { data, error } = await q.order("created_at", { ascending: true });
   if (error) throw error;
   return data;

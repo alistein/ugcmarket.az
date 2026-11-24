@@ -5,6 +5,7 @@ import { createAdminClient } from "@/server/db/supabase";
 import { ApiError } from "@/server/http/errors";
 import { postProvidersFor, providersFor } from "@/server/social/registry";
 import { type Network, ProviderError } from "@/server/social/types";
+import { postKey, readPost, readProfile, writePost, writeProfile } from "./social-cache";
 
 /** Successful numbers are reused for this long before a background refresh fetches again. */
 const FRESH_MS = 12 * 60 * 60 * 1000;
@@ -58,6 +59,27 @@ export async function refreshCreatorSocialStats(creatorId: string, opts: { force
 
     const errors: string[] = [];
     let saved = false;
+    // Someone fetched this account in the last hours (another creator, a lookup): reuse it.
+    // A forced refresh (manual, weekly cron) always asks the provider.
+    const cached = opts.force ? null : await readProfile(social.network, social.handle);
+    if (cached) {
+      await db.from("creator_social_stats").upsert({
+        creator_id: creatorId,
+        network: social.network,
+        handle: social.handle,
+        followers: cached.value.followers,
+        posts: cached.value.posts,
+        avg_views: cached.value.avg_views,
+        avg_likes: cached.value.avg_likes,
+        recent: cached.value.recent as unknown as Json,
+        source: cached.source,
+        fetched_at: cached.fetched_at,
+        attempted_at: new Date().toISOString(),
+        error: null,
+      });
+      results[social.network] = "updated";
+      continue;
+    }
     for (const provider of providers) {
       try {
         const profile = await provider.fetchProfile(social.handle);
@@ -65,6 +87,7 @@ export async function refreshCreatorSocialStats(creatorId: string, opts: { force
           errors.push(`${provider.id}: not found or private`);
           continue;
         }
+        await writeProfile(social.network, social.handle, provider.id, profile);
         await db.from("creator_social_stats").upsert({
           creator_id: creatorId,
           network: social.network,
@@ -155,7 +178,23 @@ export async function refreshPortfolioItemStats(itemId: string) {
     .eq("id", itemId)
     .maybeSingle();
   if (!item) return "missing" as const;
-  const providers = postProvidersFor(item.network as Network);
+  const network = item.network as Network;
+
+  // The same post fetched recently (re-added, or another creator's link): reuse numbers and cover.
+  const cached = await readPost(network, item.url);
+  if (cached) {
+    await db.from("portfolio_item_stats").upsert({
+      portfolio_item_id: item.id,
+      ...cached.value,
+      source: cached.source,
+      fetched_at: cached.fetched_at,
+      attempted_at: new Date().toISOString(),
+      error: null,
+    });
+    return "cached" as const;
+  }
+
+  const providers = postProvidersFor(network);
   if (!providers.length) return "no_provider" as const;
 
   const errors: string[] = [];
@@ -166,9 +205,16 @@ export async function refreshPortfolioItemStats(itemId: string) {
         errors.push(`${provider.id}: not found or private`);
         continue;
       }
+      const { thumbnail_source, ...numbers } = post;
+      const thumbnail_url = thumbnail_source
+        ? await storeThumbnail(postKey(network, item.url), thumbnail_source)
+        : null;
+      await writePost(network, item.url, provider.id, { ...numbers, thumbnail_url });
       await db.from("portfolio_item_stats").upsert({
         portfolio_item_id: item.id,
-        ...post,
+        ...numbers,
+        // Keep the previous cover when this fetch didn't bring one.
+        ...(thumbnail_url ? { thumbnail_url } : {}),
         source: provider.id,
         fetched_at: new Date().toISOString(),
         attempted_at: new Date().toISOString(),
@@ -186,6 +232,33 @@ export async function refreshPortfolioItemStats(itemId: string) {
   });
   console.warn(`[social-stats] portfolio ${item.id}: ${errors.join(" | ")}`);
   return "failed" as const;
+}
+
+const THUMB_MAX_BYTES = 2 * 1024 * 1024;
+
+/**
+ * Copy a post's cover into our public "portfolio-thumbs" bucket (provider URLs expire).
+ * Returns our URL, or null if the image can't be fetched; never throws.
+ */
+async function storeThumbnail(key: string, source: string) {
+  try {
+    const res = await fetch(source, { signal: AbortSignal.timeout(15_000) });
+    const type = res.headers.get("content-type")?.split(";")[0] ?? "";
+    if (!res.ok || !["image/jpeg", "image/png", "image/webp"].includes(type)) return null;
+    const body = await res.arrayBuffer();
+    if (body.byteLength > THUMB_MAX_BYTES) return null;
+    const ext = type === "image/png" ? "png" : type === "image/webp" ? "webp" : "jpg";
+    // One file per post (shared by every portfolio item that links to it).
+    const path = `${key.replace(/[^\w-]/g, "-")}.${ext}`;
+    const bucket = createAdminClient().storage.from("portfolio-thumbs");
+    const { error } = await bucket.upload(path, body, { contentType: type, upsert: true });
+    if (error) throw error;
+    // Same path on refresh: a version keeps browsers from showing the old cover.
+    return `${bucket.getPublicUrl(path).data.publicUrl}?v=${Date.now()}`;
+  } catch (e) {
+    console.warn(`[social-stats] thumbnail for ${key} failed`, e);
+    return null;
+  }
 }
 
 export async function refreshPortfolioItemStatsQuietly(itemId: string) {
@@ -276,6 +349,37 @@ const LOOKUPS_PER_HOUR = 8;
  */
 export async function lookupSocial(user: SessionUser, network: Network, handle: string) {
   const db = createAdminClient();
+
+  // Checked recently (by anyone): answer from the cache. Free, so it doesn't count to the limit.
+  const cached = await readProfile(network, handle);
+  if (cached) {
+    const { data: creator } = await db.from("creators").select("id").eq("profile_id", user.id).maybeSingle();
+    if (creator) {
+      await db.from("creator_social_stats").upsert({
+        creator_id: creator.id,
+        network,
+        handle,
+        followers: cached.value.followers,
+        posts: cached.value.posts,
+        avg_views: cached.value.avg_views,
+        avg_likes: cached.value.avg_likes,
+        recent: cached.value.recent as unknown as Json,
+        source: cached.source,
+        fetched_at: cached.fetched_at,
+        attempted_at: new Date().toISOString(),
+        error: null,
+      });
+    }
+    return {
+      network,
+      handle,
+      followers: cached.value.followers,
+      posts: cached.value.posts,
+      avg_views: cached.value.avg_views,
+      avg_likes: cached.value.avg_likes,
+    };
+  }
+
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const { count } = await db
     .from("social_lookups")
@@ -299,6 +403,7 @@ export async function lookupSocial(user: SessionUser, network: Network, handle: 
         continue;
       }
       await log(true, provider.id);
+      await writeProfile(network, handle, provider.id, profile);
       const { data: creator } = await db
         .from("creators")
         .select("id")

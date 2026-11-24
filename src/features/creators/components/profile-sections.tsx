@@ -31,12 +31,14 @@ import {
   CONTENT_LANGUAGES,
   CREATOR_CATEGORIES,
   CreatorHandle,
-  ENABLED_PRICE_FORMATS,
+  DEAL_FORMATS,
   GENDERS,
+  MORE_CATEGORIES,
   SocialUsername,
 } from "@/schemas";
 import { type CreatorFormValues, NETWORKS, suggestHandle } from "../form";
 import { useHandleAvailability, useLookupSocial } from "../hooks";
+import { WhyWeAsk } from "./enhancer-fields";
 import { AvatarField, ChipGroup } from "./form-bits";
 
 type Form = UseFormReturn<CreatorFormValues>;
@@ -49,7 +51,19 @@ export const NETWORK_TINT = {
 } as const;
 
 // ── About ───────────────────────────────────────────────────────────────────
-export function AboutFields({ form, currentHandle }: { form: Form; currentHandle?: string }) {
+/** Fields of "Özünüz haqqında". `only` limits it to some of them (the completeness panel shows just what's missing). */
+export type AboutField = "avatar_url" | "display_name" | "handle" | "birth_year" | "gender" | "city" | "bio";
+
+export function AboutFields({
+  form,
+  currentHandle,
+  only,
+}: {
+  form: Form;
+  currentHandle?: string;
+  only?: readonly AboutField[];
+}) {
+  const show = (f: AboutField) => !only || only.includes(f);
   const t = useTranslations("creator.form");
   const tt = useTranslations("taxonomy");
   const { register, control, setValue, getFieldState, formState } = form;
@@ -65,92 +79,114 @@ export function AboutFields({ form, currentHandle }: { form: Form; currentHandle
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <div className="sm:col-span-2">
-        <Controller
-          control={control}
-          name="avatar_url"
-          render={({ field }) => (
-            <AvatarField value={field.value} name={name ?? ""} onChange={(v) => field.onChange(v)} />
+      {show("avatar_url") && (
+        <div className="sm:col-span-2">
+          <Controller
+            control={control}
+            name="avatar_url"
+            render={({ field }) => (
+              <AvatarField value={field.value} name={name ?? ""} onChange={(v) => field.onChange(v)} />
+            )}
+          />
+        </div>
+      )}
+      {show("display_name") && (
+        <Field label={t("displayName")} error={errors.display_name}>
+          {(a) => (
+            <Input
+              {...a}
+              {...register("display_name")}
+              autoComplete="name"
+              placeholder={t("displayNamePh")}
+            />
           )}
-        />
-      </div>
-      <Field label={t("displayName")} error={errors.display_name}>
-        {(a) => (
-          <Input {...a} {...register("display_name")} autoComplete="name" placeholder={t("displayNamePh")} />
-        )}
-      </Field>
-      <HandleField form={form} currentHandle={currentHandle} />
-      <Field label={t("birthYear")} error={errors.birth_year} hint={t("birthYearHint")}>
-        {(a) => (
-          <Input
-            {...a}
-            {...register("birth_year")}
-            inputMode="numeric"
-            autoComplete="bday-year"
-            maxLength={4}
-            placeholder={t("birthYearPh")}
-          />
-        )}
-      </Field>
-      <Field label={t("gender")} error={errors.gender}>
-        {(a) => (
-          <Controller
-            control={control}
-            name="gender"
-            render={({ field }) => (
-              <ChipGroup
-                single
-                options={GENDERS}
-                value={field.value ? [field.value] : []}
-                onChange={(v) => field.onChange(v[0] ?? "")}
-                label={(g) => tt(`genders.${g}`)}
-                icon={(g) => (g === "female" ? WomanIcon : ManIcon)}
-                invalid={a["aria-invalid"]}
-                describedBy={a["aria-describedby"]}
-              />
-            )}
-          />
-        )}
-      </Field>
-      <Field label={t("city")} error={errors.city}>
-        {(a) => (
-          <Controller
-            control={control}
-            name="city"
-            render={({ field }) => (
-              <Select
-                items={CITIES.map((c) => ({ value: c, label: tt(`cities.${c}`) }))}
-                value={field.value || null}
-                onValueChange={(v) => field.onChange(v ?? "")}
-              >
-                <SelectTrigger
-                  id={a.id}
-                  aria-invalid={a["aria-invalid"]}
-                  aria-describedby={a["aria-describedby"]}
-                  className="w-full"
+        </Field>
+      )}
+      {show("handle") && <HandleField form={form} currentHandle={currentHandle} />}
+      {show("birth_year") && (
+        <Field label={t("birthYear")} error={errors.birth_year} hint={t("birthYearHint")}>
+          {(a) => (
+            <Input
+              {...a}
+              {...register("birth_year")}
+              inputMode="numeric"
+              autoComplete="bday-year"
+              maxLength={4}
+              placeholder={t("birthYearPh")}
+            />
+          )}
+        </Field>
+      )}
+      {show("gender") && (
+        <Field label={t("gender")} error={errors.gender}>
+          {(a) => (
+            <Controller
+              control={control}
+              name="gender"
+              render={({ field }) => (
+                <ChipGroup
+                  single
+                  options={GENDERS}
+                  value={field.value ? [field.value] : []}
+                  onChange={(v) => field.onChange(v[0] ?? "")}
+                  label={(g) => tt(`genders.${g}`)}
+                  icon={(g) => (g === "female" ? WomanIcon : ManIcon)}
+                  invalid={a["aria-invalid"]}
+                  describedBy={a["aria-describedby"]}
+                />
+              )}
+            />
+          )}
+        </Field>
+      )}
+      {(show("birth_year") || show("gender")) && (
+        <div className="-mt-2 sm:col-span-2">
+          <WhyWeAsk topic="about" />
+        </div>
+      )}
+      {show("city") && (
+        <Field label={t("city")} error={errors.city}>
+          {(a) => (
+            <Controller
+              control={control}
+              name="city"
+              render={({ field }) => (
+                <Select
+                  items={CITIES.map((c) => ({ value: c, label: tt(`cities.${c}`) }))}
+                  value={field.value || null}
+                  onValueChange={(v) => field.onChange(v ?? "")}
                 >
-                  <SelectValue placeholder={t("cityPh")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {CITIES.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {tt(`cities.${c}`)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        )}
-      </Field>
-      <Field
-        className="sm:col-span-2"
-        label={t("bio")}
-        error={errors.bio}
-        aside={<span className="text-xs text-muted-foreground tabular-nums">{bio.length}/600</span>}
-      >
-        {(a) => <Textarea {...a} {...register("bio")} rows={4} maxLength={600} placeholder={t("bioPh")} />}
-      </Field>
+                  <SelectTrigger
+                    id={a.id}
+                    aria-invalid={a["aria-invalid"]}
+                    aria-describedby={a["aria-describedby"]}
+                    className="w-full"
+                  >
+                    <SelectValue placeholder={t("cityPh")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CITIES.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {tt(`cities.${c}`)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          )}
+        </Field>
+      )}
+      {show("bio") && (
+        <Field
+          className="sm:col-span-2"
+          label={t("bio")}
+          error={errors.bio}
+          aside={<span className="text-xs text-muted-foreground tabular-nums">{bio.length}/600</span>}
+        >
+          {(a) => <Textarea {...a} {...register("bio")} rows={4} maxLength={600} placeholder={t("bioPh")} />}
+        </Field>
+      )}
     </div>
   );
 }
@@ -221,32 +257,55 @@ function HandleField({ form, currentHandle }: { form: Form; currentHandle?: stri
 }
 
 // ── Content ─────────────────────────────────────────────────────────────────
+/** Step 2: categories (all of them, the rest behind "Daha çox"), languages and deal formats. */
 export function ContentFields({ form }: { form: Form }) {
   const t = useTranslations("creator.form");
   const tt = useTranslations("taxonomy");
   const { control, formState } = form;
+  const picked = useWatch({ control, name: "categories" }) ?? [];
+  const [more, setMore] = useState(() =>
+    picked.some((c) => (MORE_CATEGORIES as readonly string[]).includes(c)),
+  );
+  const options = more
+    ? CREATOR_CATEGORIES
+    : CREATOR_CATEGORIES.filter((c) => !(MORE_CATEGORIES as readonly string[]).includes(c));
   return (
     <>
-      <Field label={t("categories")} error={formState.errors.categories} hint={t("categoriesHint")}>
+      <Field
+        label={t("categories")}
+        required
+        error={formState.errors.categories}
+        hint={t("categoriesCount", { count: picked.length })}
+      >
         {(a) => (
-          <Controller
-            control={control}
-            name="categories"
-            render={({ field }) => (
-              <ChipGroup
-                options={CREATOR_CATEGORIES}
-                value={field.value}
-                onChange={field.onChange}
-                label={(c) => tt(`categories.${c}`)}
-                max={5}
-                invalid={a["aria-invalid"]}
-                describedBy={a["aria-describedby"]}
-              />
+          <div className="grid gap-2">
+            <Controller
+              control={control}
+              name="categories"
+              render={({ field }) => (
+                <ChipGroup
+                  options={options}
+                  value={field.value}
+                  onChange={field.onChange}
+                  label={(c) => tt(`categories.${c}`)}
+                  invalid={a["aria-invalid"]}
+                  describedBy={a["aria-describedby"]}
+                />
+              )}
+            />
+            {!more && (
+              <button
+                type="button"
+                onClick={() => setMore(true)}
+                className="inline-flex w-fit items-center gap-1 text-sm font-medium text-foreground/80 underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:underline"
+              >
+                {t("moreCategories", { count: MORE_CATEGORIES.length })}
+              </button>
             )}
-          />
+          </div>
         )}
       </Field>
-      <Field label={t("languages")} error={formState.errors.languages}>
+      <Field label={t("languages")} required error={formState.errors.languages} hint={t("languagesHint")}>
         {(a) => (
           <Controller
             control={control}
@@ -257,6 +316,29 @@ export function ContentFields({ form }: { form: Form }) {
                 value={field.value}
                 onChange={field.onChange}
                 label={(l) => tt(`languages.${l}`)}
+                invalid={a["aria-invalid"]}
+                describedBy={a["aria-describedby"]}
+              />
+            )}
+          />
+        )}
+      </Field>
+      <Field
+        label={t("dealFormats")}
+        required
+        error={formState.errors.deal_formats}
+        hint={t("dealFormatsHint")}
+      >
+        {(a) => (
+          <Controller
+            control={control}
+            name="deal_formats"
+            render={({ field }) => (
+              <ChipGroup
+                options={DEAL_FORMATS}
+                value={field.value}
+                onChange={field.onChange}
+                label={(d) => tt(`dealFormats.${d}`)}
                 invalid={a["aria-invalid"]}
                 describedBy={a["aria-describedby"]}
               />
@@ -544,54 +626,5 @@ function SocialConnectRow({
         )}
       </div>
     </div>
-  );
-}
-
-// ── Prices ─────────────────────────────────────────────────────────────────
-export function PriceFields({ form }: { form: Form }) {
-  const t = useTranslations("creator.form");
-  const tt = useTranslations("taxonomy");
-  const { register, formState } = form;
-  return (
-    <>
-      <p className="-mt-2 text-sm text-muted-foreground">{t("pricesHint")}</p>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {ENABLED_PRICE_FORMATS.map((f) => (
-          <Field key={f} label={tt(`formats.${f}`)} error={formState.errors.prices?.[f]}>
-            {(a) => (
-              <div className="relative">
-                <Input
-                  {...a}
-                  {...register(`prices.${f}`)}
-                  inputMode="decimal"
-                  placeholder="0"
-                  className="pr-14 tabular-nums"
-                />
-                <span className="pointer-events-none absolute top-1/2 right-3.5 -translate-y-1/2 text-sm text-muted-foreground">
-                  AZN
-                </span>
-              </div>
-            )}
-          </Field>
-        ))}
-      </div>
-      <div className="grid gap-3 border-t border-border/70 pt-5">
-        <div className="grid gap-0.5">
-          <p className="text-sm font-semibold">{t("termsTitle")}</p>
-          <p className="text-sm text-muted-foreground">{t("termsHint")}</p>
-        </div>
-        {(["barter_open", "repost_open"] as const).map((name) => (
-          <label key={name} className="flex cursor-pointer items-start gap-3">
-            <input type="checkbox" {...register(name)} className="mt-0.5 size-5 accent-[var(--primary)]" />
-            <span className="grid gap-0.5">
-              <span className="text-sm font-medium">{t(name === "barter_open" ? "barter" : "repost")}</span>
-              <span className="text-sm text-muted-foreground">
-                {t(name === "barter_open" ? "barterHint" : "repostHint")}
-              </span>
-            </span>
-          </label>
-        ))}
-      </div>
-    </>
   );
 }

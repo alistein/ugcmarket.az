@@ -18,7 +18,7 @@ import { refreshCreatorSocialStatsQuietly, refreshPortfolioItemStatsQuietly } fr
 type Db = Awaited<ReturnType<typeof createUserClient>>;
 
 const PUBLIC_FIELDS =
-  "id, handle, display_name, avatar_url, gender, birth_year, city, country, categories, languages, bio, barter_open, repost_open, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position, portfolio_item_stats(owner_handle, views, likes, comments, posted_at, fetched_at))";
+  "id, handle, display_name, avatar_url, gender, birth_year, city, country, categories, languages, bio, paid_open, barter_open, repost_open, lifestyle_tags, shoot_options, skills, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position, portfolio_item_stats(owner_handle, views, likes, comments, posted_at, fetched_at, thumbnail_url, caption, hashtags, mentions, duration_seconds, music, paid_partnership))";
 
 const MAX_PORTFOLIO = PORTFOLIO_MAX;
 
@@ -191,6 +191,7 @@ export async function addPortfolioItem(user: SessionUser, input: PortfolioItem) 
 export async function removePortfolioItem(user: SessionUser, id: string) {
   const supabase = await createUserClient();
   const me = await getMyCreator(user);
+  // The cover stays: it's stored per post and other creators may link the same one.
   const { error } = await supabase.from("portfolio_items").delete().eq("id", id).eq("creator_id", me.id);
   if (error) throw error;
 }

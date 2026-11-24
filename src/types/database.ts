@@ -442,9 +442,13 @@ export type Database = {
           handle: string
           id: string
           languages: string[]
+          lifestyle_tags: string[]
+          paid_open: boolean
           profile_id: string
           repost_open: boolean
           review_status: Database["public"]["Enums"]["review_status"]
+          shoot_options: string[]
+          skills: string[]
           updated_at: string
         }
         Insert: {
@@ -461,9 +465,13 @@ export type Database = {
           handle: string
           id?: string
           languages?: string[]
+          lifestyle_tags?: string[]
+          paid_open?: boolean
           profile_id: string
           repost_open?: boolean
           review_status?: Database["public"]["Enums"]["review_status"]
+          shoot_options?: string[]
+          skills?: string[]
           updated_at?: string
         }
         Update: {
@@ -480,9 +488,13 @@ export type Database = {
           handle?: string
           id?: string
           languages?: string[]
+          lifestyle_tags?: string[]
+          paid_open?: boolean
           profile_id?: string
           repost_open?: boolean
           review_status?: Database["public"]["Enums"]["review_status"]
+          shoot_options?: string[]
+          skills?: string[]
           updated_at?: string
         }
         Relationships: [
@@ -498,38 +510,59 @@ export type Database = {
       portfolio_item_stats: {
         Row: {
           attempted_at: string
+          caption: string | null
           comments: number | null
+          duration_seconds: number | null
           error: string | null
           fetched_at: string | null
+          hashtags: string[]
           likes: number | null
+          mentions: string[]
+          music: string | null
           owner_handle: string | null
+          paid_partnership: boolean | null
           portfolio_item_id: string
           posted_at: string | null
           source: string | null
+          thumbnail_url: string | null
           views: number | null
         }
         Insert: {
           attempted_at?: string
+          caption?: string | null
           comments?: number | null
+          duration_seconds?: number | null
           error?: string | null
           fetched_at?: string | null
+          hashtags?: string[]
           likes?: number | null
+          mentions?: string[]
+          music?: string | null
           owner_handle?: string | null
+          paid_partnership?: boolean | null
           portfolio_item_id: string
           posted_at?: string | null
           source?: string | null
+          thumbnail_url?: string | null
           views?: number | null
         }
         Update: {
           attempted_at?: string
+          caption?: string | null
           comments?: number | null
+          duration_seconds?: number | null
           error?: string | null
           fetched_at?: string | null
+          hashtags?: string[]
           likes?: number | null
+          mentions?: string[]
+          music?: string | null
           owner_handle?: string | null
+          paid_partnership?: boolean | null
           portfolio_item_id?: string
           posted_at?: string | null
           source?: string | null
+          thumbnail_url?: string | null
           views?: number | null
         }
         Relationships: [
@@ -657,6 +690,30 @@ export type Database = {
           locale?: string
           role?: Database["public"]["Enums"]["user_role"] | null
           status?: Database["public"]["Enums"]["account_status"]
+        }
+        Relationships: []
+      }
+      social_cache: {
+        Row: {
+          data: Json
+          fetched_at: string
+          key: string
+          kind: string
+          source: string
+        }
+        Insert: {
+          data: Json
+          fetched_at?: string
+          key: string
+          kind: string
+          source: string
+        }
+        Update: {
+          data?: Json
+          fetched_at?: string
+          key?: string
+          kind?: string
+          source?: string
         }
         Relationships: []
       }
