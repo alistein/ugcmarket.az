@@ -3,10 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { env } from "@/lib/env";
 import { Email, EmailInput, type EmailInput as EmailValues } from "@/schemas/auth";
 import { useAfterAuth, useNextPath } from "../hooks";
@@ -23,7 +22,16 @@ function VerifyEmail() {
   const params = useSearchParams();
   const next = useNextPath(params.get("next"));
   const afterAuth = useAfterAuth(next);
-  const [email, setEmail] = useState<string | null>(Email.safeParse(params.get("email")).data ?? null);
+  const router = useRouter();
+  // The URL is the only source of the email. Next keeps this page mounted between visits, so a
+  // copy in state would still hold the address from the previous sign-up.
+  const email = Email.safeParse(params.get("email")).data ?? null;
+  const rawNext = params.get("next");
+  const setEmail = (value: string | null) =>
+    router.replace({
+      pathname: "/verify-email",
+      query: { ...(value && { email: value }), ...(rawNext && { next: rawNext }) },
+    });
 
   const footer = (
     <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
@@ -41,6 +49,7 @@ function VerifyEmail() {
   return (
     <AuthCard title={t("verify.title")} subtitle={t("verify.subtitle", { email })} footer={footer}>
       <EmailCodeStep
+        key={email}
         email={email}
         type="signup"
         next={next}

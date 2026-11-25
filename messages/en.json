@@ -338,6 +338,7 @@
       "link_expired": "This link has expired. Request a new code",
       "session_missing": "Your session expired. Request a new code",
       "unknown": "Something went wrong. Try again",
+      "email_taken": "An account with this email already exists. Log in instead",
       "email_off": "Emails are off in test mode. Message the team to confirm your account"
     },
     "emailOff": {

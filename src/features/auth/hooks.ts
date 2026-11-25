@@ -1,15 +1,15 @@
 "use client";
 
 import type { EmailOtpType } from "@supabase/supabase-js";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useLocale } from "next-intl";
 import { useCallback } from "react";
-import { meKeys } from "@/features/me/hooks";
-import { useRouter } from "@/i18n/navigation";
-import { safeNext, stripLocale } from "@/lib/auth-routes";
+import type { Locale } from "@/i18n/routing";
+import { safeNext, viaOnboarding } from "@/lib/auth-routes";
 import { env } from "@/lib/env";
 import { createClient } from "@/lib/supabase/client";
 import { AuthFlowError, toAuthFlowError } from "./errors";
+import { trackAuthCall } from "./identity";
 
 /**
  * Auth flows run in the browser against Supabase Auth directly (PKCE). This is the agreed
@@ -22,7 +22,7 @@ const supabase = () => createClient();
 /** Throws AuthFlowError (i18n key) instead of raw Supabase errors. */
 async function run<R extends { error: unknown }>(fn: () => Promise<R>): Promise<R> {
   try {
-    const result = await fn();
+    const result = await trackAuthCall(fn);
     if (result.error) throw result.error;
     return result;
   } catch (e) {
@@ -43,16 +43,16 @@ export function useNextPath(rawNext: string | null) {
   return safeNext(rawNext, `/${locale}/onboarding`);
 }
 
-/** After any successful sign-in: refresh `me`, then go to `next`. */
+/**
+ * After any successful sign-in: full page load to onboarding, which picks the role if it is missing
+ * and then forwards to `next`. A full load (not router.replace) because the signed-in user changed:
+ * Next keeps visited pages mounted and caches routes, and only a reload drops them.
+ */
 export function useAfterAuth(next: string) {
-  const qc = useQueryClient();
-  const router = useRouter();
-  return useCallback(async () => {
-    // Reset, not invalidate: a page visited while signed out cached `me = null`, and the next
-    // screen would read that stale null as "signed out" and bounce to /login.
-    await qc.resetQueries({ queryKey: meKeys.all });
-    router.replace(stripLocale(next));
-  }, [qc, router, next]);
+  const locale = useLocale() as Locale;
+  return useCallback(() => {
+    window.location.replace(viaOnboarding(next, locale));
+  }, [next, locale]);
 }
 
 export function useSignInWithPassword() {
@@ -75,8 +75,24 @@ export function useSignInWithPassword() {
 
 export function useSignUp(next: string) {
   return useMutation({
-    mutationFn: (v: { email: string; password: string }) =>
-      run(() => supabase().auth.signUp({ ...v, options: { emailRedirectTo: callbackUrl(next) } })),
+    mutationFn: async (v: { email: string; password: string }) => {
+      const result = await run(() =>
+        supabase().auth.signUp({ ...v, options: { emailRedirectTo: callbackUrl(next) } }),
+      );
+      // The email already has a confirmed account (e.g. made with Google): Supabase returns a
+      // placeholder user with no identities and sends nothing. Send a sign-in code instead, so the
+      // person still gets an email and the response does not reveal that the account exists.
+      const existing = !result.data.session && result.data.user?.identities?.length === 0;
+      if (existing && env.authEmail) {
+        await run(() =>
+          supabase().auth.signInWithOtp({
+            email: v.email,
+            options: { shouldCreateUser: false, emailRedirectTo: callbackUrl(next) },
+          }),
+        );
+      }
+      return { ...result, existing };
+    },
   });
 }
 
@@ -173,14 +189,11 @@ export function useSignInWithGoogle(next: string) {
 }
 
 export function useSignOut() {
-  const qc = useQueryClient();
-  const router = useRouter();
+  const locale = useLocale();
   return useMutation({
-    // scope "local": this device only. Clear every cached query so no previous-user data lingers.
+    // scope "local": this device only.
     mutationFn: () => run(() => supabase().auth.signOut({ scope: "local" })),
-    onSettled: () => {
-      qc.clear();
-      router.replace("/login");
-    },
+    // Full page load: drops every cached query, kept page and cached route of the previous user.
+    onSettled: () => window.location.replace(`/${locale}/login`),
   });
 }

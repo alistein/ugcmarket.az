@@ -6,10 +6,19 @@ import type { z } from "zod";
 import { ApiClientError, api } from "@/lib/api-client";
 import type { CampaignDraft, CampaignFilters, CampaignStatusChange, Deliverable } from "@/schemas";
 
+/**
+ * `all`, `boards` and `details` are prefixes for invalidation; the rest are full keys.
+ * Board and detail answers depend on who is looking, so the viewer is part of their key.
+ */
 export const campaignKeys = {
-  board: (f: Partial<CampaignFilters>) => ["campaigns", "board", f] as const,
-  detail: (id: string) => ["campaigns", "detail", id] as const,
+  all: ["campaigns"] as const,
+  boards: ["campaigns", "board"] as const,
+  board: (f: Partial<CampaignFilters>, viewer: string) => ["campaigns", "board", f, viewer] as const,
+  details: ["campaigns", "detail"] as const,
+  /** `id` is whatever the URL carries (id or slug), so one listing can sit under two keys. */
+  detail: (id: string, viewer: string) => ["campaigns", "detail", id, viewer] as const,
   mine: ["campaigns", "mine"] as const,
+  own: (id: string) => ["campaigns", "own", id] as const,
 };
 
 function toQuery(f: Partial<CampaignFilters>) {
@@ -32,22 +41,21 @@ function viewHeaders(): Record<string, string> {
   }
 }
 
-/** Cache key part for data that depends on who is looking (pay, "Applied", "Yours"). */
-export function viewerKey(
-  me:
-    | { role: string | null; brand?: { id: string } | null; creator?: { id: string } | null }
-    | null
-    | undefined,
-) {
-  return me ? `${me.role ?? "none"}:${me.brand?.id ?? me.creator?.id ?? ""}` : "out";
+/**
+ * Cache key part for data that depends on who is looking (pay, "Applied", "Yours"): the user id,
+ * so two accounts never share an entry.
+ */
+export function viewerKey(me: { id: string } | null | undefined) {
+  return me?.id ?? "out";
 }
 
 export type BoardPage = { items: CampaignCard[]; total: number; page: number; page_size: number };
 
 /** The public board, 20 at a time ("Show more"). Keyed by signed-in state: pay depends on it. */
-export function useCampaignBoard(filters: Partial<CampaignFilters>, viewerKey: string) {
+export function useCampaignBoard(filters: Partial<CampaignFilters>, viewerKey: string, enabled = true) {
   return useInfiniteQuery({
-    queryKey: [...campaignKeys.board(filters), viewerKey],
+    queryKey: campaignKeys.board(filters, viewerKey),
+    enabled,
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       api<BoardPage>(`/campaigns${toQuery({ ...filters, page: pageParam })}`, { headers: viewHeaders() }),
@@ -56,9 +64,10 @@ export function useCampaignBoard(filters: Partial<CampaignFilters>, viewerKey: s
 }
 
 /** Pay is hidden from signed-out visitors and other brands, so the cache is split by viewer. */
-export function useCampaign(id: string, viewerKey = "out") {
+export function useCampaign(id: string, viewerKey = "out", enabled = true) {
   return useQuery({
-    queryKey: [...campaignKeys.detail(id), viewerKey],
+    queryKey: campaignKeys.detail(id, viewerKey),
+    enabled,
     queryFn: () => api<CampaignDetail>(`/campaigns/${id}`, { headers: viewHeaders() }),
     // A 404 means "not published" (or gone): don't retry, the owner preview takes over.
     retry: (n, e) => !(e instanceof ApiClientError && e.status === 404) && n < 2,
@@ -122,7 +131,8 @@ export function useSetCampaignStatus() {
   return useMutation({
     mutationFn: ({ id, status }: { id: string } & z.infer<typeof CampaignStatusChange>) =>
       api<{ id: string; status: string }>(`/campaigns/${id}/status`, { method: "POST", json: { status } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+    // A status change shows everywhere: own list, owner view, the public board and listing page.
+    onSuccess: () => qc.invalidateQueries({ queryKey: campaignKeys.all }),
   });
 }
 
@@ -135,7 +145,12 @@ export function useArchiveCampaign() {
         method: "POST",
         json: { archived },
       }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+    // Only finished listings can be archived, so the public board and listing page don't change.
+    onSuccess: (_data, { id }) =>
+      Promise.all([
+        qc.invalidateQueries({ queryKey: campaignKeys.mine }),
+        qc.invalidateQueries({ queryKey: campaignKeys.own(id) }),
+      ]),
   });
 }
 
@@ -157,7 +172,7 @@ export type OwnCampaign = Omit<MyCampaign, "applications" | "recent_applicants">
 export function useOwnCampaign(id: string, enabled = true) {
   return useQuery({
     enabled,
-    queryKey: ["campaigns", "own", id],
+    queryKey: campaignKeys.own(id),
     queryFn: () => api<OwnCampaign>(`/campaigns/${id}?own=1`),
   });
 }
@@ -168,8 +183,14 @@ export function useUpdateCampaign(id: string) {
     mutationFn: (input: CampaignDraft) =>
       api<OwnCampaign>(`/campaigns/${id}`, { method: "PATCH", json: input }),
     onSuccess: (fresh) => {
-      qc.setQueryData(["campaigns", "own", id], fresh);
-      qc.invalidateQueries({ queryKey: campaignKeys.mine });
+      qc.setQueryData(campaignKeys.own(id), fresh);
+      // An edit to a live listing also shows on the public board and listing page.
+      // Returned so the mutation waits: screens navigate in onSuccess and must read fresh data.
+      return Promise.all([
+        qc.invalidateQueries({ queryKey: campaignKeys.mine }),
+        qc.invalidateQueries({ queryKey: campaignKeys.boards }),
+        qc.invalidateQueries({ queryKey: campaignKeys.details }),
+      ]);
     },
   });
 }
@@ -179,7 +200,7 @@ export function useChangeCampaignStatus(id: string) {
   return useMutation({
     mutationFn: (input: z.infer<typeof CampaignStatusChange>) =>
       api<unknown>(`/campaigns/${id}/status`, { method: "POST", json: input }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["campaigns"] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: campaignKeys.all }),
   });
 }
 

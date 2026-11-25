@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { meKeys, useMe, useSetRole } from "@/features/me/hooks";
 import { useRouter } from "@/i18n/navigation";
-import { homeFor } from "@/lib/auth-routes";
+import { homeFor, safeNext, stripLocale } from "@/lib/auth-routes";
 import { cn } from "@/lib/utils";
 import { OnboardingRole } from "@/schemas/auth";
 import { useQueryClient } from "@tanstack/react-query";
@@ -59,15 +59,24 @@ export function OnboardingView() {
     OnboardingRole.safeParse(params.get("role")).data ?? null,
   );
   const [error, setError] = useState<AuthErrorKey | null>(null);
+  // Where the user was heading before auth (e.g. a listing). Every sign-in passes through here
+  // first, so nobody reaches it without a role.
+  const next = safeNext(params.get("next"), "");
 
   useEffect(() => {
     if (isPending) return;
-    if (!me) router.replace({ pathname: "/login", query: { next: window.location.pathname } });
-    // Returning creators land on the board: listings are why they came (D14). New ones go on to
-    // their profile right after picking the role (below).
-    else if (me.role && me.status !== "blocked")
-      router.replace(me.role === "creator" ? "/campaigns" : homeFor(me.role));
-  }, [me, isPending, router]);
+    if (!me)
+      router.replace({
+        pathname: "/login",
+        query: { next: `${window.location.pathname}${window.location.search}` },
+      });
+    else if (me.role && me.status !== "blocked") {
+      if (next) router.replace(stripLocale(next));
+      // Returning creators land on the board: listings are why they came (D14). New ones go on to
+      // their profile right after picking the role (below).
+      else router.replace(me.role === "creator" ? "/campaigns" : homeFor(me.role));
+    }
+  }, [me, isPending, router, next]);
 
   if (me?.status === "blocked") return <AccountBlocked />;
   if (isPending || !me || me.role) return <OnboardingSkeleton />;
@@ -78,7 +87,7 @@ export function OnboardingView() {
     if (!role || setRole.isPending || setRole.isSuccess) return;
     setError(null);
     setRole.mutate(role, {
-      onSuccess: () => router.replace(homeFor(role)),
+      onSuccess: () => router.replace(next ? stripLocale(next) : homeFor(role)),
       onError: (err) => {
         // 409 role_already_set → another tab already chose; refetching `me` routes us home.
         if (err instanceof ApiClientError && err.status === 409)

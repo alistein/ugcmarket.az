@@ -1,8 +1,15 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { campaignKeys } from "@/features/campaigns/hooks";
 import type { Network, SocialStats } from "@/features/creators/hooks";
 import { api } from "@/lib/api-client";
+
+export const applicationKeys = {
+  all: ["applications"] as const,
+  mine: ["applications", "mine"] as const,
+  campaign: (campaignId: string) => ["applications", "campaign", campaignId] as const,
+};
 
 export type ApplyResult = {
   application_id: string;
@@ -16,7 +23,13 @@ export function useApply(campaignId: string) {
   return useMutation({
     mutationFn: (input: { message?: string; bid_amount?: number }) =>
       api<ApplyResult>(`/campaigns/${campaignId}/apply`, { method: "POST", json: input }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["applications"] }),
+    // Besides the creator's own list, the board and the listing page carry the "Applied" mark.
+    onSuccess: () =>
+      Promise.all([
+        qc.invalidateQueries({ queryKey: applicationKeys.all }),
+        qc.invalidateQueries({ queryKey: campaignKeys.boards }),
+        qc.invalidateQueries({ queryKey: campaignKeys.details }),
+      ]),
   });
 }
 
@@ -31,7 +44,7 @@ export type MyApplication = {
 
 export function useMyApplications(enabled = true) {
   return useQuery({
-    queryKey: ["applications", "mine"],
+    queryKey: applicationKeys.mine,
     queryFn: () => api<MyApplication[]>("/applications/mine"),
     enabled,
   });
@@ -69,7 +82,7 @@ export type Applicant = {
 
 export function useApplicants(campaignId: string) {
   return useQuery({
-    queryKey: ["applications", "campaign", campaignId],
+    queryKey: applicationKeys.campaign(campaignId),
     queryFn: () => api<Applicant[]>(`/campaigns/${campaignId}/applications`),
   });
 }

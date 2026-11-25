@@ -18,6 +18,7 @@ export type AuthErrorKey =
   | "link_invalid"
   | "link_expired"
   | "session_missing"
+  | "email_taken"
   | "email_off"
   | "unknown";
 
@@ -38,6 +39,7 @@ const AUTH_ERROR_KEYS = new Set<string>([
   "link_invalid",
   "link_expired",
   "session_missing",
+  "email_taken",
   "email_off",
   "unknown",
 ]);
@@ -64,6 +66,10 @@ const BY_CODE: Record<string, AuthErrorKey> = {
   same_password: "same_password",
   signup_disabled: "signup_disabled",
   email_provider_disabled: "signup_disabled",
+  // Only with email confirmation off (local dev); with it on, useSignUp sends a sign-in code.
+  user_already_exists: "email_taken",
+  email_exists: "email_taken",
+  identity_already_exists: "email_taken",
   email_address_invalid: "email_invalid",
   email_address_not_authorized: "email_invalid",
   validation_failed: "email_invalid",

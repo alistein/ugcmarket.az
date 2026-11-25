@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +29,10 @@ export function SignupView() {
   const [mode, setMode] = useState<"password" | "code">("password");
   const [codeEmail, setCodeEmail] = useState<string | null>(null);
 
+  // Next keeps this page mounted while hidden: drop the code step when leaving, so coming back
+  // never shows a code screen for an earlier email.
+  useLayoutEffect(() => () => setCodeEmail(null), []);
+
   const query = { ...(params.get("next") && { next: params.get("next")! }) };
   const title =
     role === "brand"
@@ -41,6 +45,7 @@ export function SignupView() {
     return (
       <AuthCard title={t("code.title")}>
         <EmailCodeStep
+          key={codeEmail}
           email={codeEmail}
           type="email"
           next={next}
@@ -70,7 +75,13 @@ export function SignupView() {
       <GoogleButton next={next} onError={setError} context="signup" />
       <OrDivider />
       {mode === "password" ? (
-        <PasswordSignupForm next={next} error={error} onError={setError} onSignedIn={afterAuth} />
+        <PasswordSignupForm
+          next={next}
+          error={error}
+          onError={setError}
+          onSignedIn={afterAuth}
+          onExisting={setCodeEmail}
+        />
       ) : (
         <SendCodeForm next={next} error={error} onError={setError} onSent={setCodeEmail} />
       )}
@@ -111,11 +122,14 @@ function PasswordSignupForm({
   error,
   onError,
   onSignedIn,
+  onExisting,
 }: {
   next: string;
   error: AuthErrorKey | null;
   onError: (k: AuthErrorKey | null) => void;
   onSignedIn: () => void;
+  /** The email already has an account: a sign-in code was sent instead. */
+  onExisting: (email: string) => void;
 }) {
   const t = useTranslations("auth");
   const router = useRouter();
@@ -126,10 +140,12 @@ function PasswordSignupForm({
   const submit = form.handleSubmit((v) => {
     onError(null);
     signUp.mutate(v, {
-      onSuccess: ({ data }) => {
+      onSuccess: ({ data, existing }) => {
         // Confirmations off (local dev) → already signed in. Otherwise confirm with the emailed code.
-        // Existing emails get the same response on purpose (no account enumeration).
         if (data.session) onSignedIn();
+        // Existing account: useSignUp sent a sign-in code, so the same "enter the code" step follows
+        // (no account enumeration, and the email really arrives).
+        else if (existing && env.authEmail) onExisting(v.email);
         // Emails off but Supabase still requires confirmation → nothing will arrive; say so.
         else if (!env.authEmail) onError("email_off");
         else router.push({ pathname: "/verify-email", query: { email: v.email, next } });

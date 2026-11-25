@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
-import { isGuestOnlyPath, isProtectedPath, safeNext, splitLocale } from "@/lib/auth-routes";
+import { isGuestOnlyPath, isProtectedPath, safeNext, splitLocale, viaOnboarding } from "@/lib/auth-routes";
 import { updateSession } from "@/lib/supabase/proxy";
 
 const handleI18n = createIntlMiddleware(routing);
@@ -10,6 +10,10 @@ const handleI18n = createIntlMiddleware(routing);
 function redirectWithCookies(url: URL, from: NextResponse) {
   const res = NextResponse.redirect(url);
   from.cookies.getAll().forEach((c) => res.cookies.set(c));
+  for (const h of ["Expires", "Pragma"]) {
+    const v = from.headers.get(h);
+    if (v) res.headers.set(h, v);
+  }
   res.headers.set("Cache-Control", "private, no-store");
   return res;
 }
@@ -18,11 +22,11 @@ export async function proxy(request: NextRequest) {
   // API routes: no locale prefix, only refresh the Supabase session cookie.
   // Auth for APIs is enforced in the route (requireUser/requireRole) → JSON 401/403, never redirects.
   if (request.nextUrl.pathname.startsWith("/api")) {
-    return (await updateSession(request, NextResponse.next({ request }))).response;
+    return (await updateSession(request, () => NextResponse.next({ request }))).response;
   }
 
   // Pages: resolve locale (/az, /ru, /en), then refresh the session on that response.
-  const { response, userId } = await updateSession(request, handleI18n(request));
+  const { response, userId } = await updateSession(request, () => handleI18n(request));
   if (response.headers.has("location")) return response; // next-intl redirect (e.g. / → /az)
 
   // Optimistic guards (cookie/JWT only). Roles are checked by RoleGate + API + RLS.
@@ -37,7 +41,7 @@ export async function proxy(request: NextRequest) {
   }
   if (userId && isGuestOnlyPath(path)) {
     const next = safeNext(request.nextUrl.searchParams.get("next"), `/${locale}/onboarding`);
-    return redirectWithCookies(new URL(next, request.url), response);
+    return redirectWithCookies(new URL(viaOnboarding(next, locale), request.url), response);
   }
   if (userId && isProtectedPath(path)) response.headers.set("Cache-Control", "private, no-store");
   return response;

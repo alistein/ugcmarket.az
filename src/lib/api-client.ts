@@ -15,6 +15,8 @@ export class ApiClientError extends Error {
 export async function api<T>(path: string, init?: RequestInit & { json?: unknown }): Promise<T> {
   const { json, headers, ...rest } = init ?? {};
   const res = await fetch(`/api${path}`, {
+    // Answers depend on the signed-in user: never reuse one from the browser's HTTP cache.
+    cache: "no-store",
     ...rest,
     headers: { ...(json !== undefined && { "Content-Type": "application/json" }), ...headers },
     body: json !== undefined ? JSON.stringify(json) : rest.body,
@@ -22,7 +24,12 @@ export async function api<T>(path: string, init?: RequestInit & { json?: unknown
   const body = res.status === 204 ? null : await res.json().catch(() => null);
   if (!res.ok) {
     const err = (body as ApiErrorBody | null)?.error;
-    throw new ApiClientError(res.status, err?.code ?? "unknown", err?.message ?? "errors.unknown", err?.details);
+    throw new ApiClientError(
+      res.status,
+      err?.code ?? "unknown",
+      err?.message ?? "errors.unknown",
+      err?.details,
+    );
   }
   // 204 No Content (and any empty body) → undefined, not a crash on `null.data`.
   return (body as { data: T } | null)?.data as T;

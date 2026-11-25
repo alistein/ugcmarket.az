@@ -338,6 +338,7 @@
       "link_expired": "Linkin vaxtı bitib. Yeni kod tələb edin",
       "session_missing": "Sessiyanın vaxtı bitib. Kodu yenidən tələb edin",
       "unknown": "Xəta baş verdi. Yenidən cəhd edin",
+      "email_taken": "Bu e-poçt ilə hesab artıq var. Daxil olun",
       "email_off": "Test rejimində e-poçt göndərilmir. Hesabınızı təsdiqləmək üçün komandamıza yazın"
     },
     "emailOff": {

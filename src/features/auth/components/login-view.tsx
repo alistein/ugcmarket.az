@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,12 +25,17 @@ export function LoginView() {
   const [codeEmail, setCodeEmail] = useState<string | null>(null);
   const afterAuth = useAfterAuth(next);
 
+  // Next keeps this page mounted while hidden: drop the code step when leaving, so coming back
+  // never shows a code screen for an earlier email.
+  useLayoutEffect(() => () => setCodeEmail(null), []);
+
   const query = { ...(params.get("next") && { next: params.get("next")! }) };
 
   if (codeEmail) {
     return (
       <AuthCard title={t("code.title")}>
         <EmailCodeStep
+          key={codeEmail}
           email={codeEmail}
           type="email"
           next={next}

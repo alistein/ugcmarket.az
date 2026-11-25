@@ -1,7 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { type Locale, routing, toLocale } from "@/i18n/routing";
-import { safeNext, splitLocale } from "@/lib/auth-routes";
+import { safeNext, splitLocale, viaOnboarding } from "@/lib/auth-routes";
 
 /** Locale for auth redirects: from `next` ("/ru/…"), else the next-intl cookie, else default. */
 export function localeOf(request: Request, next: string | null): Locale {
@@ -17,9 +17,10 @@ export function authRedirect(request: Request, path: string) {
   return res;
 }
 
-/** Validated post-auth destination; defaults to onboarding (which routes by role). */
+/** Validated post-auth destination, always through onboarding (role pick, then on to `next`). */
 export function nextOf(request: Request, locale: Locale) {
-  return safeNext(new URL(request.url).searchParams.get("next"), `/${locale}/onboarding`);
+  const next = safeNext(new URL(request.url).searchParams.get("next"), `/${locale}/onboarding`);
+  return viaOnboarding(next, locale);
 }
 
 /** `error` is an i18n key suffix under auth.errors. */

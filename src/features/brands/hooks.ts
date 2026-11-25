@@ -29,7 +29,8 @@ export function useCreateBrand() {
     mutationFn: (input: BrandProfileInput) => api<MyBrand>("/brands", { method: "POST", json: input }),
     onSuccess: (brand) => {
       qc.setQueryData(brandKeys.mine, brand);
-      qc.invalidateQueries({ queryKey: meKeys.all });
+      // Returned so the mutation waits: screens navigate in onSuccess and must read a fresh `me`.
+      return qc.invalidateQueries({ queryKey: meKeys.all });
     },
   });
 }
@@ -40,7 +41,8 @@ export function useUpdateBrand() {
     mutationFn: (input: BrandProfileInput) => api<MyBrand>("/brands/me", { method: "PATCH", json: input }),
     onSuccess: (brand) => {
       qc.setQueryData(brandKeys.mine, brand);
-      qc.invalidateQueries({ queryKey: meKeys.all });
+      // Returned so the mutation waits: screens navigate in onSuccess and must read a fresh `me`.
+      return qc.invalidateQueries({ queryKey: meKeys.all });
     },
   });
 }

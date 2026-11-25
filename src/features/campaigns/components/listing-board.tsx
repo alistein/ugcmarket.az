@@ -42,7 +42,8 @@ export function ListingBoardView() {
   };
   const filtered = Object.keys(filters).length > 0;
 
-  const board = useCampaignBoard(filters, viewerKey(me));
+  // Wait for `me`: fetching before it is known would run the same request twice.
+  const board = useCampaignBoard(filters, viewerKey(me), !meLoading);
   const items = board.data?.pages.flatMap((p) => p.items) ?? [];
   const total = board.data?.pages[0]?.total ?? 0;
 

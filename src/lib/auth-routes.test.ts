@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { homeFor, isGuestOnlyPath, isProtectedPath, safeNext, splitLocale, stripLocale } from "./auth-routes";
+import {
+  homeFor,
+  isGuestOnlyPath,
+  isProtectedPath,
+  safeNext,
+  splitLocale,
+  stripLocale,
+  viaOnboarding,
+} from "./auth-routes";
 
 describe("safeNext (open-redirect guard)", () => {
   const fallback = "/az/onboarding";
@@ -57,5 +65,22 @@ describe("guards", () => {
     expect(isProtectedPath("/media")).toBe(false);
     expect(isGuestOnlyPath("/signup")).toBe(true);
     expect(isGuestOnlyPath("/verify-email")).toBe(false);
+  });
+});
+
+describe("viaOnboarding (post-auth destination)", () => {
+  it("wraps any other destination so the role pick is never skipped", () => {
+    expect(viaOnboarding("/ru/campaigns/abc?x=1", "az")).toBe(
+      "/ru/onboarding?next=%2Fru%2Fcampaigns%2Fabc%3Fx%3D1",
+    );
+  });
+
+  it("uses the fallback locale for an unprefixed path", () => {
+    expect(viaOnboarding("/campaigns", "az")).toBe("/az/onboarding?next=%2Fcampaigns");
+  });
+
+  it("leaves onboarding itself alone", () => {
+    expect(viaOnboarding("/az/onboarding", "ru")).toBe("/az/onboarding");
+    expect(viaOnboarding("/az/onboarding?role=brand", "az")).toBe("/az/onboarding?role=brand");
   });
 });

@@ -66,3 +66,14 @@ export function stripLocale(next: string): string {
   const rest = next.slice(locale.length + 1);
   return rest.startsWith("/") ? rest : `/${rest}`;
 }
+
+/**
+ * Post-auth destination: always through onboarding, which picks the role when it is missing and
+ * then forwards to `next`. Without this a new user with `?next=` (e.g. from a listing) skips the
+ * role pick. `next` must already be safe (safeNext).
+ */
+export function viaOnboarding(next: string, fallbackLocale: Locale): string {
+  const { locale, path } = splitLocale(next.split(/[?#]/)[0]);
+  if (path === "/onboarding") return next;
+  return `/${locale ?? fallbackLocale}/onboarding?next=${encodeURIComponent(next)}`;
+}

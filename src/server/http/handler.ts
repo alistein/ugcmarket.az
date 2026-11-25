@@ -10,34 +10,41 @@ type Ctx<P> = { params: Promise<P> };
  * Wraps every route handler: catches errors and returns `{ error }` JSON.
  * Pattern inside: parse (zod) → auth (requireRole) → service → ok(data).
  */
-export function handler<P = Record<string, string>>(
-  fn: (req: Request, ctx: Ctx<P>) => Promise<Response>,
-) {
+export function handler<P = Record<string, string>>(fn: (req: Request, ctx: Ctx<P>) => Promise<Response>) {
   return async (req: Request, ctx: Ctx<P>) => {
     // API responses are per-request (auth cookies, live data): never prerender or cache them.
     await connection();
     try {
-      return await fn(req, ctx);
+      return privately(await fn(req, ctx));
     } catch (e) {
       const err =
-        e instanceof ApiError
-          ? e
-          : e instanceof z.ZodError
-            ? errors.validation(z.flattenError(e))
-            : null;
+        e instanceof ApiError ? e : e instanceof z.ZodError ? errors.validation(z.flattenError(e)) : null;
       if (!err) {
         console.error(e);
-        return NextResponse.json<ApiErrorBody>(
-          { error: { code: "internal", message: "errors.internal" } },
-          { status: 500 },
+        return privately(
+          NextResponse.json<ApiErrorBody>(
+            { error: { code: "internal", message: "errors.internal" } },
+            { status: 500 },
+          ),
         );
       }
-      return NextResponse.json<ApiErrorBody>(
-        { error: { code: err.code, message: err.message, details: err.details } },
-        { status: err.status },
+      return privately(
+        NextResponse.json<ApiErrorBody>(
+          { error: { code: err.code, message: err.message, details: err.details } },
+          { status: err.status },
+        ),
       );
     }
   };
+}
+
+/**
+ * API responses depend on who is asking: no browser or CDN may store or share them. A route that
+ * really is public and cacheable sets its own Cache-Control, which is kept.
+ */
+function privately(res: Response) {
+  if (!res.headers.has("Cache-Control")) res.headers.set("Cache-Control", "private, no-store");
+  return res;
 }
 
 export const ok = <T>(data: T, status = 200) => NextResponse.json({ data }, { status });

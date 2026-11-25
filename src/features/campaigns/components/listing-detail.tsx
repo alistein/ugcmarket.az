@@ -41,7 +41,8 @@ const known = <T extends string>(list: readonly T[], v: string | null | undefine
 export function ListingDetailView() {
   const { id } = useParams<{ id: string }>();
   const { data: me, isPending: meLoading } = useMe();
-  const pub = useCampaign(id, viewerKey(me));
+  // Wait for `me`: fetching before it is known would run the same request twice.
+  const pub = useCampaign(id, viewerKey(me), !meLoading);
   const router = useRouter();
   const slug = pub.data?.slug;
   // Old links use the id: once the listing is known, show its readable URL instead.

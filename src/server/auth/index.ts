@@ -12,17 +12,25 @@ export async function getUser(): Promise<SessionUser | null> {
   const claims = data?.claims;
   if (!claims?.sub) return null;
 
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from("profiles")
     .select("role, status")
     .eq("id", claims.sub)
     .maybeSingle();
+  if (error) throw error;
+  // Every auth user gets a profile row (trigger), so no row means the account was deleted while
+  // its token is still valid (up to an hour). Treat it as signed out and drop the cookie, or the
+  // proxy keeps seeing a session and onboarding loops on a role that can never be set.
+  if (!profile) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+    return null;
+  }
 
   return {
     id: claims.sub,
     email: (claims.email as string | undefined) ?? null,
-    role: (profile?.role as Role | undefined) ?? null, // null = signed up, hasn't picked a role yet
-    status: profile?.status ?? "active",
+    role: (profile.role as Role | null) ?? null, // null = signed up, hasn't picked a role yet
+    status: profile.status ?? "active",
   };
 }
 

@@ -12,6 +12,8 @@ import {
 } from "@/schemas";
 
 export const creatorKeys = {
+  /** Prefix: every public profile. */
+  publics: ["creators", "public"] as const,
   public: (handle: string) => ["creators", "public", handle] as const,
   mine: ["creators", "mine"] as const,
   handle: (handle: string) => ["creators", "handle", handle] as const,
@@ -244,9 +246,12 @@ function useInvalidateMine() {
   const qc = useQueryClient();
   return (data?: MyCreator) => {
     if (data) qc.setQueryData(creatorKeys.mine, data);
-    void qc.invalidateQueries({ queryKey: creatorKeys.mine });
-    void qc.invalidateQueries({ queryKey: meKeys.all });
-    void qc.invalidateQueries({ queryKey: ["creators", "public"] });
+    // Returned so the mutation waits: screens navigate in onSuccess and must read a fresh `me`.
+    return Promise.all([
+      qc.invalidateQueries({ queryKey: creatorKeys.mine }),
+      qc.invalidateQueries({ queryKey: meKeys.all }),
+      qc.invalidateQueries({ queryKey: creatorKeys.publics }),
+    ]);
   };
 }
 
