@@ -30,6 +30,30 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
     Middleware is `src/proxy.ts`. Route `params` are Promises.
 11. Role guards in the UI (`RoleGate`) are UX only — real enforcement is `requireRole()` + RLS.
 
+## Client state: TanStack Query + Next 16 (non-negotiable)
+Full text and reasons: wiki `decisions/client-state-rules`; the audit behind it: `decisions/auth-state-bugs`.
+- **Where state lives.** Server data (`/api`) → TanStack Query hooks in `src/features/<domain>/hooks.ts`. Values from the
+  route (`?email=`, `?next=`, `?role=`, filters, ids) → the URL, derived on every render. Form input → react-hook-form,
+  server data enters through `values:`. Short-lived UI → `useState`. No other client store.
+- **TanStack Query is only for `/api` reads and writes.** Auth calls to Supabase may use `useMutation` for pending/error,
+  but a mutation's `data`/`variables` are not state: pass what the next screen needs through the URL.
+- **Never `useState(params.get(...))` or copy query data into state.** With Cache Components Next keeps up to 3 visited
+  pages mounted (hidden, state intact), so a page comes back with old state and new URL params. Derive, or `key` the
+  subtree by the param.
+- **A change of signed-in user is a full page load.** Sign-in, code verify, sign-out, or a different user id seen by
+  `AuthSync` end in `window.location.replace()` / `reload()`, never `router.push/replace`. Kept pages and Next's client
+  router cache (prefetched pages and proxy redirects, about 5 min) survive `qc.clear()` and client navigation.
+- **`AuthSync` compares user ids:** same user (focus, token refresh) → nothing; different user → full reload.
+  No `qc.clear()` on mounted screens (it does not notify them); use a reload or `resetQueries()`.
+- **No Next caching for user data.** No `use cache`, `cacheLife`, `revalidate` or React `cache()` in anything that reads
+  cookies or the user. `use cache` only for anonymous public reads via `createPublicClient()`. API responses are
+  `private, no-store`.
+- **Query keys** come from the domain's key factory, never string literals. A response that depends on the viewer has
+  the viewer (`me.id`, not role) in its key and waits for `me`.
+- **Guards** (`RoleGate`, onboarding) act only on a settled `me`. Proxy redirects are hints; the router can replay them.
+- **Mutations:** server returned the entity → `setQueryData`; otherwise invalidate every view it touches (mine, own,
+  detail, board), no wider. If navigation follows, return/await the invalidation in `onSuccess`.
+
 ## Copywriting (must, everywhere)
 Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) for every user-facing string:
 - **No em dash (—)** in any language. Use a period, comma or colon. `pnpm copy:check` must pass.
