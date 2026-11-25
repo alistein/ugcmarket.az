@@ -13,10 +13,12 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as React from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LanguageMenu } from "@/components/shared/language-menu";
 import { Logo } from "@/components/shared/logo";
 import { Link } from "@/i18n/navigation";
@@ -49,6 +51,28 @@ function CtaButtons({ className }: { className?: string }) {
   );
 }
 
+/** Same footprint as the loaded avatar and name, so the header does not jump. */
+const NavAccountSkeleton = () => <Skeleton className="h-8 w-28 rounded-full" />;
+
+// Loaded only for visitors who have a session cookie: signed-out visitors download nothing extra.
+const NavAccount = dynamic(() => import("./nav-account"), {
+  ssr: false,
+  loading: () => <NavAccountSkeleton />,
+});
+
+/** True when a Supabase session cookie exists. Read after hydration; the static page says false. */
+const noSubscribe = () => () => {};
+const hasSessionCookie = () => /(?:^|;\s*)sb-[^=;]*-auth-token/.test(document.cookie);
+
+/**
+ * "Get started" for visitors; avatar and name for signed-in users. The page stays static and
+ * makes no request for signed-out visitors: only a cookie check in the browser decides.
+ */
+function NavAction({ children }: { children: React.ReactNode }) {
+  const signedIn = React.useSyncExternalStore(noSubscribe, hasSessionCookie, () => false);
+  return signedIn ? <NavAccount fallback={children} /> : children;
+}
+
 function Nav() {
   const t = useTranslations("landing.nav");
   return (
@@ -66,12 +90,11 @@ function Nav() {
         </nav>
         <div className="ml-auto flex items-center gap-1">
           <LanguageMenu />
-          <Button variant="ghost" size="sm" className="hidden sm:inline-flex" nativeButton={false} render={<Link href="/login" />}>
-            {t("login")}
-          </Button>
-          <Button size="sm" nativeButton={false} render={<Link href="/signup" />}>
-            {t("start")}
-          </Button>
+          <NavAction>
+            <Button size="sm" nativeButton={false} render={<Link href="/signup" />}>
+              {t("start")}
+            </Button>
+          </NavAction>
         </div>
       </div>
     </header>
