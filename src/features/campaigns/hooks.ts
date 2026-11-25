@@ -211,7 +211,7 @@ export type CampaignCard = {
   title: string;
   category: string;
   network: string;
-  /** "post": published on the creator's account; "ugc": a video for the brand only. */
+  /** "post": published on the creator's account ("ugc" was removed, 2026-11-25). */
   collaboration_model: string;
   deliverables: Deliverable[];
   compensation_type: string;

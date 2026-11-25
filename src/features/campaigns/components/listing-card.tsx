@@ -21,7 +21,7 @@ export type ListingCardData = {
   category: string | null | undefined;
   deliverables: { format: string; count: number }[];
   compensation_type: string;
-  /** "post" or "ugc"; missing in the create-form preview before formats are picked. */
+  /** "post"; missing in the create-form preview before formats are picked. */
   collaboration_model?: string | null;
   compensation_value: number | null;
   /** Barter: what the brand offers (e.g. "breakfast for two"). */
@@ -233,8 +233,7 @@ export function TypeBadges({
   className?: string;
 }) {
   const tt = useTranslations("taxonomy");
-  const collab =
-    d.collaboration_model === "post" || d.collaboration_model === "ugc" ? d.collaboration_model : null;
+  const collab = d.collaboration_model === "post" ? d.collaboration_model : null;
   return (
     <div className={cn("flex flex-wrap gap-1.5", className)}>
       <Badge variant="mint">{tt(`compensation.${d.compensation_type}` as never)}</Badge>

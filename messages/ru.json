@@ -431,8 +431,7 @@
       "stories": "Stories",
       "post": "Пост",
       "tiktok_video": "Видео в TikTok",
-      "youtube_short": "YouTube Shorts",
-      "ugc_video": "UGC-видео (для бренда)"
+      "youtube_short": "YouTube Shorts"
     },
     "barter": "Открыт к бартеру",
     "brandCategories": {
@@ -528,8 +527,7 @@
     },
     "age": "{age, plural, one {# год} few {# года} many {# лет} other {# года}}",
     "collaboration": {
-      "post": "Публикация в вашем аккаунте",
-      "ugc": "Видео только для бренда"
+      "post": "Публикация в вашем аккаунте"
     }
   },
   "creator": {

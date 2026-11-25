@@ -431,8 +431,7 @@
       "stories": "Stories",
       "post": "Post",
       "tiktok_video": "TikTok video",
-      "youtube_short": "YouTube Shorts",
-      "ugc_video": "UGC video (for the brand)"
+      "youtube_short": "YouTube Shorts"
     },
     "barter": "Open to barter",
     "brandCategories": {
@@ -528,8 +527,7 @@
     },
     "age": "{age} y.o.",
     "collaboration": {
-      "post": "Posted on your account",
-      "ugc": "Video for the brand only"
+      "post": "Posted on your account"
     }
   },
   "creator": {

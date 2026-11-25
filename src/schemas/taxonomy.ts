@@ -144,7 +144,6 @@ export const PRICE_FORMATS = [
   "post",
   "tiktok_video",
   "youtube_short",
-  "ugc_video",
 ] as const;
 
 /**
@@ -163,5 +162,4 @@ export const ENABLED_PRICE_FORMATS = [
   "reels",
   "stories",
   "post",
-  "ugc_video",
 ] as const satisfies readonly (typeof PRICE_FORMATS)[number][];

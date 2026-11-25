@@ -46,15 +46,14 @@ export function localToday() {
 }
 
 /**
- * Form values → API payload: the model is "ugc" only when every format is a UGC video;
- * drop what doesn't apply to the payment type (amount only when paid or as a bid ceiling, no
+ * Form values → API payload: content is always posted on the creator's account (UGC video
+ * for the brand only was removed, 2026-11-25); drop what doesn't apply to the payment type (amount only when paid or as a bid ceiling, no
  * extras when unpaid).
  */
 export function toPayload<T extends CampaignDraft>(v: T): T {
   return {
     ...v,
-    collaboration_model:
-      v.deliverables.length > 0 && v.deliverables.every((d) => d.format === "ugc_video") ? "ugc" : "post",
+    collaboration_model: "post",
     compensation_value:
       v.compensation_type === "money" || v.compensation_type === "bid" ? v.compensation_value : null,
     // Paid listings may add a product/service on top; unpaid ones offer nothing.
@@ -68,7 +67,7 @@ export function campaignToForm(c: OwnCampaign): CampaignFormValues {
     title: c.title ?? "",
     description: c.description ?? "",
     category: (c.category ?? undefined) as CampaignFormValues["category"],
-    collaboration_model: c.collaboration_model,
+    collaboration_model: "post",
     network: c.network as CampaignFormValues["network"],
     deliverables: c.deliverables,
     compensation_type: c.compensation_type as CampaignFormValues["compensation_type"],

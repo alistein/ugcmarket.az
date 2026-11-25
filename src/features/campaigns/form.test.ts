@@ -60,26 +60,23 @@ describe("campaign form helpers", () => {
     expect(toPayload(parsed)).toEqual(content);
   });
 
-  it("keeps a paid listing's extra; UGC model only when every format is UGC video", () => {
+  it("keeps a paid listing's extra; content is always posted on the creator's account", () => {
     const parsed = CampaignInput.parse({
       ...campaignToForm(saved),
       compensation_type: "money",
       compensation_value: "200",
-      deliverables: [{ format: "ugc_video", count: 2 }],
+      deliverables: [{ format: "reels", count: 2 }],
     });
     const p = toPayload(parsed);
     expect(p.compensation_details).toBe("Breakfast for two"); // paid + a product on top
     expect(p.compensation_value).toBe(200);
-    expect(p.collaboration_model).toBe("ugc");
-    const mixed = toPayload(
-      CampaignInput.parse({
-        ...campaignToForm(saved),
-        deliverables: [
-          { format: "ugc_video", count: 1 },
-          { format: "reels", count: 1 },
-        ],
-      }),
-    );
-    expect(mixed.collaboration_model).toBe("post");
+    expect(p.collaboration_model).toBe("post");
+  });
+
+  it("rejects the removed UGC video format", () => {
+    expect(
+      CampaignInput.safeParse({ ...campaignToForm(saved), deliverables: [{ format: "ugc_video", count: 1 }] })
+        .success,
+    ).toBe(false);
   });
 });

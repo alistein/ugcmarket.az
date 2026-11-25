@@ -77,7 +77,6 @@ const priceShape = {
   post: price,
   tiktok_video: price,
   youtube_short: price,
-  ugc_video: price,
 } satisfies Record<(typeof PRICE_FORMATS)[number], typeof price>;
 
 export const CreatorForm = z.object({

@@ -7,8 +7,11 @@ export type Role = z.infer<typeof Role>;
 export const SocialNetwork = z.enum(["instagram", "tiktok", "youtube"]);
 export type SocialNetwork = z.infer<typeof SocialNetwork>;
 
-/** Spec §1: influencer post (primary) vs UGC production (secondary). */
-export const CollaborationModel = z.enum(["post", "ugc"]);
+/**
+ * Spec §1: influencer post. UGC production (video for the brand only) was removed (2026-11-25);
+ * "ugc" stays in the DB enum but the API no longer accepts it.
+ */
+export const CollaborationModel = z.enum(["post"]);
 
 /** Spec §6: compensation types. */
 export const CompensationType = z.enum(["money", "product", "service", "barter", "unpaid", "bid"]);
@@ -27,7 +30,6 @@ export const PostFormat = z.enum([
   "post",
   "tiktok_video",
   "youtube_short",
-  "ugc_video",
   "other",
 ]);
 

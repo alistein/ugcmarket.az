@@ -431,8 +431,7 @@
       "stories": "Stories",
       "post": "Post",
       "tiktok_video": "TikTok video",
-      "youtube_short": "YouTube Shorts",
-      "ugc_video": "UGC video (brend üçün)"
+      "youtube_short": "YouTube Shorts"
     },
     "barter": "Barterə açıq",
     "brandCategories": {
@@ -528,8 +527,7 @@
     },
     "age": "{age} yaş",
     "collaboration": {
-      "post": "Hesabınızda paylaşım",
-      "ugc": "Yalnız brend üçün video"
+      "post": "Hesabınızda paylaşım"
     }
   },
   "creator": {
