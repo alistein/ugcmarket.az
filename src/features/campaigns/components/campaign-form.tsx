@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft01Icon, ArrowRight01Icon, Clock01Icon, InstagramIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
-import { useId, useState } from "react";
+import { startTransition, useId, useState } from "react";
 import { Controller, type FieldError, type UseFormReturn, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { Field } from "@/components/shared/form-field";
@@ -49,6 +49,9 @@ export type CampaignForm = UseFormReturn<CampaignFormValues, unknown, CampaignIn
 export function NewCampaignPage() {
   const t = useTranslations("common");
   const { data: brand, isPending, isError } = useMyBrand();
+  // Next keeps this page mounted (hidden) after we leave it, so a finished wizard would come back
+  // on its last step with the old values. A new key after each save starts the next one fresh.
+  const [run, setRun] = useState(0);
   if (isPending) return <FormSkeleton />;
   if (isError)
     return (
@@ -56,7 +59,11 @@ export function NewCampaignPage() {
         {t("loadFailed")}
       </p>
     );
-  return brand ? <CreateCampaign brand={brand} /> : <NeedsBrand />;
+  return brand ? (
+    <CreateCampaign key={run} brand={brand} onDone={() => setRun((n) => n + 1)} />
+  ) : (
+    <NeedsBrand />
+  );
 }
 
 /**
@@ -156,7 +163,7 @@ export function BackToBrand() {
 }
 
 // ── Create wizard ───────────────────────────────────────────────────────────
-function CreateCampaign({ brand }: { brand: MyBrand }) {
+function CreateCampaign({ brand, onDone }: { brand: MyBrand; onDone: () => void }) {
   const t = useTranslations("campaign.form");
   const te = useTranslations();
   const router = useRouter();
@@ -177,6 +184,13 @@ function CreateCampaign({ brand }: { brand: MyBrand }) {
     const key = e instanceof ApiClientError ? e.message : "errors.unknown";
     toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
   };
+
+  /** Back to the dashboard; the wizard resets in the same transition, so it never flashes empty. */
+  const finish = () =>
+    startTransition(() => {
+      router.replace("/brand");
+      onDone();
+    });
 
   const goTo = (s: Step) => {
     setStep(s);
@@ -201,7 +215,7 @@ function CreateCampaign({ brand }: { brand: MyBrand }) {
     try {
       await create.mutateAsync(toPayload(draft));
       toast.success(t("savedDraft"));
-      router.replace("/brand");
+      finish();
     } catch (e) {
       onError(e);
     }
@@ -213,7 +227,7 @@ function CreateCampaign({ brand }: { brand: MyBrand }) {
       const created = await create.mutateAsync(toPayload(v));
       const res = await setStatus.mutateAsync({ id: created.id, status: "published" });
       toast.success(res.status === "published" ? t("published") : t("sentForReview"));
-      router.replace("/brand");
+      finish();
     } catch (e) {
       onError(e);
     }

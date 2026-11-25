@@ -83,6 +83,16 @@ export async function createUser(email: string, opts: { role?: "brand" | "creato
   return body.id as string;
 }
 
+/** A brand profile for a brand user, so the listing form opens (it goes with the user on delete). */
+export async function createBrand(profileId: string, name = "E2E Brend") {
+  const res = await retryFetch(`${url}/rest/v1/brands`, {
+    method: "POST",
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ profile_id: profileId, name, category: "food" }),
+  });
+  expect(res.ok, await res.text()).toBe(true);
+}
+
 /** Remembers users the UI created, so cleanup can delete them. */
 export async function trackUser(email: string) {
   const { body } = await admin(`/users?per_page=50&filter=${encodeURIComponent(email)}`);
