@@ -60,10 +60,7 @@ const GOOGLE_METADATA = (email: string) => ({
  * gives it the metadata a Google sign-in leaves (name, picture, provider), so the session
  * cookie looks like a real Google user's. It still gets a password so the UI can sign in.
  */
-export async function createUser(
-  email: string,
-  opts: { role?: "brand" | "creator"; google?: boolean } = {},
-) {
+export async function createUser(email: string, opts: { role?: "brand" | "creator"; google?: boolean } = {}) {
   const { status, body } = await admin("/users", {
     method: "POST",
     body: JSON.stringify({
@@ -92,6 +89,13 @@ export async function trackUser(email: string) {
   const user = (body?.users ?? []).find((u: { email: string }) => u.email === email);
   if (user) created.add(user.id);
   return user as { id: string; email_confirmed_at: string | null } | undefined;
+}
+
+/** Deletes one account now (its profile goes with it), e.g. while its session is still open. */
+export async function deleteUser(id: string) {
+  const { status } = await admin(`/users/${id}`, { method: "DELETE" });
+  expect(status).toBe(200);
+  created.delete(id);
 }
 
 export async function deleteCreatedUsers() {
@@ -210,3 +214,29 @@ export function watchLoginBounces(page: Page) {
   });
   return hits;
 }
+
+/** Account menu → "Çıxış". Ends on the login page. */
+export async function signOut(page: Page) {
+  await page.getByRole("button", { name: "Hesab" }).click();
+  await page.getByRole("menuitem", { name: "Çıxış" }).click();
+  await expect(page).toHaveURL(/\/az\/login/);
+}
+
+/**
+ * Marks the current document. A full page load makes a new document without the mark; a
+ * client-side navigation keeps it. Used to prove that a change of user reloads the page.
+ */
+export async function markDocument(page: Page) {
+  await page.evaluate(() => {
+    (window as unknown as { __e2eMark?: boolean }).__e2eMark = true;
+  });
+}
+export const isMarked = (page: Page) =>
+  page.evaluate(() => (window as unknown as { __e2eMark?: boolean }).__e2eMark === true);
+
+/** The signed-in user's email as the API sees it (null when signed out). */
+export const apiEmail = (page: Page) =>
+  page.evaluate(async () => {
+    const res = await fetch("/api/me", { cache: "no-store" });
+    return ((await res.json()) as { data: { email: string } | null }).data?.email ?? null;
+  });

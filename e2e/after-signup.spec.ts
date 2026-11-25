@@ -13,8 +13,8 @@ import {
 } from "./helpers";
 
 /**
- * What a brand-new account does right after signing up: pick a role, press "start" on the
- * empty home, land in the profile editor, move around its area. Runs for a password account
+ * What a brand-new account does right after signing up: pick a role, land in the profile editor
+ * (creators go straight there, brands press "start" on the empty home), move around its area. Runs for a password account
  * and a Google-shaped one (Google metadata makes the session cookie bigger and split in parts).
  * Regression: a Google creator pressing "Profili yaratmağa başla" was sent to /login.
  */
@@ -31,19 +31,21 @@ for (const google of [false, true]) {
     await login(page, email);
     await chooseRole(page, "creator");
 
-    await page.getByRole("button", { name: START }).click();
+    // No profile yet: /me goes straight to the setup form (no "start" screen for creators).
     await expectStaysOn(page, /\/az\/me\/profile$/);
 
     await page.reload();
     await expectStaysOn(page, /\/az\/me\/profile$/);
 
-    for (const path of ["/az/me", "/az/me/applications", "/az/me/posts"]) {
+    for (const path of ["/az/me/applications", "/az/me/posts"]) {
       await open(page, path);
       await expectStaysOn(page, new RegExp(`${path}$`));
     }
-    // Wrong area → own home, not login.
+    await open(page, "/az/me");
+    await expectStaysOn(page, /\/az\/me\/profile$/);
+    // Wrong area → own home (the setup form while there is no profile), not login.
     await open(page, "/az/brand");
-    await expectStaysOn(page, /\/az\/me$/);
+    await expectStaysOn(page, /\/az\/me\/profile$/);
   });
 
   test(`${kind}: new brand → start → brand profile, all brand pages open`, async ({ page }) => {
@@ -75,7 +77,7 @@ test("session survives a new tab and the onboarding page sends a creator home", 
   await open(tab, "/az/me/profile");
   await expectStaysOn(tab, /\/az\/me\/profile$/);
   await open(tab, "/az/onboarding");
-  await expectStaysOn(tab, /\/az\/me$/);
+  await expectStaysOn(tab, /\/az\/me\/profile$/);
 });
 
 /**
@@ -100,7 +102,6 @@ for (const google of [false, true]) {
     const bounces = watchLoginBounces(page);
     await page.getByRole("button", { name: "Daxil ol" }).last().click();
     await chooseRole(page, "creator");
-    await page.getByRole("button", { name: "Profili yaratmağa başla" }).click();
     await expectStaysOn(page, /\/az\/me\/profile$/);
     expect(bounces, "signed-in user was sent to a login page").toEqual([]);
   });

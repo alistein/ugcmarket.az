@@ -75,7 +75,8 @@ test("code login, existing creator → straight to /me", async ({ page }) => {
   await createUser(email, { role: "creator" });
   await open(page, "/az/login");
   await page.getByRole("tab", { name: "Kod ilə" }).click();
-  await page.getByLabel("E-poçt").fill(email);
+  // Both tabs have an email field (and both show for a moment while the tab switches).
+  await page.getByRole("tabpanel", { name: "Kod ilə" }).getByLabel("E-poçt").fill(email);
   await sendCode(page);
   await fillCode(page, await mintCode(email));
   await expect(page).toHaveURL(/\/az\/me/);
@@ -86,7 +87,8 @@ test("wrong code shows an error and allows another try", async ({ page }) => {
   await createUser(email);
   await open(page, "/az/login");
   await page.getByRole("tab", { name: "Kod ilə" }).click();
-  await page.getByLabel("E-poçt").fill(email);
+  // Both tabs have an email field (and both show for a moment while the tab switches).
+  await page.getByRole("tabpanel", { name: "Kod ilə" }).getByLabel("E-poçt").fill(email);
   await sendCode(page);
   await fillCode(page, "000000");
   await expect(page.getByRole("alert")).toBeVisible();
