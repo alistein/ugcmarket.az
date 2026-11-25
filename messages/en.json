@@ -525,10 +525,7 @@
       "stylist": "Stylist",
       "designer": "Designer"
     },
-    "age": "{age} y.o.",
-    "collaboration": {
-      "post": "Posted on your account"
-    }
+    "age": "{age} y.o."
   },
   "creator": {
     "setup": {

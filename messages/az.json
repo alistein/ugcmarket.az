@@ -525,10 +525,7 @@
       "stylist": "Stilist",
       "designer": "Dizayner"
     },
-    "age": "{age} yaş",
-    "collaboration": {
-      "post": "Hesabınızda paylaşım"
-    }
+    "age": "{age} yaş"
   },
   "creator": {
     "setup": {

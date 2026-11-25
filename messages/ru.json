@@ -525,10 +525,7 @@
       "stylist": "Стилист",
       "designer": "Дизайнер"
     },
-    "age": "{age, plural, one {# год} few {# года} many {# лет} other {# года}}",
-    "collaboration": {
-      "post": "Публикация в вашем аккаунте"
-    }
+    "age": "{age, plural, one {# год} few {# года} many {# лет} other {# года}}"
   },
   "creator": {
     "setup": {
