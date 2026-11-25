@@ -72,9 +72,9 @@ export function OnboardingView() {
       });
     else if (me.role && me.status !== "blocked") {
       if (next) router.replace(stripLocale(next));
-      // Returning creators land on the board: listings are why they came (D14). New ones go on to
-      // their profile right after picking the role (below).
-      else router.replace(me.role === "creator" ? "/campaigns" : homeFor(me.role));
+      // Everyone lands on their own home. For creators that is /me: the profile with the
+      // "finish your profile" card, or the setup form when there is no profile yet (founder, 2026-11-25).
+      else router.replace(homeFor(me.role));
     }
   }, [me, isPending, router, next]);
 
