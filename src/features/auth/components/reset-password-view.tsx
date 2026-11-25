@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -157,19 +157,31 @@ function CodeAndPasswordForm({
   const { errors } = form.formState;
   const pending = verify.isPending || update.isPending;
 
-  const submit = form.handleSubmit(async ({ code, password }) => {
-    setError(null);
+  // One run at a time (ref, not `pending`: that is from the last render). A second submit in the
+  // same tick would reuse a code Supabase has just consumed and report it as wrong.
+  const busy = useRef(false);
+  const submit = async (e?: React.BaseSyntheticEvent) => {
+    e?.preventDefault();
+    if (busy.current) return;
+    busy.current = true;
     try {
-      // A verified code signs the user in with a recovery session; keep it if the password step fails.
-      if (!verify.isSuccess) await verify.mutateAsync({ email, code });
-      await update.mutateAsync(password);
-      onDone();
-    } catch (e) {
-      const key = errorKeyOf(e);
-      setError(key);
-      if (key === "code_invalid") form.setValue("code", "");
+      await form.handleSubmit(async ({ code, password }) => {
+        setError(null);
+        try {
+          // A verified code signs the user in with a recovery session; keep it if the password step fails.
+          if (!verify.isSuccess) await verify.mutateAsync({ email, code });
+          await update.mutateAsync(password);
+          onDone();
+        } catch (err) {
+          const key = errorKeyOf(err);
+          setError(key);
+          if (key === "code_invalid") form.setValue("code", "");
+        }
+      })(e);
+    } finally {
+      busy.current = false;
     }
-  });
+  };
 
   return (
     <form onSubmit={submit} noValidate className="grid gap-4">

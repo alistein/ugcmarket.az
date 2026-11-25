@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -30,21 +30,34 @@ export function EmailCodeStep({ email, type, next, onVerified, onChangeEmail, hi
   const cooldown = useCooldown();
   const form = useForm<CodeValues>({ resolver: zodResolver(CodeSchema), defaultValues: { code: "" } });
 
-  const submit = form.handleSubmit(({ code }) => {
-    if (verify.isPending) return;
-    setError(null);
-    verify.mutate(
-      { email, code: String(code) },
-      {
-        onSuccess: () => onVerified(),
-        onError: (e) => {
-          setError(errorKeyOf(e));
+  // One request per code. A second submit while the first is running (autofill firing twice, an
+  // extra digit, Enter right after the sixth digit) would reuse a code Supabase has just consumed
+  // and show "wrong code" although the sign-in went through. A ref, not `verify.isPending`: that
+  // value is from the last render and still false when two submits arrive in the same tick.
+  const busy = useRef(false);
+  const submit = async (e?: React.BaseSyntheticEvent) => {
+    e?.preventDefault();
+    if (busy.current) return;
+    busy.current = true;
+    let verified = false;
+    try {
+      await form.handleSubmit(async ({ code }) => {
+        setError(null);
+        try {
+          await verify.mutateAsync({ email, code: String(code) });
+          verified = true;
+          await onVerified();
+        } catch (err) {
+          setError(errorKeyOf(err));
           form.setValue("code", "");
           form.setFocus("code");
-        },
-      },
-    );
-  });
+        }
+      })(e);
+    } finally {
+      // Stay locked after success: the page is navigating away.
+      if (!verified) busy.current = false;
+    }
+  };
 
   const onResend = () => {
     setError(null);
