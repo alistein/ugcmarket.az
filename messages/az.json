@@ -1155,6 +1155,7 @@
     "title": "Elanlar",
     "count": "{count} aktiv elan",
     "sub": "Brendlərin kreatorlar üçün elanları. Uyğun olanı seçin və müraciət edin",
+    "locked": "Tezliklə elanlar aktivləşəcək",
     "post": "Elan yerləşdir",
     "forBrands": "Brendlər üçün",
     "payType": "Ödəniş növü",

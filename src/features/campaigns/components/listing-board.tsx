@@ -1,6 +1,12 @@
 "use client";
 
-import { Add01Icon, Alert02Icon, Clock01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
+import {
+  Add01Icon,
+  Alert02Icon,
+  Clock01Icon,
+  SquareLock02Icon,
+  Tick02Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -56,6 +62,8 @@ export function ListingBoardView() {
   const clear = () => router.replace("/campaigns", { scroll: false });
 
   const isBrand = me?.role === "brand";
+  // For now only brands (and admins) see the board; creators and guests get a blurred teaser.
+  const locked = !meLoading && !isBrand && me?.role !== "admin";
   const loading = meLoading || board.isPending;
 
   return (
@@ -87,67 +95,76 @@ export function ListingBoardView() {
 
         <CreatorNote />
 
-        <Filters pay={isPay(pay) ? pay : null} city={isCity(city) ? city : null} onChange={setFilter} />
+        <div className="relative">
+          <div
+            inert={locked}
+            aria-hidden={locked || undefined}
+            className={cn(locked && "pointer-events-none blur-md select-none")}
+          >
+            <Filters pay={isPay(pay) ? pay : null} city={isCity(city) ? city : null} onChange={setFilter} />
 
-        {loading ? (
-          <CardGridSkeleton />
-        ) : board.isError ? (
-          <div className="py-16 text-center">
-            <p className="flex items-center justify-center gap-2 text-destructive">
-              <HugeiconsIcon icon={Alert02Icon} strokeWidth={2} className="size-4" />
-              {t("error")}
-            </p>
-            <Button variant="outline" className="mt-4" onClick={() => board.refetch()}>
-              {t("retry")}
-            </Button>
-          </div>
-        ) : items.length === 0 ? (
-          filtered ? (
-            <Empty title={t("noResultsTitle")} body={t("noResultsBody")}>
-              <Button variant="outline" onClick={clear}>
-                {t("clear")}
-              </Button>
-            </Empty>
-          ) : (
-            <Empty title={t("emptyTitle")} body={t("emptyBody")}>
-              {isBrand && me.brand && (
-                <Button nativeButton={false} render={<Link href="/brand/campaigns/new" />}>
-                  {t("emptyBrand")}
-                </Button>
-              )}
-            </Empty>
-          )
-        ) : (
-          <>
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((c) => (
-                <li key={c.id} className="min-w-0">
-                  <Link
-                    href={`/campaigns/${c.slug ?? c.id}`}
-                    className="group/card block h-full rounded-3xl outline-none focus-visible:ring-4 focus-visible:ring-ring/25"
-                  >
-                    <ListingCard
-                      data={{ ...c, brand: c.brand ?? { name: "", logo_url: null } }}
-                      className="h-full [transition:scale_160ms_var(--ease-out),box-shadow_200ms_ease] group-active/card:scale-[0.98] [@media(hover:hover)_and_(pointer:fine)]:group-hover/card:shadow-(--shadow-float)"
-                    />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            {board.hasNextPage && (
-              <div className="mt-8 flex justify-center">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => board.fetchNextPage()}
-                  disabled={board.isFetchingNextPage}
-                >
-                  {t("more")}
+            {loading ? (
+              <CardGridSkeleton />
+            ) : board.isError ? (
+              <div className="py-16 text-center">
+                <p className="flex items-center justify-center gap-2 text-destructive">
+                  <HugeiconsIcon icon={Alert02Icon} strokeWidth={2} className="size-4" />
+                  {t("error")}
+                </p>
+                <Button variant="outline" className="mt-4" onClick={() => board.refetch()}>
+                  {t("retry")}
                 </Button>
               </div>
+            ) : items.length === 0 ? (
+              filtered ? (
+                <Empty title={t("noResultsTitle")} body={t("noResultsBody")}>
+                  <Button variant="outline" onClick={clear}>
+                    {t("clear")}
+                  </Button>
+                </Empty>
+              ) : (
+                <Empty title={t("emptyTitle")} body={t("emptyBody")}>
+                  {isBrand && me.brand && (
+                    <Button nativeButton={false} render={<Link href="/brand/campaigns/new" />}>
+                      {t("emptyBrand")}
+                    </Button>
+                  )}
+                </Empty>
+              )
+            ) : (
+              <>
+                <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {items.map((c) => (
+                    <li key={c.id} className="min-w-0">
+                      <Link
+                        href={`/campaigns/${c.slug ?? c.id}`}
+                        className="group/card block h-full rounded-3xl outline-none focus-visible:ring-4 focus-visible:ring-ring/25"
+                      >
+                        <ListingCard
+                          data={{ ...c, brand: c.brand ?? { name: "", logo_url: null } }}
+                          className="h-full [transition:scale_160ms_var(--ease-out),box-shadow_200ms_ease] group-active/card:scale-[0.98] [@media(hover:hover)_and_(pointer:fine)]:group-hover/card:shadow-(--shadow-float)"
+                        />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                {board.hasNextPage && !locked && (
+                  <div className="mt-8 flex justify-center">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      onClick={() => board.fetchNextPage()}
+                      disabled={board.isFetchingNextPage}
+                    >
+                      {t("more")}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
+          </div>
+          {locked && <LockedOverlay />}
+        </div>
 
         {!meLoading && !me && <GuestPrompt />}
       </main>
@@ -257,6 +274,20 @@ function Empty({ title, body, children }: { title: string; body: string; childre
       <p className="text-lg font-semibold tracking-[-0.02em]">{title}</p>
       <p className="mt-1 text-pretty text-muted-foreground">{body}</p>
       {children && <div className="mt-6 flex justify-center">{children}</div>}
+    </div>
+  );
+}
+
+/** Over the blurred board for creators and guests until listings open to them. */
+function LockedOverlay() {
+  const t = useTranslations("board");
+  return (
+    // Padding puts it near the middle of the first screen; sticky keeps it there while scrolling.
+    <div className="absolute inset-0 flex flex-col items-center px-4 pt-[max(2rem,calc(50dvh-20rem))]">
+      <p className="sticky top-[calc(50dvh-4rem)] flex max-w-xl flex-col items-center gap-4 text-center text-2xl font-semibold tracking-[-0.025em] text-balance sm:text-3xl">
+        <HugeiconsIcon icon={SquareLock02Icon} strokeWidth={2} className="size-9 shrink-0" />
+        {t("locked")}
+      </p>
     </div>
   );
 }

@@ -1155,6 +1155,7 @@
     "title": "Listings",
     "count": "{count, plural, one {# open listing} other {# open listings}}",
     "sub": "Brand listings for creators. Pick one that fits and apply",
+    "locked": "Listings will open soon",
     "post": "Post a listing",
     "forBrands": "For brands",
     "payType": "Payment type",
