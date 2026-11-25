@@ -24,7 +24,13 @@ import {
   type Step,
   toPayload,
 } from "../form";
-import { type MyCreator, useCreateCreator, useMyCreator, useUpdateCreator } from "../hooks";
+import {
+  type MyCreator,
+  useCreateCreator,
+  useInvalidateMine,
+  useMyCreator,
+  useUpdateCreator,
+} from "../hooks";
 import { FormSection } from "./form-bits";
 import { PortfolioEditor } from "./portfolio-editor";
 import { LifestyleFields, TermsFields } from "./enhancer-fields";
@@ -107,6 +113,7 @@ function ProfileSetup() {
     mode: "onTouched",
   });
   const create = useCreateCreator();
+  const invalidateMine = useInvalidateMine();
   const onServerError = useServerErrors(form);
   const index = STEPS.indexOf(step);
   const last = index === STEPS.length - 1;
@@ -123,9 +130,11 @@ function ProfileSetup() {
     }
     await form.handleSubmit((v) =>
       create.mutate(toPayload(v), {
-        onSuccess: () => {
+        onSuccess: (fresh) => {
           toast.success(t("setup.created"));
+          // Leave first, then fill the cache (see useCreateCreator): /me shows the new profile.
           router.replace("/me");
+          void invalidateMine(fresh);
         },
         onError: (e) => {
           if (e instanceof ApiClientError && e.code === "handle_taken") setStep("about");
@@ -198,7 +207,6 @@ function ProfileSetup() {
               {t("setup.back")}
             </Button>
           )}
-          {last && <p className="text-sm text-muted-foreground">{t("setup.reviewNote")}</p>}
           <Button type="submit" size="lg" className="ml-auto min-w-40" disabled={create.isPending}>
             {last ? t("setup.finish") : t("setup.next")}
             {!last && <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} data-icon="inline-end" />}

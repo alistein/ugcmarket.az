@@ -12,6 +12,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ClampedChips } from "@/components/shared/clamped-chips";
 import { PublicHeader } from "@/components/shared/public-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
@@ -22,8 +23,9 @@ import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
 import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES, PRICE_FORMATS } from "@/schemas";
+import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES } from "@/schemas";
 import { type CreatorPublic, portfolioSummary, socialNumbers } from "../hooks";
+import { CreatorContactsDialog } from "./creator-contacts-dialog";
 import { CreatorTags } from "./creator-tags";
 import { PortfolioSummary } from "./portfolio-summary";
 import { DealTerms } from "./deal-terms";
@@ -118,12 +120,10 @@ export function PublicCreatorProfile({
   const who = useCreatorWho();
   const locale = useLocale();
   const { data: me } = useMe();
-  const money = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
+  const [contactsOpen, setContactsOpen] = useState(false);
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
   const known = <T extends string>(list: readonly T[], v: string): v is T =>
     (list as readonly string[]).includes(v);
-  const prices = PRICE_FORMATS.flatMap((f) => c.creator_prices.filter((p) => p.format === f));
-  const unchecked = c.creator_socials.some((s) => !socialNumbers(c, s).checked);
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -137,7 +137,7 @@ export function PublicCreatorProfile({
         )}
 
         <div className="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-[13rem_minmax(0,1fr)]">
-          {/* Side column: who, where, links, terms, categories, tags, prices */}
+          {/* Side column: who, where, links, terms, categories, tags (prices are not shown) */}
           <aside className="order-2 grid content-start gap-3 text-sm lg:order-1 lg:pt-2">
             {who(c) && <p>{who(c)}</p>}
             <p className="flex items-center gap-2.5">
@@ -173,7 +173,7 @@ export function PublicCreatorProfile({
               <DealTerms creator={c} />
             </SideBlock>
             {c.categories.length > 0 && (
-              <SideBlock title={td("categoriesTitle")}>
+              <SideBlock title={td("categoriesTitle")} clamp>
                 {c.categories.map((cat) => (
                   <Badge key={cat} variant="brand">
                     {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
@@ -181,29 +181,11 @@ export function PublicCreatorProfile({
                 ))}
               </SideBlock>
             )}
-            {(c.lifestyle_tags.length > 0 || c.skills.length > 0 || c.shoot_options.length > 0) && (
-              <SideBlock title={t("tagsTitle")}>
-                <CreatorTags creator={c} />
+            {(c.lifestyle_tags.length > 0 || c.shoot_options.length > 0) && (
+              <SideBlock title={t("tagsTitle")} clamp>
+                <CreatorTags creator={c} bare />
               </SideBlock>
             )}
-            <SideBlock title={t("prices")}>
-              {prices.length ? (
-                <dl className="grid w-full gap-1.5">
-                  {prices.map((p) => (
-                    <div key={p.format} className="flex items-baseline justify-between gap-3">
-                      <dt className="text-muted-foreground">
-                        {known(PRICE_FORMATS, p.format) ? tt(`formats.${p.format}`) : p.format}
-                      </dt>
-                      <dd className="font-medium tabular-nums">
-                        {t("priceFrom", { amount: money.format(Number(p.amount)), currency: p.currency })}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              ) : (
-                <p className="text-muted-foreground">{t("pricesEmpty")}</p>
-              )}
-            </SideBlock>
           </aside>
 
           {/* Main column */}
@@ -219,7 +201,6 @@ export function PublicCreatorProfile({
                 <h1 className="text-3xl font-semibold tracking-[-0.035em] text-balance sm:text-4xl">
                   {c.display_name}
                 </h1>
-                <p className="mt-1 text-muted-foreground">@{c.handle}</p>
                 {c.bio && <p className="mt-2 max-w-xl text-pretty whitespace-pre-line">{c.bio}</p>}
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                   {c.creator_socials.map((s) => {
@@ -249,7 +230,6 @@ export function PublicCreatorProfile({
                     {td("works")}
                   </span>
                 </div>
-                {unchecked && <p className="mt-1 text-xs text-muted-foreground">{t("selfReported")}</p>}
               </div>
               <PublicActions creator={c} isOwner={isOwner} />
             </section>
@@ -260,22 +240,21 @@ export function PublicCreatorProfile({
                   <h2 className="font-semibold tracking-[-0.02em]">{t("ctaTitle")}</h2>
                   <p className="mt-1 text-sm text-primary-foreground/85">{t("ctaBody")}</p>
                 </div>
-                <Button
-                  variant="secondary"
-                  className="shrink-0"
-                  nativeButton={false}
-                  render={
-                    <Link
-                      href={
-                        me?.role === "brand"
-                          ? "/brand/campaigns/new"
-                          : { pathname: "/signup", query: { role: "brand" } }
-                      }
-                    />
-                  }
-                >
-                  {t("ctaButton")}
-                </Button>
+                {me?.role === "brand" ? (
+                  <Button variant="secondary" className="shrink-0" onClick={() => setContactsOpen(true)}>
+                    {t("ctaButton")}
+                  </Button>
+                ) : (
+                  // Visitors: sign up as a brand first (the role is picked there).
+                  <Button
+                    variant="secondary"
+                    className="shrink-0"
+                    nativeButton={false}
+                    render={<Link href={{ pathname: "/signup", query: { role: "brand" } }} />}
+                  >
+                    {t("ctaButton")}
+                  </Button>
+                )}
               </section>
             )}
 
@@ -295,17 +274,36 @@ export function PublicCreatorProfile({
           </div>
         </div>
       </main>
+      <CreatorContactsDialog
+        handle={c.handle}
+        name={c.display_name}
+        open={contactsOpen}
+        onOpenChange={setContactsOpen}
+      />
     </div>
   );
 }
 
 const portfolioSummaryShown = (c: CreatorPublic) => portfolioSummary(c) != null;
 
-function SideBlock({ title, children }: { title: string; children: React.ReactNode }) {
+function SideBlock({
+  title,
+  children,
+  clamp,
+}: {
+  title: string;
+  children: React.ReactNode;
+  /** Long chip lists: two lines, then "Daha çox". */
+  clamp?: boolean;
+}) {
   return (
     <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
       <p className="text-xs font-medium text-muted-foreground">{title}</p>
-      <div className="flex flex-wrap gap-1.5">{children}</div>
+      {clamp ? (
+        <ClampedChips>{children}</ClampedChips>
+      ) : (
+        <div className="flex flex-wrap gap-1.5">{children}</div>
+      )}
     </div>
   );
 }

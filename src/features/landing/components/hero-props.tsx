@@ -247,7 +247,7 @@ function ReelsFeed() {
         {slides.map((r, i) => (
           <div key={i} className="relative h-full shrink-0 p-3" style={{ background: r.bg }}>
             {r.scene}
-            <div className="absolute right-2.5 bottom-14 flex flex-col items-center gap-2.5 text-[10px] font-medium">
+            <div className="absolute right-2.5 bottom-14 flex flex-col items-center gap-2.5 text-xs font-medium">
               <span className="flex flex-col items-center">
                 <HugeiconsIcon icon={FavouriteIcon} strokeWidth={2} className="size-4" />
                 {r.likes}
@@ -258,13 +258,13 @@ function ReelsFeed() {
               </span>
             </div>
             <div className="absolute inset-x-3 bottom-5 space-y-0.5 pr-7">
-              <div className="text-[11px] font-semibold">{r.handle}</div>
-              <div className="text-[11px] leading-tight opacity-90">{t(r.caption)}</div>
+              <div className="text-xs font-semibold">{r.handle}</div>
+              <div className="text-xs leading-tight opacity-90">{t(r.caption)}</div>
             </div>
           </div>
         ))}
       </div>
-      <span className="absolute top-3 left-3 text-[11px] font-semibold">Reels</span>
+      <span className="absolute top-3 left-3 text-xs font-semibold">Reels</span>
       {/* Progress to the next swipe: constant motion → linear, on transform (scale) only. */}
       <div className="absolute inset-x-3 bottom-2.5 h-0.5 overflow-hidden rounded-full bg-white/25">
         <div
@@ -306,7 +306,7 @@ export function HeroProps() {
         <div className="relative flex w-44 flex-col items-center rounded-xl bg-sky px-4 py-3 text-sky-ink shadow-(--shadow-raised)">
           <span className="absolute top-1/2 -left-2 size-4 -translate-y-1/2 rounded-full bg-background" />
           <span className="absolute top-1/2 -right-2 size-4 -translate-y-1/2 rounded-full bg-background" />
-          <span className="text-[11px] font-semibold tracking-[0.14em] uppercase opacity-80">{t("paid")}</span>
+          <span className="text-xs font-semibold tracking-[0.14em] uppercase opacity-80">{t("paid")}</span>
           <span className="font-heading text-2xl font-semibold tracking-[-0.02em] tabular-nums">150 AZN</span>
         </div>
       </Prop>

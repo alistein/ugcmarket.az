@@ -85,6 +85,7 @@ Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) f
     `text-muted-foreground` (or `text-destructive` for problems) with a small icon. Backgrounds are for fields and controls.
   - Buttons press to `scale(0.97)`. Named avatars get a tone from the joy palette; one initial in overlapping groups.
   - Apple type: tighter tracking as size grows (`tracking-[-0.025em]` on titles), body at 0, `tabular-nums` for counts.
+  - **Minimum font size is 12px** (`text-xs`) everywhere, landing and mockups included. Never `text-[10px]`/`text-[11px]`.
 - Class merging: `cn()` from `@/lib/utils` (re-exports shadcn's `cn` package).
 - Design tokens live in `src/app/globals.css` (`:root` / `.dark` CSS variables + `@theme inline`). Change tokens, not one-off colors.
 - **Showcase:** `/ui-kit` (`src/app/[locale]/(dev)/ui-kit`) renders every kit component in all variants + product patterns.

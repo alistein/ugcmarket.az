@@ -45,7 +45,7 @@ export function AuthShowcase() {
       <div className="absolute top-0 right-0 w-[38%] rounded-bl-3xl bg-card p-6 shadow-(--shadow-soft)">
         <p className="text-4xl font-semibold tracking-[-0.04em] tabular-nums">36</p>
         <p className="mt-0.5 text-sm text-muted-foreground">{t("applicants")}</p>
-        <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+        <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <Legend tone="bg-sun" label="Reels" />
           <Legend tone="bg-mint" label="Stories" />
           <Legend tone="bg-sky" label="UGC" />

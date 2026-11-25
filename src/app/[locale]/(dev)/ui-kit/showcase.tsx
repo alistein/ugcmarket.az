@@ -290,7 +290,7 @@ function Foundations() {
               </div>
               <div className="px-0.5">
                 <div className="text-sm font-medium">{name}</div>
-                <div className="font-mono text-[11px] text-muted-foreground">--{bg}</div>
+                <div className="font-mono text-xs text-muted-foreground">--{bg}</div>
               </div>
             </div>
           ))}
@@ -303,7 +303,7 @@ function Foundations() {
               style={{ background: `var(--${bg})`, color: `var(--${ink})` }}
             >
               {name}
-              <span className="font-mono text-[11px] font-normal opacity-80">--{bg}</span>
+              <span className="font-mono text-xs font-normal opacity-80">--{bg}</span>
             </div>
           ))}
         </Panel>
@@ -318,7 +318,7 @@ function Foundations() {
           ["Caption · 13", "text-[13px] text-muted-foreground", "Son tarix: 30 noyabr · Minimum 5.000 izləyici"],
         ].map(([meta, cls, text]) => (
           <div key={meta} className="grid gap-1 sm:grid-cols-[180px_1fr] sm:items-baseline">
-            <span className="font-mono text-[11px] text-muted-foreground">{meta}</span>
+            <span className="font-mono text-xs text-muted-foreground">{meta}</span>
             <span className={cn("font-heading", cls)}>{text}</span>
           </div>
         ))}
@@ -341,7 +341,7 @@ function Foundations() {
               style={{ boxShadow: `var(--shadow-${s})` }}
             />
             <div>
-              <div className="font-mono text-[11px]">--shadow-{s}</div>
+              <div className="font-mono text-xs">--shadow-{s}</div>
               <div className="text-xs text-muted-foreground">{use}</div>
             </div>
           </div>
@@ -724,7 +724,7 @@ function Cards() {
               ].map(([k, v, c]) => (
                 <div key={k} className={cn("rounded-2xl py-3", c)}>
                   <div className="font-heading text-xl font-semibold tracking-[-0.02em] tabular-nums">{v}</div>
-                  <div className="text-[11px] font-medium opacity-80">{k}</div>
+                  <div className="text-xs font-medium opacity-80">{k}</div>
                 </div>
               ))}
             </CardContent>
@@ -1070,7 +1070,7 @@ function CreatorCard() {
           ].map(([k, v]) => (
             <div key={k} className="rounded-2xl bg-muted py-2.5">
               <div className="font-heading font-semibold tracking-[-0.02em] tabular-nums">{v}</div>
-              <div className="text-[11px] text-muted-foreground">{k}</div>
+              <div className="text-xs text-muted-foreground">{k}</div>
             </div>
           ))}
         </div>

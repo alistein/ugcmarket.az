@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
 import { meKeys } from "@/features/me/hooks";
 import { api } from "@/lib/api-client";
 import { createClient } from "@/lib/supabase/client";
@@ -17,6 +17,10 @@ export const creatorKeys = {
   public: (handle: string) => ["creators", "public", handle] as const,
   mine: ["creators", "mine"] as const,
   handle: (handle: string) => ["creators", "handle", handle] as const,
+  /** A creator's contacts as revealed to one brand (viewer in the key: it depends on who asks). */
+  contacts: (handle: string, viewerId: string) => ["creators", "contacts", handle, viewerId] as const,
+  /** Mutation key: lets the portfolio grid show a tile for each link still being checked. */
+  addPortfolio: ["creators", "portfolio", "add"] as const,
 };
 
 export type Network = "instagram" | "tiktok" | "youtube";
@@ -242,7 +246,7 @@ export function useHandleAvailability(handle: string, enabled: boolean) {
   });
 }
 
-function useInvalidateMine() {
+export function useInvalidateMine() {
   const qc = useQueryClient();
   return (data?: MyCreator) => {
     if (data) qc.setQueryData(creatorKeys.mine, data);
@@ -255,11 +259,14 @@ function useInvalidateMine() {
   };
 }
 
+/**
+ * No cache update here on purpose: the setup form swaps to the editor as soon as the profile is
+ * in the cache, which would unmount it before it can navigate. The caller navigates first, then
+ * calls useInvalidateMine() with the new profile.
+ */
 export function useCreateCreator() {
-  const done = useInvalidateMine();
   return useMutation({
     mutationFn: (input: CreatorProfileInput) => api<MyCreator>("/creators", { method: "POST", json: input }),
-    onSuccess: done,
   });
 }
 
@@ -275,9 +282,18 @@ export function useUpdateCreator() {
 export function useAddPortfolioItem() {
   const done = useInvalidateMine();
   return useMutation({
+    mutationKey: creatorKeys.addPortfolio,
     mutationFn: (input: PortfolioItemInput) =>
       api<unknown>("/creators/me/portfolio", { method: "POST", json: input }),
     onSuccess: () => done(),
+  });
+}
+
+/** Links being added right now (the check can take up to a minute): one pending tile each. */
+export function usePendingPortfolioUrls() {
+  return useMutationState({
+    filters: { mutationKey: creatorKeys.addPortfolio, status: "pending" },
+    select: (m) => (m.state.variables as PortfolioItemInput | undefined)?.url ?? "",
   });
 }
 
@@ -337,4 +353,17 @@ async function resizeToWebp(file: File, size: number, area?: CropArea): Promise<
   const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/webp", 0.85));
   if (!blob) throw new Error("avatar_type");
   return blob;
+}
+
+export type CreatorContacts = { instagram: string | null; phone: string | null; email: string | null };
+
+/** Phone, email and Instagram for a signed-in brand; fetched only when the popup opens. */
+export function useCreatorContacts(handle: string, viewerId: string | undefined, enabled: boolean) {
+  return useQuery({
+    queryKey: creatorKeys.contacts(handle, viewerId ?? ""),
+    queryFn: () => api<CreatorContacts>(`/creators/${encodeURIComponent(handle)}/contacts`),
+    enabled: enabled && !!viewerId,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
 }

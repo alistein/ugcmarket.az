@@ -70,7 +70,7 @@ function Bubble({
       >
         {children}
       </div>
-      <span className="px-2 text-[11px] text-muted-foreground">{from}</span>
+      <span className="px-2 text-xs text-muted-foreground">{from}</span>
     </div>
   );
 }

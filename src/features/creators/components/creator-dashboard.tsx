@@ -17,6 +17,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { ClampedChips } from "@/components/shared/clamped-chips";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,6 +36,7 @@ import { ApiClientError } from "@/lib/api-client";
 import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
 import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES } from "@/schemas";
+import { CreatorTags } from "./creator-tags";
 import { BoostCard, SectionSheet, type SheetSection } from "./boost-card";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
 import { DealTerms } from "./deal-terms";
@@ -108,6 +110,7 @@ function DashboardSkeleton() {
 
 function Home({ creator: c }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
+  const tp = useTranslations("creator.public");
   const tt = useTranslations("taxonomy");
   const who = useCreatorWho();
   const [now] = useState(() => Date.now());
@@ -179,13 +182,23 @@ function Home({ creator: c }: { creator: MyCreator }) {
         {c.categories.length > 0 && (
           <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
             <p className="text-xs font-medium text-muted-foreground">{t("categoriesTitle")}</p>
-            <div className="flex flex-wrap gap-1.5">
+            <ClampedChips>
               {c.categories.map((cat) => (
                 <Badge key={cat} variant="brand">
                   {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
                 </Badge>
               ))}
-            </div>
+            </ClampedChips>
+          </div>
+        )}
+
+        {/* Lifestyle tags and where they film: same block as on the public profile. */}
+        {(c.lifestyle_tags.length > 0 || c.shoot_options.length > 0) && (
+          <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
+            <p className="text-xs font-medium text-muted-foreground">{tp("tagsTitle")}</p>
+            <ClampedChips>
+              <CreatorTags creator={c} bare />
+            </ClampedChips>
           </div>
         )}
       </aside>
@@ -206,7 +219,6 @@ function Home({ creator: c }: { creator: MyCreator }) {
               </h1>
               <StatusMark status={c.review_status} />
             </div>
-            <p className="mt-1 text-muted-foreground">@{c.handle}</p>
             {c.bio ? (
               <p className="mt-2 max-w-xl text-pretty">{c.bio}</p>
             ) : (

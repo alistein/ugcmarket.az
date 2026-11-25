@@ -12,7 +12,9 @@
     "cancel": "Ləğv et",
     "apply": "Müraciət et",
     "loadFailed": "Məlumatları yükləmək mümkün olmadı. Səhifəni yeniləyin",
-    "back": "Geri"
+    "back": "Geri",
+    "showMore": "Daha çox",
+    "showLess": "Daha az"
   },
   "pages": {
     "landing": "Ana səhifə",
@@ -70,7 +72,8 @@
     "portfolio_private": "Hesab gizlidir, ona görə brendlər bu Reels-i görə bilməz. Instagram-da hesabı açıq edin və yenidən cəhd edin",
     "portfolio_not_video": "Bu, şəkil və ya karusel paylaşımıdır. Portfolioya video lazımdır, Reels linkini əlavə edin",
     "portfolio_not_yours": "Bu Reels sizin Instagram hesabınızda deyil. Yalnız öz hesabınızda paylaşdığınız və ya birgə (Collab) paylaşdığınız Reels-i əlavə edin",
-    "campaign_ended": "Bu elanın müddəti bitib. Müraciət qəbul olunmur"
+    "campaign_ended": "Bu elanın müddəti bitib. Müraciət qəbul olunmur",
+    "brand_profile_required": "Əlaqə məlumatlarını görmək üçün əvvəlcə brend profilinizi yaradın"
   },
   "validation": {
     "handle": "Yalnız kiçik hərflər, rəqəmlər, nöqtə və alt xətt (3–30 simvol)",
@@ -362,14 +365,13 @@
   },
   "app": {
     "account": "Hesab",
-    "publicProfile": "Açıq profilim",
     "browseCampaigns": "Elanlar",
-    "editProfile": "Profili redaktə et",
     "myApplications": "Müraciətlərim",
     "language": "Dil",
     "myListings": "Elanlarım",
     "newListing": "Elan yerləşdir",
-    "brandProfile": "Brend profili"
+    "brandProfile": "Brend profili",
+    "myProfile": "Profilim"
   },
   "taxonomy": {
     "categories": {
@@ -533,8 +535,7 @@
       "next": "Davam et",
       "back": "Geri",
       "finish": "Profili yarat",
-      "created": "Profiliniz yaradıldı və yoxlamaya göndərildi",
-      "reviewNote": "Profili yaratdıqdan sonra ən azı 1 iş əlavə edin: yoxlama ondan sonra başlayır"
+      "created": "Profiliniz yaradıldı və yoxlamaya göndərildi"
     },
     "steps": {
       "about": {
@@ -637,7 +638,6 @@
       "slotEmpty": "Reels əlavə edin",
       "addMore": "Daha bir iş əlavə edin",
       "dialogTitle": "Portfolioya iş əlavə edin",
-      "checking": "Reels yoxlanılır. Bu, bir dəqiqəyə qədər çəkə bilər",
       "checkingShort": "Yoxlanılır",
       "summary": {
         "medianViews": "Orta baxış",
@@ -708,15 +708,11 @@
       "previewPending": "Önizləmə: profiliniz yoxlanılır. Hələlik onu yalnız siz görürsünüz",
       "previewRejected": "Önizləmə: profiliniz təsdiqlənməyib, başqaları onu görmür",
       "edit": "Redaktə et",
-      "selfReported": "İşarəsi olmayan rəqəmləri kreator özü daxil edib",
       "portfolio": "Portfolio",
       "portfolioEmpty": "Hələ heç bir iş əlavə olunmayıb",
-      "prices": "Qiymətlər",
-      "pricesEmpty": "Razılaşma yolu ilə",
       "ctaTitle": "Bu kreatorla işləmək istəyirsiniz?",
-      "ctaBody": "Elan yerləşdirin, kreatorlar sizə özləri müraciət etsin",
-      "ctaButton": "Elan yerləşdir",
-      "priceFrom": "{amount} {currency}-dən",
+      "ctaBody": "Telefon, e-poçt və ya Instagram ilə kreatorla birbaşa əlaqə saxlayın",
+      "ctaButton": "Əlaqə məlumatları",
       "tagsTitle": "Xüsusiyyətlər"
     },
     "why": {
@@ -737,9 +733,7 @@
       "pricePh": "0",
       "aznFrom": "AZN-dən",
       "shootTitle": "Çəkiliş imkanı",
-      "shootHint": "Harada çəkə bildiyinizi seçin",
-      "skillsTitle": "Bacarıqlar",
-      "skillsHint": "Özünüz etdiyiniz işlər: brendə əlavə komanda lazım olmur"
+      "shootHint": "Harada çəkə bildiyinizi seçin"
     },
     "sections": {
       "about": {
@@ -776,7 +770,11 @@
       "save": "Yadda saxla",
       "saved": "Yadda saxlanıldı",
       "fieldDone": "tamamlanıb",
-      "fieldMissing": "əlavə edilməyib"
+      "fieldMissing": "əlavə edilməyib",
+      "completeTitle": "Profiliniz tamdır 🎉",
+      "completeTitlePlain": "Profiliniz tamdır",
+      "completeBody": "Brendlər indi sizi daha tez tapacaq",
+      "close": "Bağla"
     },
     "post": {
       "title": "{network} paylaşımı",
@@ -797,6 +795,17 @@
       "notYours": "Bu paylaşım @{owner} hesabınındır, ona görə rəqəmləri göstərmirik",
       "player": "Video",
       "play": "Videonu oynat"
+    },
+    "contacts": {
+      "title": "{name} ilə əlaqə",
+      "body": "Kreatora birbaşa yazın və ya zəng edin. Əlaqə məlumatlarını kopyalamaq üçün yanındakı düyməyə basın",
+      "phone": "Telefon",
+      "email": "E-poçt",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "copyFailed": "Kopyalamaq alınmadı",
+      "empty": "Kreator hələ əlaqə məlumatı əlavə etməyib",
+      "createBrand": "Brend profili yaradın"
     }
   },
   "legal": {

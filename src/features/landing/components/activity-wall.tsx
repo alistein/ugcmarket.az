@@ -56,11 +56,11 @@ function TileView({ tile }: { tile: Tile }) {
     return (
       <div className="relative aspect-[9/14] overflow-hidden rounded-2xl p-2.5 text-white shadow-(--shadow-raised)" style={{ background: tile.bg }}>
         <div className="absolute inset-x-[22%] top-[22%] h-[38%] rounded-[45%_45%_14px_14px]" style={{ background: tile.subject, opacity: 0.55 }} />
-        <span className="absolute top-2 left-2.5 text-[10px] font-semibold">Reels</span>
+        <span className="absolute top-2 left-2.5 text-xs font-semibold">Reels</span>
         <span className="absolute top-1/2 left-1/2 flex size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
           <HugeiconsIcon icon={PlayIcon} strokeWidth={2} className="size-3.5 translate-x-px" />
         </span>
-        <div className="absolute inset-x-2.5 bottom-2.5 flex items-end justify-between text-[10px]">
+        <div className="absolute inset-x-2.5 bottom-2.5 flex items-end justify-between text-xs">
           <span className="font-semibold">{tile.handle}</span>
           <span className="flex items-center gap-1 opacity-90">
             <HugeiconsIcon icon={FavouriteIcon} strokeWidth={2} className="size-3" />

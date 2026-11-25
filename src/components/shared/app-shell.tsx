@@ -28,7 +28,6 @@ import { useMyBrand } from "@/features/brands/hooks";
 import { useMyCreator } from "@/features/creators/hooks";
 import { useMe } from "@/features/me/hooks";
 import { Link, usePathname } from "@/i18n/navigation";
-import { homeFor } from "@/lib/auth-routes";
 
 /**
  * Signed-in frame (Luhive-style) for creators and brands: logo left; one primary action
@@ -54,7 +53,8 @@ export function AppHeader({ className }: { className: string }) {
   const { data: me } = useMe();
   return (
     <header className={className}>
-      <Link href={me?.role ? homeFor(me.role) : "/"} className="group/logo text-xl">
+      {/* The logo always goes to the landing page, signed in or not. */}
+      <Link href="/" className="group/logo text-xl">
         <Logo />
       </Link>
       <div className="ml-auto flex items-center gap-2">
@@ -136,9 +136,7 @@ function AccountMenu() {
         {setUp && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              {isBrand ? <BrandItems /> : <CreatorItems handle={me?.creator?.handle} />}
-            </DropdownMenuGroup>
+            <DropdownMenuGroup>{isBrand ? <BrandItems /> : <CreatorItems />}</DropdownMenuGroup>
           </>
         )}
         <DropdownMenuSeparator />
@@ -151,19 +149,13 @@ function AccountMenu() {
   );
 }
 
-function CreatorItems({ handle }: { handle: string | undefined }) {
+function CreatorItems() {
   const t = useTranslations("app");
   return (
     <>
-      {handle && (
-        <DropdownMenuItem render={<Link href={`/creator/${handle}`} />}>
-          <HugeiconsIcon icon={UserCircleIcon} strokeWidth={2} />
-          {t("publicProfile")}
-        </DropdownMenuItem>
-      )}
-      <DropdownMenuItem render={<Link href="/me/profile" />}>
-        <HugeiconsIcon icon={PencilEdit02Icon} strokeWidth={2} />
-        {t("editProfile")}
+      <DropdownMenuItem render={<Link href="/me" />}>
+        <HugeiconsIcon icon={UserCircleIcon} strokeWidth={2} />
+        {t("myProfile")}
       </DropdownMenuItem>
       <DropdownMenuItem render={<Link href="/campaigns" />}>
         <HugeiconsIcon icon={Megaphone01Icon} strokeWidth={2} />

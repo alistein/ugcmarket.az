@@ -20,6 +20,7 @@ import {
   postCover,
   postNumbers,
   useAddPortfolioItem,
+  usePendingPortfolioUrls,
   useRemovePortfolioItem,
 } from "../hooks";
 import { PostSheet } from "./post-sheet";
@@ -43,7 +44,8 @@ export function PortfolioEditor({
   const t = useTranslations("creator.portfolio");
   const [open, setOpen] = useState(false);
   const [viewing, setViewing] = useState<string | null>(null);
-  const empty = readOnly ? 0 : Math.max(0, SLOTS - items.length);
+  const pending = usePendingPortfolioUrls();
+  const empty = readOnly ? 0 : Math.max(0, SLOTS - items.length - pending.length);
   // No upper limit: after the first three slots there is always one more "+" tile.
   const canAddMore = !readOnly && items.length >= SLOTS;
 
@@ -60,6 +62,12 @@ export function PortfolioEditor({
             />
           </li>
         ))}
+        {!readOnly &&
+          pending.map((url, i) => (
+            <li key={`pending-${i}-${url}`}>
+              <PendingTile />
+            </li>
+          ))}
         {Array.from({ length: empty }, (_, i) => (
           <li key={`empty-${i}`}>
             <button type="button" onClick={() => setOpen(true)} className={cn(slotClass, "items-stretch")}>
@@ -95,6 +103,34 @@ export function PortfolioEditor({
         onClose={() => setViewing(null)}
         explainMismatch={!readOnly}
       />
+    </div>
+  );
+}
+
+/**
+ * A link being checked (up to a minute). A gray fill rises from the bottom: fast at first, then
+ * slower and slower (ease-out over 40s), so it reads as "working" without promising a time.
+ * Mounted once per add, so a one-off @starting-style transition; reduced motion keeps it static.
+ */
+function PendingTile() {
+  const t = useTranslations("creator.portfolio");
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="relative flex aspect-[3/4] w-full flex-col overflow-hidden rounded-2xl bg-muted/60 p-3"
+    >
+      <span
+        aria-hidden
+        className="absolute inset-0 origin-bottom scale-y-90 bg-foreground/[0.07] [transition:scale_40s_var(--ease-out)] starting:scale-y-0"
+      />
+      <span className="relative flex size-9 items-center justify-center rounded-lg bg-card/70 text-muted-foreground">
+        <HugeiconsIcon icon={NETWORK_ICON.instagram} strokeWidth={2} className="size-4" />
+      </span>
+      <span className="relative mt-auto inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+        <HugeiconsIcon icon={Loading03Icon} strokeWidth={2} className="size-4 animate-spin" />
+        {t("checkingShort")}
+      </span>
     </div>
   );
 }
@@ -222,18 +258,19 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
   const checked = url ? checkPortfolioUrl(url) : null;
   const detected = checked?.ok ? checked.network : null;
 
-  const submit = form.handleSubmit((v) =>
+  const submit = form.handleSubmit((v) => {
+    // The check can take up to a minute: close now, the grid shows a pending tile meanwhile.
+    onOpenChange(false);
+    form.reset();
     add.mutate(
       { url: v.url, title: v.title || undefined },
       {
-        onSuccess: () => {
-          form.reset();
-          onOpenChange(false);
-        },
         onError: (e) => {
-          // Problems with this link (gone, private account, a photo, already added, portfolio
-          // full) belong under the field with what to do; anything else is a toast.
+          // Problems with this link (gone, private account, a photo, someone else's, already
+          // added) reopen the panel with the link and what to do; anything else is a toast.
           if (e instanceof ApiClientError && LINK_ERRORS.has(e.code)) {
+            form.reset({ url: v.url, title: v.title ?? "" });
+            onOpenChange(true);
             form.setError("url", { message: e.message }, { shouldFocus: true });
             return;
           }
@@ -241,8 +278,8 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
           toast.error(te.has(key as never) ? te(key as never) : te("errors.unknown"));
         },
       },
-    ),
-  );
+    );
+  });
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -258,13 +295,7 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
             <Field
               label={t("url")}
               error={form.formState.errors.url}
-              hint={
-                add.isPending
-                  ? t("checking")
-                  : detected
-                    ? t("detected", { network: t(`networks.${detected}`) })
-                    : t("urlHint")
-              }
+              hint={detected ? t("detected", { network: t(`networks.${detected}`) }) : t("urlHint")}
             >
               {(a) => (
                 <Input
@@ -276,7 +307,6 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
                   autoCorrect="off"
                   spellCheck={false}
                   autoFocus
-                  readOnly={add.isPending}
                   placeholder="https://www.instagram.com/reel/…"
                 />
               )}
@@ -286,14 +316,9 @@ function AddPortfolioSheet({ open, onOpenChange }: { open: boolean; onOpenChange
             </Field>
           </div>
           <SheetFooter>
-            <Button type="submit" disabled={add.isPending}>
-              <HugeiconsIcon
-                icon={add.isPending ? Loading03Icon : Add01Icon}
-                strokeWidth={2}
-                data-icon="inline-start"
-                className={add.isPending ? "animate-spin" : undefined}
-              />
-              {add.isPending ? t("checkingShort") : t("add")}
+            <Button type="submit">
+              <HugeiconsIcon icon={Add01Icon} strokeWidth={2} data-icon="inline-start" />
+              {t("add")}
             </Button>
           </SheetFooter>
         </form>

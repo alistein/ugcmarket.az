@@ -10,7 +10,7 @@ import type {
 import type { PortfolioItem } from "@/schemas/creator";
 import { track } from "@/server/analytics";
 import type { SessionUser } from "@/server/auth";
-import { createPublicClient, createUserClient } from "@/server/db/supabase";
+import { createAdminClient, createPublicClient, createUserClient } from "@/server/db/supabase";
 import { ApiError, errors } from "@/server/http/errors";
 import {
   checkPost,
@@ -211,4 +211,36 @@ export async function removePortfolioItem(user: SessionUser, id: string) {
   // The cover stays: it's stored per post and other creators may link the same one.
   const { error } = await supabase.from("portfolio_items").delete().eq("id", id).eq("creator_id", me.id);
   if (error) throw error;
+}
+
+/**
+ * A creator's contacts for a brand that wants to work with them (founders, 2026-11-25: brands
+ * see phone, email and Instagram from the profile). Approved creators only; the caller must be
+ * a brand with a brand profile. Contacts are read with the service role (never public) and every
+ * reveal is tracked.
+ */
+export async function getCreatorContactsForBrand(user: SessionUser, handle: string) {
+  const supabase = await createUserClient();
+  const { data: brand } = await supabase.from("brands").select("id").eq("profile_id", user.id).maybeSingle();
+  if (!brand) throw new ApiError(403, "brand_profile_required", "errors.brand_profile_required");
+
+  const db = createAdminClient();
+  const { data: creator, error } = await db
+    .from("creators")
+    .select("id, profile_id, creator_socials(network, handle), creator_contacts(instagram, phone)")
+    .eq("handle", handle.toLowerCase())
+    .eq("review_status", "approved")
+    .maybeSingle();
+  if (error) throw error;
+  if (!creator) throw errors.notFound("creator");
+
+  const contacts = Array.isArray(creator.creator_contacts)
+    ? creator.creator_contacts[0]
+    : creator.creator_contacts;
+  const instagram =
+    contacts?.instagram ?? creator.creator_socials.find((s) => s.network === "instagram")?.handle ?? null;
+  const { data: auth } = await db.auth.admin.getUserById(creator.profile_id);
+
+  await track(user.id, "contact_revealed", { creator_id: creator.id, from: "profile" });
+  return { instagram, phone: contacts?.phone ?? null, email: auth?.user?.email ?? null };
 }

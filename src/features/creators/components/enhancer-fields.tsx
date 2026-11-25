@@ -18,7 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
-  CREATOR_SKILLS,
   ENABLED_PRICE_FORMATS,
   EXCLUSIVE_LIFESTYLE,
   LIFESTYLE_GROUPS,
@@ -140,7 +139,7 @@ export function LifestyleFields({ form }: { form: Form }) {
 }
 
 // ── Qiymətlər və şərtlər ────────────────────────────────────────────────────
-/** How the creator works: a minimum ("from") price per format, where they film, what they do themselves. */
+/** How the creator works: a minimum ("from") price per format and where they film. */
 export function TermsFields({ form }: { form: Form }) {
   const t = useTranslations("creator.terms");
   const tt = useTranslations("taxonomy");
@@ -185,24 +184,6 @@ export function TermsFields({ form }: { form: Form }) {
                 value={field.value}
                 onChange={field.onChange}
                 label={(o) => tt(`shootOptions.${o}`)}
-                describedBy={a["aria-describedby"]}
-              />
-            )}
-          />
-        )}
-      </Field>
-
-      <Field label={t("skillsTitle")} hint={t("skillsHint")}>
-        {(a) => (
-          <Controller
-            control={control}
-            name="skills"
-            render={({ field }) => (
-              <ChipGroup
-                options={CREATOR_SKILLS}
-                value={field.value}
-                onChange={field.onChange}
-                label={(o) => tt(`skills.${o}`)}
                 describedBy={a["aria-describedby"]}
               />
             )}

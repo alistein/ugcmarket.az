@@ -12,7 +12,9 @@
     "cancel": "Cancel",
     "apply": "Apply",
     "loadFailed": "Couldn’t load. Refresh the page",
-    "back": "Back"
+    "back": "Back",
+    "showMore": "Show more",
+    "showLess": "Show less"
   },
   "pages": {
     "landing": "Home",
@@ -70,7 +72,8 @@
     "portfolio_private": "The account is private, so brands can't see this Reel. Make the account public on Instagram and try again",
     "portfolio_not_video": "That's a photo or carousel post. The portfolio needs video, so add a Reels link",
     "portfolio_not_yours": "This Reel isn't on your Instagram account. Add Reels from your own account or ones you're credited on (Collab)",
-    "campaign_ended": "This listing has ended. It no longer takes applications"
+    "campaign_ended": "This listing has ended. It no longer takes applications",
+    "brand_profile_required": "Create your brand profile first to see contact details"
   },
   "validation": {
     "handle": "Lowercase letters, numbers, dots and underscores only (3–30 characters)",
@@ -362,14 +365,13 @@
   },
   "app": {
     "account": "Account",
-    "publicProfile": "My public profile",
     "browseCampaigns": "Listings",
-    "editProfile": "Edit profile",
     "myApplications": "My applications",
     "language": "Language",
     "myListings": "My listings",
     "newListing": "Post a listing",
-    "brandProfile": "Brand profile"
+    "brandProfile": "Brand profile",
+    "myProfile": "My profile"
   },
   "taxonomy": {
     "categories": {
@@ -533,8 +535,7 @@
       "next": "Continue",
       "back": "Back",
       "finish": "Create profile",
-      "created": "Profile created and sent for review",
-      "reviewNote": "After creating your profile, add at least 1 piece of work: review starts after that"
+      "created": "Profile created and sent for review"
     },
     "steps": {
       "about": {
@@ -637,7 +638,6 @@
       "slotEmpty": "Add a Reel",
       "addMore": "Add another piece",
       "dialogTitle": "Add to your portfolio",
-      "checking": "Checking the Reel. This can take up to a minute",
       "checkingShort": "Checking",
       "summary": {
         "medianViews": "Typical views",
@@ -708,15 +708,11 @@
       "previewPending": "Preview: your profile is in review. Only you can see it for now",
       "previewRejected": "Preview: your profile wasn’t approved, so others can’t see it",
       "edit": "Edit",
-      "selfReported": "Numbers without a check mark are reported by the creator",
       "portfolio": "Portfolio",
       "portfolioEmpty": "No work added yet",
-      "prices": "Prices",
-      "pricesEmpty": "Negotiable",
       "ctaTitle": "Want to work with this creator?",
-      "ctaBody": "Post a listing and creators will apply to you",
-      "ctaButton": "Post a listing",
-      "priceFrom": "from {amount} {currency}",
+      "ctaBody": "Reach the creator directly by phone, email or Instagram",
+      "ctaButton": "Contact details",
       "tagsTitle": "About them"
     },
     "why": {
@@ -737,9 +733,7 @@
       "pricePh": "0",
       "aznFrom": "AZN, from",
       "shootTitle": "Where you film",
-      "shootHint": "Pick where you can film",
-      "skillsTitle": "Skills",
-      "skillsHint": "What you do yourself, so the brand needs no crew"
+      "shootHint": "Pick where you can film"
     },
     "sections": {
       "about": {
@@ -776,7 +770,11 @@
       "save": "Save",
       "saved": "Saved",
       "fieldDone": "done",
-      "fieldMissing": "missing"
+      "fieldMissing": "missing",
+      "completeTitle": "Your profile is complete 🎉",
+      "completeTitlePlain": "Your profile is complete",
+      "completeBody": "Brands will find you faster now",
+      "close": "Close"
     },
     "post": {
       "title": "{network} post",
@@ -797,6 +795,17 @@
       "notYours": "This post belongs to @{owner}, so we don't show its numbers",
       "player": "Video",
       "play": "Play video"
+    },
+    "contacts": {
+      "title": "Contact {name}",
+      "body": "Write to or call the creator directly. Tap the button next to a contact to copy it",
+      "phone": "Phone",
+      "email": "Email",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyFailed": "Couldn't copy",
+      "empty": "The creator hasn't added contact details yet",
+      "createBrand": "Create brand profile"
     }
   },
   "legal": {
