@@ -2,7 +2,6 @@
 
 import { CategoryIcon } from "@/components/shared/category-icon";
 import {
-  CheckmarkBadge01Icon,
   Copy01Icon,
   InstagramIcon,
   Link01Icon,
@@ -274,14 +273,6 @@ function ApplicantCard({ applicant: a, currency }: { applicant: Applicant; curre
               <div>
                 <p className="flex items-center gap-1.5 text-2xl font-semibold tracking-[-0.03em] tabular-nums">
                   {numbers.followers != null ? compact.format(numbers.followers) : "?"}
-                  {numbers.checked && (
-                    <HugeiconsIcon
-                      icon={CheckmarkBadge01Icon}
-                      strokeWidth={2}
-                      className="size-4 text-mint-ink"
-                      aria-label={t("checked")}
-                    />
-                  )}
                 </p>
                 <p className="text-xs text-muted-foreground">{t("followers")}</p>
               </div>

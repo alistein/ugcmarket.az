@@ -7,7 +7,6 @@ import {
   Add01Icon,
   ArrowRight01Icon,
   CheckmarkBadge01Icon,
-  CheckmarkCircle02Icon,
   Clock01Icon,
   RefreshIcon,
   Location01Icon,
@@ -446,14 +445,6 @@ function PhoneStats({ creator: c }: { creator: MyCreator }) {
           <FollowersMenu key={s.network} creator={c} stacked>
             <span className="flex items-center gap-1 text-base font-semibold tabular-nums">
               {socialFailed(c, s) ? "–" : compact.format(n.followers)}
-              {n.checked && (
-                <HugeiconsIcon
-                  icon={CheckmarkCircle02Icon}
-                  strokeWidth={2}
-                  className="size-3.5 text-mint-ink"
-                  aria-label={t("checked")}
-                />
-              )}
             </span>
             <span className="text-sm text-muted-foreground">{t("followers")}</span>
           </FollowersMenu>
@@ -594,14 +585,6 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
             <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />
             <span className="font-semibold text-foreground tabular-nums">{compact.format(n.followers)}</span>
             {t("followers")}
-            {n.checked && (
-              <HugeiconsIcon
-                icon={CheckmarkCircle02Icon}
-                strokeWidth={2}
-                className="size-3.5 text-mint-ink"
-                aria-label={t("checked")}
-              />
-            )}
           </FollowersMenu>
         );
       })}

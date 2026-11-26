@@ -2,7 +2,6 @@
 
 import { CategoryIcon } from "@/components/shared/category-icon";
 import {
-  CheckmarkCircle02Icon,
   Clock01Icon,
   Location01Icon,
   PencilEdit02Icon,
@@ -180,7 +179,7 @@ export function PublicCreatorProfile({
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader className={WIDE_HEADER} />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 sm:pb-16 sm:pt-10">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 sm:pt-10 sm:pb-16">
         {preview && (
           <div role="status" className="mb-6 flex items-start gap-2 text-sm text-muted-foreground">
             <HugeiconsIcon icon={Clock01Icon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
@@ -260,14 +259,6 @@ export function PublicCreatorProfile({
                           {compact.format(n.followers)}
                         </span>
                         {td("followers")}
-                        {n.checked && (
-                          <HugeiconsIcon
-                            icon={CheckmarkCircle02Icon}
-                            strokeWidth={2}
-                            className="size-3.5 text-mint-ink"
-                            aria-label={td("checked")}
-                          />
-                        )}
                       </span>
                     );
                   })}
@@ -411,14 +402,6 @@ function PhoneHeader({
               <span key={s.network} className={cell}>
                 <span className="flex items-center gap-1 text-base font-semibold tabular-nums">
                   {compact.format(n.followers)}
-                  {n.checked && (
-                    <HugeiconsIcon
-                      icon={CheckmarkCircle02Icon}
-                      strokeWidth={2}
-                      className="size-3.5 text-mint-ink"
-                      aria-label={t("checked")}
-                    />
-                  )}
                 </span>
                 <span className="text-sm text-muted-foreground">{t("followers")}</span>
               </span>
