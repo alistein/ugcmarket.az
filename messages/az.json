@@ -454,9 +454,8 @@
       "service": "Xidmət",
       "barter": "Barter",
       "unpaid": "Ödənişsiz",
-      "bid": "Qiymət təklifi"
+      "bid": "Təklif əsaslı"
     },
-    "bidUpTo": "Büdcə {amount} {currency}-dək",
     "genders": {
       "female": "Qadın",
       "male": "Kişi"
@@ -939,6 +938,8 @@
       "descriptionHint": "Elanı nə qədər aydın təsvir etsəniz, bir o qədər uyğun müraciət alacaqsınız",
       "category": "Kontent istiqaməti",
       "categoryPh": "İstiqaməti seçin",
+      "categorySearch": "Axtarın",
+      "categoryEmpty": "Belə istiqamət tapılmadı",
       "format": "Kontent formatı",
       "less": "Azalt",
       "more": "Artır",
@@ -952,7 +953,6 @@
       "offer": "Nə təklif edirsiniz?",
       "offerHint": "Məhsulun və ya xidmətin adını və təxmini dəyərini yazın",
       "offerPh": "Məsələn, iki nəfərlik səhər yeməyi və ya hədiyyə sertifikatı",
-      "unpaidHint": "Ödənişsiz elanlara adətən daha az müraciət gəlir",
       "deadline": "Son tarix",
       "deadlineHint": "Kontent bu tarixə qədər paylaşılmalıdır",
       "creatorsNeeded": "Neçə kreator lazımdır",
@@ -975,9 +975,7 @@
       "countsLabel": "Hər formatdan neçə paylaşım lazımdır?",
       "extra": "Əlavə olaraq",
       "extraPh": "Məsələn, iki nəfərlik səhər yeməyi",
-      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq",
-      "budget": "Maksimum büdcə",
-      "budgetHint": "Məcburi deyil. Kreatorlar qiymətlərini müraciət edərkən yazacaq"
+      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq"
     },
     "card": {
       "noTitle": "Elanın adı",

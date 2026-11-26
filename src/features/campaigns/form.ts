@@ -7,7 +7,7 @@ export type Step = (typeof STEPS)[number];
 
 /** Fields validated before leaving each step. */
 export const STEP_FIELDS = {
-  what: ["title", "description", "network", "deliverables", "requirements", "category"],
+  what: ["title", "category", "description", "network", "deliverables", "requirements"],
   who: ["creators_needed", "min_followers", "city"],
   pay: ["compensation_type", "compensation_value", "compensation_details", "deadline"],
 } as const satisfies Record<Step, readonly (keyof CampaignFormValues)[]>;
@@ -15,7 +15,7 @@ export const STEP_FIELDS = {
 /** Minimum follower presets offered as chips (0 = anyone). */
 export const MIN_FOLLOWER_OPTIONS = [0, 1_000, 5_000, 10_000, 50_000, 100_000] as const;
 
-/** Payment types a brand picks from: paid, bid, barter, unpaid. */
+/** Payment types a brand picks from: paid, barter, bid (offer-based). */
 export { LISTING_COMPENSATION_TYPES as COMPENSATION_TYPES } from "@/schemas";
 
 export function emptyCampaignForm(): CampaignFormValues {
@@ -47,17 +47,13 @@ export function localToday() {
 
 /**
  * Form values → API payload: content is always posted on the creator's account (UGC video
- * for the brand only was removed, 2026-11-25); drop what doesn't apply to the payment type (amount only when paid or as a bid ceiling, no
- * extras when unpaid).
+ * for the brand only was removed, 2026-11-25); drop what doesn't apply to the payment type (amount only when paid).
  */
 export function toPayload<T extends CampaignDraft>(v: T): T {
   return {
     ...v,
     collaboration_model: "post",
-    compensation_value:
-      v.compensation_type === "money" || v.compensation_type === "bid" ? v.compensation_value : null,
-    // Paid listings may add a product/service on top; unpaid ones offer nothing.
-    compensation_details: v.compensation_type === "unpaid" ? null : v.compensation_details,
+    compensation_value: v.compensation_type === "money" ? v.compensation_value : null,
   };
 }
 

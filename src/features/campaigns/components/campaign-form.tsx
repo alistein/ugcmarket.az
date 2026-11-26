@@ -12,6 +12,13 @@ import { Field } from "@/components/shared/form-field";
 import { LoadingState } from "@/components/shared/loading-state";
 import { SkeletonBack, SkeletonChips, SkeletonField } from "@/components/shared/skeletons";
 import { Button } from "@/components/ui/button";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+  ComboboxValue,
+} from "@/components/ui/combobox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -96,6 +103,7 @@ export function FormSkeleton({ variant = "create" }: { variant?: "create" | "edi
         {variant === "edit" && <Skeleton className="mt-8 h-7 w-40" />}
         <div className={cn("grid gap-6", variant === "create" ? "mt-6" : "mt-5")}>
           <SkeletonField labelWidth="w-28" />
+          <SkeletonField labelWidth="w-32" className="sm:max-w-sm" />
           <SkeletonField textarea rows={6} labelWidth="w-20" />
           <div className="grid gap-2">
             <Skeleton className="h-3.5 w-32" />
@@ -103,7 +111,6 @@ export function FormSkeleton({ variant = "create" }: { variant?: "create" | "edi
             <Skeleton className="h-3 w-48" />
           </div>
           <SkeletonField textarea rows={3} labelWidth="w-20" />
-          <SkeletonField labelWidth="w-32" className="sm:max-w-sm" />
         </div>
         {variant === "create" && (
           <div className="mt-8 flex justify-end gap-3 border-t border-border/70 pt-6">
@@ -356,6 +363,7 @@ export function Preview({ form, brand }: { form: CampaignForm; brand: MyBrand })
 export function WhatFields({ form }: { form: CampaignForm }) {
   const t = useTranslations("campaign.form");
   const tt = useTranslations("taxonomy");
+  const locale = useLocale();
   const { register, control, formState } = form;
   const errors = formState.errors;
   const description = useWatch({ control, name: "description" });
@@ -366,6 +374,50 @@ export function WhatFields({ form }: { form: CampaignForm }) {
       <Field required label={t("title")} error={errors.title} hint={t("titleHint")}>
         {(a) => <Input {...a} {...register("title")} maxLength={120} placeholder={t("titlePh")} />}
       </Field>
+      <div className="grid gap-5 sm:max-w-sm">
+        <Field required label={t("category")} error={errors.category}>
+          {(a) => (
+            <Controller
+              control={control}
+              name="category"
+              render={({ field }) => (
+                // 20+ directions: searchable (founders, 2026-11-26).
+                <Combobox
+                  items={CREATOR_CATEGORIES}
+                  autoHighlight
+                  itemToStringLabel={(c: string) => tt(`categories.${c}` as never)}
+                  locale={locale}
+                  value={(field.value as string | undefined) || null}
+                  onValueChange={(v) => field.onChange(v ?? undefined)}
+                  // Focus moves into the search field on open, so "touched" is when the popup closes.
+                  onOpenChange={(open) => {
+                    if (!open) field.onBlur();
+                  }}
+                >
+                  <ComboboxTrigger
+                    id={a.id}
+                    aria-invalid={a["aria-invalid"]}
+                    aria-describedby={a["aria-describedby"]}
+                    className="w-full"
+                  >
+                    <ComboboxValue placeholder={t("categoryPh")}>
+                      {(c: string) => tt(`categories.${c}` as never)}
+                    </ComboboxValue>
+                  </ComboboxTrigger>
+                  <ComboboxContent searchPlaceholder={t("categorySearch")} empty={t("categoryEmpty")}>
+                    {(c: (typeof CREATOR_CATEGORIES)[number]) => (
+                      <ComboboxItem key={c} value={c}>
+                        <CategoryIcon category={c} className="text-muted-foreground" />
+                        {tt(`categories.${c}`)}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxContent>
+                </Combobox>
+              )}
+            />
+          )}
+        </Field>
+      </div>
       <Field
         required
         label={t("description")}
@@ -410,41 +462,6 @@ export function WhatFields({ form }: { form: CampaignForm }) {
           />
         )}
       </Field>
-      <div className="grid gap-5 sm:max-w-sm">
-        <Field required label={t("category")} error={errors.category}>
-          {(a) => (
-            <Controller
-              control={control}
-              name="category"
-              render={({ field }) => (
-                <Select
-                  items={CREATOR_CATEGORIES.map((c) => ({ value: c, label: tt(`categories.${c}`) }))}
-                  value={(field.value as string | undefined) || null}
-                  onValueChange={(v) => field.onChange(v ?? undefined)}
-                >
-                  <SelectTrigger
-                    id={a.id}
-                    aria-invalid={a["aria-invalid"]}
-                    aria-describedby={a["aria-describedby"]}
-                    className="w-full"
-                    onBlur={field.onBlur}
-                  >
-                    <SelectValue placeholder={t("categoryPh")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CREATOR_CATEGORIES.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        <CategoryIcon category={c} className="text-muted-foreground" />
-                        {tt(`categories.${c}`)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          )}
-        </Field>
-      </div>
     </div>
   );
 }
@@ -618,6 +635,13 @@ export function PayFields({ form }: { form: CampaignForm }) {
   const { register, control, formState } = form;
   const errors = formState.errors;
   const type = useWatch({ control, name: "compensation_type" });
+  const extra = (
+    <Field label={t("extra")} error={errors.compensation_details}>
+      {(a) => (
+        <Input {...a} {...register("compensation_details")} maxLength={300} placeholder={t("extraPh")} />
+      )}
+    </Field>
+  );
 
   return (
     <div className="grid gap-6">
@@ -640,23 +664,17 @@ export function PayFields({ form }: { form: CampaignForm }) {
         )}
       </Field>
 
-      {(type === "money" || type === "bid") && (
-        // Paid: the amount. Bid: an optional ceiling, creators name their price when applying.
-        // Either way an optional extra on top: a product, a service or both.
+      {type === "money" && (
+        // Paid: the amount, plus an optional extra on top (a product, a service or both).
         <div className="grid gap-5 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
-          <Field
-            required={type === "money"}
-            label={t(type === "bid" ? "budget" : "amount")}
-            hint={type === "bid" ? t("budgetHint") : undefined}
-            error={errors.compensation_value}
-          >
+          <Field required label={t("amount")} error={errors.compensation_value}>
             {(a) => (
               <div className="relative">
                 <Input
                   {...a}
                   {...register("compensation_value")}
                   inputMode="decimal"
-                  placeholder={type === "bid" ? "500" : "150"}
+                  placeholder="150"
                   className="pr-14 tabular-nums"
                 />
                 <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm text-muted-foreground">
@@ -665,18 +683,11 @@ export function PayFields({ form }: { form: CampaignForm }) {
               </div>
             )}
           </Field>
-          <Field label={t("extra")} error={errors.compensation_details}>
-            {(a) => (
-              <Input
-                {...a}
-                {...register("compensation_details")}
-                maxLength={300}
-                placeholder={t("extraPh")}
-              />
-            )}
-          </Field>
+          {extra}
         </div>
       )}
+      {/* Bid: creators name their price when applying (no budget ceiling, 2026-11-26). */}
+      {type === "bid" && extra}
       {type === "barter" && (
         <Field label={t("offer")} error={errors.compensation_details} hint={t("offerHint")}>
           {(a) => (
@@ -684,7 +695,6 @@ export function PayFields({ form }: { form: CampaignForm }) {
           )}
         </Field>
       )}
-      {type === "unpaid" && <p className="-mt-2 text-sm text-muted-foreground">{t("unpaidHint")}</p>}
 
       <Field
         required

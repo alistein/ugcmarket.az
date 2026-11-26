@@ -196,11 +196,6 @@ export function Pay({
     return (
       <div className="mt-3">
         <p className={big}>{label}</p>
-        {d.compensation_value ? (
-          <p className="mt-0.5 text-sm text-muted-foreground tabular-nums">
-            {tt("bidUpTo", { amount: formatAmount(d.compensation_value, locale), currency: d.currency })}
-          </p>
-        ) : null}
         {d.compensation_details && (
           <p className="mt-0.5 line-clamp-2 text-sm text-pretty text-muted-foreground">
             + {d.compensation_details}

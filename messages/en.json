@@ -454,9 +454,8 @@
       "service": "Service",
       "barter": "Barter",
       "unpaid": "Unpaid",
-      "bid": "Bids"
+      "bid": "Open to offers"
     },
-    "bidUpTo": "Budget up to {amount} {currency}",
     "genders": {
       "female": "Female",
       "male": "Male"
@@ -939,6 +938,8 @@
       "descriptionHint": "The clearer the description, the better the applicants",
       "category": "Content direction",
       "categoryPh": "Choose a direction",
+      "categorySearch": "Search",
+      "categoryEmpty": "No such direction",
       "format": "Content format",
       "less": "Fewer",
       "more": "More",
@@ -952,7 +953,6 @@
       "offer": "What do you offer?",
       "offerHint": "Name the product or service and its rough value",
       "offerPh": "For example, breakfast for two or a gift card",
-      "unpaidHint": "Unpaid listings usually get fewer applicants",
       "deadline": "Deadline",
       "deadlineHint": "The content should be posted by this date",
       "creatorsNeeded": "Creators needed",
@@ -975,9 +975,7 @@
       "countsLabel": "How many of each?",
       "extra": "On top of that",
       "extraPh": "For example, breakfast for two",
-      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon",
-      "budget": "Max budget",
-      "budgetHint": "Optional. Creators name their price when they apply"
+      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon"
     },
     "card": {
       "noTitle": "Listing title",

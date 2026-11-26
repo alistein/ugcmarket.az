@@ -73,6 +73,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Combobox,
+  ComboboxContent,
+  ComboboxItem,
+  ComboboxTrigger,
+  ComboboxValue,
+} from "@/components/ui/combobox";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -103,7 +110,11 @@ import { cn } from "@/lib/utils";
 function Icon({
   icon,
   ...props
-}: { icon: IconSvgElement; className?: string; "data-icon"?: "inline-start" | "inline-end" }) {
+}: {
+  icon: IconSvgElement;
+  className?: string;
+  "data-icon"?: "inline-start" | "inline-end";
+}) {
   return <HugeiconsIcon icon={icon} strokeWidth={2} {...props} />;
 }
 
@@ -136,7 +147,9 @@ function Section({
     <section id={id} className="scroll-mt-24 space-y-6">
       <div className="max-w-2xl space-y-2">
         <p className="text-sm font-semibold text-primary">{eyebrow}</p>
-        <h2 className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.025em] sm:text-4xl">{title}</h2>
+        <h2 className="font-heading text-3xl leading-[1.1] font-semibold tracking-[-0.025em] sm:text-4xl">
+          {title}
+        </h2>
         {description && <p className="text-[15px] leading-relaxed text-muted-foreground">{description}</p>}
       </div>
       {children}
@@ -145,11 +158,21 @@ function Section({
 }
 
 /** A quiet surface for specimens: depth from shadow, not an outline. */
-function Panel({ label, className, children }: { label?: string; className?: string; children: React.ReactNode }) {
+function Panel({
+  label,
+  className,
+  children,
+}: {
+  label?: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="rounded-3xl bg-card shadow-(--shadow-soft) ring-1 ring-foreground/[0.04] dark:ring-white/[0.07]">
       {label && <p className="px-6 pt-5 text-xs font-medium text-muted-foreground">{label}</p>}
-      <div className={cn("flex flex-wrap items-center gap-3 p-6", label && "pt-4", className)}>{children}</div>
+      <div className={cn("flex flex-wrap items-center gap-3 p-6", label && "pt-4", className)}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -181,8 +204,8 @@ function Hero() {
           <span className="text-primary">bir yerdə.</span>
         </h1>
         <p className="max-w-md text-lg leading-relaxed text-muted-foreground">
-          The kit behind every UGCMarket screen. Warm, quick to respond, and calm enough to let creators&apos; work be
-          the color.
+          The kit behind every UGCMarket screen. Warm, quick to respond, and calm enough to let creators&apos;
+          work be the color.
         </p>
         <div className="flex flex-wrap gap-3">
           <Button size="lg" nativeButton={false} render={<a href="#patterns" />}>
@@ -241,7 +264,7 @@ function Hero() {
             </div>
           </CardContent>
         </Card>
-        <div className="animate-enter absolute right-3 bottom-0 w-[calc(100%-1.5rem)] rounded-3xl sm:w-[76%] bg-popover/85 p-3.5 shadow-(--shadow-float) ring-1 ring-foreground/5 backdrop-blur-xl backdrop-saturate-150 [animation-delay:100ms] sm:right-[-6%] dark:ring-white/10">
+        <div className="absolute right-3 bottom-0 w-[calc(100%-1.5rem)] animate-enter rounded-3xl bg-popover/85 p-3.5 shadow-(--shadow-float) ring-1 ring-foreground/5 backdrop-blur-xl backdrop-saturate-150 [animation-delay:100ms] sm:right-[-6%] sm:w-[76%] dark:ring-white/10">
           <div className="flex items-center gap-3">
             <NamedAvatar name="Aysel Məmmədova" badge />
             <div className="min-w-0 flex-1">
@@ -318,10 +341,22 @@ function Foundations() {
       <Panel label="Type: Geist, tracking tightens as size grows" className="block space-y-5">
         {[
           ["Display · 60 / −3.5%", "text-6xl font-semibold tracking-[-0.035em] leading-[1.02]", "Bir yerdə."],
-          ["Title · 36 / −2.5%", "text-4xl font-semibold tracking-[-0.025em] leading-[1.1]", "Kampaniyanı 5 dəqiqəyə yerləşdir"],
+          [
+            "Title · 36 / −2.5%",
+            "text-4xl font-semibold tracking-[-0.025em] leading-[1.1]",
+            "Kampaniyanı 5 dəqiqəyə yerləşdir",
+          ],
           ["Headline · 20 / −1.5%", "text-xl font-semibold tracking-[-0.015em]", "Бренды и контент-креаторы"],
-          ["Body · 15 / 0", "text-[15px] leading-relaxed", "Bakıda yeni restoran üçün Instagram Reels çəkəcək 3 kreator axtarırıq. Barter mümkündür."],
-          ["Caption · 13", "text-[13px] text-muted-foreground", "Son tarix: 30 noyabr · Minimum 5.000 izləyici"],
+          [
+            "Body · 15 / 0",
+            "text-[15px] leading-relaxed",
+            "Bakıda yeni restoran üçün Instagram Reels çəkəcək 3 kreator axtarırıq. Barter mümkündür.",
+          ],
+          [
+            "Caption · 13",
+            "text-[13px] text-muted-foreground",
+            "Son tarix: 30 noyabr · Minimum 5.000 izləyici",
+          ],
         ].map(([meta, cls, text]) => (
           <div key={meta} className="grid gap-1 sm:grid-cols-[180px_1fr] sm:items-baseline">
             <span className="font-mono text-xs text-muted-foreground">{meta}</span>
@@ -330,11 +365,15 @@ function Foundations() {
         ))}
         <Separator />
         <p className="text-sm">
-          <span className="text-muted-foreground">Glyphs · </span>Ə ə Ğ ğ I ı İ i Ş ş Ç ç Ö ö Ü ü · Ё ж щ ы э ю я
+          <span className="text-muted-foreground">Glyphs · </span>Ə ə Ğ ğ I ı İ i Ş ş Ç ç Ö ö Ü ü · Ё ж щ ы э
+          ю я
         </p>
       </Panel>
 
-      <Panel label="Depth: shadows do the work outlines used to" className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+      <Panel
+        label="Depth: shadows do the work outlines used to"
+        className="grid grid-cols-2 gap-6 sm:grid-cols-4"
+      >
         {[
           ["soft", "Fields, chips"],
           ["raised", "Cards"],
@@ -382,7 +421,7 @@ function Motion() {
               <div className="text-xs text-muted-foreground">{use}</div>
             </div>
             <div className="relative h-10 rounded-full bg-muted">
-              <div className="absolute inset-1 [container-type:inline-size]">
+              <div className="[container-type:inline-size] absolute inset-1">
                 <div
                   className="size-8 rounded-full bg-primary shadow-(--shadow-press)"
                   style={{
@@ -463,7 +502,9 @@ function Buttons() {
         </Panel>
         <Panel label="State morph: try it">
           <ApplyButton />
-          <span className="text-xs text-muted-foreground">Idle → sending → applied, with blur-masked swaps.</span>
+          <span className="text-xs text-muted-foreground">
+            Idle → sending → applied, with blur-masked swaps.
+          </span>
         </Panel>
       </div>
       <Panel label="With icons · icon-only · states">
@@ -511,7 +552,9 @@ function Badges() {
       description="Joy tints mark what something is (a network, a reward, a status), so a board of campaigns scans at a glance."
     >
       <Panel label="Variants">
-        {(["default", "brand", "sun", "mint", "sky", "rose", "secondary", "outline", "destructive"] as const).map((v) => (
+        {(
+          ["default", "brand", "sun", "mint", "sky", "rose", "secondary", "outline", "destructive"] as const
+        ).map((v) => (
           <Badge key={v} variant={v}>
             {v[0].toUpperCase() + v.slice(1)}
           </Badge>
@@ -644,9 +687,28 @@ function Forms() {
             </SelectContent>
           </Select>
         </Field>
+        <Field id="f-city-search" label="City (searchable)" hint="Combobox: for long lists.">
+          <Combobox items={CITIES} defaultValue={null} autoHighlight>
+            <ComboboxTrigger id="f-city-search" className="w-full">
+              <ComboboxValue placeholder="Choose city">
+                {(c: (typeof CITIES)[number]) => c.label}
+              </ComboboxValue>
+            </ComboboxTrigger>
+            <ComboboxContent searchPlaceholder="Search" empty="Nothing found">
+              {(c: (typeof CITIES)[number]) => (
+                <ComboboxItem key={c.value} value={c}>
+                  {c.label}
+                </ComboboxItem>
+              )}
+            </ComboboxContent>
+          </Combobox>
+        </Field>
         <div className="md:col-span-2">
           <Field id="f-desc" label="Description" hint="Grows with what you write.">
-            <Textarea id="f-desc" placeholder="Brendiniz, məhsul və kreatordan gözləntiləriniz haqqında yazın…" />
+            <Textarea
+              id="f-desc"
+              placeholder="Brendiniz, məhsul və kreatordan gözləntiləriniz haqqında yazın…"
+            />
           </Field>
         </div>
       </Panel>
@@ -729,7 +791,9 @@ function Cards() {
                 ["Views", "48.2K", "bg-mint text-mint-ink"],
               ].map(([k, v, c]) => (
                 <div key={k} className={cn("rounded-2xl py-3", c)}>
-                  <div className="font-heading text-xl font-semibold tracking-[-0.02em] tabular-nums">{v}</div>
+                  <div className="font-heading text-xl font-semibold tracking-[-0.02em] tabular-nums">
+                    {v}
+                  </div>
                   <div className="text-xs font-medium opacity-80">{k}</div>
                 </div>
               ))}
@@ -801,7 +865,9 @@ function Overlays() {
           <DialogContent showCloseButton={false}>
             <DialogHeader>
               <DialogTitle>Delete this campaign?</DialogTitle>
-              <DialogDescription>Applications and post links will be removed. This can&apos;t be undone.</DialogDescription>
+              <DialogDescription>
+                Applications and post links will be removed. This can&apos;t be undone.
+              </DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
@@ -1227,7 +1293,7 @@ export function UiKitShowcase() {
   return (
     <div className="min-h-full bg-background text-foreground">
       {/* Translucent chrome; content scrolls underneath (Apple materials). */}
-      <header className="sticky top-0 z-30 bg-background/70 backdrop-blur-xl backdrop-saturate-150 [mask-image:linear-gradient(to_bottom,black_calc(100%-8px),transparent)]">
+      <header className="sticky top-0 z-30 bg-background/70 [mask-image:linear-gradient(to_bottom,black_calc(100%-8px),transparent)] backdrop-blur-xl backdrop-saturate-150">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3.5">
           <a href="#" className="font-heading text-[15px] font-semibold tracking-[-0.01em]">
             UGCMarket <span className="font-normal text-muted-foreground">UI kit</span>

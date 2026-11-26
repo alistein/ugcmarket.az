@@ -41,12 +41,8 @@ describe("CampaignInput", () => {
     expect(paths({ ...base, compensation_type: "barter", compensation_value: "" })).toEqual([]);
   });
 
-  it("bid listings take an optional budget ceiling", () => {
+  it("doesn't need an amount for bid", () => {
     expect(paths({ ...base, compensation_type: "bid", compensation_value: "" })).toEqual([]);
-    expect(
-      CampaignInput.parse({ ...base, compensation_type: "bid", compensation_value: "500" })
-        .compensation_value,
-    ).toBe(500);
   });
 
   it("rejects a past deadline", () => {
@@ -68,9 +64,9 @@ describe("CampaignInput", () => {
     ]);
   });
 
-  it("offers paid, bid, barter and unpaid only", () => {
+  it("offers paid, bid and barter only", () => {
     expect(paths({ ...base, compensation_type: "product" })).toEqual(["compensation_type"]);
-    expect(paths({ ...base, compensation_type: "unpaid", compensation_value: "" })).toEqual([]);
+    expect(paths({ ...base, compensation_type: "unpaid" })).toEqual(["compensation_type"]);
   });
 
   it("requires requirements to publish", () => {

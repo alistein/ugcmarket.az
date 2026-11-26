@@ -17,21 +17,15 @@ export const CollaborationModel = z.enum(["post"]);
 export const CompensationType = z.enum(["money", "product", "service", "barter", "unpaid", "bid"]);
 
 /**
- * What a brand can pick for a listing (founders, 2026-11-19): paid, bid, barter or unpaid.
+ * What a brand can pick for a listing (founders, 2026-11-19): paid, barter or offer-based (bid), in that order.
  * "product" and "service" stay in the DB enum but are folded into barter in the product.
- * "bid" (2026-11-23): creators name their price when applying; the amount is an optional ceiling.
+ * "unpaid" was dropped from the form and board filter (2026-11-26); it stays in the DB enum for old rows.
+ * "bid" (2026-11-23): creators name their price when applying; no budget ceiling (dropped 2026-11-26).
  */
-export const LISTING_COMPENSATION_TYPES = ["money", "bid", "barter", "unpaid"] as const;
+export const LISTING_COMPENSATION_TYPES = ["money", "barter", "bid"] as const;
 export const ListingCompensationType = z.enum(LISTING_COMPENSATION_TYPES);
 
-export const PostFormat = z.enum([
-  "reels",
-  "stories",
-  "post",
-  "tiktok_video",
-  "youtube_short",
-  "other",
-]);
+export const PostFormat = z.enum(["reels", "stories", "post", "tiktok_video", "youtube_short", "other"]);
 
 export const Currency = z.enum(["AZN", "USD", "EUR"]);
 
