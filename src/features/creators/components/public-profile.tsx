@@ -23,7 +23,7 @@ import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
 import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES } from "@/schemas";
+import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
 import { type CreatorPublic, portfolioSummary, socialNumbers } from "../hooks";
 import { CreatorContactsDialog } from "./creator-contacts-dialog";
 import { CreatorTags } from "./creator-tags";
@@ -141,16 +141,12 @@ export function PublicCreatorProfile({
           <aside className="order-2 grid content-start gap-3 text-sm lg:order-1 lg:pt-2">
             {who(c) && <p>{who(c)}</p>}
             <p className="flex items-center gap-2.5">
-              <HugeiconsIcon icon={Location01Icon} strokeWidth={2} className="size-4 text-muted-foreground" />
+              <HugeiconsIcon
+                icon={Location01Icon}
+                strokeWidth={2}
+                className="size-4 shrink-0 text-muted-foreground"
+              />
               {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
-              {c.languages.length > 0 && (
-                <span className="text-muted-foreground">
-                  ·{" "}
-                  {c.languages
-                    .map((l) => (known(CONTENT_LANGUAGES, l) ? tt(`languages.${l}`) : l))
-                    .join(", ")}
-                </span>
-              )}
             </p>
             {c.creator_socials.map((s) => (
               <a

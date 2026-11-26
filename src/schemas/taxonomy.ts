@@ -56,7 +56,7 @@ export const MORE_CATEGORIES = [
   "real_estate",
 ] as const satisfies readonly CreatorCategory[];
 
-/** How a creator works with brands (onboarding step 2). "collab" is the repost deal. */
+/** How a creator works with brands (onboarding content step). "collab" is the repost deal. */
 export const DEAL_FORMATS = ["paid", "barter", "collab"] as const;
 export type DealFormat = (typeof DEAL_FORMATS)[number];
 

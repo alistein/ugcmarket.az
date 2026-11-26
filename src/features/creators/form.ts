@@ -117,8 +117,10 @@ export const CreatorSetupForm = CreatorForm.extend({ socials: socials(false) });
 /** Which fields each wizard step owns (validated with form.trigger before moving on). */
 export const STEP_FIELDS = {
   about: ["avatar_url", "display_name", "handle", "birth_year", "gender", "city", "bio"],
-  content: ["categories", "languages", "deal_formats"],
+  // Socials before content: leaving this step starts the Instagram lookup in the background,
+  // so it runs while the creator picks categories (see useSocialPrefetch).
   socials: ["socials", "contact_instagram", "contact_phone"],
+  content: ["categories", "languages", "deal_formats"],
 } as const;
 export type Step = keyof typeof STEP_FIELDS;
 export const STEPS = Object.keys(STEP_FIELDS) as Step[];

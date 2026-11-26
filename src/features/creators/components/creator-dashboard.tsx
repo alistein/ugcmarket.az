@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertCircleIcon,
   Alert02Icon,
   Add01Icon,
   ArrowRight01Icon,
@@ -35,7 +36,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { CITIES, CONTENT_LANGUAGES, CREATOR_CATEGORIES } from "@/schemas";
+import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
 import { CreatorTags } from "./creator-tags";
 import { BoostCard, SectionSheet, type SheetSection } from "./boost-card";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
@@ -140,13 +141,12 @@ function Home({ creator: c }: { creator: MyCreator }) {
         <p className="text-muted-foreground">{t("joined", { days })}</p>
         {who(c) && <p>{who(c)}</p>}
         <p className="flex items-center gap-2.5">
-          <HugeiconsIcon icon={Location01Icon} strokeWidth={2} className="size-4 text-muted-foreground" />
+          <HugeiconsIcon
+            icon={Location01Icon}
+            strokeWidth={2}
+            className="size-4 shrink-0 text-muted-foreground"
+          />
           {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
-          {c.languages.length > 0 && (
-            <span className="text-muted-foreground">
-              · {c.languages.map((l) => (known(CONTENT_LANGUAGES, l) ? tt(`languages.${l}`) : l)).join(", ")}
-            </span>
-          )}
         </p>
         {c.creator_socials.map((s) => (
           <a
@@ -428,6 +428,24 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
     <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
       {c.creator_socials.map((s) => {
         const n = socialNumbers(c, s);
+        // Checked and nothing came back (not found, private, or the providers failed): say so and
+        // let the creator fix the username. Setup stays silent about it on purpose.
+        const failed =
+          !n.checked &&
+          c.creator_social_stats?.some(
+            (x) =>
+              x.network === s.network && x.handle.toLowerCase() === s.handle.toLowerCase() && !x.fetched_at,
+          );
+        if (failed)
+          return (
+            <span key={s.network} className="inline-flex flex-wrap items-center gap-x-1.5 text-destructive">
+              <HugeiconsIcon icon={AlertCircleIcon} strokeWidth={2} className="size-3.5" />
+              {t("socialNotFound", { handle: s.handle })}
+              <Link href="/me/profile#socials" className="font-medium underline underline-offset-4">
+                {t("socialFix")}
+              </Link>
+            </span>
+          );
         return (
           <FollowersMenu key={s.network} creator={c}>
             <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-3.5" />

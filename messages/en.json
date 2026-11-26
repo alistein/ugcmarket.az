@@ -624,11 +624,8 @@
       "contactsTitle": "Contacts",
       "socialsHint": "Enter your username and press “Connect account”. We take followers and views from your account automatically",
       "username": "Username or link",
-      "categoriesCount": "{count} categories picked",
       "moreCategories": "More categories ({count})",
-      "languagesHint": "Pick the languages you can create content in",
-      "dealFormats": "Deal format",
-      "dealFormatsHint": "How you work with brands. You can pick several"
+      "dealFormats": "Deal format"
     },
     "portfolio": {
       "title": "Portfolio",
@@ -711,7 +708,9 @@
       "statsRefreshHint": "Numbers come from Instagram. You can refresh them once a day, and they update automatically every week",
       "statsLastRun": "Last checked",
       "statsNeverRun": "Not checked yet",
-      "termsTitle": "Terms"
+      "termsTitle": "Terms",
+      "socialNotFound": "We couldn't find @{handle}",
+      "socialFix": "Fix"
     },
     "public": {
       "login": "Sign in",

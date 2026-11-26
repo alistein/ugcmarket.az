@@ -271,12 +271,7 @@ export function ContentFields({ form }: { form: Form }) {
     : CREATOR_CATEGORIES.filter((c) => !(MORE_CATEGORIES as readonly string[]).includes(c));
   return (
     <>
-      <Field
-        label={t("categories")}
-        required
-        error={formState.errors.categories}
-        hint={t("categoriesCount", { count: picked.length })}
-      >
+      <Field label={t("categories")} required error={formState.errors.categories}>
         {(a) => (
           <div className="grid gap-2">
             <Controller
@@ -305,7 +300,7 @@ export function ContentFields({ form }: { form: Form }) {
           </div>
         )}
       </Field>
-      <Field label={t("languages")} required error={formState.errors.languages} hint={t("languagesHint")}>
+      <Field label={t("languages")} required error={formState.errors.languages}>
         {(a) => (
           <Controller
             control={control}
@@ -323,12 +318,7 @@ export function ContentFields({ form }: { form: Form }) {
           />
         )}
       </Field>
-      <Field
-        label={t("dealFormats")}
-        required
-        error={formState.errors.deal_formats}
-        hint={t("dealFormatsHint")}
-      >
+      <Field label={t("dealFormats")} required error={formState.errors.deal_formats}>
         {(a) => (
           <Controller
             control={control}

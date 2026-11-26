@@ -5,7 +5,8 @@ import { ArrowLeft01Icon, ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-f
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { LoadingState } from "@/components/shared/loading-state";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
+import { SocialUsername } from "@/schemas";
 import {
   CreatorForm,
   CreatorSetupForm,
@@ -28,7 +30,9 @@ import {
   type MyCreator,
   useCreateCreator,
   useInvalidateMine,
+  socialLookupQuery,
   useMyCreator,
+  useSocialPrefetch,
   useUpdateCreator,
 } from "../hooks";
 import { FormSection } from "./form-bits";
@@ -41,6 +45,8 @@ import { SetupWaiting } from "./setup-waiting";
 const MIN_WAIT_MS = 1800;
 /** Bar fills (300ms), check shows, then a short hold before /me. */
 const DONE_HOLD_MS = 900;
+/** "Profili yarat" waits this long at most for a background account lookup still running. */
+const LOOKUP_WAIT_MS = 90_000;
 const wait = (ms: number) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
 
 /** /me/profile — setup wizard before the profile exists, sectioned editor after. */
@@ -134,6 +140,14 @@ function ProfileSetup() {
   const index = STEPS.indexOf(step);
   const last = index === STEPS.length - 1;
 
+  // Past the socials step: look the Instagram account up in the background (see useSocialPrefetch).
+  // Derived from the form on every render; editing the username after going back starts a new one.
+  const qc = useQueryClient();
+  const igRaw = useWatch({ control: form.control, name: "socials.instagram.handle" });
+  const ig = SocialUsername.safeParse(igRaw ?? "");
+  const prefetchHandle = index > STEPS.indexOf("socials") && ig.success ? ig.data.toLowerCase() : null;
+  useSocialPrefetch("instagram", prefetchHandle);
+
   const next = async () => {
     const ok = await form.trigger(STEP_FIELDS[step] as unknown as (keyof CreatorFormValues)[], {
       shouldFocus: true,
@@ -144,9 +158,16 @@ function ProfileSetup() {
       window.scrollTo({ top: 0 });
       return;
     }
-    await form.handleSubmit((v) => {
+    await form.handleSubmit(async (v) => {
       const startedAt = Date.now();
       setWaiting("waiting");
+      // Lookup still running: wait for it, so the server finds the account in the cache instead
+      // of paying for a second lookup. Its result (or error) doesn't matter here.
+      if (prefetchHandle) {
+        const lookup = socialLookupQuery("instagram", prefetchHandle);
+        if (qc.getQueryState(lookup.queryKey)?.fetchStatus === "fetching")
+          await Promise.race([qc.fetchQuery(lookup).catch(() => undefined), wait(LOOKUP_WAIT_MS)]);
+      }
       // Leave first, then fill the cache (see useCreateCreator): /me shows the new profile.
       // Skipped if the creator left this page meanwhile (a kept-alive page must not pull them back).
       const finish = async (fresh?: MyCreator) => {

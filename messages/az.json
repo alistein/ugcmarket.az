@@ -624,11 +624,8 @@
       "contactsTitle": "Əlaqə",
       "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik",
       "username": "İstifadəçi adı və ya link",
-      "categoriesCount": "{count} kateqoriya seçilib",
       "moreCategories": "Daha çox kateqoriya ({count})",
-      "languagesHint": "Kontent yarada bildiyiniz dilləri seçin",
-      "dealFormats": "Əməkdaşlıq formatı",
-      "dealFormatsHint": "Hansı şərtlərlə işlədiyinizi seçin. Bir neçəsini seçə bilərsiniz"
+      "dealFormats": "Əməkdaşlıq formatı"
     },
     "portfolio": {
       "title": "Portfolio",
@@ -711,7 +708,9 @@
       "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir",
       "statsLastRun": "Son yoxlama",
       "statsNeverRun": "Hələ yoxlanılmayıb",
-      "termsTitle": "Şərtlər"
+      "termsTitle": "Şərtlər",
+      "socialNotFound": "@{handle} hesabını tapa bilmədik",
+      "socialFix": "Düzəlt"
     },
     "public": {
       "login": "Daxil ol",

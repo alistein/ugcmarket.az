@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useMutation, useMutationState, useQuery, useQueryClient } from "@tanstack/react-query";
 import { meKeys } from "@/features/me/hooks";
 import { api } from "@/lib/api-client";
 import { createClient } from "@/lib/supabase/client";
@@ -21,6 +21,8 @@ export const creatorKeys = {
   contacts: (handle: string, viewerId: string) => ["creators", "contacts", handle, viewerId] as const,
   /** Mutation key: lets the portfolio grid show a tile for each link still being checked. */
   addPortfolio: ["creators", "portfolio", "add"] as const,
+  /** Background account lookup during setup, one per username. */
+  lookup: (network: Network, handle: string) => ["creators", "lookup", network, handle] as const,
 };
 
 export type Network = "instagram" | "tiktok" | "youtube";
@@ -192,6 +194,29 @@ export function useLookupSocial() {
       api<LookupResult>("/creators/socials/lookup", { method: "POST", json: v }),
     onSuccess: () => qc.invalidateQueries({ queryKey: creatorKeys.mine }),
   });
+}
+
+/**
+ * Setup: look the account up as soon as the creator leaves the socials step, while they fill the
+ * last one. The server stores the result in the shared cache, so "Profili yarat" finds it there.
+ * Nothing on screen reads it; errors (not found, limit) are left for the profile to show.
+ */
+export const socialLookupQuery = (network: Network, handle: string) =>
+  queryOptions({
+    queryKey: creatorKeys.lookup(network, handle),
+    queryFn: () =>
+      api<LookupResult>("/creators/socials/lookup", { method: "POST", json: { network, handle } }),
+    // Paid and rate limited: one try per username, never again on focus, mount or reconnect.
+    staleTime: Infinity,
+    gcTime: Infinity,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+export function useSocialPrefetch(network: Network, handle: string | null) {
+  return useQuery({ ...socialLookupQuery(network, handle ?? ""), enabled: !!handle });
 }
 
 export function useRefreshSocialStats() {

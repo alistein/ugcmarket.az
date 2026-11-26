@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { CreatorForm, CreatorSetupForm, emptyCreatorForm, profileCompleteness, toPayload } from "./form";
+import {
+  CreatorForm,
+  CreatorSetupForm,
+  emptyCreatorForm,
+  profileCompleteness,
+  STEPS,
+  toPayload,
+} from "./form";
 import { LifestyleTags } from "@/schemas";
 import { type MyCreator, portfolioSummary } from "./hooks";
 import { ageFrom } from "./who";
@@ -71,7 +78,13 @@ describe("gender and birth year", () => {
   });
 });
 
-describe("onboarding step 2", () => {
+describe("onboarding step order", () => {
+  it("asks for socials before content, so the Instagram lookup runs during the last step", () => {
+    expect(STEPS).toEqual(["about", "socials", "content"]);
+  });
+});
+
+describe("onboarding content step", () => {
   it("needs at least one deal format", () => {
     const v = filled();
     v.deal_formats = [];
