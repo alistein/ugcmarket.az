@@ -7,7 +7,10 @@ import {
   STEPS,
   toPayload,
 } from "./form";
-import { LifestyleTags } from "@/schemas";
+import az from "../../../messages/az.json";
+import en from "../../../messages/en.json";
+import ru from "../../../messages/ru.json";
+import { CREATOR_CATEGORIES, CreatorProfileInput, LEGACY_CATEGORY, normalizeCategories } from "@/schemas";
 import { type MyCreator, portfolioSummary } from "./hooks";
 import { ageFrom } from "./who";
 
@@ -106,10 +109,26 @@ describe("onboarding content step", () => {
   });
 });
 
-describe("lifestyle tags", () => {
-  it("Subay and Ailəvi can't both be picked, Uşaqlı goes with either", () => {
-    expect(LifestyleTags.safeParse(["single", "married"]).success).toBe(false);
-    expect(LifestyleTags.safeParse(["married", "has_kids"]).success).toBe(true);
+describe("content directions", () => {
+  it("has the 29 directions, each with a label in az, ru and en", () => {
+    expect(CREATOR_CATEGORIES).toHaveLength(29);
+    for (const m of [az, ru, en]) {
+      const labels = m.taxonomy.categories as Record<string, string>;
+      expect(Object.keys(labels).sort()).toEqual([...CREATOR_CATEGORIES].sort());
+    }
+  });
+
+  it("maps merged directions to live ones", () => {
+    for (const to of Object.values(LEGACY_CATEGORY)) expect(CREATOR_CATEGORIES).toContain(to);
+  });
+
+  it("normalises old slugs without duplicates and drops unknown ones", () => {
+    expect(normalizeCategories(["skincare", "beauty", "humor", "nope"])).toEqual(["beauty", "entertainment"]);
+  });
+
+  it("the API maps old slugs sent by a cached form", () => {
+    const p = CreatorProfileInput.pick({ categories: true }).parse({ categories: ["skincare", "jewelry"] });
+    expect(p.categories).toEqual(["beauty", "fashion"]);
   });
 });
 
@@ -131,34 +150,31 @@ describe("profile completeness", () => {
       { network: "instagram", handle: "nigar", followers: 0, avg_views: null, verified: false },
     ],
     contact_phone: "+994501234567",
-    lifestyle_tags: [],
     portfolio_items: [],
     creator_prices: [],
     shoot_options: [],
   } as unknown as MyCreator;
 
-  it("right after onboarding, without photo and bio, is 45%", () => {
+  it("right after onboarding, without photo and bio, is 54%", () => {
     const r = profileCompleteness(base);
     expect(r.sections).toEqual({
       about: 71,
       content: 100,
       socials: 100,
-      lifestyle: 0,
       portfolio: 0,
       terms: 0,
     });
-    expect(r.total).toBe(45);
+    expect(r.total).toBe(54);
     expect(r.done).toBe(2);
   });
 
   it("enhancer sections fill as specced", () => {
     const r = profileCompleteness({
       ...base,
-      lifestyle_tags: ["cat_owner"],
       portfolio_items: [{}, {}] as MyCreator["portfolio_items"],
       creator_prices: [{ format: "reels", amount: 80, currency: "AZN" }] as MyCreator["creator_prices"],
     });
-    expect([r.sections.lifestyle, r.sections.portfolio, r.sections.terms]).toEqual([100, 67, 50]);
+    expect([r.sections.portfolio, r.sections.terms]).toEqual([67, 50]);
   });
 });
 

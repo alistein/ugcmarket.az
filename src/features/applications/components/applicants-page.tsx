@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "@/components/shared/category-icon";
 import {
   CheckmarkBadge01Icon,
   Copy01Icon,
@@ -27,7 +28,7 @@ import { type CreatorPublic, socialNumbers } from "@/features/creators/hooks";
 import { Link } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES, isEnabledNetwork } from "@/schemas";
+import { CITIES, isEnabledNetwork, normalizeCategories } from "@/schemas";
 import { type Applicant, useApplicants } from "../hooks";
 import { CreatorTags } from "@/features/creators/components/creator-tags";
 import { useCreatorWho } from "@/features/creators/who";
@@ -299,11 +300,14 @@ function ApplicantCard({ applicant: a, currency }: { applicant: Applicant; curre
 
       {c.categories.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {c.categories.slice(0, 3).map((cat) => (
-            <Badge key={cat} variant="brand">
-              {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
-            </Badge>
-          ))}
+          {normalizeCategories(c.categories)
+            .slice(0, 3)
+            .map((cat) => (
+              <Badge key={cat} variant="brand">
+                <CategoryIcon category={cat} className="size-3.5" />
+                {tt(`categories.${cat}`)}
+              </Badge>
+            ))}
         </div>
       )}
       <div className="mt-2">

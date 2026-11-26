@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { type CropArea, useUploadAvatar } from "../hooks";
 import { AvatarCropDialog } from "./avatar-crop";
 
-/** Multi-select as tappable chips (categories, languages). */
+/** Multi-select as tappable chips (content directions, languages). */
 export function ChipGroup<T extends string>({
   options,
   value,
@@ -21,6 +21,7 @@ export function ChipGroup<T extends string>({
   describedBy,
   single,
   icon,
+  renderIcon,
 }: {
   options: readonly T[];
   value: T[];
@@ -33,6 +34,8 @@ export function ChipGroup<T extends string>({
   single?: boolean;
   /** An icon per option, shown in place of the tick (the selected fill already says "chosen"). */
   icon?: (v: T) => IconSvgElement;
+  /** Same, for icons that aren't Hugeicons (content directions: CategoryIcon). */
+  renderIcon?: (v: T) => React.ReactNode;
 }) {
   const full = max !== undefined && value.length >= max;
   return (
@@ -60,7 +63,9 @@ export function ChipGroup<T extends string>({
                 : "bg-muted text-foreground hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]",
             )}
           >
-            {icon ? (
+            {renderIcon ? (
+              renderIcon(o)
+            ) : icon ? (
               <HugeiconsIcon icon={icon(o)} strokeWidth={2} className="size-4" />
             ) : (
               on && <HugeiconsIcon icon={Tick02Icon} strokeWidth={2.5} className="size-3.5" />

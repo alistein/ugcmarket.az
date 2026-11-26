@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "@/components/shared/category-icon";
 import {
   AlertCircleIcon,
   Alert02Icon,
@@ -36,7 +37,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { ApiClientError } from "@/lib/api-client";
 import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
+import { CITIES, normalizeCategories } from "@/schemas";
 import { CreatorTags } from "./creator-tags";
 import { BoostCard, SectionSheet, type SheetSection } from "./boost-card";
 import { type MyCreator, socialNumbers, useMyCreator, useRefreshSocialStats } from "../hooks";
@@ -120,7 +121,7 @@ function Home({ creator: c }: { creator: MyCreator }) {
   // The card's Portfolio row: open the tab, bring it into view and outline it for a moment.
   const [tab, setTab] = useState<"portfolio" | "applications">("portfolio");
   const [flash, setFlash] = useState(false);
-  // One panel per section (about, lifestyle, terms), opened from the card or the bio link.
+  // One panel per section (about, terms), opened from the card or the bio link.
   const [sheet, setSheet] = useState<SheetSection | null>(null);
   const showPortfolio = () => {
     setTab("portfolio");
@@ -194,17 +195,18 @@ function Home({ creator: c }: { creator: MyCreator }) {
           <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
             <p className="text-xs font-medium text-muted-foreground">{t("categoriesTitle")}</p>
             <ClampedChips>
-              {c.categories.map((cat) => (
+              {normalizeCategories(c.categories).map((cat) => (
                 <Badge key={cat} variant="brand">
-                  {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
+                  <CategoryIcon category={cat} className="size-3.5" />
+                  {tt(`categories.${cat}`)}
                 </Badge>
               ))}
             </ClampedChips>
           </div>
         )}
 
-        {/* Lifestyle tags and where they film: same block as on the public profile. */}
-        {(c.lifestyle_tags.length > 0 || c.shoot_options.length > 0) && (
+        {/* Where they film: same block as on the public profile. */}
+        {c.shoot_options.length > 0 && (
           <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
             <p className="text-xs font-medium text-muted-foreground">{tp("tagsTitle")}</p>
             <ClampedChips>

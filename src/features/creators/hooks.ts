@@ -43,7 +43,6 @@ export type CreatorPublic = {
   barter_open: boolean;
   /** "Kollaborasiya" in copy. */
   repost_open: boolean;
-  lifestyle_tags: string[];
   shoot_options: string[];
   skills: string[];
   review_status: "pending" | "approved" | "rejected";

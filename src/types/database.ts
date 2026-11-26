@@ -448,7 +448,6 @@ export type Database = {
           handle: string
           id: string
           languages: string[]
-          lifestyle_tags: string[]
           paid_open: boolean
           profile_id: string
           repost_open: boolean
@@ -471,7 +470,6 @@ export type Database = {
           handle: string
           id?: string
           languages?: string[]
-          lifestyle_tags?: string[]
           paid_open?: boolean
           profile_id: string
           repost_open?: boolean
@@ -494,7 +492,6 @@ export type Database = {
           handle?: string
           id?: string
           languages?: string[]
-          lifestyle_tags?: string[]
           paid_open?: boolean
           profile_id?: string
           repost_open?: boolean

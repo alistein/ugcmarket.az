@@ -5,12 +5,11 @@ import {
   ContentLanguage,
   CreatorCategory,
   CreatorSkill,
-  EXCLUSIVE_LIFESTYLE,
   EnabledNetwork,
   Gender,
-  LifestyleTag,
   ShootOption,
   isEnabledNetwork,
+  normalizeCategories,
 } from "./taxonomy";
 
 /**
@@ -124,16 +123,6 @@ export const Phone = z
   .trim()
   .regex(/^\+?[0-9][0-9 ()-]{6,19}$/, "validation.phone");
 
-/** Lifestyle tags: unique, and never two tags that exclude each other (Subay + Ailəvi). */
-export const LifestyleTags = z
-  .array(LifestyleTag)
-  .max(60)
-  .refine((t) => new Set(t).size === t.length, "validation.duplicate")
-  .refine(
-    (t) => EXCLUSIVE_LIFESTYLE.every((group) => group.filter((g) => t.includes(g)).length <= 1),
-    "validation.lifestyleExclusive",
-  );
-
 const profileShape = {
   handle: CreatorHandle,
   display_name: z.string().trim().min(1, "validation.required").max(80, "validation.tooLong"),
@@ -142,14 +131,17 @@ const profileShape = {
   city: City,
   gender: Gender,
   birth_year: BirthYear,
-  categories: z.array(CreatorCategory).min(1, "validation.categoriesMin").max(40),
+  /** Content directions. Old slugs (still in a cached form) are mapped to their new home. */
+  categories: z.preprocess(
+    (v) => (Array.isArray(v) ? normalizeCategories(v) : v),
+    z.array(CreatorCategory).min(1, "validation.categoriesMin").max(40),
+  ),
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin").max(6),
   bio: z.string().trim().max(600, "validation.tooLong").nullable(),
   paid_open: z.boolean(),
   barter_open: z.boolean(),
   /** "Kollaborasiya" in copy: free work in exchange for the brand sharing it. */
   repost_open: z.boolean(),
-  lifestyle_tags: LifestyleTags,
   shoot_options: z.array(ShootOption).max(5),
   skills: z.array(CreatorSkill).max(10),
   /** Private — only revealed to a brand through the application flow. */
@@ -166,7 +158,6 @@ export const CreatorProfileInput = z.object({
   paid_open: profileShape.paid_open.optional(),
   barter_open: profileShape.barter_open.optional(),
   repost_open: profileShape.repost_open.optional(),
-  lifestyle_tags: profileShape.lifestyle_tags.optional(),
   shoot_options: profileShape.shoot_options.optional(),
   skills: profileShape.skills.optional(),
   contact_instagram: profileShape.contact_instagram.optional(),

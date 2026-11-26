@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "@/components/shared/category-icon";
 import {
   CheckmarkCircle02Icon,
   Clock01Icon,
@@ -23,7 +24,7 @@ import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
 import { shareOrCopy } from "@/lib/share";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
+import { CITIES, normalizeCategories } from "@/schemas";
 import { type CreatorPublic, portfolioSummary, socialNumbers } from "../hooks";
 import { CreatorContactsDialog } from "./creator-contacts-dialog";
 import { CreatorTags } from "./creator-tags";
@@ -170,14 +171,15 @@ export function PublicCreatorProfile({
             </SideBlock>
             {c.categories.length > 0 && (
               <SideBlock title={td("categoriesTitle")} clamp>
-                {c.categories.map((cat) => (
+                {normalizeCategories(c.categories).map((cat) => (
                   <Badge key={cat} variant="brand">
-                    {known(CREATOR_CATEGORIES, cat) ? tt(`categories.${cat}`) : cat}
+                    <CategoryIcon category={cat} className="size-3.5" />
+                    {tt(`categories.${cat}`)}
                   </Badge>
                 ))}
               </SideBlock>
             )}
-            {(c.lifestyle_tags.length > 0 || c.shoot_options.length > 0) && (
+            {c.shoot_options.length > 0 && (
               <SideBlock title={t("tagsTitle")} clamp>
                 <CreatorTags creator={c} bare />
               </SideBlock>

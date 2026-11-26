@@ -1,10 +1,10 @@
 "use client";
 
-import { ArrowDown01Icon, InformationCircleIcon } from "@hugeicons/core-free-icons";
+import { InformationCircleIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { Field } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,15 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import {
-  ENABLED_PRICE_FORMATS,
-  EXCLUSIVE_LIFESTYLE,
-  LIFESTYLE_GROUPS,
-  type LifestyleGroup,
-  type LifestyleTag,
-  SHOOT_OPTIONS,
-} from "@/schemas";
+import { ENABLED_PRICE_FORMATS, SHOOT_OPTIONS } from "@/schemas";
 import type { CreatorFormValues } from "../form";
 import { ChipGroup } from "./form-bits";
 
@@ -34,7 +26,7 @@ type Form = UseFormReturn<CreatorFormValues>;
  * "Niyə soruşuruq?": a quiet link that opens a short, plain explanation of why we ask for
  * personal details and who sees them. `topic` picks the text.
  */
-export function WhyWeAsk({ topic }: { topic: "about" | "lifestyle" }) {
+export function WhyWeAsk({ topic }: { topic: "about" }) {
   const t = useTranslations("creator.why");
   const [open, setOpen] = useState(false);
   return (
@@ -63,78 +55,6 @@ export function WhyWeAsk({ topic }: { topic: "about" | "lifestyle" }) {
         </DialogContent>
       </Dialog>
     </>
-  );
-}
-
-// ── Həyat tərzi və maraqlar ─────────────────────────────────────────────────
-/** Who the creator is: tags in closed groups that show their count. Nothing is required. */
-export function LifestyleFields({ form }: { form: Form }) {
-  const t = useTranslations("creator.lifestyle");
-  const tt = useTranslations("taxonomy");
-  const { control } = form;
-  const value = useWatch({ control, name: "lifestyle_tags" }) ?? [];
-  const [open, setOpen] = useState<LifestyleGroup | null>(null);
-
-  return (
-    <Controller
-      control={control}
-      name="lifestyle_tags"
-      render={({ field }) => (
-        <div className="grid gap-4">
-          <WhyWeAsk topic="lifestyle" />
-          <div className="grid">
-            {(Object.keys(LIFESTYLE_GROUPS) as LifestyleGroup[]).map((g) => {
-              const options = LIFESTYLE_GROUPS[g] as readonly LifestyleTag[];
-              const picked = options.filter((o) => value.includes(o));
-              const isOpen = open === g;
-              return (
-                <div key={g} className="border-b border-border/70 last:border-b-0">
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    onClick={() => setOpen(isOpen ? null : g)}
-                    className="flex w-full items-center gap-3 py-3.5 text-left outline-none focus-visible:underline"
-                  >
-                    <span className="flex-1 font-medium">{tt(`lifestyleGroups.${g}`)}</span>
-                    {picked.length > 0 && (
-                      <span className="text-sm text-muted-foreground tabular-nums">{picked.length}</span>
-                    )}
-                    <HugeiconsIcon
-                      icon={ArrowDown01Icon}
-                      strokeWidth={2}
-                      className={cn("size-4 text-muted-foreground", isOpen && "rotate-180")}
-                    />
-                  </button>
-                  {isOpen && (
-                    <div className="pb-4">
-                      <ChipGroup
-                        options={options}
-                        value={picked}
-                        onChange={(next) => {
-                          const added = next.find((o) => !picked.includes(o));
-                          // Subay and Ailəvi exclude each other: picking one drops the other.
-                          const drop = EXCLUSIVE_LIFESTYLE.flatMap((pair) =>
-                            added && (pair as readonly string[]).includes(added)
-                              ? pair.filter((p) => p !== added)
-                              : [],
-                          );
-                          field.onChange([
-                            ...value.filter((v) => !options.includes(v) && !drop.includes(v as never)),
-                            ...next.filter((v) => !drop.includes(v as never)),
-                          ]);
-                        }}
-                        label={(o) => tt(`lifestyle.${o}`)}
-                      />
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-          <p className="text-sm text-muted-foreground">{t("count", { count: value.length })}</p>
-        </div>
-      )}
-    />
   );
 }
 

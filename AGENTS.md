@@ -65,6 +65,8 @@ Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) f
   Don't blindly re-run `pnpm dlx shadcn add` over an existing file (it overwrites our changes); diff first.
 - Primitives are **Base UI** (`@base-ui/react`), not Radix. Check the Base UI API when composing (e.g. `render` prop, not `asChild`).
 - Icons: **Hugeicons** (`@hugeicons/react` + `@hugeicons/core-free-icons`). Don't add another icon library.
+  One exception: content-direction icons are **Solar** (`@solar-icons/react`, linear, imported per icon), only in
+  `src/components/shared/category-icon.tsx` (founders, 2026-11-26). The artwork is CC BY 4.0: keep the credit in the landing footer.
 - **Motion — strictly Emil Kowalski** (`emil-design-eng`, `animate` + `animate/RECIPES.md`, `review-animations` +
   `STANDARDS.md`, `choreograph`, `animation-performance`). These are the ONLY authority for animation. Do not take motion
   advice from `apple-design` or `stageshow`. Build with `animate`, then self-review with `review-animations` before merge.

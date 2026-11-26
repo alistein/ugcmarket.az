@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "@/components/shared/category-icon";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft01Icon, ArrowRight01Icon, Clock01Icon, InstagramIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -433,6 +434,7 @@ export function WhatFields({ form }: { form: CampaignForm }) {
                   <SelectContent>
                     {CREATOR_CATEGORIES.map((c) => (
                       <SelectItem key={c} value={c}>
+                        <CategoryIcon category={c} className="text-muted-foreground" />
                         {tt(`categories.${c}`)}
                       </SelectItem>
                     ))}

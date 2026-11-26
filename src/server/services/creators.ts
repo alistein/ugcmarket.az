@@ -23,7 +23,7 @@ import {
 type Db = Awaited<ReturnType<typeof createUserClient>>;
 
 const PUBLIC_FIELDS =
-  "id, handle, display_name, avatar_url, gender, birth_year, city, country, categories, languages, bio, paid_open, barter_open, repost_open, lifestyle_tags, shoot_options, skills, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position, portfolio_item_stats(owner_handle, views, likes, comments, posted_at, fetched_at, thumbnail_url, caption, hashtags, mentions, duration_seconds, music, paid_partnership))";
+  "id, handle, display_name, avatar_url, gender, birth_year, city, country, categories, languages, bio, paid_open, barter_open, repost_open, shoot_options, skills, review_status, created_at, creator_socials(network, handle, followers, avg_views, verified), creator_social_stats(network, handle, followers, posts, avg_views, avg_likes, source, fetched_at), creator_prices(format, amount, currency), portfolio_items(id, url, network, title, position, portfolio_item_stats(owner_handle, views, likes, comments, posted_at, fetched_at, thumbnail_url, caption, hashtags, mentions, duration_seconds, music, paid_partnership))";
 
 /**
  * Public profile. Uses the cookie-less client so it can also run in generateMetadata.

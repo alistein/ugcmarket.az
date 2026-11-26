@@ -5,81 +5,60 @@ import { z } from "zod";
  * Adding a value: add it here + in az/ru/en messages. Removing one: migrate existing rows first.
  */
 export const CREATOR_CATEGORIES = [
+  "lifestyle",
   "beauty",
   "fashion",
   "food",
-  "lifestyle",
-  "travel",
+  "restaurants",
   "home",
+  "renovation",
   "family",
+  "baby",
+  "travel",
   "fitness",
+  "health",
   "tech",
   "auto",
-  "education",
-  "humor",
-  "gaming",
   "pets",
-  "music",
+  "education",
   "business",
-  "health",
   "finance",
   "shopping",
-  "restaurants",
   "entertainment",
-  // Behind "Daha çox" in the form (MORE_CATEGORIES).
-  "skincare",
-  "haircare",
-  "baby",
-  "jewelry",
+  "gaming",
   "art_design",
-  "photo_video",
+  "music",
   "film_tv",
   "books",
-  "electronics",
+  "photo_video",
   "apps",
   "real_estate",
+  "events",
 ] as const;
 export const CreatorCategory = z.enum(CREATOR_CATEGORIES);
 export type CreatorCategory = z.infer<typeof CreatorCategory>;
-/** Shown only after "Daha çox", so the first screen stays short. */
-export const MORE_CATEGORIES = [
-  "skincare",
-  "haircare",
-  "baby",
-  "jewelry",
-  "art_design",
-  "photo_video",
-  "film_tv",
-  "books",
-  "electronics",
-  "apps",
-  "real_estate",
-] as const satisfies readonly CreatorCategory[];
+
+/**
+ * Directions merged into others on 2026-11-26 (migration content_directions). Old rows are
+ * remapped in the database; this covers anything still cached in a browser or a link.
+ */
+export const LEGACY_CATEGORY: Record<string, CreatorCategory> = {
+  skincare: "beauty",
+  haircare: "beauty",
+  jewelry: "fashion",
+  electronics: "tech",
+  humor: "entertainment",
+};
+
+/** Known directions only, old ones mapped to their new home, no duplicates, list order kept. */
+export function normalizeCategories(values: readonly string[]): CreatorCategory[] {
+  const mapped = new Set(values.map((v) => LEGACY_CATEGORY[v] ?? v));
+  return CREATOR_CATEGORIES.filter((c) => mapped.has(c));
+}
 
 /** How a creator works with brands (onboarding content step). "collab" is the repost deal. */
 export const DEAL_FORMATS = ["paid", "barter", "collab"] as const;
 export type DealFormat = (typeof DEAL_FORMATS)[number];
-
-/**
- * "Həyat tərzi və maraqlar" (enhancer): who the creator is and what they have, in groups.
- * Categories say what they make content about; these never repeat a category.
- */
-export const LIFESTYLE_GROUPS = {
-  education: ["student", "teacher"],
-  occupation: ["employee", "entrepreneur", "freelancer", "homemaker"],
-  family: ["single", "married", "has_kids"],
-  pets: ["cat_owner", "dog_owner", "other_pet_owner"],
-  transport: ["car_owner", "motorcycle_rider", "cyclist"],
-  sport: ["athlete", "fitness_fan", "runner", "swimmer", "yoga", "pilates", "football_fan", "hiking"],
-  hobbies: ["bookworm", "home_cook", "coffee_lover", "gardening", "crafts", "healthy_eating"],
-  profession: ["chef", "barista", "fitness_coach", "it_specialist", "marketer", "musician"],
-} as const;
-export type LifestyleGroup = keyof typeof LIFESTYLE_GROUPS;
-export const LIFESTYLE_TAGS = Object.values(LIFESTYLE_GROUPS).flat() as LifestyleTag[];
-export type LifestyleTag = (typeof LIFESTYLE_GROUPS)[LifestyleGroup][number];
-export const LifestyleTag = z.enum(LIFESTYLE_TAGS as [LifestyleTag, ...LifestyleTag[]]);
-/** Subay and Ailəvi exclude each other; Uşaqlı goes with either. */
-export const EXCLUSIVE_LIFESTYLE = [["single", "married"]] as const;
 
 /** Where the creator can film (Qiymətlər və şərtlər). */
 export const SHOOT_OPTIONS = ["at_home", "at_brand_location"] as const;
@@ -138,13 +117,7 @@ export const CONTENT_LANGUAGES = ["az", "ru", "en", "tr", "other"] as const;
 export const ContentLanguage = z.enum(CONTENT_LANGUAGES);
 
 /** Formats a creator can price; mirrors the post_format DB enum. */
-export const PRICE_FORMATS = [
-  "reels",
-  "stories",
-  "post",
-  "tiktok_video",
-  "youtube_short",
-] as const;
+export const PRICE_FORMATS = ["reels", "stories", "post", "tiktok_video", "youtube_short"] as const;
 
 /**
  * Networks live in the product right now (founders, 2026-11-12: Instagram first; TikTok and

@@ -520,6 +520,15 @@ function Footer() {
       <Logo className="text-base text-foreground" />
       <span>{t("city")}</span>
       <span>{t("rights")}</span>
+      {/* Content-direction icons are Solar (CC BY 4.0): credit required. */}
+      <a
+        href="https://solar-icons.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline-offset-4 hover:text-foreground hover:underline"
+      >
+        {t("icons")}
+      </a>
       <nav className="flex gap-4">
         <Link href="/terms" className="underline-offset-4 hover:text-foreground hover:underline">
           {tAuth("terms")}

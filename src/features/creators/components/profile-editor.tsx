@@ -37,7 +37,7 @@ import {
 } from "../hooks";
 import { FormSection } from "./form-bits";
 import { PortfolioEditor } from "./portfolio-editor";
-import { LifestyleFields, TermsFields } from "./enhancer-fields";
+import { TermsFields } from "./enhancer-fields";
 import { AboutFields, ContentFields, SocialFields } from "./profile-sections";
 import { SetupWaiting } from "./setup-waiting";
 
@@ -309,9 +309,6 @@ function ProfileEdit({ creator }: { creator: MyCreator }) {
         </FormSection>
         <FormSection id="socials" title={t("steps.socials.title")}>
           <SocialFields form={form} />
-        </FormSection>
-        <FormSection id="lifestyle" title={t("sections.lifestyle.title")}>
-          <LifestyleFields form={form} />
         </FormSection>
         <FormSection id="terms" title={t("sections.terms.title")}>
           <TermsFields form={form} />

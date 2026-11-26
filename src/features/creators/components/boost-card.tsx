@@ -34,20 +34,19 @@ import {
   toPayload,
 } from "../form";
 import { type MyCreator, useUpdateCreator } from "../hooks";
-import { LifestyleFields, TermsFields } from "./enhancer-fields";
+import { TermsFields } from "./enhancer-fields";
 import { type AboutField, AboutFields } from "./profile-sections";
 
 const ICON: Record<ProfileSection, typeof UserIcon> = {
   about: UserCircleIcon,
   content: GridViewIcon,
   socials: InstagramIcon,
-  lifestyle: UserIcon,
   portfolio: Video01Icon,
   terms: Wallet01Icon,
 };
 
-/** The three enhancer sections, always listed in this order; finished ones stay with a green 100%. */
-const ENHANCER_ORDER: ProfileSection[] = ["lifestyle", "terms", "portfolio"];
+/** The enhancer sections, always listed in this order; finished ones stay with a green 100%. */
+const ENHANCER_ORDER: ProfileSection[] = ["terms", "portfolio"];
 /** Onboarding sections are listed only while something in them is missing (photo, bio). */
 const ONBOARDING_ORDER: ProfileSection[] = ["about", "content", "socials"];
 
@@ -170,7 +169,7 @@ export function BoostCard({
                 <button type="button" className={cls} onClick={onPortfolio}>
                   {inner}
                 </button>
-              ) : s === "about" || s === "lifestyle" || s === "terms" ? (
+              ) : s === "about" || s === "terms" ? (
                 <button type="button" className={cls} onClick={() => onOpen(s)}>
                   {inner}
                 </button>
@@ -356,7 +355,7 @@ function CompleteLine({ creatorId }: { creatorId: string }) {
 }
 
 /** Sections that open in a panel from the card (portfolio scrolls to its own section instead). */
-export type SheetSection = "about" | "lifestyle" | "terms";
+export type SheetSection = "about" | "terms";
 
 /** Form label key for each "Özünüz haqqında" field. */
 const FIELD_LABEL: Record<
@@ -372,9 +371,8 @@ const FIELD_LABEL: Record<
   bio: "bio",
 };
 
-/** Fields the lifestyle and terms panels own and save (nothing else is sent). */
+/** Fields the terms panel owns and saves (nothing else is sent). */
 const SHEET_FIELDS = {
-  lifestyle: ["lifestyle_tags"],
   terms: ["prices", "shoot_options"],
 } as const;
 
@@ -413,9 +411,7 @@ export function SectionSheet({
     const partial =
       section === "about"
         ? Object.fromEntries(missing.map((f) => [f, payload[f]]))
-        : section === "lifestyle"
-          ? { lifestyle_tags: payload.lifestyle_tags }
-          : { prices: payload.prices, shoot_options: payload.shoot_options };
+        : { prices: payload.prices, shoot_options: payload.shoot_options };
     update.mutate(partial, {
       onSuccess: () => {
         toast.success(t("saved"));
@@ -469,8 +465,6 @@ export function SectionSheet({
                   </ul>
                   <AboutFields form={form} currentHandle={creator.handle} only={missing} />
                 </div>
-              ) : section === "lifestyle" ? (
-                <LifestyleFields form={form} />
               ) : (
                 <TermsFields form={form} />
               )}

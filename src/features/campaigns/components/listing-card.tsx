@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "@/components/shared/category-icon";
 import {
   Calendar03Icon,
   InstagramIcon,
@@ -13,7 +14,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { NamedAvatar } from "@/components/shared/named-avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { CITIES, CREATOR_CATEGORIES } from "@/schemas";
+import { CITIES, normalizeCategories } from "@/schemas";
 
 export type ListingCardData = {
   title: string;
@@ -58,6 +59,7 @@ const known = <T extends string>(list: readonly T[], v: string | null | undefine
 export function ListingCard({ data: d, className }: { data: ListingCardData; className?: string }) {
   const t = useTranslations("campaign.card");
   const tt = useTranslations("taxonomy");
+  const category = normalizeCategories(d.category ? [d.category] : [])[0];
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
 
@@ -69,8 +71,9 @@ export function ListingCard({ data: d, className }: { data: ListingCardData; cla
         <NamedAvatar name={d.brand.name || "?"} src={d.brand.logo_url} square className="size-11" />
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold tracking-[-0.02em]">{d.brand.name}</p>
-          <p className="truncate text-sm text-muted-foreground">
-            {known(CREATOR_CATEGORIES, d.category) ? tt(`categories.${d.category}`) : t("noCategory")}
+          <p className="flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
+            {category && <CategoryIcon category={category} />}
+            <span className="truncate">{category ? tt(`categories.${category}`) : t("noCategory")}</span>
           </p>
         </div>
         {/* One mark at most, by what matters to this viewer: theirs, done, then fresh. */}

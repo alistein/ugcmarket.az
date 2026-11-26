@@ -1,5 +1,6 @@
 "use client";
 
+import { CategoryIcon } from "@/components/shared/category-icon";
 import {
   ArrowLeft01Icon,
   LockIcon,
@@ -26,7 +27,7 @@ import { useMyBrand } from "@/features/brands/hooks";
 import { useMe } from "@/features/me/hooks";
 import { ApplyBlock } from "@/features/applications/components/apply-block";
 import { Link, useRouter } from "@/i18n/navigation";
-import { BRAND_CATEGORIES, CITIES, CREATOR_CATEGORIES } from "@/schemas";
+import { BRAND_CATEGORIES, CITIES, normalizeCategories } from "@/schemas";
 import { type CampaignDetail, useCampaign, useOwnCampaign, viewerKey } from "../hooks";
 import { useShareListing } from "../share";
 import { Pay, TypeBadges } from "./listing-card";
@@ -163,6 +164,7 @@ function Listing({
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
   const deadline = d.deadline ? d.deadline.split("-").reverse().join(".") : null;
+  const category = normalizeCategories(d.category ? [d.category] : [])[0];
   const live = d.status === "published" || d.status === "paused" || d.status === "closed";
 
   const facts = [
@@ -214,8 +216,11 @@ function Listing({
       <h1 className="mt-6 text-3xl font-semibold tracking-[-0.03em] text-balance break-words sm:text-4xl">
         {d.title}
       </h1>
-      {known(CREATOR_CATEGORIES, d.category) && (
-        <p className="mt-2 text-muted-foreground">{tt(`categories.${d.category}`)}</p>
+      {category && (
+        <p className="mt-2 flex items-center gap-1.5 text-muted-foreground">
+          <CategoryIcon category={category} />
+          {tt(`categories.${category}`)}
+        </p>
       )}
       <TypeBadges data={d} className="mt-3" />
 

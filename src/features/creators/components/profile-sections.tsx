@@ -17,6 +17,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
+import { CategoryIcon } from "@/components/shared/category-icon";
 import { Field } from "@/components/shared/form-field";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +34,6 @@ import {
   CreatorHandle,
   DEAL_FORMATS,
   GENDERS,
-  MORE_CATEGORIES,
   SocialUsername,
 } from "@/schemas";
 import { type CreatorFormValues, NETWORKS, suggestHandle } from "../form";
@@ -257,46 +257,32 @@ function HandleField({ form, currentHandle }: { form: Form; currentHandle?: stri
 }
 
 // ── Content ─────────────────────────────────────────────────────────────────
-/** Step 2: categories (all of them, the rest behind "Daha çox"), languages and deal formats. */
+/** Last setup step: content directions (all 29 at once, each with its icon), languages, deal formats. */
 export function ContentFields({ form }: { form: Form }) {
   const t = useTranslations("creator.form");
   const tt = useTranslations("taxonomy");
   const { control, formState } = form;
-  const picked = useWatch({ control, name: "categories" }) ?? [];
-  const [more, setMore] = useState(() =>
-    picked.some((c) => (MORE_CATEGORIES as readonly string[]).includes(c)),
-  );
-  const options = more
-    ? CREATOR_CATEGORIES
-    : CREATOR_CATEGORIES.filter((c) => !(MORE_CATEGORIES as readonly string[]).includes(c));
   return (
     <>
       <Field label={t("categories")} required error={formState.errors.categories}>
         {(a) => (
-          <div className="grid gap-2">
+          <div className="grid gap-3">
+            <p className="-mt-1 text-sm text-pretty text-muted-foreground">{t("categoriesHint")}</p>
             <Controller
               control={control}
               name="categories"
               render={({ field }) => (
                 <ChipGroup
-                  options={options}
+                  options={CREATOR_CATEGORIES}
                   value={field.value}
                   onChange={field.onChange}
                   label={(c) => tt(`categories.${c}`)}
+                  renderIcon={(c) => <CategoryIcon category={c} />}
                   invalid={a["aria-invalid"]}
                   describedBy={a["aria-describedby"]}
                 />
               )}
             />
-            {!more && (
-              <button
-                type="button"
-                onClick={() => setMore(true)}
-                className="inline-flex w-fit items-center gap-1 text-sm font-medium text-foreground/80 underline-offset-4 outline-none hover:text-foreground hover:underline focus-visible:underline"
-              >
-                {t("moreCategories", { count: MORE_CATEGORIES.length })}
-              </button>
-            )}
           </div>
         )}
       </Field>

@@ -8,8 +8,6 @@ import {
   CreatorSkill,
   DEAL_FORMATS,
   type DealFormat,
-  LifestyleTag,
-  LifestyleTags,
   ShootOption,
   ENABLED_NETWORKS,
   ENABLED_PRICE_FORMATS,
@@ -17,6 +15,7 @@ import {
   PRICE_FORMATS,
   Phone,
   SocialUsername,
+  normalizeCategories,
   type CreatorProfileInput,
 } from "@/schemas";
 import { type CreatorPublic, type MyCreator, type Network, socialNumbers } from "./hooks";
@@ -95,7 +94,6 @@ export const CreatorForm = z.object({
   languages: z.array(ContentLanguage).min(1, "validation.languagesMin"),
   /** Paid / barter / collab (repost). At least one; stored as paid_open, barter_open, repost_open. */
   deal_formats: z.array(z.enum(DEAL_FORMATS)).min(1, "validation.dealFormatsMin"),
-  lifestyle_tags: LifestyleTags,
   shoot_options: z.array(ShootOption),
   skills: z.array(CreatorSkill),
   socials: socials(true),
@@ -139,7 +137,6 @@ export function emptyCreatorForm(): CreatorFormValues {
     categories: [],
     languages: ["az"],
     deal_formats: [],
-    lifestyle_tags: [],
     shoot_options: [],
     skills: [],
     socials: { instagram: { ...emptyRow }, tiktok: { ...emptyRow }, youtube: { ...emptyRow } },
@@ -174,16 +171,12 @@ export function creatorToForm(c: MyCreator): CreatorFormValues {
     gender: Gender.safeParse(c.gender).success ? (c.gender as CreatorFormValues["gender"]) : "",
     birth_year: c.birth_year ? String(c.birth_year) : "",
     bio: c.bio ?? "",
-    categories: c.categories.filter(
-      (x) => CreatorCategory.safeParse(x).success,
-    ) as CreatorFormValues["categories"],
+    // Old directions (merged 2026-11-26) map to their new home, so saving never fails on them.
+    categories: normalizeCategories(c.categories),
     languages: c.languages.filter(
       (x) => ContentLanguage.safeParse(x).success,
     ) as CreatorFormValues["languages"],
     deal_formats: DEAL_FORMATS.filter((f) => dealOpen(c, f)),
-    lifestyle_tags: c.lifestyle_tags.filter(
-      (x) => LifestyleTag.safeParse(x).success,
-    ) as CreatorFormValues["lifestyle_tags"],
     shoot_options: c.shoot_options.filter(
       (x) => ShootOption.safeParse(x).success,
     ) as CreatorFormValues["shoot_options"],
@@ -209,7 +202,6 @@ export function toPayload(v: CreatorFormValues): CreatorProfileInput & { avatar_
     paid_open: v.deal_formats.includes("paid"),
     barter_open: v.deal_formats.includes("barter"),
     repost_open: v.deal_formats.includes("collab"),
-    lifestyle_tags: v.lifestyle_tags,
     shoot_options: v.shoot_options,
     skills: v.skills,
     socials: NETWORKS.filter((n) => v.socials[n].handle).map((n) => ({
@@ -247,15 +239,11 @@ export function aboutStatus(c: MyCreator) {
   return ABOUT_FIELDS.map((f) => ({ field: f, done: !!c[f] }));
 }
 
-/** The six parts of a creator profile: 3 from onboarding, 3 from the enhancer. */
-export const PROFILE_SECTIONS = ["about", "content", "socials", "lifestyle", "portfolio", "terms"] as const;
+/** The five parts of a creator profile: 3 from onboarding, 2 from the enhancer. */
+export const PROFILE_SECTIONS = ["about", "content", "socials", "portfolio", "terms"] as const;
 export type ProfileSection = (typeof PROFILE_SECTIONS)[number];
 /** Sections that open in their own sheet from the completeness card (the rest go to the edit page). */
-export const ENHANCER_SECTIONS = [
-  "lifestyle",
-  "portfolio",
-  "terms",
-] as const satisfies readonly ProfileSection[];
+export const ENHANCER_SECTIONS = ["portfolio", "terms"] as const satisfies readonly ProfileSection[];
 
 const share = (done: boolean[]) => Math.round((done.filter(Boolean).length / done.length) * 100);
 
@@ -272,7 +260,6 @@ export function profileCompleteness(c: MyCreator) {
       c.paid_open || c.barter_open || c.repost_open,
     ]),
     socials: share([c.creator_socials.length > 0, !!c.contact_phone]),
-    lifestyle: c.lifestyle_tags.length > 0 ? 100 : 0,
     portfolio: Math.round((Math.min(c.portfolio_items.length, 3) / 3) * 100),
     terms: (c.creator_prices.length > 0 ? 50 : 0) + (c.shoot_options.length > 0 ? 50 : 0),
   };

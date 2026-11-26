@@ -2,15 +2,15 @@
 
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
-import { LIFESTYLE_TAGS, SHOOT_OPTIONS } from "@/schemas";
+import { SHOOT_OPTIONS } from "@/schemas";
 
-type Tagged = { lifestyle_tags?: string[]; shoot_options?: string[] };
+type Tagged = { shoot_options?: string[] };
 
 const known = (list: readonly string[], v: string) => list.includes(v);
 
 /**
- * What brands see from the enhancer: where the creator films first (it changes the job), then
- * lifestyle tags. `limit` folds the rest into "+N" on small cards.
+ * What brands see from the enhancer: where the creator films (it changes the job).
+ * `limit` folds the rest into "+N" on small cards.
  */
 export function CreatorTags({
   creator: c,
@@ -27,9 +27,6 @@ export function CreatorTags({
     ...(c.shoot_options ?? [])
       .filter((s) => known(SHOOT_OPTIONS, s))
       .map((s) => tt(`shootOptions.${s}` as never)),
-    ...(c.lifestyle_tags ?? [])
-      .filter((s) => known(LIFESTYLE_TAGS, s))
-      .map((s) => tt(`lifestyle.${s}` as never)),
   ];
   if (!tags.length) return null;
   const shown = limit ? tags.slice(0, limit) : tags;

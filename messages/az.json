@@ -91,7 +91,7 @@
     "duplicate": "Bu dəyər təkrarlanır",
     "phone": "Telefon nömrəsi düzgün deyil",
     "tooLong": "Mətn çox uzundur",
-    "categoriesMin": "Ən azı bir kateqoriya seçin",
+    "categoriesMin": "Ən azı bir istiqamət seçin",
     "languagesMin": "Ən azı bir dil seçin",
     "socialsMin": "Ən azı bir sosial şəbəkə hesabı əlavə edin",
     "avatar": "Şəkli yenidən yükləyin",
@@ -104,7 +104,6 @@
     "formatsMin": "Ən azı bir format seçin",
     "bidRequired": "Qiymətinizi daxil edin",
     "birthYear": "İli 4 rəqəmlə yazın. Yaşınız 16 ilə 80 arasında olmalıdır",
-    "lifestyleExclusive": "Subay və Ailəvi birlikdə seçilə bilməz",
     "dealFormatsMin": "Ən azı bir format seçin",
     "portfolioEmpty": "Reels linkini yapışdırın",
     "portfolioNotLink": "Bu link deyil. Instagram-da Reels-i açın, «Paylaş» və sonra «Linki kopyala» basın, sonra bura yapışdırın",
@@ -233,7 +232,8 @@
     },
     "footer": {
       "city": "Bakı, Azərbaycan",
-      "rights": "© 2026 UGCMarket"
+      "rights": "© 2026 UGCMarket",
+      "icons": "İkonlar: Solar (480 Design)"
     },
     "partner": {
       "label": "rəsmi tərəfdaşlarımız"
@@ -375,38 +375,35 @@
   },
   "taxonomy": {
     "categories": {
-      "beauty": "Gözəllik",
-      "fashion": "Moda",
-      "food": "Yemək",
       "lifestyle": "Lifestyle",
-      "travel": "Səyahət",
-      "home": "Ev və dekor",
-      "family": "Ailə və uşaq",
-      "fitness": "İdman",
-      "tech": "Texnologiya",
-      "auto": "Avtomobil",
-      "education": "Təhsil",
-      "humor": "Yumor",
-      "gaming": "Oyunlar",
-      "pets": "Ev heyvanları",
-      "music": "Musiqi",
-      "business": "Biznes",
-      "health": "Sağlamlıq",
-      "finance": "Maliyyə",
-      "shopping": "Alış-veriş",
+      "beauty": "Gözəllik və kosmetika",
+      "fashion": "Moda və stil",
+      "food": "Qida və kulinariya",
       "restaurants": "Restoran və kafe",
-      "entertainment": "Əyləncə",
-      "skincare": "Dəri baxımı",
-      "haircare": "Saç baxımı",
+      "home": "Ev və dekor",
+      "renovation": "Təmir və interyer",
+      "family": "Ailə və uşaqlar",
       "baby": "Ana və körpə",
-      "jewelry": "Zərgərlik və aksesuarlar",
+      "travel": "Səyahət və turizm",
+      "fitness": "İdman və fitness",
+      "health": "Sağlamlıq və wellness",
+      "tech": "Texnologiya və elektronika",
+      "auto": "Avtomobil",
+      "pets": "Ev heyvanları",
+      "education": "Təhsil və şəxsi inkişaf",
+      "business": "Biznes və karyera",
+      "finance": "Maliyyə və bank xidmətləri",
+      "shopping": "Alış-veriş",
+      "entertainment": "Əyləncə və yumor",
+      "gaming": "Oyunlar və gaming",
       "art_design": "İncəsənət və dizayn",
-      "photo_video": "Foto və video",
-      "film_tv": "Kino və serial",
+      "music": "Musiqi",
+      "film_tv": "Kino və seriallar",
       "books": "Kitablar",
-      "electronics": "Elektronika",
-      "apps": "Mobil tətbiqlər",
-      "real_estate": "Daşınmaz əmlak"
+      "photo_video": "Foto və video",
+      "apps": "Mobil tətbiqlər və rəqəmsal xidmətlər",
+      "real_estate": "Daşınmaz əmlak",
+      "events": "Tədbirlər və təşkilatçılıq"
     },
     "cities": {
       "baku": "Bakı",
@@ -469,53 +466,6 @@
       "barter": "Barter",
       "collab": "Kollaborasiya"
     },
-    "lifestyleGroups": {
-      "education": "Təhsil",
-      "occupation": "Məşğuliyyət",
-      "family": "Ailə və valideynlik",
-      "pets": "Ev heyvanları",
-      "transport": "Nəqliyyat",
-      "sport": "İdman və aktiv həyat",
-      "hobbies": "Həyat tərzi və hobbilər",
-      "profession": "Peşə"
-    },
-    "lifestyle": {
-      "student": "Tələbə",
-      "teacher": "Müəllim",
-      "employee": "İşçi",
-      "entrepreneur": "Sahibkar",
-      "freelancer": "Freelancer",
-      "homemaker": "Evdar",
-      "single": "Subay",
-      "married": "Ailəvi",
-      "has_kids": "Uşaqlı",
-      "cat_owner": "Pişik sahibi",
-      "dog_owner": "İt sahibi",
-      "other_pet_owner": "Digər ev heyvanı sahibi",
-      "car_owner": "Avtomobil sahibi",
-      "motorcycle_rider": "Motosiklet sürücüsü",
-      "cyclist": "Velosiped sürücüsü",
-      "athlete": "İdmançı",
-      "fitness_fan": "Fitness həvəskarı",
-      "runner": "Qaçış həvəskarı",
-      "swimmer": "Üzgüçü",
-      "yoga": "Yoga həvəskarı",
-      "pilates": "Pilates həvəskarı",
-      "football_fan": "Futbol həvəskarı",
-      "hiking": "Təbiət gəzintisi həvəskarı",
-      "bookworm": "Kitabsevər",
-      "home_cook": "Evdə yemək bişirən",
-      "coffee_lover": "Qəhvə həvəskarı",
-      "gardening": "Bağçılıq həvəskarı",
-      "crafts": "Əl işi həvəskarı",
-      "healthy_eating": "Sağlam qidalanan",
-      "chef": "Aşpaz",
-      "barista": "Barista",
-      "fitness_coach": "Fitness məşqçisi",
-      "it_specialist": "IT mütəxəssisi",
-      "marketer": "Marketoloq",
-      "musician": "Musiqiçi"
-    },
     "shootOptions": {
       "at_home": "Evdə çəkiliş",
       "at_brand_location": "Brendin məkanında çəkiliş"
@@ -555,7 +505,7 @@
         "subtitle": "Brendlər sizi bu məlumatlarla tanıyacaq"
       },
       "content": {
-        "title": "Kontent və ixtisaslaşma",
+        "title": "Kontent istiqamətləri",
         "subtitle": "Sizə uyğun əməkdaşlıqları tapmaqda kömək edəcək"
       },
       "socials": {
@@ -592,7 +542,7 @@
       "cityPh": "Şəhəri seçin",
       "bio": "Haqqında",
       "bioPh": "Bakıda yaşayıram, lifestyle və gözəllik mövzusunda kontent çəkirəm…",
-      "categories": "Kateqoriyalar",
+      "categories": "Kontent istiqamətləri",
       "languages": "Kontent dili",
       "network": {
         "instagram": "Instagram",
@@ -624,8 +574,8 @@
       "contactsTitle": "Əlaqə",
       "socialsHint": "İstifadəçi adınızı yazın və \"Hesabı qoş\" düyməsini basın. İzləyici və baxış sayını hesabınızdan avtomatik götürəcəyik",
       "username": "İstifadəçi adı və ya link",
-      "moreCategories": "Daha çox kateqoriya ({count})",
-      "dealFormats": "Əməkdaşlıq formatı"
+      "dealFormats": "Əməkdaşlıq formatı",
+      "categoriesHint": "Hansı mövzularda kontent yaradırsınız və ya yarada bilərsiniz?"
     },
     "portfolio": {
       "title": "Portfolio",
@@ -704,7 +654,7 @@
       "statsRefresh": "Rəqəmləri yenilə",
       "statsRefreshing": "Yoxlanılır…",
       "statsRefreshed": "Rəqəmlər yeniləndi",
-      "categoriesTitle": "Kateqoriyalar",
+      "categoriesTitle": "Kontent istiqamətləri",
       "statsRefreshHint": "Rəqəmlər Instagram-dan götürülür. Gündə bir dəfə yeniləyə bilərsiniz, hər həftə isə avtomatik yenilənir",
       "statsLastRun": "Son yoxlama",
       "statsNeverRun": "Hələ yoxlanılmayıb",
@@ -730,13 +680,9 @@
       "link": "Niyə soruşuruq?",
       "title": "Niyə bu məlumatı soruşuruq?",
       "aboutBody": "Brendlər məhsulları üçün auditoriyasına yaxın kreator axtarır. Yaş və cins onlara uyğun üzü tapmağa kömək edir. Doğum iliniz görünmür, brendlər yalnız yaşınızı görür",
-      "lifestyleBody": "Brendlər məhsulları üçün uyğun üz axtarır: məsələn, uşaq məhsulu üçün uşaqlı valideyn, ev heyvanı yeməyi üçün pişik sahibi",
       "point1": "Seçdikləriniz profilinizdə görünür və sizi uyğun elanlara yaxınlaşdırır",
       "point2": "Hamısını istədiyiniz vaxt dəyişə və ya silə bilərsiniz",
       "ok": "Aydındır"
-    },
-    "lifestyle": {
-      "count": "{count} xüsusiyyət seçilib · Könüllü məlumatlar"
     },
     "terms": {
       "pricesTitle": "Minimum qiymət",
@@ -754,16 +700,12 @@
         "panelHint": "Yalnız çatışmayanları doldurun, qalanı artıq hazırdır"
       },
       "content": {
-        "title": "Kontent və ixtisaslaşma",
-        "hint": "Kateqoriya, dil və əməkdaşlıq formatı"
+        "title": "Kontent istiqamətləri",
+        "hint": "İstiqamət, dil və əməkdaşlıq formatı"
       },
       "socials": {
         "title": "Sosial şəbəkələr",
         "hint": "Instagram və telefon"
-      },
-      "lifestyle": {
-        "title": "Həyat tərzi və maraqlar",
-        "hint": "Brendlərin sizi daha dəqiq tapmasına kömək edin"
       },
       "portfolio": {
         "title": "Portfolio",
@@ -995,8 +937,8 @@
       "description": "Təsvir",
       "descriptionPh": "Nəyi çəkmək lazımdır, nə göstərilməlidir, videonun əhval-ruhiyyəsi necə olmalıdır?",
       "descriptionHint": "Elanı nə qədər aydın təsvir etsəniz, bir o qədər uyğun müraciət alacaqsınız",
-      "category": "Kontent mövzusu",
-      "categoryPh": "Mövzunu seçin",
+      "category": "Kontent istiqaməti",
+      "categoryPh": "İstiqaməti seçin",
       "format": "Kontent formatı",
       "less": "Azalt",
       "more": "Artır",
@@ -1039,7 +981,7 @@
     },
     "card": {
       "noTitle": "Elanın adı",
-      "noCategory": "Mövzu seçilməyib",
+      "noCategory": "İstiqamət seçilməyib",
       "anyCity": "İstənilən şəhər",
       "minFollowers": "{count}+ izləyici",
       "deadline": "Son tarix: {date}",

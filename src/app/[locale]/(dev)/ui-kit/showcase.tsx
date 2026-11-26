@@ -27,11 +27,15 @@ import {
   ViewIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon, type IconSvgElement } from "@hugeicons/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { CategoryIcon } from "@/components/shared/category-icon";
+import { ChipGroup } from "@/features/creators/components/form-bits";
 import { SetupWaiting } from "@/features/creators/components/setup-waiting";
+import { CREATOR_CATEGORIES, type CreatorCategory } from "@/schemas";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -1126,6 +1130,9 @@ function Patterns() {
       <Panel label="Creator setup: waiting screen (fake 6 s wait)">
         <SetupWaitingDemo />
       </Panel>
+      <Panel label="Content directions: icon chips (Solar icons, the one exception to Hugeicons)">
+        <DirectionsDemo />
+      </Panel>
       <Panel label="Stress test: long Azerbaijani and Russian strings" className="grid gap-4 md:grid-cols-2">
         <CampaignCard
           brand="Azərbaycan Respublikası Gənclər və İdman Nazirliyinin Tədbirlər Mərkəzi"
@@ -1149,6 +1156,21 @@ function Patterns() {
         />
       </Panel>
     </Section>
+  );
+}
+
+/** Onboarding's "Kontent istiqamətləri": every direction with its icon; picked ones fill coral. */
+function DirectionsDemo() {
+  const tt = useTranslations("taxonomy");
+  const [value, setValue] = useState<CreatorCategory[]>(["beauty", "travel"]);
+  return (
+    <ChipGroup
+      options={CREATOR_CATEGORIES}
+      value={value}
+      onChange={setValue}
+      label={(c) => tt(`categories.${c}`)}
+      renderIcon={(c) => <CategoryIcon category={c} />}
+    />
   );
 }
 
