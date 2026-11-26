@@ -535,7 +535,19 @@
       "next": "Continue",
       "back": "Back",
       "finish": "Create profile",
-      "created": "Profile created and sent for review"
+      "created": "Profile created and sent for review",
+      "waiting": {
+        "title1": "Checking your Instagram",
+        "title2": "Counting your stats",
+        "title3": "Getting your profile ready",
+        "done": "All set",
+        "slow": "This can take a moment, please keep this page open",
+        "followers": "Followers",
+        "posts": "Posts",
+        "views": "Views",
+        "likes": "Likes",
+        "er": "ER"
+      }
     },
     "steps": {
       "about": {

@@ -535,7 +535,19 @@
       "next": "Davam et",
       "back": "Geri",
       "finish": "Profili yarat",
-      "created": "Profiliniz yaradıldı və yoxlamaya göndərildi"
+      "created": "Profiliniz yaradıldı və yoxlamaya göndərildi",
+      "waiting": {
+        "title1": "Instagram hesabınız yoxlanılır",
+        "title2": "Statistikanız hesablanır",
+        "title3": "Profiliniz hazırlanır",
+        "done": "Hazırdır",
+        "slow": "Bu bir az çəkə bilər, səhifəni bağlamayın",
+        "followers": "İzləyici",
+        "posts": "Paylaşım",
+        "views": "Baxışlar",
+        "likes": "Bəyənmələr",
+        "er": "ER"
+      }
     },
     "steps": {
       "about": {

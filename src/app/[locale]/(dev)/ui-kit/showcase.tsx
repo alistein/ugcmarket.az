@@ -31,6 +31,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { SetupWaiting } from "@/features/creators/components/setup-waiting";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -1122,6 +1123,9 @@ function Patterns() {
         />
         <CreatorCard />
       </div>
+      <Panel label="Creator setup: waiting screen (fake 6 s wait)">
+        <SetupWaitingDemo />
+      </Panel>
       <Panel label="Stress test: long Azerbaijani and Russian strings" className="grid gap-4 md:grid-cols-2">
         <CampaignCard
           brand="Azərbaycan Respublikası Gənclər və İdman Nazirliyinin Tədbirlər Mərkəzi"
@@ -1145,6 +1149,29 @@ function Patterns() {
         />
       </Panel>
     </Section>
+  );
+}
+
+/** Plays the full-screen wait shown after "Profili yarat": 6 s of swapping cards, then done. */
+function SetupWaitingDemo() {
+  const [state, setState] = useState<"waiting" | "done" | null>(null);
+  useEffect(() => {
+    if (state === "waiting") {
+      const id = setTimeout(() => setState("done"), 6000);
+      return () => clearTimeout(id);
+    }
+    if (state === "done") {
+      const id = setTimeout(() => setState(null), 1500);
+      return () => clearTimeout(id);
+    }
+  }, [state]);
+  return (
+    <>
+      <Button variant="outline" onClick={() => setState("waiting")}>
+        Play
+      </Button>
+      {state && <SetupWaiting done={state === "done"} />}
+    </>
   );
 }
 

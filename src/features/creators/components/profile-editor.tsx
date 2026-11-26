@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft01Icon, ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { LoadingState } from "@/components/shared/loading-state";
@@ -35,6 +35,13 @@ import { FormSection } from "./form-bits";
 import { PortfolioEditor } from "./portfolio-editor";
 import { LifestyleFields, TermsFields } from "./enhancer-fields";
 import { AboutFields, ContentFields, SocialFields } from "./profile-sections";
+import { SetupWaiting } from "./setup-waiting";
+
+/** The waiting screen stays at least this long, so a fast answer doesn't flash it. */
+const MIN_WAIT_MS = 1800;
+/** Bar fills (300ms), check shows, then a short hold before /me. */
+const DONE_HOLD_MS = 900;
+const wait = (ms: number) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
 
 /** /me/profile — setup wizard before the profile exists, sectioned editor after. */
 export function ProfileEditorPage() {
@@ -114,6 +121,15 @@ function ProfileSetup() {
   });
   const create = useCreateCreator();
   const invalidateMine = useInvalidateMine();
+  const [waiting, setWaiting] = useState<"waiting" | "done" | null>(null);
+  // False while this page is hidden (kept alive by Next) or gone; effects clean up then.
+  const activeRef = useRef(false);
+  useEffect(() => {
+    activeRef.current = true;
+    return () => {
+      activeRef.current = false;
+    };
+  }, []);
   const onServerError = useServerErrors(form);
   const index = STEPS.indexOf(step);
   const last = index === STEPS.length - 1;
@@ -128,24 +144,37 @@ function ProfileSetup() {
       window.scrollTo({ top: 0 });
       return;
     }
-    await form.handleSubmit((v) =>
+    await form.handleSubmit((v) => {
+      const startedAt = Date.now();
+      setWaiting("waiting");
+      // Leave first, then fill the cache (see useCreateCreator): /me shows the new profile.
+      // Skipped if the creator left this page meanwhile (a kept-alive page must not pull them back).
+      const finish = async (fresh?: MyCreator) => {
+        await wait(MIN_WAIT_MS - (Date.now() - startedAt));
+        if (!activeRef.current) return;
+        setWaiting("done");
+        await wait(DONE_HOLD_MS);
+        if (!activeRef.current) return;
+        toast.success(t("setup.created"));
+        router.replace("/me");
+        void invalidateMine(fresh);
+      };
       create.mutate(toPayload(v), {
-        onSuccess: (fresh) => {
-          toast.success(t("setup.created"));
-          // Leave first, then fill the cache (see useCreateCreator): /me shows the new profile.
-          router.replace("/me");
-          void invalidateMine(fresh);
-        },
+        onSuccess: (fresh) => void finish(fresh),
         onError: (e) => {
+          // The profile was saved but the answer got lost (dropped connection): carry on to it.
+          if (e instanceof ApiClientError && e.code === "creator_exists") return void finish();
+          setWaiting(null);
           if (e instanceof ApiClientError && e.code === "handle_taken") setStep("about");
           onServerError(e);
         },
-      }),
-    )();
+      });
+    })();
   };
 
   return (
     <div className="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-[14rem_minmax(0,1fr)]">
+      {waiting && <SetupWaiting done={waiting === "done"} />}
       {/* Stepper: vertical on wide screens, a progress bar on phones */}
       <aside className="lg:sticky lg:top-8 lg:self-start">
         <p className="text-sm font-medium text-primary tabular-nums">
