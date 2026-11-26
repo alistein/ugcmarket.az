@@ -785,7 +785,8 @@
       "completeTitle": "Your profile is complete 🎉",
       "completeTitlePlain": "Your profile is complete",
       "completeBody": "Brands will find you faster now",
-      "close": "Close"
+      "close": "Close",
+      "next": "Next: {section}"
     },
     "post": {
       "title": "{network} post",

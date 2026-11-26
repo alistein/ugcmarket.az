@@ -168,7 +168,7 @@ function ProfileSetup() {
         if (qc.getQueryState(lookup.queryKey)?.fetchStatus === "fetching")
           await Promise.race([qc.fetchQuery(lookup).catch(() => undefined), wait(LOOKUP_WAIT_MS)]);
       }
-      // Leave first, then fill the cache (see useCreateCreator): /me shows the new profile.
+      // Leave first, then fill the cache (see useCreateCreator): the board shows the new profile.
       // Skipped if the creator left this page meanwhile (a kept-alive page must not pull them back).
       const finish = async (fresh?: MyCreator) => {
         await wait(MIN_WAIT_MS - (Date.now() - startedAt));
@@ -177,7 +177,8 @@ function ProfileSetup() {
         await wait(DONE_HOLD_MS);
         if (!activeRef.current) return;
         toast.success(t("setup.created"));
-        router.replace("/me");
+        // Listings first: the board opens with the profile card on top (BoostTeaser).
+        router.replace("/campaigns");
         void invalidateMine(fresh);
       };
       create.mutate(toPayload(v), {

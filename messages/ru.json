@@ -785,7 +785,8 @@
       "completeTitle": "Профиль заполнен 🎉",
       "completeTitlePlain": "Профиль заполнен",
       "completeBody": "Теперь бренды найдут вас быстрее",
-      "close": "Закрыть"
+      "close": "Закрыть",
+      "next": "Дальше: {section}"
     },
     "post": {
       "title": "Публикация в {network}",

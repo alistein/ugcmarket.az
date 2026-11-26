@@ -15,6 +15,9 @@ import { PublicHeader } from "@/components/shared/public-header";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BoostTeaser } from "@/features/creators/components/boost-card";
+import { profileCompleteness } from "@/features/creators/form";
+import { useMyCreator } from "@/features/creators/hooks";
 import { useMe } from "@/features/me/hooks";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -244,12 +247,21 @@ function Filters({
   );
 }
 
-/** Creators who can't apply yet hear why, once, above the list (D2, D14). */
+/**
+ * Creators above the list: no profile → how to start; profile under 100% → the profile card
+ * (BoostTeaser, on every visit until complete); otherwise why they can't apply yet (D2, D14).
+ * Reads the creator's own profile, not `me.creator`: right after setup that one is still
+ * refreshing and would flash "create your profile" at someone who just did.
+ */
 function CreatorNote() {
   const t = useTranslations("board");
   const { data: me } = useMe();
-  if (me?.role !== "creator") return null;
-  if (!me.creator)
+  const isCreator = me?.role === "creator";
+  const mine = useMyCreator(isCreator);
+  if (!isCreator) return null;
+  if (mine.isPending) return <Skeleton className="mt-6 h-32 rounded-3xl" />;
+  const c = mine.data ?? null;
+  if (!c && !me.creator)
     return (
       <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
         {t("createProfileNote")}
@@ -258,7 +270,8 @@ function CreatorNote() {
         </Link>
       </p>
     );
-  if (me.creator.review_status !== "approved")
+  if (c && profileCompleteness(c).total < 100) return <BoostTeaser creator={c} className="mt-6" />;
+  if ((c?.review_status ?? me.creator?.review_status) !== "approved")
     return (
       <p className="mt-4 flex items-start gap-2 text-sm text-muted-foreground">
         <HugeiconsIcon icon={Clock01Icon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />

@@ -92,7 +92,7 @@ export function BoostCard({
   const todo = [...ENHANCER_ORDER, ...ONBOARDING_ORDER.filter((s) => sections[s] < 100)];
 
   return (
-    <section className="rounded-3xl bg-card p-4 shadow-(--shadow-soft) sm:p-5">
+    <section id="boost" className="scroll-mt-6 rounded-3xl bg-card p-4 shadow-(--shadow-soft) sm:p-5">
       {celebrating && <Confetti />}
       <div className="flex items-start gap-4">
         <div className="min-w-0 flex-1">
@@ -184,6 +184,57 @@ export function BoostCard({
         })}
       </ul>
     </section>
+  );
+}
+
+/**
+ * The /me card in short, for the listings board: total, bar, and the next missing section. The
+ * whole card is one link to /me (to the portfolio when that's next, else to the full card).
+ * No entrance motion: the board is visited often. Hidden by the caller at 100%.
+ */
+export function BoostTeaser({ creator: c, className }: { creator: MyCreator; className?: string }) {
+  const t = useTranslations("creator.boost");
+  const ts = useTranslations("creator.sections");
+  const { sections, total, done } = profileCompleteness(c);
+  const next = [...ENHANCER_ORDER, ...ONBOARDING_ORDER].find((s) => sections[s] < 100);
+  return (
+    <Link
+      href={next === "portfolio" ? "/me#portfolio" : "/me#boost"}
+      aria-label={`${t("title")}, ${total}%`}
+      className={cn(
+        "block rounded-3xl bg-card p-4 shadow-(--shadow-soft) outline-none sm:p-5",
+        "[transition:scale_160ms_var(--ease-out),box-shadow_200ms_ease] active:scale-[0.99]",
+        "focus-visible:ring-4 focus-visible:ring-ring/25 [@media(hover:hover)_and_(pointer:fine)]:hover:shadow-(--shadow-raised)",
+        className,
+      )}
+    >
+      <div className="flex items-start gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold tracking-[-0.02em]">{t("title")}</p>
+          <p className="text-sm text-pretty text-muted-foreground">{t("subtitle")}</p>
+        </div>
+        <p className="text-xl font-semibold tracking-[-0.03em] text-primary tabular-nums">{total}%</p>
+      </div>
+      <div
+        role="progressbar"
+        aria-valuenow={total}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={t("title")}
+        className="mt-3 h-1.5 overflow-hidden rounded-full bg-muted"
+      >
+        <div className="h-full origin-left rounded-full bg-primary" style={{ scale: `${total / 100} 1` }} />
+      </div>
+      <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+        <span className="tabular-nums">{t("done", { done, total: PROFILE_SECTIONS.length })}</span>
+        {next && (
+          <span className="ml-auto flex min-w-0 items-center gap-1 font-medium text-foreground">
+            <span className="truncate">{t("next", { section: ts(`${next}.title`) })}</span>
+            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} className="size-3.5 shrink-0" />
+          </span>
+        )}
+      </div>
+    </Link>
   );
 }
 

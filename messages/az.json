@@ -785,7 +785,8 @@
       "completeTitle": "Profiliniz tamdır 🎉",
       "completeTitlePlain": "Profiliniz tamdır",
       "completeBody": "Brendlər indi sizi daha tez tapacaq",
-      "close": "Bağla"
+      "close": "Bağla",
+      "next": "Növbəti: {section}"
     },
     "post": {
       "title": "{network} paylaşımı",

@@ -134,6 +134,17 @@ function Home({ creator: c }: { creator: MyCreator }) {
     });
   };
 
+  // Arriving from the board's profile card: /me#portfolio opens the portfolio (as its row does),
+  // /me#boost brings the card into view. Read once per visit; the hash is the URL's, not state.
+  useEffect(() => {
+    const hash = window.location.hash;
+    const id = requestAnimationFrame(() => {
+      if (hash === "#portfolio") showPortfolio();
+      else if (hash === "#boost") document.getElementById("boost")?.scrollIntoView({ block: "start" });
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
   return (
     <div className="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-[13rem_minmax(0,1fr)]">
       {/* Side column: meta + links */}
