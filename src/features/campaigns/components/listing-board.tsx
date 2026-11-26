@@ -73,6 +73,8 @@ export function ListingBoardView() {
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader className="mx-auto flex w-full max-w-5xl items-center gap-2 px-4 py-4" />
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-4 pb-28 sm:pb-16">
+        <CreatorNote slot="top" />
+
         <div className="flex flex-wrap items-end gap-x-6 gap-y-4">
           <div className="min-w-0 flex-1">
             <h1 className="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-4xl">
@@ -96,7 +98,7 @@ export function ListingBoardView() {
           )}
         </div>
 
-        <CreatorNote />
+        <CreatorNote slot="below" />
 
         <div className="relative">
           <div
@@ -248,19 +250,22 @@ function Filters({
 }
 
 /**
- * Creators above the list: no profile → how to start; profile under 100% → the profile card
- * (BoostTeaser, on every visit until complete); otherwise why they can't apply yet (D2, D14).
+ * Creators: profile under 100% → the profile card on top of the page, above the title (BoostTeaser,
+ * on every visit until complete). Under the title: no profile → how to start; otherwise why they
+ * can't apply yet (D2, D14). Rendered in both slots; each shows only its own case.
  * Reads the creator's own profile, not `me.creator`: right after setup that one is still
  * refreshing and would flash "create your profile" at someone who just did.
  */
-function CreatorNote() {
+function CreatorNote({ slot }: { slot: "top" | "below" }) {
   const t = useTranslations("board");
   const { data: me } = useMe();
   const isCreator = me?.role === "creator";
   const mine = useMyCreator(isCreator);
   if (!isCreator) return null;
-  if (mine.isPending) return <Skeleton className="mt-6 h-32 rounded-3xl" />;
+  if (mine.isPending) return slot === "top" ? <Skeleton className="mb-6 h-32 rounded-3xl" /> : null;
   const c = mine.data ?? null;
+  const boost = !!c && profileCompleteness(c).total < 100;
+  if (slot === "top") return boost ? <BoostTeaser creator={c} className="mb-6" /> : null;
   if (!c && !me.creator)
     return (
       <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
@@ -270,7 +275,7 @@ function CreatorNote() {
         </Link>
       </p>
     );
-  if (c && profileCompleteness(c).total < 100) return <BoostTeaser creator={c} className="mt-6" />;
+  if (boost) return null;
   if ((c?.review_status ?? me.creator?.review_status) !== "approved")
     return (
       <p className="mt-4 flex items-start gap-2 text-sm text-muted-foreground">
