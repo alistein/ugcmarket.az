@@ -89,7 +89,7 @@ function ComboboxContent({
           )}
           {...props}
         >
-          <div className="relative shrink-0 p-1.5 pb-1">
+          <div className="relative mb-1 shrink-0 p-1.5">
             <HugeiconsIcon
               icon={Search01Icon}
               strokeWidth={2}
