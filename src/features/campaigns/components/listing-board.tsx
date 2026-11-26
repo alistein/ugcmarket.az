@@ -72,7 +72,7 @@ export function ListingBoardView() {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader className="mx-auto flex w-full max-w-5xl items-center gap-2 px-4 py-4" />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-4 pb-16">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-4 pb-28 sm:pb-16">
         <div className="flex flex-wrap items-end gap-x-6 gap-y-4">
           <div className="min-w-0 flex-1">
             <h1 className="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-4xl">

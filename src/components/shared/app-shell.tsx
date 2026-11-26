@@ -28,6 +28,7 @@ import { useMyBrand } from "@/features/brands/hooks";
 import { useMyCreator } from "@/features/creators/hooks";
 import { useMe } from "@/features/me/hooks";
 import { Link, usePathname } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 
 /**
  * Signed-in frame (Luhive-style) for creators and brands: logo left; one primary action
@@ -39,7 +40,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <AppHeader className="mx-auto flex w-full max-w-5xl items-center gap-3 px-4 pt-5 pb-2 sm:pt-7" />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-16 sm:pt-10">{children}</main>
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 sm:pt-10 sm:pb-16">{children}</main>
     </div>
   );
 }
@@ -67,7 +68,52 @@ export function AppHeader({ className }: { className: string }) {
         </Suspense>
         <AccountMenu />
       </div>
+      {/* Phones: Elanlar / Profil floating at the bottom (creators with a profile). Fixed, so its
+          place in the DOM doesn't matter; it lives here to be on every signed-in page. */}
+      <Suspense fallback={null}>{me?.role === "creator" && me.creator && <CreatorTabBar />}</Suspense>
     </header>
+  );
+}
+
+/**
+ * Pinterest-style bottom bar on phones: two floating tiles, Elanlar and Profil (the photo).
+ * The current one is marked; no entrance motion (it's on every page), only press feedback.
+ * Pages leave room for it with `pb-28` on phones; the edit page's save bar sits above it.
+ */
+function CreatorTabBar() {
+  const t = useTranslations("app");
+  const pathname = usePathname();
+  const { data: creator } = useMyCreator();
+  const onBoard = pathname === "/campaigns" || pathname.startsWith("/campaigns/");
+  const onProfile = pathname === "/me" || pathname === "/me/profile";
+  const tile =
+    "flex size-12 items-center justify-center rounded-2xl bg-card shadow-(--shadow-float) ring-1 ring-foreground/[0.06] outline-none [transition:scale_160ms_var(--ease-out)] focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.97] dark:ring-white/10";
+  return (
+    <nav
+      aria-label={t("account")}
+      className="fixed inset-x-0 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 flex justify-center gap-3 sm:hidden"
+    >
+      <Link
+        href="/campaigns"
+        aria-label={t("browseCampaigns")}
+        aria-current={onBoard ? "page" : undefined}
+        className={cn(tile, onBoard ? "text-foreground" : "text-muted-foreground")}
+      >
+        <HugeiconsIcon icon={Megaphone01Icon} strokeWidth={onBoard ? 2.25 : 1.75} className="size-6" />
+      </Link>
+      <Link
+        href="/me"
+        aria-label={t("myProfile")}
+        aria-current={onProfile ? "page" : undefined}
+        className={tile}
+      >
+        <span
+          className={cn("rounded-full", onProfile && "ring-2 ring-foreground ring-offset-2 ring-offset-card")}
+        >
+          <NamedAvatar name={creator?.display_name ?? "?"} src={creator?.avatar_url} size="sm" single />
+        </span>
+      </Link>
+    </nav>
   );
 }
 

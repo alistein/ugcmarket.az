@@ -81,7 +81,7 @@ export function ListingDetailView() {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader className="mx-auto flex w-full max-w-3xl items-center gap-2 px-4 py-4" />
-      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pt-4 pb-16">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 pt-4 pb-28 sm:pb-16">
         {data ? (
           <Listing data={data} preview={preview} isOwner={isOwner} />
         ) : loading ? (

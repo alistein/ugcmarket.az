@@ -180,7 +180,7 @@ export function PublicCreatorProfile({
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader className={WIDE_HEADER} />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-16 sm:pt-10">
+      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 sm:pb-16 sm:pt-10">
         {preview && (
           <div role="status" className="mb-6 flex items-start gap-2 text-sm text-muted-foreground">
             <HugeiconsIcon icon={Clock01Icon} strokeWidth={2} className="mt-0.5 size-4 shrink-0" />
