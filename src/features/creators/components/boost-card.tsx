@@ -133,7 +133,8 @@ export function BoostCard({
         {t("done", { done, total: PROFILE_SECTIONS.length })}
       </p>
 
-      <ul className="mt-3 grid border-t border-border/70">
+      {/* grid-cols-1 = minmax(0,1fr): an auto column would grow to the one-line hints and push the page wide on phones */}
+      <ul className="mt-3 grid grid-cols-1 border-t border-border/70">
         {todo.map((s) => {
           const inner = (
             <>

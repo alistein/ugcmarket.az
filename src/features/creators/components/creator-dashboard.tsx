@@ -218,7 +218,8 @@ function Home({ creator: c }: { creator: MyCreator }) {
 
       {/* Main column */}
       <div className="order-1 grid min-w-0 grid-cols-1 content-start gap-6 lg:order-2">
-        <section className="flex flex-col gap-5 sm:flex-row sm:items-center">
+        <PhoneHeader creator={c} onAddBio={() => setSheet("about")} />
+        <section className="hidden gap-5 sm:flex sm:flex-row sm:items-center">
           <NamedAvatar
             name={c.display_name}
             src={c.avatar_url}
@@ -353,17 +354,7 @@ const ACTION =
 /** Top-right of the profile: edit, and share the public link (share sheet on phones, copy on computers). */
 function HeaderActions({ creator }: { creator: MyCreator }) {
   const t = useTranslations("creator.dashboard");
-  const locale = useLocale();
-  const [copied, setCopied] = useState(false);
-
-  const share = async () => {
-    const url = `${window.location.origin}/${locale}/creator/${creator.handle}`;
-    const result = await shareOrCopy({ title: creator.display_name, url });
-    if (result === "copied") {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1600);
-    } else if (result === "failed") toast.error(t("copyFailed"));
-  };
+  const { share, copied } = useShareProfile(creator);
 
   return (
     <div className="flex items-center gap-5 self-start sm:pt-2">
@@ -379,8 +370,144 @@ function HeaderActions({ creator }: { creator: MyCreator }) {
   );
 }
 
+/** Share the public link: the share sheet on phones, copy (with a short "Kopyalandı") on computers. */
+function useShareProfile(creator: MyCreator) {
+  const t = useTranslations("creator.dashboard");
+  const locale = useLocale();
+  const [copied, setCopied] = useState(false);
+  const share = async () => {
+    const url = `${window.location.origin}/${locale}/creator/${creator.handle}`;
+    const result = await shareOrCopy({ title: creator.display_name, url });
+    if (result === "copied") {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } else if (result === "failed") toast.error(t("copyFailed"));
+  };
+  return { share, copied };
+}
+
+/**
+ * Phones: the Instagram-style profile head. Photo with the numbers beside it, then name, status
+ * and bio, then two equal buttons. From `sm` up the wider row layout takes over.
+ */
+function PhoneHeader({ creator: c, onAddBio }: { creator: MyCreator; onAddBio: () => void }) {
+  const t = useTranslations("creator.dashboard");
+  const { share, copied } = useShareProfile(c);
+  const button =
+    "inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted px-3 text-sm font-semibold outline-none select-none [transition:scale_160ms_var(--ease-out),background-color_150ms_ease] focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_6%)]";
+  return (
+    <section className="grid gap-3 sm:hidden">
+      <div className="flex items-center gap-4">
+        <NamedAvatar
+          name={c.display_name}
+          src={c.avatar_url}
+          className="size-20"
+          fallbackClassName="text-2xl"
+        />
+        <PhoneStats creator={c} />
+      </div>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-2">
+          <h1 className="text-xl font-semibold tracking-[-0.025em] text-balance">{c.display_name}</h1>
+          <StatusMark status={c.review_status} />
+        </div>
+        {c.bio ? (
+          <p className="mt-1 text-sm text-pretty">{c.bio}</p>
+        ) : (
+          <button type="button" onClick={onAddBio} className="mt-1 text-sm text-primary hover:underline">
+            {t("addBio")}
+          </button>
+        )}
+        <SocialProblems creator={c} className="mt-1.5" />
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <Link href="/me/profile" className={button}>
+          {t("edit")}
+        </Link>
+        <button type="button" onClick={share} className={button}>
+          <span aria-live="polite">{copied ? t("copied") : t("share")}</span>
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/** Numbers beside the photo: followers per network (tap for the last check and refresh), works. */
+function PhoneStats({ creator: c }: { creator: MyCreator }) {
+  const t = useTranslations("creator.dashboard");
+  const locale = useLocale();
+  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+  const cell = "flex flex-col items-center leading-tight";
+  return (
+    <div className="flex flex-1 items-center justify-around gap-2 text-center">
+      {c.creator_socials.map((s) => {
+        const n = socialNumbers(c, s);
+        return (
+          <FollowersMenu key={s.network} creator={c} stacked>
+            <span className="flex items-center gap-1 text-base font-semibold tabular-nums">
+              {socialFailed(c, s) ? "–" : compact.format(n.followers)}
+              {n.checked && (
+                <HugeiconsIcon
+                  icon={CheckmarkCircle02Icon}
+                  strokeWidth={2}
+                  className="size-3.5 text-mint-ink"
+                  aria-label={t("checked")}
+                />
+              )}
+            </span>
+            <span className="text-sm text-muted-foreground">{t("followers")}</span>
+          </FollowersMenu>
+        );
+      })}
+      <span className={cell}>
+        <span className="text-base font-semibold tabular-nums">{c.portfolio_items.length}</span>
+        <span className="text-sm text-muted-foreground">{t("works")}</span>
+      </span>
+    </div>
+  );
+}
+
+/** Checked and nothing came back (not found, private, or the providers failed). */
+function socialFailed(c: MyCreator, s: MyCreator["creator_socials"][number]) {
+  return (
+    !socialNumbers(c, s).checked &&
+    !!c.creator_social_stats?.some(
+      (x) => x.network === s.network && x.handle.toLowerCase() === s.handle.toLowerCase() && !x.fetched_at,
+    )
+  );
+}
+
+/** "@handle hesabını tapa bilmədik · Düzəlt" for each account the check couldn't find. */
+function SocialProblems({ creator: c, className }: { creator: MyCreator; className?: string }) {
+  const t = useTranslations("creator.dashboard");
+  const failed = c.creator_socials.filter((s) => socialFailed(c, s));
+  if (!failed.length) return null;
+  return (
+    <div className={cn("grid gap-1 text-sm", className)}>
+      {failed.map((s) => (
+        <p key={s.network} className="flex flex-wrap items-center gap-x-1.5 text-destructive">
+          <HugeiconsIcon icon={AlertCircleIcon} strokeWidth={2} className="size-3.5" />
+          {t("socialNotFound", { handle: s.handle })}
+          <Link href="/me/profile#socials" className="font-medium underline underline-offset-4">
+            {t("socialFix")}
+          </Link>
+        </p>
+      ))}
+    </div>
+  );
+}
+
 /** Followers figure that opens a small menu: last check time and the refresh action. */
-function FollowersMenu({ creator: c, children }: { creator: MyCreator; children: React.ReactNode }) {
+function FollowersMenu({
+  creator: c,
+  children,
+  stacked,
+}: {
+  creator: MyCreator;
+  children: React.ReactNode;
+  /** Phone stats: number over label, no refresh icon (the menu still opens on tap). */
+  stacked?: boolean;
+}) {
   const t = useTranslations("creator.dashboard");
   const te = useTranslations();
   const refresh = useRefreshSocialStats();
@@ -393,13 +520,22 @@ function FollowersMenu({ creator: c, children }: { creator: MyCreator; children:
   const when = checkedAt ? formatDateTime(new Date(checkedAt)) : null;
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="-mx-1.5 -my-0.5 inline-flex items-center gap-1.5 rounded-full px-1.5 py-0.5 whitespace-nowrap transition-colors outline-none hover:bg-muted focus-visible:ring-4 focus-visible:ring-ring/25 aria-expanded:bg-muted">
+      <DropdownMenuTrigger
+        className={cn(
+          "whitespace-nowrap transition-colors outline-none hover:bg-muted focus-visible:ring-4 focus-visible:ring-ring/25 aria-expanded:bg-muted",
+          stacked
+            ? "flex flex-col items-center rounded-xl px-2 py-1 leading-tight"
+            : "-mx-1.5 -my-0.5 inline-flex items-center gap-1.5 rounded-full px-1.5 py-0.5",
+        )}
+      >
         {children}
-        <HugeiconsIcon
-          icon={RefreshIcon}
-          strokeWidth={2}
-          className={cn("size-3", refresh.isPending && "animate-spin")}
-        />
+        {!stacked && (
+          <HugeiconsIcon
+            icon={RefreshIcon}
+            strokeWidth={2}
+            className={cn("size-3", refresh.isPending && "animate-spin")}
+          />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" sideOffset={8} className="w-72 p-1.5">
         <div className="px-3 pt-2 pb-2.5 text-xs text-muted-foreground">
@@ -443,13 +579,7 @@ function ProfileStatsLine({ creator: c }: { creator: MyCreator }) {
         const n = socialNumbers(c, s);
         // Checked and nothing came back (not found, private, or the providers failed): say so and
         // let the creator fix the username. Setup stays silent about it on purpose.
-        const failed =
-          !n.checked &&
-          c.creator_social_stats?.some(
-            (x) =>
-              x.network === s.network && x.handle.toLowerCase() === s.handle.toLowerCase() && !x.fetched_at,
-          );
-        if (failed)
+        if (socialFailed(c, s))
           return (
             <span key={s.network} className="inline-flex flex-wrap items-center gap-x-1.5 text-destructive">
               <HugeiconsIcon icon={AlertCircleIcon} strokeWidth={2} className="size-3.5" />

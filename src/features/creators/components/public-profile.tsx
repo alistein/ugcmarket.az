@@ -188,7 +188,8 @@ export function PublicCreatorProfile({
 
           {/* Main column */}
           <div className="order-1 grid min-w-0 grid-cols-1 content-start gap-6 lg:order-2">
-            <section className="flex flex-col gap-5 sm:flex-row sm:items-center">
+            <PhoneHeader creator={c} isOwner={isOwner} />
+            <section className="hidden gap-5 sm:flex sm:flex-row sm:items-center">
               <NamedAvatar
                 name={c.display_name}
                 src={c.avatar_url}
@@ -306,8 +307,8 @@ function SideBlock({
   );
 }
 
-/** Top-right, like /me: share for everyone (copy on computers), edit for the owner. */
-function PublicActions({ creator, isOwner }: { creator: CreatorPublic; isOwner?: boolean }) {
+/** Share the public link: the share sheet on phones, copy (with a short "Kopyalandı") on computers. */
+function useShareProfile(creator: CreatorPublic) {
   const t = useTranslations("creator.dashboard");
   const locale = useLocale();
   const [copied, setCopied] = useState(false);
@@ -319,6 +320,78 @@ function PublicActions({ creator, isOwner }: { creator: CreatorPublic; isOwner?:
       setTimeout(() => setCopied(false), 1600);
     } else if (result === "failed") toast.error(t("copyFailed"));
   };
+  return { share, copied };
+}
+
+/**
+ * Phones, like /me: photo with the numbers beside it, then name and bio, then the buttons
+ * (Redaktə et + Paylaş for the owner, Paylaş for everyone else; brands contact from the card below).
+ */
+function PhoneHeader({ creator: c, isOwner }: { creator: CreatorPublic; isOwner?: boolean }) {
+  const t = useTranslations("creator.dashboard");
+  const locale = useLocale();
+  const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
+  const { share, copied } = useShareProfile(c);
+  const button =
+    "inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-muted px-3 text-sm font-semibold outline-none select-none [transition:scale_160ms_var(--ease-out),background-color_150ms_ease] focus-visible:ring-4 focus-visible:ring-ring/25 active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_6%)]";
+  const cell = "flex flex-col items-center leading-tight";
+  return (
+    <section className="grid gap-3 sm:hidden">
+      <div className="flex items-center gap-4">
+        <NamedAvatar
+          name={c.display_name}
+          src={c.avatar_url}
+          className="size-20"
+          fallbackClassName="text-2xl"
+        />
+        <div className="flex flex-1 items-center justify-around gap-2 text-center">
+          {c.creator_socials.map((s) => {
+            const n = socialNumbers(c, s);
+            return (
+              <span key={s.network} className={cell}>
+                <span className="flex items-center gap-1 text-base font-semibold tabular-nums">
+                  {compact.format(n.followers)}
+                  {n.checked && (
+                    <HugeiconsIcon
+                      icon={CheckmarkCircle02Icon}
+                      strokeWidth={2}
+                      className="size-3.5 text-mint-ink"
+                      aria-label={t("checked")}
+                    />
+                  )}
+                </span>
+                <span className="text-sm text-muted-foreground">{t("followers")}</span>
+              </span>
+            );
+          })}
+          <span className={cell}>
+            <span className="text-base font-semibold tabular-nums">{c.portfolio_items.length}</span>
+            <span className="text-sm text-muted-foreground">{t("works")}</span>
+          </span>
+        </div>
+      </div>
+      <div className="min-w-0">
+        <h1 className="text-xl font-semibold tracking-[-0.025em] text-balance">{c.display_name}</h1>
+        {c.bio && <p className="mt-1 text-sm text-pretty whitespace-pre-line">{c.bio}</p>}
+      </div>
+      <div className={cn("grid gap-2", isOwner ? "grid-cols-2" : "grid-cols-1")}>
+        {isOwner && (
+          <Link href="/me/profile" className={button}>
+            {t("edit")}
+          </Link>
+        )}
+        <button type="button" onClick={share} className={button}>
+          <span aria-live="polite">{copied ? t("copied") : t("share")}</span>
+        </button>
+      </div>
+    </section>
+  );
+}
+
+/** Top-right, like /me: share for everyone (copy on computers), edit for the owner. */
+function PublicActions({ creator, isOwner }: { creator: CreatorPublic; isOwner?: boolean }) {
+  const t = useTranslations("creator.dashboard");
+  const { share, copied } = useShareProfile(creator);
   const action =
     "inline-flex items-center gap-1.5 text-sm font-medium text-foreground transition-colors hover:text-primary [&_svg]:size-4";
   return (
