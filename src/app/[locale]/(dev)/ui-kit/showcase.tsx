@@ -31,8 +31,9 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AvatarGroup, AvatarGroupCount } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeVariants } from "@/components/ui/badge";
 import { CategoryIcon } from "@/components/shared/category-icon";
+import { OneRowChips } from "@/components/shared/one-row-chips";
 import { ChipGroup } from "@/features/creators/components/form-bits";
 import { SetupWaiting } from "@/features/creators/components/setup-waiting";
 import { CREATOR_CATEGORIES, type CreatorCategory } from "@/schemas";
@@ -1133,6 +1134,9 @@ function Patterns() {
       <Panel label="Content directions: icon chips (Solar icons, the one exception to Hugeicons)">
         <DirectionsDemo />
       </Panel>
+      <Panel label="One-row chips (phone profile): at least 3, the rest fold into +N, tap to show all">
+        <OneRowDemo />
+      </Panel>
       <Panel label="Stress test: long Azerbaijani and Russian strings" className="grid gap-4 md:grid-cols-2">
         <CampaignCard
           brand="Azərbaycan Respublikası Gənclər və İdman Nazirliyinin Tədbirlər Mərkəzi"
@@ -1171,6 +1175,25 @@ function DirectionsDemo() {
       label={(c) => tt(`categories.${c}`)}
       renderIcon={(c) => <CategoryIcon category={c} />}
     />
+  );
+}
+
+/** OneRowChips at a phone-ish width: as many directions as fit, then "+N". */
+function OneRowDemo() {
+  const tt = useTranslations("taxonomy");
+  return (
+    <div className="w-80 max-w-full">
+      <OneRowChips
+        items={CREATOR_CATEGORIES.slice(0, 9).map((c) => (
+          <Badge key={c} variant="brand">
+            <CategoryIcon category={c} className="size-3.5" />
+            {tt(`categories.${c}`)}
+          </Badge>
+        ))}
+        min={3}
+        moreClassName={badgeVariants({ variant: "brand" })}
+      />
+    </div>
   );
 }
 

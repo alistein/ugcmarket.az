@@ -17,8 +17,9 @@ import { ClampedChips } from "@/components/shared/clamped-chips";
 import { PublicHeader } from "@/components/shared/public-header";
 import { LoadingState } from "@/components/shared/loading-state";
 import { NamedAvatar } from "@/components/shared/named-avatar";
+import { OneRowChips } from "@/components/shared/one-row-chips";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
+import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useMe } from "@/features/me/hooks";
 import { Link } from "@/i18n/navigation";
@@ -126,6 +127,56 @@ export function PublicCreatorProfile({
   const known = <T extends string>(list: readonly T[], v: string): v is T =>
     (list as readonly string[]).includes(v);
 
+  const directions = normalizeCategories(c.categories).map((cat) => (
+    <Badge key={cat} variant="brand">
+      <CategoryIcon category={cat} className="size-3.5" />
+      {tt(`categories.${cat}`)}
+    </Badge>
+  ));
+
+  // Phones: who, where and the account in one wrapping row under the bio.
+  const facts = (
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted-foreground">
+      {who(c) && <span>{who(c)}</span>}
+      <span className="inline-flex items-center gap-1.5">
+        <HugeiconsIcon icon={Location01Icon} strokeWidth={2} className="size-4 shrink-0" />
+        {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
+      </span>
+      {c.creator_socials.map((s) => (
+        <a
+          key={s.network}
+          href={SOCIAL_URL[s.network](s.handle)}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          className="inline-flex min-w-0 items-center gap-1.5 text-foreground hover:underline"
+        >
+          <HugeiconsIcon icon={NETWORK_ICON[s.network]} strokeWidth={2} className="size-4 shrink-0" />
+          <span className="truncate">{s.handle}</span>
+        </a>
+      ))}
+    </div>
+  );
+
+  // Phones: under the facts, directions cut to one row (+N), then the terms. Wider screens keep
+  // these in the side column.
+  const phoneDetails = (
+    <div className="grid gap-3">
+      {facts}
+      {directions.length > 0 && (
+        <div className="grid gap-1.5">
+          <p className="text-xs font-medium text-muted-foreground">{td("categoriesTitle")}</p>
+          <OneRowChips items={directions} min={3} moreClassName={badgeVariants({ variant: "brand" })} />
+        </div>
+      )}
+      <div className="grid gap-1.5">
+        <p className="text-xs font-medium text-muted-foreground">{td("termsTitle")}</p>
+        <div className="flex flex-wrap gap-1.5">
+          <DealTerms creator={c} />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <PublicHeader className={WIDE_HEADER} />
@@ -138,45 +189,43 @@ export function PublicCreatorProfile({
         )}
 
         <div className="grid grid-cols-1 gap-x-12 gap-y-8 lg:grid-cols-[13rem_minmax(0,1fr)]">
-          {/* Side column: who, where, links, terms, categories, tags (prices are not shown) */}
+          {/* Side column: who, where, links, terms, directions, tags (prices are not shown).
+              Phones get the first ones in the header instead (phoneDetails). */}
           <aside className="order-2 grid content-start gap-3 text-sm lg:order-1 lg:pt-2">
-            {who(c) && <p>{who(c)}</p>}
-            <p className="flex items-center gap-2.5">
-              <HugeiconsIcon
-                icon={Location01Icon}
-                strokeWidth={2}
-                className="size-4 shrink-0 text-muted-foreground"
-              />
-              {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
-            </p>
-            {c.creator_socials.map((s) => (
-              <a
-                key={s.network}
-                href={SOCIAL_URL[s.network](s.handle)}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="flex items-center gap-2.5 hover:underline"
-              >
+            <div className="hidden content-start gap-3 sm:grid">
+              {who(c) && <p>{who(c)}</p>}
+              <p className="flex items-center gap-2.5">
                 <HugeiconsIcon
-                  icon={NETWORK_ICON[s.network]}
+                  icon={Location01Icon}
                   strokeWidth={2}
-                  className="size-4 text-muted-foreground"
+                  className="size-4 shrink-0 text-muted-foreground"
                 />
-                {s.handle}
-              </a>
-            ))}
+                {known(CITIES, c.city) ? tt(`cities.${c.city}`) : c.city}
+              </p>
+              {c.creator_socials.map((s) => (
+                <a
+                  key={s.network}
+                  href={SOCIAL_URL[s.network](s.handle)}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="flex items-center gap-2.5 hover:underline"
+                >
+                  <HugeiconsIcon
+                    icon={NETWORK_ICON[s.network]}
+                    strokeWidth={2}
+                    className="size-4 text-muted-foreground"
+                  />
+                  {s.handle}
+                </a>
+              ))}
+            </div>
 
-            <SideBlock title={td("termsTitle")}>
+            <SideBlock title={td("termsTitle")} className="hidden sm:grid">
               <DealTerms creator={c} />
             </SideBlock>
-            {c.categories.length > 0 && (
-              <SideBlock title={td("categoriesTitle")} clamp>
-                {normalizeCategories(c.categories).map((cat) => (
-                  <Badge key={cat} variant="brand">
-                    <CategoryIcon category={cat} className="size-3.5" />
-                    {tt(`categories.${cat}`)}
-                  </Badge>
-                ))}
+            {directions.length > 0 && (
+              <SideBlock title={td("categoriesTitle")} clamp className="hidden sm:grid">
+                {directions}
               </SideBlock>
             )}
             {c.shoot_options.length > 0 && (
@@ -188,7 +237,7 @@ export function PublicCreatorProfile({
 
           {/* Main column */}
           <div className="order-1 grid min-w-0 grid-cols-1 content-start gap-6 lg:order-2">
-            <PhoneHeader creator={c} isOwner={isOwner} />
+            <PhoneHeader creator={c} isOwner={isOwner} details={phoneDetails} />
             <section className="hidden gap-5 sm:flex sm:flex-row sm:items-center">
               <NamedAvatar
                 name={c.display_name}
@@ -289,14 +338,16 @@ function SideBlock({
   title,
   children,
   clamp,
+  className,
 }: {
   title: string;
   children: React.ReactNode;
   /** Long chip lists: two lines, then "Daha çox". */
   clamp?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="mt-4 grid gap-2.5 border-t border-border/70 pt-5">
+    <div className={cn("mt-4 grid gap-2.5 border-t border-border/70 pt-5", className)}>
       <p className="text-xs font-medium text-muted-foreground">{title}</p>
       {clamp ? (
         <ClampedChips>{children}</ClampedChips>
@@ -327,7 +378,16 @@ function useShareProfile(creator: CreatorPublic) {
  * Phones, like /me: photo with the numbers beside it, then name and bio, then the buttons
  * (Redaktə et + Paylaş for the owner, Paylaş for everyone else; brands contact from the card below).
  */
-function PhoneHeader({ creator: c, isOwner }: { creator: CreatorPublic; isOwner?: boolean }) {
+function PhoneHeader({
+  creator: c,
+  isOwner,
+  details,
+}: {
+  creator: CreatorPublic;
+  isOwner?: boolean;
+  /** Under the bio: who/where/account, directions in one row, terms. */
+  details: React.ReactNode;
+}) {
   const t = useTranslations("creator.dashboard");
   const locale = useLocale();
   const compact = new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 });
@@ -373,6 +433,7 @@ function PhoneHeader({ creator: c, isOwner }: { creator: CreatorPublic; isOwner?
       <div className="min-w-0">
         <h1 className="text-xl font-semibold tracking-[-0.025em] text-balance">{c.display_name}</h1>
         {c.bio && <p className="mt-1 text-sm text-pretty whitespace-pre-line">{c.bio}</p>}
+        <div className="mt-3">{details}</div>
       </div>
       <div className={cn("grid gap-2", isOwner ? "grid-cols-2" : "grid-cols-1")}>
         {isOwner && (
