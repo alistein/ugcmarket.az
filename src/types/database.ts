@@ -211,6 +211,7 @@ export type Database = {
           deadline: string | null
           deliverables: Json
           description: string | null
+          gift_type: string
           id: string
           min_followers: number
           network: Database["public"]["Enums"]["social_network"]
@@ -237,6 +238,7 @@ export type Database = {
           deadline?: string | null
           deliverables?: Json
           description?: string | null
+          gift_type?: string
           id?: string
           min_followers?: number
           network: Database["public"]["Enums"]["social_network"]
@@ -263,6 +265,7 @@ export type Database = {
           deadline?: string | null
           deliverables?: Json
           description?: string | null
+          gift_type?: string
           id?: string
           min_followers?: number
           network?: Database["public"]["Enums"]["social_network"]

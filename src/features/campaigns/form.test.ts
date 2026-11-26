@@ -19,6 +19,7 @@ const saved: OwnCampaign = {
   compensation_type: "barter",
   compensation_value: null,
   compensation_details: "Breakfast for two",
+  gift_type: "none",
   currency: "AZN",
   creators_needed: 1,
   min_followers: 10_000,
@@ -33,12 +34,32 @@ const saved: OwnCampaign = {
 };
 
 describe("campaign form helpers", () => {
-  it("bid listings drop the amount and keep the extra", () => {
+  it("bid listings drop the amount and keep the gift's details", () => {
     const p = toPayload(
-      CampaignInput.parse({ ...campaignToForm(saved), compensation_type: "bid", compensation_value: "500" }),
+      CampaignInput.parse({
+        ...campaignToForm(saved),
+        compensation_type: "bid",
+        compensation_value: "500",
+        gift_type: "product",
+      }),
     );
     expect(p.compensation_value).toBeNull();
+    expect(p.gift_type).toBe("product");
     expect(p.compensation_details).toBe("Breakfast for two");
+  });
+
+  it("drops details on paid or bid listings without a gift (D7)", () => {
+    for (const compensation_type of ["money", "bid"] as const) {
+      const p = toPayload(
+        CampaignInput.parse({ ...campaignToForm(saved), compensation_type, compensation_value: "200" }),
+      );
+      expect(p.gift_type).toBe("none");
+      expect(p.compensation_details).toBeNull();
+    }
+  });
+
+  it("old listings without a gift load as none", () => {
+    expect(campaignToForm(saved).gift_type).toBe("none");
   });
 
   it("round-trips a saved listing through the form unchanged", () => {
@@ -59,10 +80,11 @@ describe("campaign form helpers", () => {
       ...campaignToForm(saved),
       compensation_type: "money",
       compensation_value: "200",
+      gift_type: "service",
       deliverables: [{ format: "reels", count: 2 }],
     });
     const p = toPayload(parsed);
-    expect(p.compensation_details).toBe("Breakfast for two"); // paid + a product on top
+    expect(p.compensation_details).toBe("Breakfast for two"); // paid + a service on top
     expect(p.compensation_value).toBe(200);
     expect(p.collaboration_model).toBe("post");
   });

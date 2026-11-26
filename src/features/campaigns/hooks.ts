@@ -1,5 +1,6 @@
 "use client";
 
+import type { GiftType } from "@/schemas";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import posthog from "posthog-js";
 import type { z } from "zod";
@@ -94,6 +95,7 @@ export type MyCampaign = {
   /** Set when the brand archived it (hidden from the main list, status unchanged). */
   archived_at: string | null;
   compensation_details: string | null;
+  gift_type?: GiftType | null;
   city: string | null;
   applications: { count: number }[];
   /** Newest three applicants (for the avatar stack). */
@@ -162,6 +164,7 @@ export type OwnCampaign = Omit<MyCampaign, "applications" | "recent_applicants">
   collaboration_model: "post" | "ugc";
   network: string;
   compensation_details: string | null;
+  gift_type?: GiftType | null;
   creators_needed: number;
   min_followers: number;
   city: string | null;
@@ -217,13 +220,14 @@ export type CampaignCard = {
   compensation_type: string;
   compensation_value: number | null;
   compensation_details: string | null;
+  gift_type?: GiftType | null;
   currency: string;
   city: string | null;
   deadline: string;
   min_followers: number;
   creators_needed: number;
   published_at: string | null;
-  brand: { id: string; name: string; logo_url: string | null } | null;
+  brand: { id: string; name: string; logo_url: string | null; category: string | null } | null;
   /** Why pay was left out by the server: signed out, or another brand's listing. null = shown. */
   pay_hidden: PayHidden;
   /** Creators: already applied. */

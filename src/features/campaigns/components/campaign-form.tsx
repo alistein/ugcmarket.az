@@ -38,6 +38,7 @@ import {
 } from "@/schemas";
 import {
   COMPENSATION_TYPES,
+  GIFT_TYPES,
   MIN_FOLLOWER_OPTIONS,
   STEP_FIELDS,
   STEPS,
@@ -49,7 +50,7 @@ import {
 import { useCreateCampaign, useSetCampaignStatus } from "../hooks";
 import { ChipGroup } from "@/features/creators/components/form-bits";
 import { ChoiceChips, NumberStepper } from "./form-controls";
-import { ListingCard } from "./listing-card";
+import { ListingCard, type ListingCardData } from "./listing-card";
 
 export type CampaignForm = UseFormReturn<CampaignFormValues, unknown, CampaignInput>;
 
@@ -340,7 +341,7 @@ export function Preview({ form, brand }: { form: CampaignForm; brand: MyBrand })
       <ListingCard
         data={{
           title: typeof v.title === "string" ? v.title.trim() : "",
-          brand: { name: brand.name, logo_url: brand.logo_url },
+          brand: { name: brand.name, logo_url: brand.logo_url, category: brand.category },
           category: v.category as string | undefined,
           deliverables: ((v.deliverables ?? []) as Partial<Deliverable>[]).flatMap((d) =>
             d?.format ? [{ format: d.format, count: Number(d.count) || 1 }] : [],
@@ -348,7 +349,12 @@ export function Preview({ form, brand }: { form: CampaignForm; brand: MyBrand })
           compensation_type: (v.compensation_type as string) ?? "money",
           compensation_value: Number.isFinite(value) && value > 0 ? value : null,
           compensation_details:
-            typeof v.compensation_details === "string" ? v.compensation_details.trim() : null,
+            typeof v.compensation_details === "string" &&
+            (v.compensation_type === "barter" || (v.gift_type && v.gift_type !== "none"))
+              ? v.compensation_details.trim()
+              : null,
+          gift_type: v.gift_type as ListingCardData["gift_type"],
+          creators_needed: Number(v.creators_needed) || 0,
           currency: "AZN",
           city: (v.city as string) || null,
           deadline: (v.deadline as string) || null,
@@ -635,8 +641,10 @@ export function PayFields({ form }: { form: CampaignForm }) {
   const { register, control, formState } = form;
   const errors = formState.errors;
   const type = useWatch({ control, name: "compensation_type" });
-  const extra = (
-    <Field label={t("extra")} error={errors.compensation_details}>
+  const gift = useWatch({ control, name: "gift_type" });
+  // What exactly is given: only when there is a gift (barter has its own field below, D7).
+  const extra = gift && gift !== "none" && (
+    <Field label={t("giftDetails")} error={errors.compensation_details}>
       {(a) => (
         <Input {...a} {...register("compensation_details")} maxLength={300} placeholder={t("extraPh")} />
       )}
@@ -664,8 +672,27 @@ export function PayFields({ form }: { form: CampaignForm }) {
         )}
       </Field>
 
+      <Field label={t("gift")} error={errors.gift_type}>
+        {(a) => (
+          <Controller
+            control={control}
+            name="gift_type"
+            render={({ field }) => (
+              <ChoiceChips
+                ariaLabel={t("gift")}
+                options={GIFT_TYPES}
+                value={(field.value ?? "none") as (typeof GIFT_TYPES)[number]}
+                onChange={field.onChange}
+                label={(g) => tt(`gift.${g}`)}
+                describedBy={a["aria-describedby"]}
+              />
+            )}
+          />
+        )}
+      </Field>
+
       {type === "money" && (
-        // Paid: the amount, plus an optional extra on top (a product, a service or both).
+        // Paid: the amount, plus what exactly the gift is when there is one.
         <div className="grid gap-5 sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]">
           <Field required label={t("amount")} error={errors.compensation_value}>
             {(a) => (

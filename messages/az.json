@@ -476,7 +476,12 @@
       "stylist": "Stilist",
       "designer": "Dizayner"
     },
-    "age": "{age} yaş"
+    "age": "{age} yaş",
+    "gift": {
+      "product": "Məhsul hədiyyə",
+      "service": "Xidmət hədiyyə",
+      "none": "Heç biri"
+    }
   },
   "creator": {
     "setup": {
@@ -975,7 +980,9 @@
       "countsLabel": "Hər formatdan neçə paylaşım lazımdır?",
       "extra": "Əlavə olaraq",
       "extraPh": "Məsələn, iki nəfərlik səhər yeməyi",
-      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq"
+      "networkNote": "Hələlik yalnız Instagram. TikTok və YouTube tezliklə əlavə olunacaq",
+      "gift": "Əlavə hədiyyə",
+      "giftDetails": "Nə veriləcək"
     },
     "card": {
       "noTitle": "Elanın adı",
@@ -983,13 +990,18 @@
       "anyCity": "İstənilən şəhər",
       "minFollowers": "{count}+ izləyici",
       "deadline": "Son tarix: {date}",
-      "daysLeft": "{count, plural, =0 {Bu gün son gündür} other {# gün qalıb}}",
-      "new": "Yeni",
+      "daysLeft": "{count, plural, =0 {Son gün} other {# gün qalıb}}",
       "applied": "Müraciət etmisiniz",
       "mine": "Sizin elan",
-      "creatorsNeeded": "{count} kreator lazımdır",
+      "creatorsNeeded": "{count} kreator",
       "payLogin": "Qiyməti görmək üçün daxil olun",
-      "payCreators": "Qiyməti yalnız kreatorlar görür"
+      "payCreators": "Qiyməti yalnız kreatorlar görür",
+      "payLabel": "Ödəniş",
+      "formatsLabel": "Kontent formatları",
+      "gift": {
+        "product": "+ məhsul hədiyyə",
+        "service": "+ xidmət hədiyyə"
+      }
     },
     "mine": {
       "title": "Elanlarınız",
@@ -1114,8 +1126,6 @@
   },
   "board": {
     "title": "Elanlar",
-    "count": "{count} aktiv elan",
-    "sub": "Brendlərin kreatorlar üçün elanları. Uyğun olanı seçin və müraciət edin",
     "locked": "Tezliklə elanlar aktivləşəcək",
     "post": "Elan yerləşdir",
     "forBrands": "Brendlər üçün",

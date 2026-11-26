@@ -415,7 +415,8 @@ function ListingMenu({ campaign: c }: { campaign: MyCampaign }) {
   const canPause = c.status === "published";
   const canClose = c.status === "published" || c.status === "paused";
   // Live listings are closed first, so nothing leaves the board without the brand saying so.
-  const canArchive = (c.status === "draft" || c.status === "rejected" || c.status === "closed") && !isArchived;
+  const canArchive =
+    (c.status === "draft" || c.status === "rejected" || c.status === "closed") && !isArchived;
 
   return (
     <>

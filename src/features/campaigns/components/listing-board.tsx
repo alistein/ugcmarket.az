@@ -54,7 +54,6 @@ export function ListingBoardView() {
   // Wait for `me`: fetching before it is known would run the same request twice.
   const board = useCampaignBoard(filters, viewerKey(me), !meLoading);
   const items = board.data?.pages.flatMap((p) => p.items) ?? [];
-  const total = board.data?.pages[0]?.total ?? 0;
 
   const setFilter = (key: "compensation_type" | "city", value: string | null) => {
     const next = new URLSearchParams(params.toString());
@@ -71,8 +70,8 @@ export function ListingBoardView() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-background">
-      <PublicHeader className="mx-auto flex w-full max-w-5xl items-center gap-2 px-4 py-4" />
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-4 pb-28 sm:pb-16">
+      <PublicHeader className="mx-auto flex w-full max-w-7xl items-center gap-2 px-4 py-4" />
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 pt-4 pb-28 sm:pb-16">
         <CreatorNote slot="top" />
 
         <div className="flex flex-wrap items-end gap-x-6 gap-y-4">
@@ -80,15 +79,6 @@ export function ListingBoardView() {
             <h1 className="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-4xl">
               {t("title")}
             </h1>
-            <p className="mt-1.5 text-pretty text-muted-foreground">
-              {board.data ? (
-                <span className="font-medium text-foreground tabular-nums">
-                  {t("count", { count: total })}
-                </span>
-              ) : null}
-              {board.data ? " · " : null}
-              {t("sub")}
-            </p>
           </div>
           {isBrand && me.brand && (
             <Button nativeButton={false} render={<Link href="/brand/campaigns/new" />}>
@@ -138,12 +128,12 @@ export function ListingBoardView() {
               )
             ) : (
               <>
-                <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <ul className="mt-6 grid gap-3 sm:grid-cols-[repeat(auto-fill,minmax(18.5rem,1fr))]">
                   {items.map((c) => (
                     <li key={c.id} className="min-w-0">
                       <Link
                         href={`/campaigns/${c.slug ?? c.id}`}
-                        className="group/card block h-full rounded-3xl outline-none focus-visible:ring-4 focus-visible:ring-ring/25"
+                        className="group/card block h-full rounded-[1.375rem] outline-none focus-visible:ring-4 focus-visible:ring-ring/25"
                       >
                         <ListingCard
                           data={{ ...c, brand: c.brand ?? { name: "", logo_url: null } }}
@@ -336,25 +326,31 @@ function GuestPrompt() {
   );
 }
 
-/** Three cards in the card's shape: brand row, title, pay, formats, footer. */
+/** Two rows of cards in the card's shape: brand + pill, title, meta, formats, pay panel. */
 function CardGridSkeleton() {
   return (
-    <LoadingState className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {[0, 1, 2].map((i) => (
-        <div key={i} className="rounded-3xl bg-card p-5 shadow-(--shadow-raised)">
-          <div className="flex items-center gap-3">
-            <Skeleton className="size-11 rounded-[28%]" />
-            <div className="grid gap-1.5">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-3.5 w-20" />
+    <LoadingState className="mt-6 grid gap-3 sm:grid-cols-[repeat(auto-fill,minmax(18.5rem,1fr))]">
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <div
+          key={i}
+          className="flex aspect-square flex-col rounded-[1.375rem] bg-card p-4 shadow-(--shadow-raised)"
+        >
+          <div className="flex items-center gap-2.5">
+            <Skeleton className="size-9 rounded-full" />
+            <div className="grid flex-1 gap-1">
+              <Skeleton className="h-3.5 w-24" />
+              <Skeleton className="h-3 w-16" />
             </div>
-          </div>
-          <Skeleton className="mt-4 h-6 w-4/5" />
-          <Skeleton className="mt-3 h-8 w-28" />
-          <div className="mt-3 flex gap-1.5">
             <Skeleton className="h-6 w-20 rounded-full" />
           </div>
-          <Skeleton className="mt-4 h-4 w-full" />
+          <Skeleton className="mt-3.5 h-5 w-4/5" />
+          <Skeleton className="mt-2.5 h-3.5 w-3/5" />
+          <Skeleton className="mt-3.5 h-3 w-24" />
+          <div className="mt-1.5 flex gap-1.5">
+            <Skeleton className="h-6 w-14 rounded-full" />
+            <Skeleton className="h-6 w-14 rounded-full" />
+          </div>
+          <Skeleton className="mt-auto h-24 w-full rounded-2xl" />
         </div>
       ))}
     </LoadingState>

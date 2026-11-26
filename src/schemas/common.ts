@@ -25,6 +25,14 @@ export const CompensationType = z.enum(["money", "product", "service", "barter",
 export const LISTING_COMPENSATION_TYPES = ["money", "barter", "bid"] as const;
 export const ListingCompensationType = z.enum(LISTING_COMPENSATION_TYPES);
 
+/**
+ * What the brand gives on top of the pay (founders, 2026-11-26): a product, a service or nothing.
+ * Its own axis, not a payment type. "none" shows nothing on the card.
+ */
+export const GIFT_TYPES = ["product", "service", "none"] as const;
+export const GiftType = z.enum(GIFT_TYPES);
+export type GiftType = z.infer<typeof GiftType>;
+
 export const PostFormat = z.enum(["reels", "stories", "post", "tiktok_video", "youtube_short", "other"]);
 
 export const Currency = z.enum(["AZN", "USD", "EUR"]);

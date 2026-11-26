@@ -5,10 +5,12 @@ Product context, decisions and open questions live in the Obsidian wiki (`~/Docu
 Key pages: `decisions/mvp-scope`, `decisions/mvp-validation-plan`, `decisions/project-structure`, `concepts/off-platform-deal-model`.
 
 ## Stack
+
 Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v4 + shadcn/ui (Base UI primitives, `base-maia` style, Hugeicons) · Supabase (Postgres, Auth, Storage, RLS)
 · TanStack Query · zod v4 · react-hook-form · next-intl v4 (az default, ru, en) · PostHog · Resend · Vercel.
 
 ## Architecture rules (non-negotiable)
+
 1. **All data goes through `/api` route handlers.** Pages/components are client components that call `/api` via
    `src/lib/api-client.ts` + TanStack Query hooks in `src/features/<domain>/hooks.ts`. No Server Actions, no data fetching in Server Components.
 2. **Only `src/app/api/**` and `src/server/**` may import `@/server/*`** (enforced by ESLint).
@@ -31,7 +33,9 @@ Next.js 16 (App Router, Turbopack, Cache Components) · TypeScript · Tailwind v
 11. Role guards in the UI (`RoleGate`) are UX only — real enforcement is `requireRole()` + RLS.
 
 ## Client state: TanStack Query + Next 16 (non-negotiable)
+
 Full text and reasons: wiki `decisions/client-state-rules`; the audit behind it: `decisions/auth-state-bugs`.
+
 - **Where state lives.** Server data (`/api`) → TanStack Query hooks in `src/features/<domain>/hooks.ts`. Values from the
   route (`?email=`, `?next=`, `?role=`, filters, ids) → the URL, derived on every render. Form input → react-hook-form,
   server data enters through `values:`. Short-lived UI → `useState`. No other client store.
@@ -55,12 +59,15 @@ Full text and reasons: wiki `decisions/client-state-rules`; the audit behind it:
   detail, board), no wider. If navigation follows, return/await the invalidation in `onSuccess`.
 
 ## Copywriting (must, everywhere)
+
 Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) for every user-facing string:
+
 - **No em dash (—)** in any language. Use a period, comma or colon. `pnpm copy:check` must pass.
 - **Azerbaijani is written natively, never translated literally** from English or Russian. Formal **siz** everywhere (landing too); listings are **elan** / **объявление** / **listing** in copy (code stays `campaign`).
 - **No closing period** on any text (hints, errors, toasts, labels, buttons). Sentences inside a text are still split by a period. Legal pages keep normal punctuation.
 
 ## UI kit
+
 - `src/components/ui/*` came from shadcn but is **our UI kit now** — edit freely; it will diverge from upstream.
   Don't blindly re-run `pnpm dlx shadcn add` over an existing file (it overwrites our changes); diff first.
 - Primitives are **Base UI** (`@base-ui/react`), not Radix. Check the Base UI API when composing (e.g. `render` prop, not `asChild`).
@@ -80,11 +87,12 @@ Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) f
   - Tailwind v4: `scale-*`/`translate-*` set the individual `scale`/`translate` properties — transition those names.
   - Reduced motion: fades stay, movement goes (handled globally in globals.css).
 - **Visual language** (`emil-design-eng`, `apple-design` for materials/type, `stageshow` for marketing visuals only):
-  - Coral `--primary` is for the one main action on a screen. Joy tints (`brand`, `sun`, `mint`, `sky`, `rose` — Badge
+  - Coral `--primary` is for the one main action on a screen. Exception: the pay figure and gift line on `ListingCard` (founders' mockup, 2026-11-26). Joy tints (`brand`, `sun`, `mint`, `sky`, `rose` — Badge
     variants and `bg-*/text-*-ink` utilities) label categories, networks and statuses — never buttons.
   - Depth via `--shadow-soft|raised|float|press`, not borders. Filled fields (`bg-muted`) with a soft coral focus ring.
   - **No tinted background boxes** for notes, statuses, hints or results (founders, 2026-11-12). Use plain text,
     `text-muted-foreground` (or `text-destructive` for problems) with a small icon. Backgrounds are for fields and controls.
+    Exception: the `bg-muted` pay panel on `ListingCard` (founders' mockup, 2026-11-26).
   - Buttons press to `scale(0.97)`. Named avatars get a tone from the joy palette; one initial in overlapping groups.
   - Apple type: tighter tracking as size grows (`tracking-[-0.025em]` on titles), body at 0, `tabular-nums` for counts.
   - **Minimum font size is 12px** (`text-xs`) everywhere, landing and mockups included. Never `text-[10px]`/`text-[11px]`.
@@ -95,6 +103,7 @@ Follow the `ugc-copywriting` skill (`.agents/skills/ugc-copywriting/SKILL.md`) f
 - Product-level components (e.g. `CampaignCard`, `CreatorBadge`) go in `src/features/<domain>/components`; shared composites in `src/components/shared`.
 
 ## Folder map
+
 ```
 src/app/[locale]/(marketing|auth|public|creator|brand|admin)/  pages (client)
 src/app/api/                                                   route handlers
@@ -105,6 +114,7 @@ src/schemas/  src/lib/  src/i18n/  src/types/  messages/  supabase/
 ```
 
 ## Skills (installed in .agents/skills, symlinked to .claude/skills)
+
 - Building product UI → `emil-design-eng`; any motion → `animate` / `choreograph`; gestures/sheets → `gestures`, `apple-design`.
 - Mobile feel (most users are on phones) → `mobile-native`.
 - Before merging UI → `break-ui` (long Azerbaijani/Russian strings, empty states) and `review-animations`.
@@ -113,6 +123,7 @@ src/schemas/  src/lib/  src/i18n/  src/types/  messages/  supabase/
 - Toasts → `ask-sonner`. Library choice → `pick-ui-library` (explicit). UI variants → `prototype` (explicit).
 
 ## Commands (pnpm only — never npm/npx/yarn)
+
 `pnpm dev` · `pnpm build` · `pnpm lint` · `pnpm typecheck` · `pnpm format`
 `pnpm db:push` · `pnpm db:types:remote` · `pnpm db:start` · `pnpm db:reset` · `pnpm db:types` · `pnpm skills:update`
 Add deps: `pnpm add <pkg>` / `pnpm add -D <pkg>`. One-off CLIs: `pnpm dlx <cli>` (e.g. `pnpm dlx shadcn@latest add <component>`).
@@ -120,6 +131,7 @@ Local CLIs: `pnpm exec <bin>` (e.g. `pnpm exec supabase`). Commit `pnpm-lock.yam
 New dependency with an install script → decide it in `pnpm-workspace.yaml` → `allowBuilds` (true only if it needs it).
 
 ## Social numbers (src/server/social)
+
 Followers / views / likes are checked by pluggable providers (`SocialStatsProvider`), tried in registry order per
 network: official APIs first (Instagram Business Discovery, YouTube Data API), third-party scraping (Apify) only as a
 temporary fallback until Meta/TikTok review. Results go to `creator_social_stats` (service role only); UI prefers them
@@ -128,6 +140,7 @@ over self-reported numbers when the handle matches. Priority: Instagram, then Ti
 providers all read it; launching TikTok/YouTube = add it there (+ `ENABLED_PRICE_FORMATS`).
 
 ## Scope guard (MVP)
+
 Not building yet: catalog/search, saved lists, compare, messaging, payments, ratings, disputes, AI assistant.
 Ask before adding anything from that list.
 

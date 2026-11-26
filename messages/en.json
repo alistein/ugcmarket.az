@@ -476,7 +476,12 @@
       "stylist": "Stylist",
       "designer": "Designer"
     },
-    "age": "{age} y.o."
+    "age": "{age} y.o.",
+    "gift": {
+      "product": "Product",
+      "service": "Service",
+      "none": "None"
+    }
   },
   "creator": {
     "setup": {
@@ -975,7 +980,9 @@
       "countsLabel": "How many of each?",
       "extra": "On top of that",
       "extraPh": "For example, breakfast for two",
-      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon"
+      "networkNote": "Instagram only for now. TikTok and YouTube are coming soon",
+      "gift": "Gift on top",
+      "giftDetails": "What's included"
     },
     "card": {
       "noTitle": "Listing title",
@@ -983,13 +990,18 @@
       "anyCity": "Any city",
       "minFollowers": "{count}+ followers",
       "deadline": "Due {date}",
-      "daysLeft": "{count, plural, =0 {Last day today} one {# day left} other {# days left}}",
-      "new": "New",
+      "daysLeft": "{count, plural, =0 {Last day} one {# day left} other {# days left}}",
       "applied": "Applied",
       "mine": "Your listing",
-      "creatorsNeeded": "{count, plural, one {# creator needed} other {# creators needed}}",
+      "creatorsNeeded": "{count, plural, one {# creator} other {# creators}}",
       "payLogin": "Log in to see the pay",
-      "payCreators": "Only creators see the pay"
+      "payCreators": "Only creators see the pay",
+      "payLabel": "Payment",
+      "formatsLabel": "Content formats",
+      "gift": {
+        "product": "+ product gift",
+        "service": "+ service gift"
+      }
     },
     "mine": {
       "title": "Your listings",
@@ -1114,8 +1126,6 @@
   },
   "board": {
     "title": "Listings",
-    "count": "{count, plural, one {# open listing} other {# open listings}}",
-    "sub": "Brand listings for creators. Pick one that fits and apply",
     "locked": "Listings will open soon",
     "post": "Post a listing",
     "forBrands": "For brands",
